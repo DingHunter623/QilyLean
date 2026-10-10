@@ -15,8 +15,16 @@ fs.mkdirSync(artifacts,{recursive:true});
 async function observeStaticMenu(context){
   await context.addInitScript(()=>{
     // This observer is only a regression probe. Production keeps one Dock owner.
-    const probe={initial:null,replaced:false,invalidMenus:[],coreReady:false};
+    const probe={initial:null,replaced:false,invalidMenus:[],coreReady:false,navMovements:[]};
     window.__qilyStaticMenuProbe=probe;
+    const movement=(nav,reason,stack)=>{
+      if(!nav.matches('header nav'))return;
+      probe.navMovements.push({reason,left:nav.scrollLeft,max:nav.scrollWidth-nav.clientWidth,width:nav.clientWidth,classes:nav.className,stack});
+      if(probe.navMovements.length>40)probe.navMovements.shift();
+    };
+    const scrollLeft=Object.getOwnPropertyDescriptor(Element.prototype,'scrollLeft');
+    Object.defineProperty(Element.prototype,'scrollLeft',{...scrollLeft,set(value){scrollLeft.set.call(this,value);movement(this,'set '+value,new Error().stack);}});
+    document.addEventListener('scroll',event=>{if(event.target instanceof Element)movement(event.target,'scroll');},true);
     const actions=node=>[...node.querySelectorAll('[data-action]')].map(button=>button.getAttribute('data-action'));
     const inspect=records=>{
       const current=document.getElementById('floatDock');
@@ -186,10 +194,15 @@ for(const [name,url,labelSelector] of pages){
           expectPaint(afterCore,`${name} ${device} delayed navigation core`);
           expect(afterCore.dock.height,`${name} ${device}: delayed navigation core must not resize the menu`).toBeCloseTo(first.dock.height,0);
           await page.waitForTimeout(800); // Includes the last 700ms reveal timer.
-          await expect.poll(()=>page.locator('input.qily-primary-nav-scroll-rail').first().evaluate(element=>{
-            const nav=document.getElementById(element.getAttribute('aria-controls'));
-            return Math.abs(nav.scrollWidth-nav.clientWidth-nav.scrollLeft);
-          }),{message:'late core initialization retains the visitor navigation position'}).toBeLessThanOrEqual(1);
+          try{
+            await expect.poll(()=>page.locator('input.qily-primary-nav-scroll-rail').first().evaluate(element=>{
+              const nav=document.getElementById(element.getAttribute('aria-controls'));
+              return Math.abs(nav.scrollWidth-nav.clientWidth-nav.scrollLeft);
+            }),{message:'late core initialization retains the visitor navigation position'}).toBeLessThanOrEqual(1);
+          }catch(error){
+            console.log('Navigation movement evidence:',JSON.stringify(await page.evaluate(()=>window.__qilyStaticMenuProbe.navMovements)));
+            throw error;
+          }
           await expectNavigationRail(page);
           await page.screenshot({path:path.join(artifacts,`first-paint-${name}-${device}-with-js.png`)});
           await page.evaluate(()=>window.scrollTo(0,600));

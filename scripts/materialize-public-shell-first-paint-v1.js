@@ -15,7 +15,7 @@ const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regu
 const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
-const NAVIGATION_INPUT_REV='20261009-user-nav-v3';
+const NAVIGATION_INPUT_REV='20261010-user-nav-v4';
 const ORDER=['home','top','back','previous','search','current','contact'];
 const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const DOCK_STYLE_ID='qilyDockUnifiedV58Style';
