@@ -8,12 +8,7 @@ import shutil
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
-
-try:
-    from PIL import Image
-except ImportError:
-    Image = None
+from urllib.parse import quote, urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 CN = ROOT / "cn-site"
@@ -76,6 +71,7 @@ HARD_BLOCK_EXACT = {
 }
 
 ALLOWED_RASTER = {".png", ".jpg", ".jpeg", ".webp", ".gif"}
+MIRROR_MEDIA: set[str] = set()
 
 @dataclass
 class Source:
@@ -318,29 +314,14 @@ def materialize_image(src: str) -> str:
     if not source.is_file():
         return ""
 
-    # The international site contains many multi-megabyte originals. Re-using those
-    # byte-for-byte made the CN release exceed 100 MB and unreliable over the mainland
-    # deployment route. Preserve the visual content, but materialize a high-quality web-optimized
-    # local copy for the China site.
-    if source.stat().st_size > 256 * 1024 and ext != ".gif":
-        if Image is None:
-            raise RuntimeError("Pillow is required to optimize CN mirror images")
-        rel_path = Path(rel)
-        optimized_rel = Path("assets/mirror-media") / rel_path.with_suffix(".webp")
-        dest = CN / optimized_rel
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        if not dest.exists() or source.stat().st_mtime_ns > dest.stat().st_mtime_ns:
-            with Image.open(source) as img:
-                img = img.convert("RGB")
-                img.thumbnail((1920, 2160), Image.Resampling.LANCZOS)
-                img.save(dest, "WEBP", quality=84, method=6, optimize=True)
-        return "/" + optimized_rel.as_posix()
-
-    dest = CN / rel
-    dest.parent.mkdir(parents=True, exist_ok=True)
-    if not dest.exists() or source.stat().st_mtime_ns > dest.stat().st_mtime_ns:
-        shutil.copy2(source, dest)
-    return "/" + rel
+    # Preserve the exact international-site media asset. The China page points to a
+    # same-origin mirror route; Nginx fetches the original bytes from qilylean.com once,
+    # stores them in the Tencent-side cache and reuses them for subsequent requests.
+    # This decouples heavy media from every HTML release without downsampling or lossy
+    # recompression.
+    encoded = quote(rel, safe="/")
+    MIRROR_MEDIA.add(encoded)
+    return "/mirror-media/" + encoded
 
 def extract_meta(text: str) -> tuple[str, str]:
     mt = re.search(r"<title>(.*?)</title>", text, re.I|re.S)
@@ -425,7 +406,7 @@ def update_sitemap(urls: list[str]):
 
 def main():
     # Remove old generated mirror trees only; never touch hand-authored CN pages.
-    for rel in ("archive", "briefs/archive"):
+    for rel in ("archive", "briefs/archive", "assets/mirror-media"):
         target = CN / rel
         if target.exists():
             shutil.rmtree(target)
@@ -492,6 +473,11 @@ def main():
             "categories": {k: len(v) for k,v in category_rows.items()},
             "items": manifest,
         }, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
+    (CN / "archive/media-manifest.txt").write_text(
+        "\n".join(sorted(MIRROR_MEDIA)) + ("\n" if MIRROR_MEDIA else ""),
         encoding="utf-8",
     )
 
