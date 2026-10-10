@@ -832,6 +832,46 @@ jobs:
           print(f"PASS: CN knowledge discovery is live: {total} pages / {briefs} briefs.")
           PY
 
+      - name: Verify original brief visual parity on production
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import urllib.request
+          import time
+          def fetch(path):
+              error=None
+              for attempt in range(12):
+                  try:
+                      request=urllib.request.Request(
+                          "https://qilylean.cn"+path,
+                          headers={"User-Agent":"QilyLean-Curated-Brief-Visual-Parity/1.0",
+                                   "Cache-Control":"no-cache"},
+                      )
+                      with urllib.request.urlopen(request,timeout=25) as response:
+                          if response.status!=200: raise AssertionError(response.status)
+                          return response.read().decode("utf-8","replace")
+                  except Exception as exc:
+                      error=exc
+                      if attempt<11:time.sleep(5)
+              raise SystemExit("CN brief production fetch failed: "+path+" "+str(error))
+          modern=fetch("/briefs/archive/2026-09-28/?brief-vi=20261011-v1")
+          legacy=fetch("/briefs/archive/2020-01-09/?brief-vi=20261011-v1")
+          modern_css=fetch("/assets/brief-visual-source/qilylean/daily/assets/2026-09-28-brief.css?v=20261011-v1")
+          standard_css=fetch("/assets/brief-visual-source/qilylean/daily/brief-layout-standard.css?v=20261011-v1")
+          conditions=[
+              ("modern brief original layout",modern,('data-qily-brief-parity="v1"','class="plan-chain"','class="formula-grid"')),
+              ("legacy brief original layout",legacy,('data-qily-brief-parity="v1"','brief-one-point-training','/mirror-media/qilylean/assets/daily-2020-01-09.svg')),
+              ("source issue styles",modern_css,('.plan-chain','/assets/brief-visual-source/qilylean/daily/brief-layout-standard.css')),
+              ("original shared styles",standard_css,('--qily-brief-font-h1','.knowledge-brief-hero')),
+          ]
+          for label,body,needles in conditions:
+              for needle in needles:
+                  if needle not in body:
+                      raise SystemExit("Visual parity production gate failed: "+label+" / "+needle)
+          print("PASS: legacy and rich CN briefs keep original visual structures and local source styles")
+          PY
+
       - name: Verify local practice award evidence is public
         shell: bash
         run: |
