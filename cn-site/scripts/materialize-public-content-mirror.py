@@ -320,7 +320,7 @@ def materialize_image(src: str) -> str:
 
     # The international site contains many multi-megabyte originals. Re-using those
     # byte-for-byte made the CN release exceed 100 MB and unreliable over the mainland
-    # deployment route. Preserve the visual content, but materialize a web-optimized
+    # deployment route. Preserve the visual content, but materialize a high-quality web-optimized
     # local copy for the China site.
     if source.stat().st_size > 256 * 1024 and ext != ".gif":
         if Image is None:
@@ -332,8 +332,8 @@ def materialize_image(src: str) -> str:
         if not dest.exists() or source.stat().st_mtime_ns > dest.stat().st_mtime_ns:
             with Image.open(source) as img:
                 img = img.convert("RGB")
-                img.thumbnail((1400, 1800), Image.Resampling.LANCZOS)
-                img.save(dest, "WEBP", quality=72, method=6, optimize=True)
+                img.thumbnail((1920, 2160), Image.Resampling.LANCZOS)
+                img.save(dest, "WEBP", quality=84, method=6, optimize=True)
         return "/" + optimized_rel.as_posix()
 
     dest = CN / rel
