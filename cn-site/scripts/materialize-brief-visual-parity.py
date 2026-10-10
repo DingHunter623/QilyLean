@@ -38,7 +38,7 @@ VISUAL_CLASSES=re.compile(r"^[\w\-\s]{1,350}$",re.U)
 ID_ATTR=re.compile(r"^[a-zA-Z][a-zA-Z0-9_\-:.]*$")
 SVG_PATTERN=re.compile(r"<svg\b[\s\S]*?</svg\s*>",re.I)
 SVG_RISK=re.compile(r"<\s*(?:script|foreignObject|iframe|object|embed)\b|\bon[a-z]+\s*=|javascript:|data:text/html|<\s*image\b[^>]*\bhref\s*=\s*['\"]https?://",re.I)
-STYLE_IMPORT=re.compile(r'(@import\s+url\(["\']?)(/[^"\')\s?]+)(["\']?\)\s*;)',re.I)
+STYLE_IMPORT=re.compile(r'(@import\s+url\(["\']?)(/[^"\')\s]+)(["\']?\)\s*;)',re.I)
 
 def local_media(url:str)->str:
     p=urlparse(url)
