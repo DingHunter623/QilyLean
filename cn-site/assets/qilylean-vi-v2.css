@@ -1513,3 +1513,37 @@ html:root:root:root body :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :
     min-width:0!important;
   }
 }
+
+/* QILY-CN-BRAND-OPTICAL-PARITY-V51 | 2026-10-10
+ * Desktop CN header previously used the 34px-high background box, which
+ * letterboxes the wide SVG. Enlarge its artwork without changing the
+ * canonical SVG, header grid, nav, translation control or layout axis.
+ * Keep established tablet/phone fit and logo aspect ratio untouched.
+ */
+@media (min-width:901px){
+  html:root:root:root body header.site-header .header-inner > a.brand{
+    width:clamp(168px,14vw,226px)!important;
+    min-width:clamp(168px,14vw,226px)!important;
+    max-width:226px!important;
+    height:40px!important;
+    background-size:contain!important;
+    background-position:left center!important;
+    background-repeat:no-repeat!important;
+  }
+}
+@media (max-width:900px) and (min-width:621px){
+  html:root:root:root body header.site-header .header-inner > a.brand{
+    width:142px!important;
+    min-width:142px!important;
+    height:27px!important;
+    background-size:contain!important;
+  }
+}
+@media (max-width:620px){
+  html:root:root:root body header.site-header .header-inner > a.brand{
+    width:126px!important;
+    min-width:126px!important;
+    height:24px!important;
+    background-size:contain!important;
+  }
+}
