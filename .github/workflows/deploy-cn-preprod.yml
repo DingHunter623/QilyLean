@@ -120,6 +120,9 @@ jobs:
       - name: Test CN search submission failure handling
         run: python3 scripts/test-cn-search-discovery.py
 
+      - name: Install Pillow for CN mirror image optimization
+        run: python3 -m pip install --disable-pip-version-check --quiet Pillow
+
       - name: Materialize approved CN practice evidence assets
         shell: bash
         run: |
@@ -262,7 +265,7 @@ jobs:
           rm -f /tmp/qilylean-cn-site.part.*
           ARCHIVE_BYTES="$(stat -c '%s' /tmp/qilylean-cn-site.tar.gz)"
           echo "Release archive size: ${ARCHIVE_BYTES} bytes"
-          split -b 2m -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
+          split -b 512k -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
 
           timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz; mkdir -p /tmp/qilylean-cn-translation'
 
