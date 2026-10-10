@@ -25,6 +25,7 @@
     if(!head||!link||link.parentNode!==head)return;
     if(head.lastElementChild!==link)head.appendChild(link);
     root.setAttribute('data-qily-r8-cascade','authority-last');
+    measureHeader();
   }
 
   function scheduleAuthorityLast(){
@@ -97,6 +98,7 @@
 
   function normalizeAndMeasure(){
     normalizeHeaderShell();
+    measureHeader();
     scheduleMeasure();
   }
 
@@ -110,7 +112,7 @@
     w.setTimeout(normalizeAndMeasure,120);
     w.setTimeout(normalizeAndMeasure,700);
     w.setTimeout(normalizeAndMeasure,1400);
-    d.addEventListener('qily:shell-ready',scheduleHeaderNormalization);
+    d.addEventListener('qily:shell-ready',normalizeAndMeasure);
     w.addEventListener('pageshow',scheduleHeaderNormalization,{passive:true});
   }
 
@@ -119,7 +121,7 @@
     var header=headerNode();
     if(header&&'ResizeObserver' in w){
       var observer=new ResizeObserver(scheduleMeasure);
-      observer.observe(header);
+      observer.observe(header,{box:'border-box'});
       w.__qilyVisualR8HeaderObserver=observer;
     }
     w.addEventListener('resize',scheduleMeasure,{passive:true});
