@@ -49,7 +49,25 @@ def main()->None:
         raw=(ROOT/page.path).read_text(encoding="utf-8",errors="ignore")
         fragment=source.extract_fragment(raw)
         fragment=recover_relative_media(fragment,page.path)
-        body,svg_count,visual_nodes=brief.sanitize_main(fragment)
+        try:
+            body,svg_count,visual_nodes=brief.sanitize_main(fragment)
+            visual_mode="source-structure"
+        except RuntimeError as exc:
+            if "brief content unexpectedly empty after filtering" not in str(exc):
+                raise
+            # Certain public tool/index pages have very short static content
+            # because the original interactive UI was JavaScript-driven.
+            # Preserve the previously compliance-sanitized static article
+            # instead of failing all 432 pages or republishing unsafe UI.
+            existing=page.out.read_text(encoding="utf-8")
+            m=re.search(r'<article class="article-body mirror-article">([\\s\\S]*?)</article>',existing,re.I)
+            if not m or len(source.clean_text(m.group(1)))<50:
+                raise RuntimeError("Empty original visual and unusable safe fallback: "+str(page.path)) from exc
+            body=m.group(1)
+            svg_count=0
+            visual_nodes=0
+            visual_mode="compliance-safe-short-page"
+            print("Visual parity short-page fallback:",page.path)
         # Original heading, image, card, chart and diagram semantics remain in
         # the full-width content column; no new commercial links are added.
         title,desc=source.extract_meta(raw)
@@ -74,6 +92,7 @@ def main()->None:
             "source":page.path.as_posix(),
             "url":page.url,
             "category":page.category,
+            "visual_mode":visual_mode,
             "visual_class_nodes":visual_nodes,
             "inline_svg":svg_count,
             "media":len(re.findall(r'/(?:mirror-media)/',doc)),
