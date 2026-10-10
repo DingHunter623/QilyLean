@@ -231,6 +231,22 @@ html:root:root body :is(header.qily-site-header,header.qily-global-header,header
   }
 }
 
+/* QILY-20261010-NAV-HOME-FOUR-CHAR-WIDTH
+ * Match the CN public header's 104px four-character navigation cell.
+ * Only the international primary Home item changes. Leave labels, font,
+ * other tabs, header layout, brand, translator and mobile rail untouched. */
+@media (min-width:901px){
+  html:root:root:root body header.qily-site-header
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href="/"]{
+    box-sizing:border-box!important;
+    width:104px!important;
+    min-width:104px!important;
+    flex:0 0 104px!important;
+    justify-content:center!important;
+    text-align:center!important;
+  }
+}
+
 /* Interaction Semantics V1.7 native range rail. */
 html:root:root body input.qily-primary-nav-scroll-rail[type="range"]{
   -webkit-appearance:none!important;
