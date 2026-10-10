@@ -149,6 +149,23 @@ html:root:root body :is(header.qily-site-header,header.qily-global-header,header
   box-shadow:none!important;
 }
 
+/* QILY-20261010-OPTICAL-BRAND-PARITY: China's canonical logo has a
+ * 1.5px transparent border inside the 40px border-box. Match its *visible*
+ * artwork, not merely the outer CSS height. Preserve hover/focus feedback. */
+html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+:is(a.qily-brand,a.brand):not(:hover):not(:focus-visible){
+  box-sizing:border-box!important;
+  border:1.5px solid transparent!important;
+}
+/* The CN header visually leaves more space before 首页. Restrict this extra
+ * breathing room to wide desktops; never compress mobile/tablet navigation. */
+@media(min-width:1200px){
+  html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+  :is(a.qily-brand,a.brand){
+    margin-right:16px!important;
+  }
+}
+
 html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
 .qily-web-translate[data-qily-header-utility="translation"]{
   position:relative!important;
