@@ -152,6 +152,33 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
 /* QILY-NAV-SURFACE-NO-UNDERLINE-V1 | public VI regression.
  * Cover both navigation components, several shared pages, desktop and phone.
  * Do not test ordinary article/footnote link decorations here. */
+/* QILY-PRIMARY-NAV-NO-UNDERLINE-RUNTIME-V1
+ * The trust screenshot demonstrates that legacy CSS could recolour a gold
+ * underline in the current tab. Assert the computed style of top-level
+ * navigation itself, not just the subnav or operating-axis cards. */
+test('primary navigation current text has no underline even with legacy styles',async({browser})=>{
+  for(const width of [1440,390]){
+    const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
+    await context.route('**/*',route=>{
+      const url=route.request().url();
+      return url.startsWith(BASE_ORIGIN)||url.startsWith('data:')||url.startsWith('blob:')?route.continue():route.abort();
+    });
+    const page=await context.newPage();
+    for(const route of ['/','/trust/','/projects/','/capabilities/']){
+      const response=await page.goto(BASE+route,{waitUntil:'domcontentloaded',timeout:30000});
+      expect(response&&response.status(),`primary nav HTTP ${route}`).toBe(200);
+      const active=page.locator('header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav) > a[aria-current="page"]').first();
+      await expect(active).toBeVisible();
+      await expect.poll(()=>active.evaluate(el=>getComputedStyle(el).textDecorationLine),{timeout:10000}).toBe('none');
+      const before=await active.evaluate(el=>({decoration:getComputedStyle(el).textDecorationLine,style:el.style.getPropertyValue('text-decoration-line')}));
+      expect(before.decoration,`${width} ${route} current item`).toBe('none');
+      await active.hover(); expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
+      await active.focus(); expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
+    }
+    await context.close();
+  }
+});
+
 test('navigation surface links retain background feedback without underlines',async({browser})=>{
   const routes=['/trust/','/experience/','/capabilities/','/cooperation/'];
   const selectors=['main .module-subnav > a[href]','main a.qily-system-axis__step[href]'];
