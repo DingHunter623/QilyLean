@@ -255,6 +255,11 @@ public class MainActivity extends Activity {
                 webCard("技术支持", "安装、切换系统桌面与问题反馈", "https://qilylean.cn/app-support/qilylean-cn-home/"),
                 webCard("中国站", "精益制造经验分享", "https://qilylean.cn/"));
 
+        addSectionTitle(content, "备案与站点信息");
+        addCardRow(content,
+                webCard("ICP备案", "湘ICP备2026041143号-1", "https://beian.miit.gov.cn/"),
+                webCard("公安备案", "湘公网安备43020002000443号", "https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443"));
+
         addSectionTitle(content, "官方联系");
         addCardRow(content,
                 webCard("官方网址", "https://qilylean.cn", "https://qilylean.cn/"),
