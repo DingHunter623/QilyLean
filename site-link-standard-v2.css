@@ -14,7 +14,7 @@
   --qily-dark-underline:#ffe39b;
 }
 
-/* 主导航：常态白底深字＋下横线。 */
+/* 主导航：常态白底深字，禁用多余下划线；正文链接仍按全站链接规范。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
   color:var(--qily-nav-ink)!important;
@@ -23,14 +23,14 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   border-color:transparent!important;
   opacity:1!important;
   filter:none!important;
-  text-decoration-line:underline!important;
+  text-decoration-line:none!important;
   text-decoration-color:#0f4b5a!important;
   text-decoration-thickness:1.8px!important;
   text-underline-offset:.25em!important;
   box-shadow:none!important;
 }
 
-/* 当前栏目：深青底白字＋金色下横线。 */
+/* 当前栏目：深青底白字＋金色边框，无文字下划线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current][aria-current="page"]{
   color:#fff!important;
