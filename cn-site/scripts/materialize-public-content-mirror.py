@@ -222,6 +222,8 @@ def rewrite_href(value: str) -> str:
             return "/"
         return value
     if value.startswith("/"):
+        if value.startswith("/downloads/"):
+            return ""
         src = source_file_for_url(value)
         if src and src in SOURCE_TO_URL:
             return SOURCE_TO_URL[src]
@@ -302,6 +304,8 @@ def materialize_image(src: str) -> str:
     if not src.startswith("/"):
         return ""
     rel = src.split("?",1)[0].lstrip("/")
+    if re.search(r"(?:^|[-_/])(qr|qrcode|wechat|weixin|contact)(?:[-_. /]|$)", rel, re.I):
+        return ""
     ext = Path(rel).suffix.lower()
     if ext not in ALLOWED_RASTER:
         return ""
@@ -341,12 +345,15 @@ def neutralize(value: str) -> str:
     return value
 
 def remove_forbidden_blocks(body: str) -> str:
-    # Drop smallest conversion-oriented blocks first.
-    pattern = re.compile(r"<(p|li|a|blockquote|figcaption)\b[^>]*>[\s\S]*?</\1>", re.I)
+    # Drop conversion/contact-oriented blocks. The mainland personal site must never
+    # inherit QR-code, private-contact or sales-conversion residue from the global site.
+    contact = re.compile(r"(微信|WeChat|wechat|Qily259|二维码|联系电话|联系邮箱|项目交流|官网与交流)", re.I)
+    pattern = re.compile(r"<(p|li|a|blockquote|figcaption|figure)\b[^>]*>[\s\S]*?</\1>", re.I)
     def repl(m):
         text = clean_text(m.group(0))
-        return "" if FORBIDDEN.search(text) else m.group(0)
+        return "" if (FORBIDDEN.search(text) or contact.search(text)) else m.group(0)
     body = pattern.sub(repl, body)
+    body = re.sub(r"(微信|WeChat|wechat|Qily259|二维码|项目交流|官网与交流)", "", body, flags=re.I)
     return neutralize(body)
 
 def footer() -> str:
