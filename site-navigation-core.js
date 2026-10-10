@@ -683,7 +683,11 @@
       // Static-first supplies base geometry, but the authoritative runtime must still
       // install the final Header/Nav typography parity layer after cached legacy CSS.
       addGlobalHeaderStyles();
-      if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav') && !adoptPublishedPrimaryNavigation()) buildNavigation();
+      // Presentation runtimes may already have added modern nav classes while
+      // leaving the legacy header class. Still adopt the published owner so
+      // every loading order receives the complete canonical header layout.
+      var publishedNavigation=adoptPublishedPrimaryNavigation();
+      if (!publishedNavigation && !document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
       enforcePrimaryNavRenderParity();
       syncPrimaryNavCurrentState();
       // R2: no repeated global contact footer on ordinary pages.

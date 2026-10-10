@@ -187,6 +187,7 @@ for(const [name,url,labelSelector] of pages){
           await focusedAction.focus();
           releaseCore();
           await page.waitForFunction(()=>window.__qilyStaticMenuProbe&&window.__qilyStaticMenuProbe.coreReady===true);
+          await expect(page.locator('header'),'published navigation adopts the complete shared header in either loading order').toHaveClass(/qily-global-header/);
           await expectStaticMenuPreserved(page);
           await expect(focusedAction,'delayed initialization keeps the existing keyboard focus').toBeFocused();
           await expect(focusedAction).toHaveCSS('background-color','rgb(255, 227, 155)');

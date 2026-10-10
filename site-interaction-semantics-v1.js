@@ -159,7 +159,7 @@
     rail.addEventListener('pointermove',function(event){if(activePointer!==event.pointerId)return;setFromPointer(event);event.preventDefault();event.stopPropagation();},{passive:false});
     function finishPointer(event){if(activePointer!==event.pointerId)return;try{rail.releasePointerCapture(activePointer);}catch(error){}activePointer=null;sync();}
     rail.addEventListener('pointerup',finishPointer);rail.addEventListener('pointercancel',finishPointer);
-    if(w.ResizeObserver){var observer=new w.ResizeObserver(layoutSync);observer.observe(header);observer.observe(nav);nav.querySelectorAll('a[href]').forEach(function(link){observer.observe(link);});}
+    if(w.ResizeObserver){var observer=new w.ResizeObserver(layoutSync);observer.observe(header);observer.observe(nav);nav.querySelectorAll('a[href]').forEach(function(link){observer.observe(link,{box:'border-box'});});}
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
   function installPrimaryNavDragGuard(nav){
