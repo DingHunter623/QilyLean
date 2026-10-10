@@ -15,7 +15,7 @@
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:roundIcon="@drawable/ic_launcher"
-        android:label="QilyLean｜启力精益"
+        android:label="精益制造经验分享"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
