@@ -48,9 +48,11 @@ jobs:
           grep -q "versionCode 1" android/qilylean-cn-home/app/build.gradle
           grep -q "versionName '1.0.0'" android/qilylean-cn-home/app/build.gradle
           grep -q 'targetSdk 36' android/qilylean-cn-home/app/build.gradle
-          grep -q 'android:label="QilyLean｜启力精益"' android/qilylean-cn-home/app/src/main/AndroidManifest.xml
+          grep -q 'android:label="精益制造经验分享"' android/qilylean-cn-home/app/src/main/AndroidManifest.xml
           grep -q 'android.intent.category.HOME' android/qilylean-cn-home/app/src/main/AndroidManifest.xml
           grep -q 'com.qilylean.times26001' android/qilylean-cn-home/app/src/main/AndroidManifest.xml
+          grep -q 'QilyLean｜启力精益' android/qilylean-cn-home/app/src/main/java/cn/qilylean/home/MainActivity.java
+          grep -q '精益制造经验分享' android/qilylean-cn-home/app/src/main/java/cn/qilylean/home/MainActivity.java
           grep -q 'https://qilylean.cn/' android/qilylean-cn-home/app/src/main/java/cn/qilylean/home/MainActivity.java
           ! grep -q 'https://qilylean.com/' android/qilylean-cn-home/app/src/main/java/cn/qilylean/home/MainActivity.java
           grep -q 'legal/qilylean-cn-home/privacy' android/qilylean-cn-home/app/src/main/java/cn/qilylean/home/MainActivity.java
@@ -71,6 +73,7 @@ jobs:
           test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='cn.qilylean.home' versionCode='1' versionName='1.0.0'"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "application-label:'精益制造经验分享'"
 
       - name: Prepare artifacts
         shell: bash
