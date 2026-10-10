@@ -39,7 +39,7 @@ def recover_relative_media(markup:str, path:Path)->str:
         if not candidate.is_file():return match.group(0)
         if candidate.suffix.lower() not in brief.MEDIA_EXT:return match.group(0)
         return prefix+"/"+rel.as_posix()+suffix
-    return re.sub(r'((?:\\bsrc|\\bposter)=["\\'])([^"\\']+)(["\\'])',replace,markup,flags=re.I)
+    return re.sub(r"""((?:\bsrc|\bposter)=["'])([^"']+)(["'])""", replace, markup, flags=re.I)
 
 def main()->None:
     eligible=[s for s in source.SOURCES if not source.is_date_brief(s.path)]
@@ -62,7 +62,7 @@ def main()->None:
         doc=doc.replace("</head>",EXTRA_CSS+"</head>",1)
         if 'data-qily-original-visual="v1"' not in doc:
             raise SystemExit("Missing non-brief visual marker: "+str(page.path))
-        if len(re.findall(r"<svg\\b",doc,re.I))!=svg_count:
+        if len(re.findall(r"<svg\b",doc,re.I))!=svg_count:
             raise SystemExit("Inline diagram lost: "+str(page.path))
         if visual_nodes and "class=" not in body:
             raise SystemExit("Original visual semantics lost: "+str(page.path))
@@ -82,13 +82,13 @@ def main()->None:
         })
     manifest=set(line.strip() for line in MEDIA.read_text(encoding="utf-8").splitlines() if line.strip())
     manifest.update(source.MIRROR_MEDIA)
-    MEDIA.write_text("\\n".join(sorted(manifest))+"\\n",encoding="utf-8")
+    MEDIA.write_text("\n".join(sorted(manifest))+"\n",encoding="utf-8")
     REPORT.write_text(json.dumps({
         "checked":len(evidence),
         "visual_classes":sum(x["visual_class_nodes"] for x in evidence),
         "inline_svg_preserved":sum(x["inline_svg"] for x in evidence),
         "items":evidence,
-    },ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+    },ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(f"CN non-brief visual parity checked: {len(evidence)} pages / "+
           f"{sum(x['visual_class_nodes'] for x in evidence)} semantic nodes / "+
           f"{sum(x['inline_svg'] for x in evidence)} inline diagrams")
