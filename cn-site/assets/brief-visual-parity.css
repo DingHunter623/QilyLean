@@ -137,3 +137,14 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main a:focus-visible
   html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a:not(.directory),
   html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>span{flex:1 1 40%!important;min-width:0!important;width:auto!important;white-space:normal!important}
 }
+
+/* QILY-CN-BRIEF-TYPE-PARITY-V5 | 2026-10-12
+ * Close the gaps left by bespoke authored checklist spans and pagination
+ * anchors in the 381-issue archive. Only article main is affected; keep
+ * hero headings, numbered badges, evidence diagrams and CN shell intact.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-checklist{font-size:20px!important}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-checklist>div>span{font-size:20px!important;line-height:1.75!important}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a{font-size:20px!important;line-height:1.5!important}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a.directory{font-size:20px!important}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-closing>span{font-size:20px!important;line-height:1.6!important}

@@ -179,6 +179,7 @@ def validate_generated_corpus():
         original_page=Page(source_main);page=Page(generated);main_page=Page(rendered_main)
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v5' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -212,6 +213,10 @@ def validate_generated_corpus():
         for block in re.findall(r'<style\b[^>]*data-qily-brief-source-style="v2"[^>]*>([\s\S]*?)</style>',generated,re.I):
             counts['scoped_selectors']+=assert_scoped_css(block)
         counts['pages']+=1
+    # A custom checklist and adjacent navigation must keep the canonical readable scale.
+    typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
+    for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):
+        assert class_name in typography,(class_name,'missing body/font parity guard')
     # These issues previously lost all of their authored layout styles.
     for date,selector in [('2026-08-14','.brief-highlight-grid'),('2026-08-19','.lean-delivery-brief .mindmap'),('2026-08-25','.w8 .loop')]:
         path=visual.CN/'briefs/archive'/date/'index.html'

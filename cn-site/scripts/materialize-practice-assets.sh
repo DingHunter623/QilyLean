@@ -30,6 +30,8 @@ echo "CN practice award asset materialized locally."
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
 python3 "$CN_ROOT/scripts/materialize-brief-visual-parity.py"
 python3 "$CN_ROOT/scripts/materialize-nonbrief-visual-parity.py"
+# Synchronize non-commercial public directory from the international SSOT.
+python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
 python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
 test -f "$CN_ROOT/archive/index.html"
