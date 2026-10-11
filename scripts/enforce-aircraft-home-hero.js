@@ -81,6 +81,9 @@ html=baselineAnchor.test(html)?html.replace(baselineAnchor,homeHead+'$&'):html.r
 html=html.replace(/<\/main>/i,`${aircraft}\n</main>`);
 html=html.replace(/[ \t]+$/gm,'');
 
+// Homepage dependencies must be emitted before the final shared paint owners.
+// Reapply their canonical order after rebuilding the aircraft/conversion tags.
+html=require('./materialize-public-shell-first-paint-v1.js').materialize(html,'index.html');
 fs.writeFileSync(target,html.endsWith('\n')?html:html+'\n','utf8');
 const validatorPath=path.join(root,'scripts','validate-sitewide-remediation-20260822.js');
 if(fs.existsSync(validatorPath)){

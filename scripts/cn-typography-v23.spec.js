@@ -27,6 +27,9 @@ const pages=walk(ROOT)
   .map(routeFor)
   .sort();
 
+// Full materialization includes the 381-issue brief archive.
+test.setTimeout(Math.max(60_000, pages.length * 1500));
+
 const reps = new Set(['/','/lean/','/notes/','/knowledge/','/briefs/','/resources/','/about/']);
 
 async function auditPage(page, route, limits, label){
@@ -39,6 +42,7 @@ async function auditPage(page, route, limits, label){
       px:parseFloat(getComputedStyle(el).fontSize)
     }));
     return {
+      briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
       heroLabels:[...document.querySelectorAll('.hero .eyebrow,.page-hero .hero-eyebrow,.module-hero .module-eyebrow')].map(el=>{
         const style=getComputedStyle(el);
         return {text:el.textContent.trim(),color:style.color,fill:style.webkitTextFillColor,weight:style.fontWeight};
@@ -46,7 +50,8 @@ async function auditPage(page, route, limits, label){
       h1:read('main h1'),
       h2:read('main h2'),
       h3:read('main h3'),
-      body:read('main .article-body p, main .section-head p').slice(0,12),
+      body:read(document.body.hasAttribute('data-qily-brief-parity')?'main p, main li, main td, main th':'main .article-body p, main .section-head p').slice(0,24),
+      briefCaptions:read('main figcaption, main .date, main time, main .tag').slice(0,24),
       small:read('main small, main .breadcrumbs, main .meta, main .article-meta').slice(0,24),
       labels:read('main .eyebrow, main .hero-eyebrow, main .module-eyebrow, main .section-kicker, main .module-kicker, main .section-head>small').slice(0,24),
       href:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')||''),
@@ -105,11 +110,33 @@ async function auditPage(page, route, limits, label){
     expect(x.fill, route+' hero label text fill '+x.text).toBe('rgb(255, 227, 155)');
     expect(x.weight, route+' hero label weight '+x.text).toBe('400');
   }
-  for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
-  for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
-  for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
-  for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
-  for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(19.9);
+  if(/^\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/$/.test(route)) expect(data.briefReading,route+' brief rendering markers').toBeTruthy();
+  if(data.briefReading){
+    // Authored brief components use a larger, explicit reading hierarchy;
+    // retain the existing shell contract and the legacy limits for other pages.
+    expect(route).toMatch(/^\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/$/);
+    const scale=label==='mobile'?{h1:[29.9,30.1],h2:26,h3:23}:{h1:[29.9,36.1],h2:28,h3:24};
+    expect(data.h1.length, route+' one accessible brief title').toBe(1);
+    for(const x of data.h1){
+      expect(x.px, route+' brief H1 floor '+x.text).toBeGreaterThanOrEqual(scale.h1[0]);
+      expect(x.px, route+' brief H1 ceiling '+x.text).toBeLessThanOrEqual(scale.h1[1]);
+    }
+    for(const key of ['h2','h3']) for(const x of data[key]){
+      expect(x.px, route+' brief '+key+' token '+x.text).toBeCloseTo(scale[key],1);
+    }
+    for(const x of data.body) expect(x.px, route+' brief body token '+x.text).toBeCloseTo(20,1);
+    for(const x of data.briefCaptions) expect(x.px,route+' brief caption token '+x.text).toBeCloseTo(18,1);
+    for(const x of data.small){
+      expect(x.px, route+' brief caption floor '+x.text).toBeGreaterThanOrEqual(17.9);
+      expect(x.px, route+' brief caption ceiling '+x.text).toBeLessThanOrEqual(20.5);
+    }
+  }else{
+    for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
+    for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
+    for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
+    for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
+    for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(19.9);
+  }
   for(const x of data.labels){
     expect(x.px, route+' module label floor '+x.text).toBeGreaterThanOrEqual(20.5);
     expect(x.px, route+' module label ceiling '+x.text).toBeLessThanOrEqual(21.5);
