@@ -16,6 +16,7 @@ on:
     paths:
       - 'cn-site/**'
       - 'qilylean/daily/**'
+      - 'links/index.html'
       - 'qilylean/daily-briefs.css'
       - 'qilylean/daily-brief-unified-layout-v2.css'
       - 'qilylean/knowledge-brief.css'
