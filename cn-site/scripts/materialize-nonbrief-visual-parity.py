@@ -23,7 +23,7 @@ brief=importlib.import_module("materialize-brief-visual-parity")
 
 REPORT=CN/"archive"/"nonbrief-visual-parity.json"
 MEDIA=CN/"archive"/"media-manifest.txt"
-EXTRA_CSS='<link rel="stylesheet" href="/assets/nonbrief-visual-parity.css?v=20261011-all-mirror-visual-v1">'
+EXTRA_CSS='<link rel="stylesheet" href="/assets/nonbrief-visual-parity.css?v=20261011-all-mirror-visual-v2">'
 
 def recover_relative_media(markup:str, path:Path)->str:
     # Only expand references that resolve to checked-in public files; do not

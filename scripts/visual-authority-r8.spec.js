@@ -61,6 +61,27 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
       }
       await page.waitForTimeout(260);
 
+      // Header ResizeObserver updates the CSS height on the next animation frame.
+      // Wait for two stable samples instead of comparing a new layout with the
+      // previous frame's measurement. Persistent drift keeps the existing 4px gate.
+      let previousHeaderHeight=null;
+      let stableHeaderSamples=0;
+      await expect.poll(async()=>{
+        const header=await page.evaluate(()=>{
+          const el=document.querySelector('header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header');
+          if(!el)return null;
+          const rect=el.getBoundingClientRect();
+          const style=getComputedStyle(el);
+          if(style.display==='none'||style.visibility==='hidden'||Number(style.opacity)===0||rect.width<=0||rect.height<=0)return null;
+          return {height:rect.height,live:parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--qily-header-live-height'))||0};
+        });
+        if(!header)return true;
+        const measured=header.live>0&&Math.abs(header.live-header.height)<=4;
+        stableHeaderSamples=measured&&previousHeaderHeight!==null&&Math.abs(header.height-previousHeaderHeight)<=1?stableHeaderSamples+1:measured?1:0;
+        previousHeaderHeight=header.height;
+        return stableHeaderSamples>=2;
+      },{timeout:5000,intervals:[50,100,200],message:`${vp.name}/${name}: header measurement must settle before geometry capture`}).toBe(true);
+
       const data=await page.evaluate(()=>{
         const q=(s)=>document.querySelector(s);
         const qa=(s)=>Array.from(document.querySelectorAll(s));

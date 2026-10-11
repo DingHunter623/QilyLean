@@ -32,6 +32,7 @@
 .mirror-article-fidelity :is(.project-result-panel,.note,.check,.quote,.lead){border-left:4px solid #caa15f;padding:14px 17px;background:#fff9ed;color:#183b40;border-radius:0 10px 10px 0}
 .mirror-article-fidelity :is(.project-result-panel,.note,.check,.quote,.lead) p{color:#183b40}
 .mirror-article-fidelity :is(pre,table,.viewer,.formula){max-width:100%;overflow-x:auto}
+.mirror-article-fidelity .grid>*{min-width:0;max-width:100%}
 .mirror-article-fidelity table{display:block;width:max-content;min-width:min(100%,800px);border-collapse:collapse}
 .mirror-article-fidelity :is(td,th){padding:10px 12px;vertical-align:top;white-space:normal;border:1px solid #d5e4e3}
 .mirror-article-fidelity .module-media img{width:auto;max-width:100%;height:auto;object-fit:contain}
