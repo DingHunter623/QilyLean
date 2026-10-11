@@ -15,6 +15,12 @@ on:
       - main
     paths:
       - 'cn-site/**'
+      - 'qilylean/daily/**'
+      - 'qilylean/daily-briefs.css'
+      - 'qilylean/daily-brief-unified-layout-v2.css'
+      - 'qilylean/knowledge-brief.css'
+      - 'qilylean/npi-four-stage-series-v1.css'
+      - 'site-daily-brief-layout-guard-v1.css'
       - 'services/cn-translation/**'
       - '.github/workflows/deploy-cn-preprod.yml'
       - 'scripts/cn-search-discovery.py'
