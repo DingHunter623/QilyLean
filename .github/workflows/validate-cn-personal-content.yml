@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'cn-site/**'
+      - 'links/index.html'
       - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
@@ -14,6 +15,7 @@ on:
       - main
     paths:
       - 'cn-site/**'
+      - 'links/index.html'
       - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
