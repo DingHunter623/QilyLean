@@ -67,3 +67,5 @@ assert "QILY-CN-KNOWLEDGE-ASSET-CATALOG" in knowledge
 assert 'data-qily-knowledge-discovery="v1"' in briefs
 print(f'CN front discovery verified: {catalog["generated"]} pages / {catalog["briefs"]} briefs.')
 PY
+
+python3 "$CN_ROOT/scripts/validate-brief-visual-parity.py"

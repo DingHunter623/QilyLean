@@ -8,20 +8,19 @@ are touched; CN shell, footer, ICP and commercial filters remain authoritative.
 from __future__ import annotations
 
 import html
-import importlib.util
 import json
 import re
-import shutil
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import quote, urlparse, unquote
+from urllib.parse import quote, urlparse, unquote, urljoin, urlunsplit
 
 ROOT=Path(__file__).resolve().parents[2]
 CN=ROOT/"cn-site"
 MIRROR=CN/"archive"/"media-manifest.txt"
 REPORT=CN/"archive"/"brief-visual-parity.json"
 sys.path.insert(0,str(CN/"scripts"))
+sys.dont_write_bytecode=True
 import importlib
 source=importlib.import_module("materialize-public-content-mirror")
 
@@ -35,10 +34,189 @@ CSS_SET = [
 MEDIA_EXT={".png",".jpg",".jpeg",".webp",".gif",".svg",".mp4",".webm"}
 SAFE_URL_ATTRS={"src","poster"}
 VISUAL_CLASSES=re.compile(r"^[\w\-\s]{1,350}$",re.U)
-ID_ATTR=re.compile(r"^[a-zA-Z][a-zA-Z0-9_\-:.]*$")
+ID_ATTR=re.compile(r"^[a-zA-Z0-9_][a-zA-Z0-9_\-:.]*$")
 SVG_PATTERN=re.compile(r"<svg\b[\s\S]*?</svg\s*>",re.I)
 SVG_RISK=re.compile(r"<\s*(?:script|foreignObject|iframe|object|embed)\b|\bon[a-z]+\s*=|javascript:|data:text/html|<\s*image\b[^>]*\bhref\s*=\s*['\"]https?://",re.I)
 STYLE_IMPORT=re.compile(r'(@import\s+url\(["\']?)(/[^"\')\s]+)(["\']?\)\s*;)',re.I)
+CONTENT_SCOPE='main#main[data-qily-brief-content="v2"]'
+SOURCE_STYLE_VERSION="20261011-brief-source-parity-v3"
+SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1"}
+CSS_GROUPS={"media","supports","container","layer"}
+
+def split_css(value:str, delimiters:str)->list[str]:
+    """Split CSS only outside strings, functions and attribute selectors.
+
+    In particular a comma in :is(), a semicolon in a quoted string, or the
+    braces in an SVG data URL must never become a new unscoped selector.
+    """
+    result=[];start=0;depth=0;quote_char="";escaped=False
+    for i,char in enumerate(value):
+        if escaped:escaped=False;continue
+        if char=="\\":escaped=True;continue
+        if quote_char:
+            if char==quote_char:quote_char=""
+            continue
+        if char in "\"'":quote_char=char;continue
+        if char in "([":depth+=1
+        elif char in ")]":depth-=1
+        elif not depth and char in delimiters:
+            result.append(value[start:i]);start=i+1
+    result.append(value[start:])
+    return result
+
+def css_rules(content:str):
+    """Read balanced CSS rules without a build-time third-party dependency."""
+    pos=0;length=len(content)
+    while pos<length:
+        while pos<length and content[pos].isspace():pos+=1
+        if pos==length:return
+        start=pos;depth=0;quote_char="";escaped=False
+        while pos<length:
+            char=content[pos]
+            if escaped:escaped=False
+            elif char=="\\":escaped=True
+            elif quote_char:
+                if char==quote_char:quote_char=""
+            elif char in "\"'":quote_char=char
+            elif content.startswith("/*",pos):
+                end=content.find("*/",pos+2)
+                if end<0:raise ValueError("Unterminated CSS comment")
+                content=content[:pos]+" "+content[end+2:];length=len(content);continue
+            elif char in "([":depth+=1
+            elif char in ")]":depth-=1
+            elif not depth and char in "{;":break
+            pos+=1
+        if pos==length:
+            if content[start:].strip():raise ValueError("Unterminated CSS rule")
+            return
+        prelude=content[start:pos].strip();delimiter=content[pos];pos+=1
+        if delimiter==";":yield prelude,None;continue
+        start=pos;depth=1;quote_char="";escaped=False
+        while pos<length and depth:
+            char=content[pos]
+            if escaped:escaped=False
+            elif char=="\\":escaped=True
+            elif quote_char:
+                if char==quote_char:quote_char=""
+            elif char in "\"'":quote_char=char
+            elif content.startswith("/*",pos):
+                end=content.find("*/",pos+2)
+                if end<0:raise ValueError("Unterminated CSS comment")
+                content=content[:pos]+" "+content[end+2:];length=len(content);continue
+            elif char=="{":depth+=1
+            elif char=="}":depth-=1
+            pos+=1
+        if depth:raise ValueError("Unterminated CSS block")
+        yield prelude,content[start:pos-1]
+
+def selector_compounds(selector:str):
+    """Return top-level compound spans; ignore selectors inside :is/:has."""
+    result=[];start=0;depth=0;quote_char="";escaped=False
+    for i,char in enumerate(selector):
+        if escaped:escaped=False;continue
+        if char=="\\":escaped=True;continue
+        if quote_char:
+            if char==quote_char:quote_char=""
+            continue
+        if char in "\"'":quote_char=char;continue
+        if char in "([":depth+=1
+        elif char in ")]":depth-=1
+        elif not depth and (char.isspace() or char in ">+~"):
+            if start<i:result.append((start,i,selector[start:i]))
+            start=i+1
+    if start<len(selector):result.append((start,len(selector),selector[start:]))
+    return result
+
+def scope_selector(selector:str)->str:
+    selector=selector.strip()
+    if not selector:return ""
+    compounds=selector_compounds(selector)
+    for start,end,compound in compounds:
+        if re.match(r"main(?:[^\w-]|$)",compound):
+            # A scoped main followed by +/~ could style a sibling in the CN shell.
+            if re.search(r"[+~]",selector[end:]):return ""
+            return selector[:start]+CONTENT_SCOPE+compound[4:]+selector[end:]
+    # Keep body conditions (layout/class/:has) as ancestors. Root/body-only
+    # rules instead target the content main, so no rule reaches the CN shell.
+    for start,end,compound in compounds:
+        if re.match(r"body(?:[^\w-]|$)",compound):
+            rest=selector[end:].strip()
+            if rest.startswith(("+","~")):return ""
+            return selector[:end]+" "+CONTENT_SCOPE+(" "+rest if rest else "")
+    if compounds and re.match(r"(?:html|:root)(?:[^\w-]|$)",compounds[0][2]):
+        start,end,compound=compounds[0]
+        rest=selector[end:].strip()
+        if rest.startswith(("+","~")):return ""
+        return CONTENT_SCOPE+(" "+rest if rest else "")
+    return CONTENT_SCOPE+" "+selector
+
+def safe_declarations(content:str,base_path:str="")->str:
+    declarations=[]
+    for item in split_css(content,";"):
+        prop,sep,value=item.partition(":");prop=prop.strip();value=value.strip()
+        if not sep or not re.fullmatch(r"(?:--|-)?[a-zA-Z][\w-]*",prop):continue
+        # CSS escaping is unnecessary for these local authored layouts and can
+        # disguise executable URLs/properties. Do not carry active CSS across.
+        if prop.lower() in {"behavior","-moz-binding"} or re.search(r"expression\s*\(|javascript:|vbscript:|[\\<>@]|/\*|\*/",value,re.I) or len(split_css(value,"{}"))>1:continue
+        failed=False
+        def rebase(match):
+            nonlocal failed
+            raw=match.group(1).strip().strip("\"'")
+            resolved=urljoin("/"+base_path,raw) if base_path else raw
+            mapped=local_media(resolved)
+            if not mapped:failed=True;return ""
+            return 'url("'+mapped+'")'
+        value=re.sub(r"url\(\s*([^)]*)\)",rebase,value,flags=re.I)
+        if failed:continue
+        declarations.append(prop+":"+value)
+    return ";".join(declarations)
+
+def scope_stylesheet(content:str,base_path:str="")->str:
+    output=[]
+    for prelude,body in css_rules(content):
+        if prelude.startswith("@"):
+            name=re.match(r"@([\w-]+)",prelude)
+            if body is not None and name and name.group(1).lower() in CSS_GROUPS:
+                nested=scope_stylesheet(body,base_path)
+                if nested:output.append(prelude+"{"+nested+"}")
+            elif body is None and name and name.group(1).lower()=="import" and prelude.startswith('@import url("/assets/brief-visual-source/'):
+                output.append(prelude+";")
+            continue
+        if body is None:continue
+        selectors=[]
+        for selector in split_css(prelude,","):
+            # The source once painted a second banner using pseudo-elements,
+            # including a date belonging to one particular issue. CN pages
+            # already contain the actual accessible hero and issue metadata.
+            if base_path=="qilylean/knowledge-brief.css" and re.search(r"(?:main\[data-qily-knowledge-brief\]|\.knowledge-brief-top-nav)::(?:before|after)",selector):continue
+            if base_path=="qilylean/daily-brief-unified-layout-v2.css" and '[id="2026-08-25"]' in selector:
+                if re.search(r"main\.page-shell:has\([^{}]+\)::(?:before|after)\s*$",selector):continue
+                if re.search(r'article\[id="2026-08-25"\]\s*>\s*\.date\s*$',selector):continue
+            scoped=scope_selector(selector)
+            if scoped:selectors.append(scoped)
+        declarations=safe_declarations(body,base_path)
+        if base_path=="qilylean/knowledge-brief.css" and re.search(r"main\[data-qily-knowledge-brief\]\s*$",prelude):
+            declarations=";".join(item for item in declarations.split(";") if not item.startswith("padding-top:"))
+        if selectors and declarations:output.append(",".join(selectors)+"{"+declarations+"}")
+    return "\n".join(output)
+
+def rewrite_brief_href(value:str,base_path:str="")->str:
+    value=value.strip()
+    if not value or value.startswith("#"):return value
+    parsed=urlparse(value)
+    if parsed.scheme and parsed.scheme not in {"http","https"}:return ""
+    if parsed.netloc and parsed.netloc.lower() not in {"qilylean.com","www.qilylean.com","qilylean.cn","www.qilylean.cn"}:
+        return source.rewrite_href(value)
+    resolved=urlparse(urljoin("/"+base_path,value))
+    if resolved.path in {"/qilylean/daily-insights.html","/qilylean/daily-insights/"}:
+        path="/briefs/"
+    elif Path(resolved.path).suffix.lower() in MEDIA_EXT:
+        path=local_media(resolved.path)
+    else:
+        original=source.source_file_for_url(resolved.path)
+        path=source.SOURCE_TO_URL.get(original,"") if original else ""
+        path=path or source.rewrite_href(resolved.path)
+    return urlunsplit(("","",path,resolved.query,resolved.fragment)) if path else ""
 
 def local_media(url:str)->str:
     p=urlparse(url)
@@ -62,8 +240,7 @@ def local_media(url:str)->str:
     return "/mirror-media/"+encoded
 
 def copy_stylesheet(rel:str,copied:set[str])->str:
-    """Copy source curated-brief CSS, preserving the exact styling rules;
-    recursively rebase CSS @imports so production never depends on .com CSS."""
+    """Localize source styles and confine every selector to brief content."""
     rel=unquote(rel.split("?",1)[0]).lstrip("/")
     if ".." in Path(rel).parts or Path(rel).suffix.lower()!=".css":return ""
     src=ROOT/rel
@@ -74,13 +251,9 @@ def copy_stylesheet(rel:str,copied:set[str])->str:
     content=src.read_text(encoding="utf-8",errors="ignore")
     def imports(match):
         imp=copy_stylesheet(match.group(2),copied)
-        return match.group(1)+imp+match.group(3) if imp else "/* skipped remote import */"
+        return '@import url("'+imp+'");' if imp else "/* skipped remote import */"
     content=STYLE_IMPORT.sub(imports,content)
-    def media_rebase(match):
-        u=match.group(2)
-        mapped=local_media(u)
-        return match.group(1)+mapped+match.group(3) if mapped else match.group(0)
-    content=re.sub(r'(url\(["\']?)(/(?!/)[^"\'\)\s]+)(["\']?\))',media_rebase,content)
+    content=scope_stylesheet(content,rel)
     dest=CN/"assets/brief-visual-source"/rel
     dest.parent.mkdir(parents=True,exist_ok=True)
     dest.write_text(content,encoding="utf-8")
@@ -96,10 +269,10 @@ class VisualSanitizer(HTMLParser):
     }
     skip_tags={"script","style","noscript","iframe","form","button","input","select","textarea","object","embed"}
     void={"img","br","hr","col","source"}
-    def __init__(self):
+    def __init__(self,base_path:str=""):
         super().__init__(convert_charrefs=True)
         self.parts=[];self.skip_stack=[];self.open_tags=[]
-        self.visual_nodes=0
+        self.visual_nodes=0;self.base_path=base_path;self.inline_styles=0
     def handle_starttag(self,tag,attrs):
         if self.skip_stack:
             if tag in self.skip_tags:self.skip_stack.append(tag)
@@ -114,14 +287,18 @@ class VisualSanitizer(HTMLParser):
             self.visual_nodes+=1
         identifier=a.get("id","")
         if identifier and ID_ATTR.fullmatch(identifier):kept.append(("id",identifier))
+        if a.get("style"):
+            visual_style=safe_declarations(a["style"],self.base_path)
+            if visual_style:
+                kept.append(("style",visual_style));self.inline_styles+=1
         for key,val in attrs:
             if val is None:continue
-            if key in {"aria-label","role","datetime","data-label","data-parity-svg","width","height","colspan","rowspan"} or re.fullmatch(r"data-(?:qily|brief|daily|one-point|section|step|item|visual|[a-z0-9_-]{2,35})[a-z0-9_-]*",key or ""):
+            if key in {"aria-label","aria-labelledby","aria-describedby","aria-hidden","aria-current","role","datetime","data-label","data-parity-svg","width","height","colspan","rowspan"} or re.fullmatch(r"data-(?:qily|brief|daily|one-point|section|step|item|visual|[a-z0-9_-]{2,35})[a-z0-9_-]*",key or ""):
                 if len(val)<400 and not re.search(r"javascript:|<|>|onerror|onload",val,re.I):
                     if key in {"width","height","colspan","rowspan"} and not val.isdigit():continue
                     if key not in {"class","id"}:kept.append((key,val))
         if tag=="a":
-            href=source.rewrite_href(a.get("href",""))
+            href=rewrite_brief_href(a.get("href",""),self.base_path)
             if href and not href.lower().startswith(("javascript:","mailto:","tel:")):
                 kept.append(("href",href))
                 if href.startswith(("http://","https://")):kept.extend([("target","_blank"),("rel","noopener noreferrer")])
@@ -158,7 +335,7 @@ class VisualSanitizer(HTMLParser):
     def handle_entityref(self,name):
         if not self.skip_stack:self.parts.append("&"+name+";")
 
-def sanitize_main(original:str):
+def sanitize_main(original:str,base_path:str=""):
     svgs=[]
     def svg_replace(m):
         raw=m.group(0)
@@ -168,14 +345,32 @@ def sanitize_main(original:str):
     original=SVG_PATTERN.sub(svg_replace,original)
     # Forms and feedback panels contain personal contact and commercial conversion UI.
     original=re.sub(r'<section\b[^>]*class=["\'][^"\']*\bbrief-feedback\b[^"\']*["\'][^>]*>[\s\S]*?</section\s*>',"",original,flags=re.I)
-    parser=VisualSanitizer()
+    parser=VisualSanitizer(base_path)
     parser.feed(original)
     safe="".join(parser.parts)
     safe=source.remove_forbidden_blocks(safe)
     for i,svg in enumerate(svgs):
         safe=safe.replace('<span data-parity-svg="'+str(i)+'"></span>',svg)
     if len(source.clean_text(safe))<100:raise RuntimeError("brief content unexpectedly empty after filtering")
+    # Shared with the nonbrief renderer: retain its three-value API contract.
     return safe,len(svgs),parser.visual_nodes
+
+def ensure_brief_heading(content:str,source_path:Path)->str:
+    """Replace a source CSS-only banner with a real, accessible module hero."""
+    if re.search(r"<h1\b",content,re.I):return content
+    meta=re.search(r'<div\b[^>]*class=["\'][^"\']*\bdate\b[^"\']*["\'][^>]*>([\s\S]*?)</div\s*>',content,re.I)
+    label=source.clean_text(meta.group(1)) if meta else source_path.stem
+    return ('<section class="daily-hero compact" data-qily-brief-generated-hero="v2">'
+        '<div class="daily-inner"><span>CURATED ENGINEERING BRIEF</span>'
+        '<h1>精选简报</h1><p>'+html.escape(label)+'</p></div></section>'+content)
+
+def contain_brief_tables(content:str)->str:
+    """Keep dense engineering tables scrollable without widening the page."""
+    def surround(match):
+        if match.group(1):return match.group(0)+'</div>'
+        return ('<div class="qily-brief-table-scroll" role="region" tabindex="0" '
+            'aria-label="表格，可左右滚动">'+match.group(0))
+    return re.sub(r'<(/?)table\b[^>]*>',surround,content,flags=re.I)
 
 def main():
     copied=set()
@@ -188,7 +383,10 @@ def main():
         title,desc=source.extract_meta(raw)
         mainmatch=re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>',raw,re.I)
         if not mainmatch:raise SystemExit("Missing original international main: "+str(src.path))
-        safe,svg_count,visual_nodes=sanitize_main(mainmatch.group(2))
+        safe,svg_count,visual_nodes=sanitize_main(mainmatch.group(2),src.path.as_posix())
+        inline_style_count=len(re.findall(r'\bstyle=["\']',safe,re.I))
+        safe=ensure_brief_heading(safe,src.path)
+        safe=contain_brief_tables(safe)
         bodymatch=re.search(r'<body\b([^>]*)>',raw,re.I)
         bodyattrs=bodymatch.group(1) if bodymatch else ""
         source_classes=re.search(r'\bclass=["\']([^"\']+)["\']',bodyattrs)
@@ -221,15 +419,16 @@ def main():
         ]
         for href in rel_styles:
             if href not in styles:styles.append(href)
-        style_tags="".join('<link rel="stylesheet" href="'+html.escape(href,quote=True)+'?v=20261011-brief-source-parity-v1">' for href in styles)
+        style_tags="".join('<link rel="stylesheet" href="'+html.escape(href,quote=True)+'?v='+SOURCE_STYLE_VERSION+'">' for href in styles)
         # Source page inline visual rule blocks only (never critical navigation,
         # Dock or inline scripts). Brings back legacy section-number/card hierarchy.
         blocks=[]
         for m in re.finditer(r'<style\b([^>]*)>([\s\S]*?)</style\s*>',raw,re.I):
             sid=re.search(r'\bid=["\']([^"\']+)["\']',m.group(1),re.I)
-            if sid and sid.group(1) in {"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1"}:
-                blocks.append(m.group(2))
-        inline_css="<style>"+"\n".join(blocks)+"</style>" if blocks else ""
+            if not sid or sid.group(1) in SOURCE_INLINE_STYLE_IDS:
+                localized=scope_stylesheet(m.group(2),src.path.as_posix())
+                if localized:blocks.append(localized)
+        inline_css='<style data-qily-brief-source-style="v2">'+"\n".join(blocks)+"</style>" if blocks else ""
         top=(
             '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
@@ -242,13 +441,13 @@ def main():
             '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2">'
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
-            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261011-brief-parity-v1">'
+            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261011-brief-parity-v3">'
             +inline_css+
             '<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16">'
             '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">'
             '</head><body class="'+html.escape(" ".join(classes),quote=True)+'" data-qily-daily-layout="'+layout_val+'" data-qily-brief-parity="v1">'
             '<a class="skip" href="#main">跳到主要内容</a>'+source.header("briefs")+
-            '<main id="main"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
+            '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
             '<script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script>'
             '</body></html>'
@@ -256,7 +455,7 @@ def main():
         src.out.write_text(top,encoding="utf-8")
         if main_data and main_data not in top:raise SystemExit("brief visual classes not preserved: "+str(src.path))
         if svg_count != len(re.findall(r"<svg\b",top,re.I)):raise SystemExit("inline SVG lost: "+str(src.path))
-        evidence.append({"source":str(src.path),"url":src.url,"layout":layout_val,"source_svg":svg_count,"cn_svg":len(re.findall(r"<svg\b",top,re.I)),"visual_class_nodes":visual_nodes,"source_css":rel_styles})
+        evidence.append({"source":str(src.path),"url":src.url,"layout":layout_val,"source_svg":svg_count,"cn_svg":len(re.findall(r"<svg\b",top,re.I)),"visual_class_nodes":visual_nodes,"inline_style_nodes":inline_style_count,"scoped_style_blocks":len(blocks),"source_css":rel_styles})
     manifest=set(line.strip() for line in MIRROR.read_text(encoding="utf-8").splitlines() if line.strip())
     manifest.update(source.MIRROR_MEDIA)
     MIRROR.write_text("\n".join(sorted(manifest))+"\n",encoding="utf-8")
