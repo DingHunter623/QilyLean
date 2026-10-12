@@ -55,6 +55,24 @@ def assert_scoped_css(css):
 
 
 class RendererRegression(unittest.TestCase):
+    def test_filtered_void_controls_never_consume_later_content(self):
+        parser=visual.VisualSanitizer()
+        parser.feed('<input type="search"><p>正文保留</p><embed src="bad"><section id="tail">后续章节</section>')
+        self.assertEqual(''.join(parser.parts),'<p>正文保留</p><section id="tail">后续章节</section>')
+        self.assertFalse(parser.skip_stack)
+
+    def test_approved_controls_keep_semantics_without_active_attributes(self):
+        parser=visual.VisualSanitizer('knowledge/terminology.html',public_controls=True)
+        parser.feed('<label for="termSearch">查找</label><input id="termSearch" type="search" placeholder="搜索术语" onfocus="bad()"><button data-plan-preview hidden onclick="bad()">预览</button><button onclick="window.print()">打印</button><script>bad()</script><section id="engineering">保留</section>')
+        result=''.join(parser.parts)
+        self.assertIn('for="termSearch"',result)
+        self.assertIn('type="search" placeholder="搜索术语"',result)
+        self.assertIn('data-plan-preview="" hidden=""',result)
+        self.assertIn('data-public-print=""',result)
+        self.assertIn('id="engineering"',result)
+        self.assertNotIn('bad()',result)
+        self.assertFalse(parser.skip_stack)
+
     def test_cn_aircraft_mapping_is_site_specific(self):
         original='/assets/qilylean-aircraft-hero-approved-20260826.png'
         china='/assets/qilylean-aircraft-hero-cn-v2-20260919.png'
@@ -203,7 +221,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v10' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v11' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)

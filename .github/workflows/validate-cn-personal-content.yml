@@ -9,6 +9,7 @@ on:
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/cn-nonbrief-hero-contrast.spec.js'
+      - 'scripts/cn-public-interactions.spec.js'
       - 'scripts/brief-international-corpus-visual.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
       - 'scripts/test-cn-translation-state.js'
@@ -22,6 +23,7 @@ on:
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/cn-nonbrief-hero-contrast.spec.js'
+      - 'scripts/cn-public-interactions.spec.js'
       - 'scripts/brief-international-corpus-visual.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
       - 'scripts/test-cn-translation-state.js'
@@ -168,6 +170,11 @@ jobs:
           echo $! >/tmp/qily-global-brief-http.pid
           sleep 1
           curl --fail --silent http://127.0.0.1:4175/qilylean/daily/2026-09-13.html >/dev/null
+
+      - name: Browser-verified local public-content interactions
+        env:
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/cn-public-interactions.spec.js --reporter=line --workers=1
 
       - name: Browser-computed nonbrief knowledge hero contrast audit
         env:

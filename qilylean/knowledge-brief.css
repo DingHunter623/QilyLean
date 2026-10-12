@@ -468,7 +468,7 @@ html body.qily-knowledge-brief-page .knowledge-brief-top-nav::before{
   z-index:3!important;
   top:112px!important;
   left:max(clamp(18px,2.2vw,56px),calc((100% - var(--qily-content-axis,1560px))/2))!important;
-  content:"2026-09-04｜AI与工业工程"!important;
+  content:attr(data-brief-meta)!important;
   color:#edf9f6!important;
   -webkit-text-fill-color:#edf9f6!important;
   font-size:clamp(17px,1.5vw,20px)!important;

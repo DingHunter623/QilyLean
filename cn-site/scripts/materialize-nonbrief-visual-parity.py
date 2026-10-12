@@ -50,7 +50,7 @@ def main()->None:
         fragment=source.extract_fragment(raw)
         fragment=recover_relative_media(fragment,page.path)
         try:
-            body,svg_count,visual_nodes=brief.sanitize_main(fragment)
+            body,svg_count,visual_nodes=brief.sanitize_main(fragment,page.path.as_posix(),public_controls=True)
             visual_mode="source-structure"
         except RuntimeError as exc:
             if "brief content unexpectedly empty after filtering" not in str(exc):

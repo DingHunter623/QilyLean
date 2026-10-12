@@ -35,6 +35,7 @@ node "$REPO_ROOT/scripts/publish-daily-brief-layout-guard-v1.js"
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
 python3 "$CN_ROOT/scripts/materialize-brief-visual-parity.py"
 python3 "$CN_ROOT/scripts/materialize-nonbrief-visual-parity.py"
+python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 # Synchronize non-commercial public directory from the international SSOT.
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
@@ -76,3 +77,6 @@ print(f'CN front discovery verified: {catalog["generated"]} pages / {catalog["br
 PY
 
 python3 "$CN_ROOT/scripts/validate-brief-visual-parity.py"
+python3 "$CN_ROOT/scripts/validate-public-interactions.py"
+
+python3 "$CN_ROOT/scripts/validate-dense-brief-tables.py"

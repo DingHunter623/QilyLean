@@ -79,7 +79,7 @@ if (aiManufacturingBrief) {
   includes(aiManufacturingBrief, '<header class="qily-site-header">', 'AI manufacturing brief inherits the QilyLean site header');
   includes(aiManufacturingBrief, '<a class="qily-brand" href="/">QilyLean | 启力精益</a>', 'AI manufacturing brief inherits the QilyLean brand Logo');
   matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
-  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v3', 'AI manufacturing brief loads the knowledge-asset visual component');
+  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20261012-brief-metadata-v4', 'AI manufacturing brief loads the knowledge-asset visual component');
   const aiManufacturingBody = (aiManufacturingBrief.match(/<body\b[^>]*>/i) || [''])[0];
   assert(/qily-knowledge-brief-page/.test(aiManufacturingBody) && /module-page/.test(aiManufacturingBody), 'AI manufacturing brief uses the governed knowledge-asset layout');
   const topNavIndex = aiManufacturingBrief.indexOf('class="brief-adjacent top"');
