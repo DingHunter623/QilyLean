@@ -295,6 +295,17 @@ def main() -> None:
                 opening = opening.replace("高清原图", "图纸")
                 return opening + content + '</button>'
             doc = re.sub(r'(<button\b[^>]*\bdata-plan-preview[^>]*>)([\s\S]*?)</button>', preview_asset, doc)
+            doc = doc.replace("9张高清规划图纸", "9张规划图纸")
+            doc = doc.replace("点击缩略图后进入仓库高清原图受控预览", "点击缩略图后进入图纸预览")
+        if path == "qilylean/production-operations-organization.html":
+            # Editable source attachments include contact sheets and are not
+            # published by the CN mirror. Point the public actions to the
+            # approved online galleries instead of leaving inert downloads.
+            doc = doc.replace("支持PPT与Excel在线预览和下载", "支持PPT与Excel资料在线预览")
+            doc = doc.replace('href="#downloads">下载附件</a>', 'href="#downloads">资料导航</a>')
+            doc = doc.replace('>DOWNLOADS</span><h2>附件下载</h2>', '>ONLINE RESOURCES</span><h2>资料导航</h2>')
+            doc = doc.replace('<a class="button">下载PPT</a>', '<a class="button" href="#ppt-preview">查看管理汇报资料</a>')
+            doc = doc.replace('<a class="button secondary">下载Excel</a>', '<a class="button secondary" href="#excel-preview">查看岗位与KPI资料</a>')
         doc = re.sub(r'<button\b(?![^>]*data-public-print)([^>]*\bclass="[^"]*(?:opl-btn|qily-term-pdf-action)[^"]*"[^>]*)>', r'<button\1 data-public-print>', doc)
         if 'canvas' in doc:
             key = "QilyLeanFlowPreview2026" if path.endswith("reference-one-piece-flow.html") else "QilyLeanPreview2026"

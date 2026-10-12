@@ -96,6 +96,8 @@ def main() -> None:
             original = source.remove_forbidden_blocks(source.extract_fragment((ROOT / page.path).read_text(encoding="utf-8")))
             expected = len(re.findall(r'<button\b[^>]*\bclass="preview-open"', original))
             require(len(previews) == expected, "Public organization preview controls lost")
+            require(not re.search(r'<a\b[^>]*>下载(?:PPT|Excel)</a>|<h3>官网与</h3>', doc), "Inert attachment/contact residue remains")
+            require(all('href' in a for a in parsed.matching('a') if 'button' in str(a.get('class','')).split()), "Public resource action has no destination")
         if item["source"] in ("knowledge/pdca-gantt-milestone-opl.html", "knowledge/terminology/mtbf.html", "knowledge/terminology/mttr.html"):
             require(bool(parsed.matching("button", "data-public-print")), "Public print action missing: " + item["url"])
         checked += 1

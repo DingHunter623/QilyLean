@@ -48,6 +48,9 @@ def main()->None:
     for page in eligible:
         raw=(ROOT/page.path).read_text(encoding="utf-8",errors="ignore")
         fragment=source.extract_fragment(raw)
+        # Remove the whole source contact panel before unsupported wrappers
+        # are unwrapped; otherwise its empty labels survive as orphan content.
+        fragment=re.sub(r'<aside\b[^>]*\bclass="[^"]*\bcontact-panel\b[^"]*"[^>]*>[\s\S]*?</aside>', '', fragment, flags=re.I)
         fragment=recover_relative_media(fragment,page.path)
         try:
             body,svg_count,visual_nodes=brief.sanitize_main(fragment,page.path.as_posix(),public_controls=True)
