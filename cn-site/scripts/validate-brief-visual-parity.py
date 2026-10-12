@@ -55,6 +55,21 @@ def assert_scoped_css(css):
 
 
 class RendererRegression(unittest.TestCase):
+    def test_cn_aircraft_mapping_is_site_specific(self):
+        original='/assets/qilylean-aircraft-hero-approved-20260826.png'
+        china='/assets/qilylean-aircraft-hero-cn-v2-20260919.png'
+        for url in [original,original+'?v=source','https://qilylean.com'+original]:
+            self.assertEqual(visual.local_media(url),china)
+        self.assertEqual(visual.rewrite_brief_href(original+'?view=full'),china+'?view=full')
+        self.assertEqual(visual.local_media('https://untrusted.test'+original),'')
+        home=Page((visual.CN/'index.html').read_text(encoding='utf-8'))
+        self.assertIn(china,[urlparse(attrs.get('src','')).path for tag,attrs in home.nodes if tag=='img'])
+        self.assertNotEqual((visual.CN/china.lstrip('/')).read_bytes(),(visual.ROOT/original.lstrip('/')).read_bytes())
+        international=(visual.ROOT/'qilylean/daily/2026-10-11.html').read_text(encoding='utf-8')
+        self.assertIn('<img src="'+original+'"',international)
+        self.assertIn('https://qilylean.com'+original,international)
+        self.assertNotIn(china,international)
+
     def test_dense_tables_get_keyboard_scroll_regions(self):
         source='<section><table class="rule-table"><tr><td>CT</td></tr></table></section>'
         result=visual.contain_brief_tables(source)
@@ -177,6 +192,15 @@ def validate_generated_corpus():
         source_main=re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>',original,re.I).group(1)
         rendered_main=re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>',generated,re.I).group(1)
         original_page=Page(source_main);page=Page(generated);main_page=Page(rendered_main)
+        translation_css=[attrs for tag,attrs in page.nodes if tag=='link' and urlparse(attrs.get('href','')).path=='/assets/cn-translate-baidu-v1.css']
+        translation_js=[attrs for tag,attrs in page.nodes if tag=='script' and urlparse(attrs.get('src','')).path=='/assets/cn-translate-baidu-v1.js']
+        assert len(translation_css)==len(translation_js)==1,(src.path,'public translator dependencies missing or duplicated')
+        assert translation_css[0].get('id')=='qilyCnDomesticTranslateV1Stylesheet',src.path
+        assert 'defer' in translation_js[0],src.path
+        assert generated.index(visual.source.TRANSLATION_STYLESHEET)<generated.index('/assets/qilylean-vi-v2.css'),src.path
+        assert generated.index(visual.source.TRANSLATION_SCRIPT)<generated.index('/assets/cn-nav-rail-v1.js'),src.path
+        assert any(tag=='header' and 'site-header' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
+        assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
         assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v5' in generated,(src.path,'stale brief CSS version')
@@ -196,6 +220,9 @@ def validate_generated_corpus():
         expected_images=[url for url in expected_images if url]
         actual_images=[attrs.get('src','') for tag,attrs in main_page.nodes if tag=='img']
         assert expected_images==actual_images,(src.path,'source diagram/image changed')
+        if src.path.as_posix()=='qilylean/daily/2026-10-11.html':
+            assert '/assets/qilylean-aircraft-hero-cn-v2-20260919.png' in actual_images,(src.path,'China brand image missing')
+            assert not any('qilylean-aircraft-hero-approved-20260826.png' in url for url in actual_images),src.path
         counts['images']+=len(actual_images)
         original_times=[attrs['datetime'] for tag,attrs in original_page.nodes if tag=='time' and attrs.get('datetime')]
         generated_times=[attrs['datetime'] for tag,attrs in main_page.nodes if tag=='time' and attrs.get('datetime')]

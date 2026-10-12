@@ -43,6 +43,24 @@ async function auditPage(page, route, limits, label){
     }));
     return {
       briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
+      translation:(()=>{
+        const controls=[...document.querySelectorAll('[data-qily-header-utility="translation"]')];
+        const control=document.querySelector('#qilyCnTranslateV3');
+        const inner=document.querySelector('.site-header .header-inner');
+        const header=document.querySelector('header.site-header');
+        const select=control&&control.querySelector('select[aria-label="选择网站语言"]');
+        if(!control||!select||!header)return {count:controls.length,visible:false};
+        const r=control.getBoundingClientRect(),h=header.getBoundingClientRect(),s=select.getBoundingClientRect();
+        const style=getComputedStyle(select);
+        return {
+          count:controls.length,
+          directMount:control.parentElement===inner,
+          visible:style.display!=='none'&&style.visibility!=='hidden'&&Number(style.opacity)>0&&s.width>0&&s.height>0,
+          enabled:!select.disabled&&style.pointerEvents!=='none',
+          insideHeader:r.left>=h.left-1&&r.right<=h.right+1&&r.top>=h.top-1&&r.bottom<=h.bottom+1,
+          insideViewport:r.left>=-1&&r.right<=document.documentElement.clientWidth+1
+        };
+      })(),
       heroLabels:[...document.querySelectorAll('.hero .eyebrow,.page-hero .hero-eyebrow,.module-hero .module-eyebrow')].map(el=>{
         const style=getComputedStyle(el);
         return {text:el.textContent.trim(),color:style.color,fill:style.webkitTextFillColor,weight:style.fontWeight};
@@ -112,6 +130,10 @@ async function auditPage(page, route, limits, label){
   }
   if(/^\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/$/.test(route)) expect(data.briefReading,route+' brief rendering markers').toBeTruthy();
   if(data.briefReading){
+    expect(data.translation.count,route+' public translator must be unique').toBe(1);
+    for(const key of ['directMount','visible','enabled','insideHeader','insideViewport']){
+      expect(data.translation[key],route+' public translator '+key).toBe(true);
+    }
     // Authored brief components use a larger, explicit reading hierarchy;
     // retain the existing shell contract and the legacy limits for other pages.
     expect(route).toMatch(/^\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/$/);
