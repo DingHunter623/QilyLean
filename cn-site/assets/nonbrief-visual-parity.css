@@ -59,7 +59,7 @@ html:root:root body main#main .mirror-article-fidelity
 }
 html:root:root body main#main .mirror-article-fidelity
 :is(.module-hero,.tool-hero,.hero) :is(.module-eyebrow,.tool-eyebrow,.eyebrow){
-  color:#ffe3a0!important;-webkit-text-fill-color:#ffe3a0!important;
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
   opacity:1!important;font-weight:400!important;
 }
 /* On any light pill/button in the hero, dark text is essential: white on
