@@ -44,3 +44,50 @@
 .mirror-article-fidelity :is(.module-hero,.tool-hero,.hero){padding:22px 16px}
 .mirror-article-fidelity :is(.module-card,.tool-card,.project-fact,.project-story,.project-verification-note,.project-media-card,.travel-card,.step,.design-feature,.formula,.viewer,.article){padding:16px}
 }
+
+/* QILY-CN-MIRROR-HERO-CONTRAST-V2 | 2026-10-12
+ * Source: /knowledge/terminology.html -> CN /archive/knowledge/terminology/.
+ * Visual defect: sitewide heading/link colors override pale-on-teal text and
+ * pale buttons inherit white text, making 193-term hero effectively invisible.
+ * Confine override to copied non-brief article content. Never modify CN shell,
+ * sitewide brand, outside-the-hero sections, or the source international site.
+ */
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero) :is(h1,h2,h3,h4,.module-lead,.tool-lead,p:not([data-qily-light-surface])){
+  color:#f7fcfa!important;-webkit-text-fill-color:#f7fcfa!important;
+  opacity:1!important;
+}
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero) :is(.module-eyebrow,.tool-eyebrow,.eyebrow){
+  color:#ffe3a0!important;-webkit-text-fill-color:#ffe3a0!important;
+  opacity:1!important;font-weight:400!important;
+}
+/* On any light pill/button in the hero, dark text is essential: white on
+ * white was invisible on the terminology 8-category sub-navigation. */
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero)
+:is(.module-subnav,.module-actions,.tool-actions) a{
+  color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  background:#fff!important;border-color:#b9d9d4!important;opacity:1!important;
+  text-decoration:none!important;
+}
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero)
+:is(.module-subnav,.module-actions,.tool-actions) a :is(span,strong,b,small){
+  color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;opacity:1!important;
+}
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero)
+:is(.module-subnav,.module-actions,.tool-actions) a:is(:hover,:focus-visible){
+  background:#fff7df!important;border-color:#caa15f!important;
+}
+/* Count/notice strip retains its own light surface, not the hero color. */
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero) [data-qily-light-surface]{
+  background:#edf8f6!important;color:#315f64!important;
+  -webkit-text-fill-color:#315f64!important;opacity:1!important;
+}
+html:root:root body main#main .mirror-article-fidelity
+:is(.module-hero,.tool-hero,.hero) [data-qily-light-surface] :is(strong,b){
+  color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+}
