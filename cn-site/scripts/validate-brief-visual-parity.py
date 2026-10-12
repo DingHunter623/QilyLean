@@ -256,7 +256,7 @@ def validate_generated_corpus():
     assert '.scene-flow>.scene-arrow' in mirrored_guard,'CN source brief flow guard missing'
     for date in ('2026-09-04','2026-08-25'):
         international=(visual.ROOT/'qilylean/daily'/f'{date}.html').read_text(encoding='utf-8')
-        assert 'site-daily-brief-layout-guard-v1.css?v=20261012-selected-brief-contrast-v6' in international, (date,'stale international visual CSS')
+        assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-key-width-v7' in international, (date,'stale international visual CSS')
     # Regression: two-column key/evidence tables must never return to a 50/50
     # fixed layout. This explicitly covers section 8 of the 2026-09-13 issue,
     # and shares selectors for every cloned Selected Brief archive page.
