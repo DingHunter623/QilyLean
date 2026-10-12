@@ -72,6 +72,35 @@ async function auditPage(page, route, limits, label){
       briefCaptions:read('main figcaption, main .date, main time, main .tag').slice(0,24),
       small:read('main small, main .breadcrumbs, main .meta, main .article-meta').slice(0,24),
       labels:read('main .eyebrow, main .hero-eyebrow, main .module-eyebrow, main .section-kicker, main .module-kicker, main .section-head>small').slice(0,24),
+      // Complete Selected Brief comparison-table audit on all 381 cloned issues.
+      // Check rendered widths, not simply CSS selector presence. Short label
+      // columns may not consume a third/half of the article unnecessarily.
+      comparisonTables:[...document.querySelectorAll('main .qily-brief-table-scroll>table')].map((table,index)=>{
+        const head=table.querySelector('thead tr:first-child');
+        const headers=head?[...head.children].filter(el=>/^(TH|TD)$/.test(el.tagName)):[];
+        if(headers.length!==2 && headers.length!==3)return null;
+        if(headers.some(el=>el.colSpan>1 || el.rowSpan>1))return null;
+        const rows=[...table.querySelectorAll('tbody tr')].filter(row=>row.querySelectorAll(':scope>td').length===headers.length);
+        if(rows.length<2)return null;
+        const labels=rows.map(row=>(row.querySelector(':scope>td:first-child')?.textContent||'').trim().replace(/\\s+/g,''));
+        const heading=(headers[0].textContent||'').trim().replace(/\\s+/g,'');
+        if(!labels.length || labels.some(x=>!x || x.length>16) || heading.length>16)return null;
+        const first=rows[0].querySelector(':scope>td:first-child');
+        if(!first)return null;
+        const tdStyle=getComputedStyle(first),tableRect=table.getBoundingClientRect();
+        const cellRect=first.getBoundingClientRect();
+        const font=parseFloat(tdStyle.fontSize)||20;
+        const pad=(parseFloat(tdStyle.paddingLeft)||0)+(parseFloat(tdStyle.paddingRight)||0);
+        const estimatedNeeded=Math.max(heading.length,...labels.map(x=>x.length))*font+pad+12;
+        const wastage=Math.max(0,cellRect.width-estimatedNeeded);
+        const headerStyle=getComputedStyle(headers[0]);
+        return {index,columns:headers.length,header:heading,rows:rows.length,
+          width:tableRect.width,firstWidth:cellRect.width,wastage,estimatedNeeded,
+          firstShare:cellRect.width/Math.max(1,tableRect.width),
+          nowrap:tdStyle.whiteSpace==='nowrap',headerBg:headerStyle.backgroundColor,
+          headerColor:headerStyle.color,authoredComparison:!!table.closest('.lean-brief-table')
+        };
+      }).filter(Boolean),
       href:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')||''),
       header:(()=>{
         const inner=document.querySelector('.site-header .header-inner');
@@ -130,6 +159,20 @@ async function auditPage(page, route, limits, label){
   }
   if(/^\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/$/.test(route)) expect(data.briefReading,route+' brief rendering markers').toBeTruthy();
   if(data.briefReading){
+    for(const item of data.comparisonTables){
+      if(item.width<=600)continue;
+      const detail=route+' '+label+' '+item.columns+'col '+item.header+' (w='+Math.round(item.width)+', first='+Math.round(item.firstWidth)+', estimated='+Math.round(item.estimatedNeeded)+')';
+      // A visible oversize first column is a layout defect even when all
+      // typography and scroll containment checks happen to pass.
+      expect(item.wastage,detail+' avoid wasted short-key column').toBeLessThanOrEqual(Math.max(85,item.width*0.085));
+      // On authentic two/three-column brief comparisons the short key must
+      // remain intact. Tables with 4+ columns are intentionally excluded.
+      expect(item.nowrap,detail+' short labels must stay on one line').toBe(true);
+      if(item.authoredComparison){
+        expect(item.headerBg,detail+' international deep-teal header').toBe('rgb(15, 75, 90)');
+        expect(item.headerColor,detail+' clear header text').toBe('rgb(255, 255, 255)');
+      }
+    }
     expect(data.translation.count,route+' public translator must be unique').toBe(1);
     for(const key of ['directMount','visible','enabled','insideHeader','insideViewport']){
       expect(data.translation[key],route+' public translator '+key).toBe(true);
