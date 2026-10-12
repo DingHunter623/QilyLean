@@ -203,7 +203,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v8' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v9' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -277,6 +277,11 @@ def validate_generated_corpus():
     assert ':nth-child(3):last-child' in cn_guard,'three-column guard must not affect 4+ column data tables'
     assert 'white-space:nowrap!important' in cn_guard,'short three-column labels must remain on one line'
     assert '<th>核心工作</th>' in example and '<th>需要建立的内容</th>' in example and '<th>应当回答的问题</th>' in example, 'three-column screenshot comparison table lost'
+    # Entire cloned issue corpus must retain the international comparison
+    # visual hierarchy (deep-teal headers, compact cells and scrollable mobile
+    # tables) with the final archive asset version, not a locally patched page.
+    assert 'QILY-CN-BRIEF-INTL-COMPARISON-SURFACE-V9' in cn_guard, 'international-style comparison surface missing'
+    assert 'min-width:860px!important' in cn_guard, 'mobile three-column reading width missing'
     # A custom checklist and adjacent navigation must keep the canonical readable scale.
     typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
     for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):
