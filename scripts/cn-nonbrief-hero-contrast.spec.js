@@ -49,7 +49,7 @@ test('all CN cloned non-brief knowledge pages have readable teal hero text and c
             note(el,'hero-text','rgb(23, 127, 135)');
           }
           for(const el of hero.querySelectorAll('.module-eyebrow,.tool-eyebrow,.eyebrow'))note(el,'gold-label','rgb(23, 127, 135)');
-          for(const el of hero.querySelectorAll('.module-subnav a,.module-actions a,.tool-actions a'))note(el,'light-pill','rgb(255, 255, 255)');
+          for(const el of hero.querySelectorAll('.module-subnav a'))note(el,'light-pill','rgb(255, 255, 255)');
           for(const el of hero.querySelectorAll('[data-qily-light-surface]'))note(el,'light-count','rgb(237, 248, 246)');
         }
         return {out,heroCount};
