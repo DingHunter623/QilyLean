@@ -11,6 +11,7 @@
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
+const firstPaint=require('./materialize-public-shell-first-paint-v1.js');
 const ROOT=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const ID='qilyDailyBriefLayoutGuardV1';
@@ -31,13 +32,15 @@ function install(html,rel){
   out=out.replace(/\s*<style\b[^>]*id=["']qilyDailyBriefSequenceOffV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');
   out=out.replace(/(<div\b[^>]*class=["'][^"']*\bsection-title\b[^"']*["'][^>]*>)\s*<span\b[^>]*class=["'][^"']*\bno\b[^"']*["'][^>]*>\s*\d{1,3}\s*<\/span>/gi,'$1');
   if(!/<\/head>/i.test(out))throw new Error(`${rel}: missing </head>`);
-  return out.replace(/<\/head>/i,`${TAG}\n${SEQUENCE_OFF_STYLE}\n</head>`);
+  out=out.replace(/<\/head>/i,`${TAG}\n${SEQUENCE_OFF_STYLE}\n</head>`);
+  return firstPaint.materialize(out,rel);
 }
 
 const changed=[];
 let count=0;
 for(const rel of files()){
   const abs=path.join(ROOT,rel);const html=fs.readFileSync(abs,'utf8');const next=install(html,rel);count+=1;
+  if(install(next,rel)!==next)throw new Error(`${rel}: brief publisher must be idempotent`);
   if(next!==html){changed.push(rel);if(!checkOnly)fs.writeFileSync(abs,next,'utf8')}
 }
 if(count<350)throw new Error(`Unexpected dated Selected Brief coverage: ${count}`);
