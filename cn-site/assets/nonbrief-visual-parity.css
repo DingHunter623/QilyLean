@@ -66,19 +66,19 @@ html:root:root body main#main .mirror-article-fidelity
  * white was invisible on the terminology 8-category sub-navigation. */
 html:root:root body main#main .mirror-article-fidelity
 :is(.module-hero,.tool-hero,.hero)
-:is(.module-subnav,.module-actions,.tool-actions) a{
+.module-subnav a{
   color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
   background:#fff!important;border-color:#b9d9d4!important;opacity:1!important;
   text-decoration:none!important;
 }
 html:root:root body main#main .mirror-article-fidelity
 :is(.module-hero,.tool-hero,.hero)
-:is(.module-subnav,.module-actions,.tool-actions) a :is(span,strong,b,small){
+.module-subnav a :is(span,strong,b,small){
   color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;opacity:1!important;
 }
 html:root:root body main#main .mirror-article-fidelity
 :is(.module-hero,.tool-hero,.hero)
-:is(.module-subnav,.module-actions,.tool-actions) a:is(:hover,:focus-visible){
+.module-subnav a:is(:hover,:focus-visible){
   background:#fff7df!important;border-color:#caa15f!important;
 }
 /* Count/notice strip retains its own light surface, not the hero color. */
