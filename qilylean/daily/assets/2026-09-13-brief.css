@@ -113,3 +113,17 @@ body.lean-operating-brief .lean-brief-case-note{
 html body.lean-operating-brief .knowledge-brief-top-nav::before{
   content:attr(data-brief-meta)!important;
 }
+
+/* QILY-SEP13-TABLE-KEY-LABELS-V7 | screenshot acceptance.
+ * Use a compact first column only for true 2-column comparisons.
+ * Preserve the existing three-column section 3 engineering matrix. */
+body.lean-operating-brief .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child){
+  table-layout:auto!important;
+}
+body.lean-operating-brief .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child{
+  width:1%!important;white-space:nowrap!important;
+  word-break:keep-all!important;overflow-wrap:normal!important;
+}
+body.lean-operating-brief .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2){
+  width:auto!important;white-space:normal!important;overflow-wrap:break-word!important;
+}

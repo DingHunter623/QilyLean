@@ -349,3 +349,36 @@ html:root:root body.qily-knowledge-brief-page main .brief-role-shift span{
   color:#e8f6f3!important;-webkit-text-fill-color:#e8f6f3!important;
   opacity:1!important;
 }
+
+/* QILY-BRIEF-TWO-COLUMN-READABILITY-V7 | 2026-10-12
+ * Reusable comparison tables must allocate space by content rather than 50/50.
+ * The short key column stays on one line; long evidence text can wrap naturally.
+ * Never impose this on multi-column engineering / gantt / data tables.
+ */
+html:root:root body.qily-knowledge-brief-page main .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child),
+html:root:root body.qily-knowledge-brief-page main table.lean-brief-table:has(>thead>tr:first-child>:nth-child(2):last-child){
+  table-layout:auto!important;width:100%!important;
+}
+html:root:root body.qily-knowledge-brief-page main .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child,
+html:root:root body.qily-knowledge-brief-page main table.lean-brief-table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child{
+  width:1%!important;white-space:nowrap!important;word-break:keep-all!important;
+  overflow-wrap:normal!important;vertical-align:top!important;
+}
+html:root:root body.qily-knowledge-brief-page main .lean-brief-table table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2),
+html:root:root body.qily-knowledge-brief-page main table.lean-brief-table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2){
+  width:auto!important;white-space:normal!important;word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+
+/* Universal fallback: older curated brief templates used other table class
+ * names. Apply the exact same contract by column count inside dated briefs. */
+html:root:root body.qily-knowledge-brief-page main table:has(>thead>tr:first-child>:nth-child(2):last-child){
+  table-layout:auto!important;
+}
+html:root:root body.qily-knowledge-brief-page main table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child{
+  width:1%!important;white-space:nowrap!important;word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html:root:root body.qily-knowledge-brief-page main table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2){
+  width:auto!important;white-space:normal!important;overflow-wrap:break-word!important;
+}

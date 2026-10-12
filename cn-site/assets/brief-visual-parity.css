@@ -229,3 +229,27 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene-flow
     min-height:0!important;padding:22px!important;
   }
 }
+
+/* QILY-CN-BRIEF-TWO-COLUMN-READABILITY-V7 | 2026-10-12
+ * Fix full archive (not one screenshot): short comparison keys should not wrap,
+ * and the evidence column must consume the remaining reading width.
+ * Scope to cloned article tables only; preserve all 3+ column engineering tables,
+ * the CN site shell and the legal footer.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(2):last-child),
+html:root:root:root body[data-qily-brief-parity] #main#main#main .lean-brief-table>table:has(>thead>tr:first-child>:nth-child(2):last-child){
+  table-layout:auto!important;width:100%!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child,
+html:root:root:root body[data-qily-brief-parity] #main#main#main .lean-brief-table>table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:first-child{
+  width:1%!important;min-width:0!important;white-space:nowrap!important;
+  word-break:keep-all!important;overflow-wrap:normal!important;
+  vertical-align:top!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2),
+html:root:root:root body[data-qily-brief-parity] #main#main#main .lean-brief-table>table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2){
+  width:auto!important;white-space:normal!important;word-break:normal!important;
+  overflow-wrap:break-word!important;
+}
+/* Keep cramped handset views scrollable at the established 640px comparison width.
+ * Preserve full-scale body text instead of shrinking it to force a fit. */
