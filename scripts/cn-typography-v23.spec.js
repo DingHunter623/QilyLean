@@ -260,3 +260,45 @@ test('CN selected brief short-key comparison table has content-driven widths', a
     await page.close();
   }
 });
+
+/* 2026-10-12 second screenshot: compare actual column geometry against the
+ * approved international three-column reference, not just CSS selectors.
+ * The previous 50/50 fix never inspected 3-column tables. */
+test('CN curated brief three-column table reserves width for real explanations', async ({browser})=>{
+  for(const [label,width,height] of [['desktop',1440,900],['mobile',390,844]]){
+    const page=await browser.newPage({viewport:{width,height},isMobile:label==='mobile'});
+    const response=await page.goto(BASE+'/briefs/archive/2026-09-13/',{waitUntil:'domcontentloaded'});
+    expect(response && response.ok()).toBeTruthy();
+    const metrics=await page.evaluate(()=>{
+      const table=[...document.querySelectorAll('main table')].find(t=>{
+        const hs=[...t.querySelectorAll('thead tr:first-child th')].map(h=>h.textContent.trim());
+        return hs.join('|')==='核心工作|需要建立的内容|应当回答的问题';
+      });
+      if(!table)return null;
+      const tr=table.querySelector('tbody tr');
+      if(!tr)return null;
+      const cells=[...tr.querySelectorAll('td')], tableRect=table.getBoundingClientRect();
+      const labels=[...table.querySelectorAll('tbody tr>td:first-child')];
+      const lineCounts=labels.map(cell=>{
+        const range=document.createRange();range.selectNodeContents(cell);
+        return new Set([...range.getClientRects()].map(r=>Math.round(r.top))).size;
+      });
+      return {
+        layout:getComputedStyle(table).tableLayout,
+        fractions:cells.map(cell=>cell.getBoundingClientRect().width/tableRect.width),
+        lineCounts,
+        docWidth:document.documentElement.scrollWidth,
+        viewport:document.documentElement.clientWidth
+      };
+    });
+    expect(metrics,'three-column comparison must be present').not.toBeNull();
+    expect(metrics.layout,label+' table layout').toBe('auto');
+    expect(metrics.fractions[0],label+' short core-work column < 28%').toBeLessThan(0.28);
+    expect(metrics.fractions[1],label+' explanations have adequate width').toBeGreaterThan(0.35);
+    expect(metrics.lineCounts.every(n=>n===1),label+' labels stay on one line').toBe(true);
+    expect(metrics.docWidth,label+' no page horizontal overflow').toBeLessThanOrEqual(metrics.viewport+1);
+    fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
+    await page.screenshot({path:`visual-cn-typography-v23/brief-2026-09-13-three-columns-${label}.png`,fullPage:true});
+    await page.close();
+  }
+});

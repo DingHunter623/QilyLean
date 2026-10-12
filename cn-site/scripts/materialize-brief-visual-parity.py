@@ -39,7 +39,7 @@ SVG_PATTERN=re.compile(r"<svg\b[\s\S]*?</svg\s*>",re.I)
 SVG_RISK=re.compile(r"<\s*(?:script|foreignObject|iframe|object|embed)\b|\bon[a-z]+\s*=|javascript:|data:text/html|<\s*image\b[^>]*\bhref\s*=\s*['\"]https?://",re.I)
 STYLE_IMPORT=re.compile(r'(@import\s+url\(["\']?)(/[^"\')\s]+)(["\']?\)\s*;)',re.I)
 CONTENT_SCOPE='main#main[data-qily-brief-content="v2"]'
-SOURCE_STYLE_VERSION="20261012-brief-source-parity-v7"
+SOURCE_STYLE_VERSION="20261012-brief-source-parity-v8"
 SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1"}
 CSS_GROUPS={"media","supports","container","layer"}
 # Brand imagery belongs to the destination site; authored engineering diagrams
@@ -453,7 +453,7 @@ def main():
             +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
-            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261012-brief-parity-v7">'
+            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261012-brief-parity-v8">'
             +inline_css+
             '<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16">'
             '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">'
