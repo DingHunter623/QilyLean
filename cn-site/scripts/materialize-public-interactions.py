@@ -281,6 +281,20 @@ def main() -> None:
             # archive readable without presenting an unconnected chat form.
             doc = replace_article(doc, '<section><h2>AI 与制造知识</h2><p>从制造知识索引进入精益、工业工程、质量与数智化主题，结合现场事实核对资料和方法。</p><p><a class="btn" href="/knowledge/">浏览制造知识索引</a></p></section>')
             kind = "knowledge-entry"
+        if path == "projects/factory-layout/index.html":
+            def preview_asset(match: re.Match) -> str:
+                opening, content = match.groups()
+                if 'data-plan-source=' in opening:
+                    return match.group(0)
+                # Two historical high-resolution source URLs have no checked-in
+                # asset. Use the real approved diagram rather than a dead URL.
+                image = re.search(r'<img\b[^>]*\bsrc="(/mirror-media/[^"]+)"', content)
+                if not image:
+                    raise RuntimeError("Factory diagram has no usable source or preview")
+                opening = opening[:-1] + ' data-plan-source="' + image.group(1) + '">'
+                opening = opening.replace("高清原图", "图纸")
+                return opening + content + '</button>'
+            doc = re.sub(r'(<button\b[^>]*\bdata-plan-preview[^>]*>)([\s\S]*?)</button>', preview_asset, doc)
         doc = re.sub(r'<button\b(?![^>]*data-public-print)([^>]*\bclass="[^"]*(?:opl-btn|qily-term-pdf-action)[^"]*"[^>]*)>', r'<button\1 data-public-print>', doc)
         if 'canvas' in doc:
             key = "QilyLeanFlowPreview2026" if path.endswith("reference-one-piece-flow.html") else "QilyLeanPreview2026"
