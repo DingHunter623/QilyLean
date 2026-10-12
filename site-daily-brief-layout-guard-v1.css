@@ -332,3 +332,20 @@ html body.daily-single-page article.post.w8 .scene-flow .node{
     font-size:20px!important;
   }
 }
+
+/* QILY-SELECTED-BRIEF-ROLE-LABEL-CONTRAST-V6 | source panel's gold label
+ * must remain visible after global content contrast and text-fill guards. */
+html:root:root body.qily-knowledge-brief-page main .brief-role-shift{
+  background:linear-gradient(145deg,#073c47,#0f4b5a 60%,#126d77)!important;
+  color:#f4fbfa!important;-webkit-text-fill-color:#f4fbfa!important;
+  border-radius:12px!important;
+}
+html:root:root body.qily-knowledge-brief-page main .brief-role-shift small,
+html:root:root body.qily-knowledge-brief-page main .brief-role-shift strong{
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+  opacity:1!important;text-shadow:none!important;
+}
+html:root:root body.qily-knowledge-brief-page main .brief-role-shift span{
+  color:#e8f6f3!important;-webkit-text-fill-color:#e8f6f3!important;
+  opacity:1!important;
+}
