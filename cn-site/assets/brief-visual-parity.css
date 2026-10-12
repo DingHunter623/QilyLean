@@ -311,3 +311,43 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
     min-width:860px!important;
   }
 }
+
+/* QILY-CN-BRIEF-DENSE-TABLE-READABILITY-V11 | 2026-10-12
+ * Keep four-or-more-column engineering matrices readable at the normal 20px
+ * article size. The focusable table region owns any horizontal overflow;
+ * short directions and technical names must not be split at arbitrary letters.
+ * Two- and three-column comparison contracts above remain unchanged.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(4)){
+  table-layout:auto!important;width:100%!important;min-width:960px!important;
+  border-collapse:collapse!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(5)){
+  min-width:1120px!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(6)){
+  min-width:1180px!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(4)) :is(th,td){
+  padding:12px!important;line-height:1.6!important;vertical-align:top!important;
+  word-break:normal!important;overflow-wrap:normal!important;hyphens:none!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(4)) thead th{
+  white-space:nowrap!important;background:#0f4b5a!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:600!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(4)) tbody tr:nth-child(even)>td{
+  background:#f4faf8!important;
+}
+/* This waste matrix has nine-character action labels. Give them their natural
+ * width before distributing the remaining space to methods and evidence. */
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+.w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
+  width:1%!important;white-space:nowrap!important;
+}

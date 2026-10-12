@@ -1,0 +1,203 @@
+/* Mainland content controls; shared navigation and Dock are outside this scope. */
+:is(.mirror-article-fidelity, article.mirror-article) :is(button, input, select, textarea) {
+  box-sizing: border-box;
+  max-width: 100%;
+  font: inherit;
+}
+:is(.mirror-article-fidelity, article.mirror-article) :is(button[data-public-print], button[data-public-share], .share-button, .app-link-share-trigger, #copyIntro, #copyUrl, .qily-public-preview-retry) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 15px;
+  border: 1px solid #9ab9b3;
+  border-radius: 9px;
+  color: #123f46;
+  background: #fff9eb;
+  line-height: 1.5;
+  cursor: pointer;
+}
+:is(.mirror-article-fidelity, article.mirror-article) :is(button, input, select, textarea):focus-visible {
+  outline: 3px solid #caa15f;
+  outline-offset: 3px;
+}
+:is(.mirror-article-fidelity, article.mirror-article) :is(.share-status, #copyStatus, .qily-public-content-status) {
+  display: inline-block;
+  color: #15535b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+:is(.mirror-article-fidelity, article.mirror-article) :is(button[data-plan-preview], button.preview-open) {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #b9ceca;
+  border-radius: 9px;
+  color: #143f46;
+  background: #fff;
+  cursor: zoom-in;
+}
+:is(.mirror-article-fidelity, article.mirror-article) :is(button[data-plan-preview], button.preview-open) img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: 0;
+}
+:is(.mirror-article-fidelity, article.mirror-article) canvas[data-src] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  background: #fff;
+}
+:is(.mirror-article-fidelity, article.mirror-article) .page-loading {
+  margin: 12px 0;
+  color: #3f5b57;
+  font-size: 15px;
+}
+:is(.mirror-article-fidelity, article.mirror-article) .qily-public-preview-retry { margin-left: 10px; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-pdf-stage { min-width: 0; margin: 20px 0; overflow: hidden; border: 1px solid #b9ceca; border-radius: 10px; background: #f2f6f4; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-pdf-stage iframe { display: block; width: 100%; min-height: min(80vh, 850px); border: 0; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) #cnPublicBriefSearch { display: block; width: 100%; min-height: 48px; margin: 12px 0; padding: 12px 14px; border: 1px solid #9ab9b3; border-radius: 9px; color: #143f46; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) #cnPublicBriefCount { margin: 12px 0 18px; color: #34534e; line-height: 1.6; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-card { min-width: 0; padding: 18px 20px; border: 1px solid #c3d8d3; border-top: 4px solid #caa15f; border-radius: 10px; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-card :is(h2, h3) { margin: 8px 0 12px; color: #123f46; font-size: 20px; line-height: 1.5; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-card a { color: #123f46; text-underline-offset: 3px; }
+:is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-card time { color: #526d68; font-size: 14px; }
+.qily-public-copy-buffer { position: fixed; inset: 0 auto auto -9999px; width: 1px; height: 1px; opacity: 0; }
+body.qily-public-preview-open { overflow: hidden; }
+.qily-public-preview[hidden] { display: none !important; }
+.qily-public-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 20040;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+  background: rgba(10, 31, 35, .86);
+  font-family: system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+.qily-public-preview, .qily-public-preview * { box-sizing: border-box; }
+.qily-public-preview-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1440px, 100%);
+  height: min(100%, 1000px);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid #9dbab5;
+  border-radius: 12px;
+  background: #edf3f1;
+  box-shadow: 0 20px 70px rgba(0, 0, 0, .35);
+}
+.qily-public-preview-toolbar {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #bbceca;
+  background: #fff;
+}
+.qily-public-preview-toolbar h2 { margin: 0; color: #123f46; font-size: 18px; line-height: 1.5; overflow-wrap: anywhere; }
+.qily-public-preview-controls { display: flex; flex-wrap: wrap; gap: 7px; }
+.qily-public-preview button {
+  min-width: 40px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid #9ab9b3;
+  border-radius: 7px;
+  color: #123f46;
+  background: #fff9eb;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.qily-public-preview button:hover { background: #f2dfb7; }
+.qily-public-preview button:focus-visible { outline: 3px solid #caa15f; outline-offset: 2px; }
+.qily-public-preview button:disabled { opacity: .45; cursor: default; }
+.qily-public-preview-stage { flex: 1 1 auto; min-width: 0; min-height: 0; overflow: auto; padding: 16px; overscroll-behavior: contain; }
+.qily-public-preview-stage img { display: block; max-width: none; height: auto; margin: 0 auto; background: #fff; }
+.qily-public-preview-status { flex: 0 0 auto; margin: 0; padding: 9px 16px; border-top: 1px solid #bbceca; color: #234b49; background: #fff; font-size: 13px; line-height: 1.5; }
+
+/* Terminology controls survive the mirror sanitizer and remain within the content. */
+:is(.mirror-article-fidelity, article.mirror-article) .term-toolbar { display: grid; gap: 12px; margin: 18px 0; padding: 20px; border: 1px solid #c3d8d3; border-radius: 12px; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-search { width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid #9ab9b3; border-radius: 9px; color: #143f46; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-card { display: flex; flex-direction: column; min-width: 0; padding: 20px; border: 1px solid #c3d8d3; border-top: 4px solid #178b94; border-radius: 10px; background: #fff; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-code { color: #123f46; font-size: 26px; font-weight: 800; overflow-wrap: anywhere; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-en { margin-top: 6px; color: #526d68; font-size: 15px; overflow-wrap: anywhere; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-card h3 { margin: 13px 0 9px; color: #123f46; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-card p { color: #34534e; line-height: 1.75; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-opl-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; padding-top: 15px; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-opl-open { display: inline-flex; align-items: center; justify-content: center; min-height: 42px; padding: 9px 15px; border: 1px solid #146975; border-radius: 9px; color: #fff; background: #146975; text-decoration: none; line-height: 1.5; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-search-results { display: none; margin-top: 18px; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-search-results.show { display: block; }
+:is(.mirror-article-fidelity, article.mirror-article) .term-empty { display: none; margin: 18px 0; padding: 16px; border: 1px dashed #9ab9b3; }
+:is(.mirror-article-fidelity, article.mirror-article) [hidden] { display: none !important; }
+#termOplModal.qily-cn-terminology-modal { box-sizing: border-box; }
+#termOplModal.qily-cn-terminology-modal[hidden] { display: none !important; }
+#termOplModal.qily-cn-terminology-modal .term-opl-dialog { min-width: 0; }
+#termOplModal.qily-cn-terminology-modal :is(button, input, textarea) { font: inherit; }
+#termOplModal.qily-cn-terminology-modal button { min-height: 40px; cursor: pointer; }
+#termOplModal.qily-cn-terminology-modal :is(button, a):focus-visible { outline: 3px solid #caa15f; outline-offset: 3px; }
+#termOplModal.qily-cn-terminology-modal .term-opl-content { min-width: 0; overflow-wrap: anywhere; }
+#termOplModal.qily-cn-terminology-modal .term-opl-toolbar { gap: 9px; }
+#termOplModal.qily-cn-terminology-modal .term-opl-toolbar button { white-space: normal; }
+@media (max-width: 760px) {
+  .qily-public-preview { padding: 0; }
+  .qily-public-preview-panel { width: 100%; height: 100%; border-radius: 0; }
+  .qily-public-preview-toolbar { gap: 8px; padding: 10px; }
+  .qily-public-preview-toolbar h2 { width: 100%; font-size: 16px; }
+  .qily-public-preview-controls { gap: 5px; }
+  .qily-public-preview button { padding: 8px 10px; }
+  .qily-public-preview-stage { padding: 10px; }
+  :is(.mirror-article-fidelity, article.mirror-article) .term-grid { grid-template-columns: 1fr; }
+  :is(.mirror-article-fidelity, article.mirror-article) .cn-public-brief-grid { grid-template-columns: 1fr; }
+  :is(.mirror-article-fidelity, article.mirror-article) .term-card { padding: 16px; }
+  :is(.mirror-article-fidelity, article.mirror-article) .term-toolbar { padding: 16px; }
+}
+@media print {
+  .qily-public-preview { display: none !important; }
+  :is(.mirror-article-fidelity, article.mirror-article) :is(.page-loading, .qily-public-content-status, button[data-public-print], button[data-public-share], .share-button, #copyIntro, #copyUrl) { display: none !important; }
+  :is(.mirror-article-fidelity, article.mirror-article) canvas[data-src] { max-width: 100%; break-inside: avoid; }
+}
+
+/* A direct OPL link is a reading page with the shared CN shell. */
+body[data-cn-public-kind="terminology"].term-opl-standalone main>.page-hero{display:none!important}
+body[data-cn-public-kind="terminology"].term-opl-standalone main>.section{padding-block:24px!important}
+html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:30px!important;line-height:1.35!important}
+html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{position:static!important;display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px}
+html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar button{min-height:44px;padding:9px 12px;font-size:20px!important;line-height:1.4!important}
+html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-content{padding-bottom:24px}
+@media(max-width:760px){
+ body[data-cn-public-kind="terminology"].term-opl-standalone main>.section{padding-block:16px!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-header{padding:18px 54px 18px 18px!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-brandbar{margin-bottom:12px!important;padding-bottom:10px!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-brandbar>span{display:none!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:24px!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-kicker{font-size:16px!important;letter-spacing:.03em!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{padding:12px}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar button{flex:1 1 40%;min-width:0;font-size:18px!important}
+}
+@media print{
+ body[data-cn-public-kind="terminology"].term-opl-standalone :is(.site-header,.footer){display:none!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{display:none!important}
+}
+/* A lesson's own footer is ordinary content, separate from the site Dock. */
+.mirror-article-fidelity .qily-public-content-footer{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid #cbdedd;
+  color:#426367;
+}
+

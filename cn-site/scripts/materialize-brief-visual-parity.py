@@ -240,7 +240,11 @@ def local_media(url:str)->str:
             raise RuntimeError("Missing China-site brand image: "+mapped)
         return mapped
     if re.search(r"(?:^|[-_/])(qr|qrcode|wechat|weixin|contact)(?:[-_./]|$)",rel,re.I):return ""
-    if Path(rel).suffix.lower() not in MEDIA_EXT:return ""
+    if Path(rel).suffix.lower() not in MEDIA_EXT:
+        # The four approved reference viewers use local XOR-encoded images.
+        # No other file type or arbitrary binary path is admitted.
+        if not (Path(rel).suffix.lower()==".qly" and rel.startswith("qilylean/reference/")):
+            return ""
     f=ROOT/rel
     if not f.is_file():return ""
     if f.suffix.lower()==".svg":
@@ -279,17 +283,24 @@ class VisualSanitizer(HTMLParser):
         "sub","details","summary","picture","source","video","main","dl","dt","dd"
     }
     skip_tags={"script","style","noscript","iframe","form","button","input","select","textarea","object","embed"}
-    void={"img","br","hr","col","source"}
-    def __init__(self,base_path:str=""):
+    void={"img","br","hr","col","source","input","embed","area","base","link","meta","param","track","wbr"}
+    controls={"input","label","button","canvas","select","option","textarea","form"}
+    def __init__(self,base_path:str="",public_controls:bool=False):
         super().__init__(convert_charrefs=True)
         self.parts=[];self.skip_stack=[];self.open_tags=[]
         self.visual_nodes=0;self.base_path=base_path;self.inline_styles=0
+        self.allowed=set(type(self).allowed)
+        self.skip_tags=set(type(self).skip_tags)
+        if public_controls:
+            self.allowed.update(self.controls)
+            self.skip_tags.difference_update(self.controls)
     def handle_starttag(self,tag,attrs):
         if self.skip_stack:
-            if tag in self.skip_tags:self.skip_stack.append(tag)
+            if tag in self.skip_tags and tag not in self.void:self.skip_stack.append(tag)
             return
         if tag in self.skip_tags:
-            self.skip_stack.append(tag);return
+            if tag not in self.void:self.skip_stack.append(tag)
+            return
         if tag not in self.allowed:return
         a=dict(attrs);kept=[]
         clazz=a.get("class","")
@@ -303,8 +314,22 @@ class VisualSanitizer(HTMLParser):
             if visual_style:
                 kept.append(("style",visual_style));self.inline_styles+=1
         for key,val in attrs:
-            if val is None:continue
-            if key in {"aria-label","aria-labelledby","aria-describedby","aria-hidden","aria-current","role","datetime","data-label","data-parity-svg","width","height","colspan","rowspan"} or re.fullmatch(r"data-(?:qily|brief|daily|one-point|section|step|item|visual|[a-z0-9_-]{2,35})[a-z0-9_-]*",key or ""):
+            if val is None:
+                if key in {"hidden","disabled","checked","selected"} or re.fullmatch(r"data-[a-z0-9_-]+",key or ""):
+                    kept.append((key,""))
+                continue
+            if tag in self.controls and key in {"type","placeholder","autocomplete","name","value","for","tabindex"}:
+                if len(val)<300 and not re.search(r"[<>]",val):kept.append((key,val))
+            if tag=="button" and key=="onclick" and re.fullmatch(r"(?:window\.)?print\(\);?",val.strip()):
+                kept.append(("data-public-print",""))
+            if key in {"data-plan-source","data-original-src","data-src"}:
+                resolved=urljoin("/"+self.base_path,val)
+                media=local_media(resolved)
+                if media:kept.append((key,media))
+                continue
+            if key in {"hidden","disabled","checked","selected"}:
+                kept.append((key,val));continue
+            if key in {"role","datetime","data-label","data-parity-svg","width","height","colspan","rowspan"} or re.fullmatch(r"aria-[a-z-]+",key or "") or re.fullmatch(r"data-(?:qily|brief|daily|one-point|section|step|item|visual|[a-z0-9_-]{2,35})[a-z0-9_-]*",key or ""):
                 if len(val)<400 and not re.search(r"javascript:|<|>|onerror|onload",val,re.I):
                     if key in {"width","height","colspan","rowspan"} and not val.isdigit():continue
                     if key not in {"class","id"}:kept.append((key,val))
@@ -346,7 +371,7 @@ class VisualSanitizer(HTMLParser):
     def handle_entityref(self,name):
         if not self.skip_stack:self.parts.append("&"+name+";")
 
-def sanitize_main(original:str,base_path:str=""):
+def sanitize_main(original:str,base_path:str="",public_controls:bool=False):
     svgs=[]
     def svg_replace(m):
         raw=m.group(0)
@@ -356,7 +381,7 @@ def sanitize_main(original:str,base_path:str=""):
     original=SVG_PATTERN.sub(svg_replace,original)
     # Forms and feedback panels contain personal contact and commercial conversion UI.
     original=re.sub(r'<section\b[^>]*class=["\'][^"\']*\bbrief-feedback\b[^"\']*["\'][^>]*>[\s\S]*?</section\s*>',"",original,flags=re.I)
-    parser=VisualSanitizer(base_path)
+    parser=VisualSanitizer(base_path,public_controls)
     parser.feed(original)
     safe="".join(parser.parts)
     safe=source.remove_forbidden_blocks(safe)
@@ -453,7 +478,7 @@ def main():
             +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
-            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261012-brief-parity-v10">'
+            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261012-brief-parity-v11">'
             +inline_css+
             '<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16">'
             '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">'

@@ -79,7 +79,7 @@ if (aiManufacturingBrief) {
   includes(aiManufacturingBrief, '<header class="qily-site-header">', 'AI manufacturing brief inherits the QilyLean site header');
   includes(aiManufacturingBrief, '<a class="qily-brand" href="/">QilyLean | 启力精益</a>', 'AI manufacturing brief inherits the QilyLean brand Logo');
   matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
-  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v3', 'AI manufacturing brief loads the knowledge-asset visual component');
+  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20261012-brief-metadata-v4', 'AI manufacturing brief loads the knowledge-asset visual component');
   const aiManufacturingBody = (aiManufacturingBrief.match(/<body\b[^>]*>/i) || [''])[0];
   assert(/qily-knowledge-brief-page/.test(aiManufacturingBody) && /module-page/.test(aiManufacturingBody), 'AI manufacturing brief uses the governed knowledge-asset layout');
   const topNavIndex = aiManufacturingBrief.indexOf('class="brief-adjacent top"');
@@ -163,7 +163,7 @@ includes(globalKnowledge, `<strong id="briefTotal">${siteData.briefs.total}</str
 includes(globalKnowledge, `<h3>${siteData.briefs.total}篇精选简报</h3>`, 'Global Knowledge asset-card count matches central metadata');
 includes(globalKnowledge, `最新更新：${siteData.briefs.latestDate}｜${siteData.briefs.latestTitle}。`, 'Global Knowledge latest brief matches central metadata');
 if (sep20Brief) {
-  includes(sep20Brief, '/qilylean/daily/assets/2026-09-20-brief.css?v=20260921-capacity-thread-v3', 'Sep 20 brief loads the VI-v4 flow revision');
+  includes(sep20Brief, '/qilylean/daily/assets/2026-09-20-brief.css?v=20261012-brief-toc-buttons-v5', 'Sep 20 brief loads the current shared chapter-navigation revision');
   assert((sep20Brief.match(/data-qily-unified-arrow="v4"/g) || []).length >= 13, 'Sep 20 diagrams use integrated VI v4 solid arrows for all primary and feedback connectors');
   includes(sep20Brief, 'class="vi-feedback-return"', 'Sep 20 diagrams use a dedicated VI feedback rail');
   includes(sep20Brief, 'class="vi-feedback-arrow"', 'Sep 20 feedback return uses an integrated solid arrow');
