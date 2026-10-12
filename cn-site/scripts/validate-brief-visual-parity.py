@@ -203,7 +203,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v8' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v10' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -256,7 +256,7 @@ def validate_generated_corpus():
     assert '.scene-flow>.scene-arrow' in mirrored_guard,'CN source brief flow guard missing'
     for date in ('2026-09-04','2026-08-25'):
         international=(visual.ROOT/'qilylean/daily'/f'{date}.html').read_text(encoding='utf-8')
-        assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-key-width-v7' in international, (date,'stale international visual CSS')
+        assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-visual-corpus-v9' in international, (date,'stale international visual CSS')
     # Regression: two-column key/evidence tables must never return to a 50/50
     # fixed layout. This explicitly covers section 8 of the 2026-09-13 issue,
     # and shares selectors for every cloned Selected Brief archive page.
@@ -269,7 +269,7 @@ def validate_generated_corpus():
         assert ':nth-child(2):last-child' in sheet,(str(path),'must target only two-column tables')
     example=(visual.ROOT/'qilylean/daily/2026-09-13.html').read_text(encoding='utf-8')
     assert '<th>成果类别</th>' in example and '<th>评价重点</th>' in example,'screenshot example lost'
-    assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-key-width-v7' in example,'source CSS refresh missing'
+    assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-visual-corpus-v9' in example,'source CSS refresh missing'
     # Same issue also contains a 3-column comparison table. Short labels
     # must not consume a full third of the content axis on the CN mirror.
     tri_marker='QILY-CN-BRIEF-THREE-COLUMN-CONTENT-FIT-V8'
@@ -277,6 +277,11 @@ def validate_generated_corpus():
     assert ':nth-child(3):last-child' in cn_guard,'three-column guard must not affect 4+ column data tables'
     assert 'white-space:nowrap!important' in cn_guard,'short three-column labels must remain on one line'
     assert '<th>核心工作</th>' in example and '<th>需要建立的内容</th>' in example and '<th>应当回答的问题</th>' in example, 'three-column screenshot comparison table lost'
+    # Entire cloned issue corpus must retain the international comparison
+    # visual hierarchy (deep-teal headers, compact cells and scrollable mobile
+    # tables) with the final archive asset version, not a locally patched page.
+    assert 'QILY-CN-BRIEF-INTL-COMPARISON-SURFACE-V10' in cn_guard, 'international-style comparison surface missing'
+    assert 'min-width:860px!important' in cn_guard, 'mobile three-column reading width missing'
     # A custom checklist and adjacent navigation must keep the canonical readable scale.
     typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
     for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):

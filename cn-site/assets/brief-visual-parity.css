@@ -280,3 +280,34 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
 }
 /* Mobile: retain the approved 640px minimum inner table plus a focusable
  * horizontal scroll region; never shrink text to cram it into the viewport. */
+
+/* QILY-CN-BRIEF-INTL-COMPARISON-SURFACE-V10 | 2026-10-12
+ * Match the international source's deep-teal comparison header, alternating
+ * lightweight row surfaces and compact spacing, without touching 4+ column
+ * engineering matrices, colored process diagrams, CN shell or legal footer.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.lean-brief-table table,table.lean-brief-table):is(:has(>thead>tr:first-child>:nth-child(2):last-child),:has(>thead>tr:first-child>:nth-child(3):last-child)){
+  table-layout:auto!important;width:100%!important;border-collapse:collapse!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.lean-brief-table table,table.lean-brief-table):is(:has(>thead>tr:first-child>:nth-child(2):last-child),:has(>thead>tr:first-child>:nth-child(3):last-child)) thead th{
+  padding:12px!important;text-align:center!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;opacity:1!important;font-weight:600!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.lean-brief-table table,table.lean-brief-table):is(:has(>thead>tr:first-child>:nth-child(2):last-child),:has(>thead>tr:first-child>:nth-child(3):last-child)) tbody td{
+  padding:12px!important;vertical-align:middle!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+:is(.lean-brief-table table,table.lean-brief-table):is(:has(>thead>tr:first-child>:nth-child(2):last-child),:has(>thead>tr:first-child>:nth-child(3):last-child)) tbody tr:nth-child(even)>td{
+  background:#f4faf8!important;
+}
+@media(max-width:700px){
+  /* Scroll dense tables internally on phones; never shrink reading text. */
+  html:root:root:root body[data-qily-brief-parity] #main#main#main
+  .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(3):last-child){
+    min-width:860px!important;
+  }
+}
