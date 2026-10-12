@@ -240,6 +240,23 @@ def validate_generated_corpus():
         for block in re.findall(r'<style\b[^>]*data-qily-brief-source-style="v2"[^>]*>([\s\S]*?)</style>',generated,re.I):
             counts['scoped_selectors']+=assert_scoped_css(block)
         counts['pages']+=1
+    # Screenshot-led 2026-10-12 VI regression: these guards must apply to the
+    # entire generated archive, not to one locally patched issue.
+    cn_guard=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
+    global_guard=(visual.ROOT/'site-daily-brief-layout-guard-v1.css').read_text(encoding='utf-8')
+    mirrored_guard=(visual.CN/'assets/brief-visual-source/site-daily-brief-layout-guard-v1.css').read_text(encoding='utf-8')
+    for selector in ('.brief-topic-statement','.brief-role-shift strong',
+                     '.knowledge-brief-hero .knowledge-breadcrumbs','.w8 .scene-flow'):
+        assert selector in cn_guard,(selector,'CN contrast/role/flow guard missing')
+    for marker in ('QILY-SELECTED-BRIEF-VISUAL-PARITY-V6',
+                   '.knowledge-brief-section .module-heading>.module-eyebrow',
+                   '.knowledge-brief-hero .knowledge-breadcrumbs',
+                   '.scene-flow>.scene-arrow'):
+        assert marker in global_guard,(marker,'international VI guard missing')
+    assert '.scene-flow>.scene-arrow' in mirrored_guard,'CN source brief flow guard missing'
+    for date in ('2026-09-04','2026-08-25'):
+        international=(visual.ROOT/'qilylean/daily'/f'{date}.html').read_text(encoding='utf-8')
+        assert 'site-daily-brief-layout-guard-v1.css?v=20261012-selected-brief-contrast-v6' in international, (date,'stale international visual CSS')
     # A custom checklist and adjacent navigation must keep the canonical readable scale.
     typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
     for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):
