@@ -148,3 +148,84 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-checkli
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a{font-size:20px!important;line-height:1.5!important}
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a.directory{font-size:20px!important}
 html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-closing>span{font-size:20px!important;line-height:1.6!important}
+
+/* QILY-CN-BRIEF-COMPONENT-CONTRAST-V6 | 2026-10-12
+ * Restore the approved original dark role card after global CN theme rules.
+ * Confined to the cloned archive's article main; never touch CN shell/record footer.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-topic-statement{
+  display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr)!important;
+  align-items:stretch!important;gap:18px!important;min-width:0!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-topic-statement>*{
+  min-width:0!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-items:flex-start!important;gap:12px!important;min-width:0!important;
+  min-height:100%!important;padding:28px!important;border:1px solid #0f4b5a!important;
+  border-radius:12px!important;background:linear-gradient(145deg,#073c47,#0f4b5a 60%,#126d77)!important;
+  color:#f4fbfa!important;-webkit-text-fill-color:#f4fbfa!important;
+  box-shadow:0 8px 22px rgba(7,60,71,.12)!important;opacity:1!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift small{
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+  font-size:18px!important;line-height:1.5!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift strong{
+  display:block!important;width:100%!important;color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font-size:clamp(24px,2.2vw,34px)!important;line-height:1.4!important;
+  font-weight:600!important;word-break:keep-all!important;overflow-wrap:normal!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift span{
+  display:block!important;margin:0!important;color:#e8f6f3!important;
+  -webkit-text-fill-color:#e8f6f3!important;
+  font-size:19px!important;line-height:1.7!important;
+}
+/* Source hero is dark after mirror parity. Never apply a white-card breadcrumb
+ * label color (#0f4b5a) to this dark teal background.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .knowledge-breadcrumbs{
+  color:#e8f6f3!important;-webkit-text-fill-color:#e8f6f3!important;
+  font-size:18px!important;line-height:1.5!important;opacity:1!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .knowledge-breadcrumbs a{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;
+  text-decoration-color:#ffe39b!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .knowledge-breadcrumbs span[aria-hidden="true"]{
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+}
+/* Keep the same China-site VI gold 21px labels on every cloned module.
+ * Titles themselves remain teal so page hierarchy stays intact.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .knowledge-brief-section .module-heading>.module-eyebrow{
+  color:#85601f!important;-webkit-text-fill-color:#85601f!important;
+  font-size:21px!important;font-weight:400!important;line-height:1.45!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene{
+  container-type:inline-size;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene-flow>.node{
+  min-width:0!important;overflow-wrap:normal!important;word-break:keep-all!important;
+}
+@container (max-width:620px){
+  html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene-flow{
+    grid-template-columns:minmax(0,1fr)!important;gap:8px!important;
+  }
+  html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene-flow>.node{
+    min-height:65px!important;padding:12px 16px!important;
+  }
+  html:root:root:root body[data-qily-brief-parity] #main#main#main .w8 .scene-flow>.scene-arrow{
+    min-height:22px!important;transform:rotate(90deg)!important;
+  }
+}
+@media(max-width:800px){
+  html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-topic-statement{
+    grid-template-columns:1fr!important;
+  }
+  html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift{
+    min-height:0!important;padding:22px!important;
+  }
+}
