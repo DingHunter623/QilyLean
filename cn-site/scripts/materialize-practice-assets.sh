@@ -26,6 +26,11 @@ cmp -s "$SOURCE" "$TARGET"
 echo "CN practice award asset materialized locally."
 
 
+# Restore the single current international VI stylesheet URL for all dated
+# briefs BEFORE mirroring. This neutralizes stale auto-publisher links and keeps
+# the generated CN archive consistent with the international SSOT.
+node "$REPO_ROOT/scripts/publish-daily-brief-layout-guard-v1.js"
+
 # Materialize the China-site local copy of eligible international public content.
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
 python3 "$CN_ROOT/scripts/materialize-brief-visual-parity.py"
