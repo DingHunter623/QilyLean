@@ -221,3 +221,42 @@ test('CN V47 mobile typography parity across every public page', async ({browser
   }
   await page.close();
 });
+
+/* Visual acceptance for 2026-10-12 screenshot: computed cell geometry, not
+ * merely the presence of CSS or an overflow wrapper. */
+test('CN selected brief short-key comparison table has content-driven widths', async ({browser})=>{
+  for(const [label,width,height] of [['desktop',1440,900],['mobile',390,844]]){
+    const page=await browser.newPage({viewport:{width,height},isMobile:label==='mobile'});
+    const response=await page.goto(BASE+'/briefs/archive/2026-09-13/',{waitUntil:'domcontentloaded'});
+    expect(response && response.ok()).toBeTruthy();
+    const metrics=await page.evaluate(()=>{
+      const tables=[...document.querySelectorAll('main table')];
+      const table=tables.find(t=>{
+        const th=[...t.querySelectorAll('thead th')].map(el=>el.textContent.trim());
+        return th.length===2 && th[0]==='成果类别' && th[1]==='评价重点';
+      });
+      if(!table)return null;
+      const cells=[...table.querySelectorAll('tbody tr')].map(row=>row.querySelector('td:first-child')).filter(Boolean);
+      const lines=cells.map(cell=>{
+        const range=document.createRange();range.selectNodeContents(cell);
+        return new Set([...range.getClientRects()].map(r=>Math.round(r.top))).size;
+      });
+      const rect=table.getBoundingClientRect(),first=cells[0].getBoundingClientRect();
+      return {
+        total:rect.width,firstWidth:first.width,secondWidth:rect.width-first.width,
+        lines,layout:getComputedStyle(table).tableLayout,
+        viewport:document.documentElement.clientWidth,
+        documentWidth:document.documentElement.scrollWidth
+      };
+    });
+    expect(metrics,'missing semantic value-results comparison table').not.toBeNull();
+    expect(metrics.layout).toBe('auto');
+    expect(metrics.firstWidth/metrics.total,label+' compact key column').toBeLessThan(0.35);
+    expect(metrics.secondWidth/metrics.total,label+' evidence column has room').toBeGreaterThan(0.65);
+    expect(metrics.lines.every(n=>n===1),label+' short key labels stay one line').toBe(true);
+    expect(metrics.documentWidth,label+' no document-wide horizontal overflow').toBeLessThanOrEqual(metrics.viewport+1);
+    fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
+    await page.screenshot({path:`visual-cn-typography-v23/brief-2026-09-13-short-key-${label}.png`,fullPage:true});
+    await page.close();
+  }
+});
