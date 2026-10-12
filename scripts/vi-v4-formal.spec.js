@@ -23,6 +23,50 @@ const heroSelector='.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.
 
 fs.mkdirSync(path.join(process.cwd(),'visual-vi-v4-artifacts'),{recursive:true});
 
+test('curated brief contents remain separate usable buttons at every breakpoint',async({browser})=>{
+  test.setTimeout(120000);
+  const issues=[['2026-09-13',10],['2026-09-20',8],['2026-09-23',8],['2026-09-28',7],['2026-10-11',7]];
+  for(const width of [1680,1024,390,320]){
+    const context=await browser.newContext({viewport:{width,height:1000},reducedMotion:'reduce'});
+    await context.route('**/*',route=>new URL(route.request().url()).origin===new URL(base).origin?route.continue():route.abort());
+    const page=await context.newPage();
+    for(const [date,count] of issues){
+      await page.goto(`${base}/qilylean/daily/${date}.html`,{waitUntil:'load'});
+      const nav=page.locator('nav.lean-brief-toc');
+      await expect(nav.locator('a[href]')).toHaveCount(count);
+      const buttons=await nav.locator('a[href]').evaluateAll(links=>links.map(a=>{
+        const r=a.getBoundingClientRect(),s=getComputedStyle(a),target=document.querySelector(a.getAttribute('href'));
+        return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height,border:parseFloat(s.borderTopWidth),decoration:s.textDecorationLine,targetVisible:!!target&&target.getBoundingClientRect().height>0};
+      }));
+      for(let i=0;i<buttons.length;i++){
+        const button=buttons[i];
+        expect(button.height,`${date}/${width}: usable target height`).toBeGreaterThanOrEqual(44);
+        expect(button.border,`${date}/${width}: separate button border`).toBeGreaterThan(0);
+        expect(button.decoration).toBe('none');
+        expect(button.targetVisible,`${date}: existing visible chapter target`).toBeTruthy();
+        expect(button.left).toBeGreaterThanOrEqual(0);
+        expect(button.right).toBeLessThanOrEqual(width);
+        if(i){
+          const previous=buttons[i-1];
+          if(Math.abs(button.top-previous.top)<1)expect(button.left-previous.right).toBeCloseTo(10,0);
+          else expect(button.top-previous.bottom).toBeGreaterThanOrEqual(9);
+        }
+      }
+      if(width>=1280&&count===7)expect(new Set(buttons.map(b=>Math.round(b.top))).size).toBe(1);
+      if(width<=390)expect(new Set(buttons.map(b=>Math.round(b.top))).size).toBeGreaterThan(1);
+      if(date==='2026-10-11'){
+        for(let i=0;i<count;i++){
+          const link=nav.locator('a[href]').nth(i),href=await link.getAttribute('href');
+          await link.click();
+          await expect(page).toHaveURL(new RegExp(`${href}$`));
+          await expect.poll(()=>page.locator(href).evaluate(el=>{const r=el.getBoundingClientRect(),header=document.querySelector('header.qily-site-header');return r.top>=(header?header.getBoundingClientRect().bottom:0)-1&&r.top<innerHeight-100;}),{message:`${width}: chapter should scroll below the fixed header`}).toBeTruthy();
+        }
+      }
+    }
+    await context.close();
+  }
+});
+
 for(const [name,url] of pages){
   for(const [device,viewport] of viewports){
     test(`${name} ${device} formal VI v4`,async({page})=>{

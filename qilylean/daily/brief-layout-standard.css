@@ -51,6 +51,34 @@ html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .module-in
   box-sizing:border-box!important;
 }
 
+/* The issue contents are separate navigation targets, with the same button
+   surfaces and 10px spacing as the China-site brief directory. */
+html body.qily-knowledge-brief-page main nav.lean-brief-toc.module-inner{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:10px!important;
+  width:min(var(--qily-brief-content-axis),calc(100% - 2 * var(--qily-brief-gutter)))!important;
+  padding-block:20px!important;
+}
+html body.qily-knowledge-brief-page main nav.lean-brief-toc.module-inner>a[href]{
+  flex:1 1 140px;
+  min-width:0;
+  min-height:44px;
+  box-sizing:border-box;
+  padding:10px 14px;
+  border:1px solid #b2ccc7;
+  border-radius:8px;
+  background:#fff;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:clamp(16px,.9vw,18px)!important;
+  line-height:1.5!important;
+  text-decoration:none!important;
+}
+html body.qily-knowledge-brief-page main nav.lean-brief-toc.module-inner>a[href]:is(:hover,:focus-visible){
+  border-color:#0f4b5a;
+  background:#eef7f5;
+}
 /* Per-issue copy classes must never create a second/narrower content axis. */
 html body.qily-knowledge-brief-page :is(
   .lean-brief-copy,
