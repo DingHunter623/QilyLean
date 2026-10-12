@@ -42,6 +42,12 @@ CONTENT_SCOPE='main#main[data-qily-brief-content="v2"]'
 SOURCE_STYLE_VERSION="20261011-brief-source-parity-v3"
 SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1"}
 CSS_GROUPS={"media","supports","container","layer"}
+# Brand imagery belongs to the destination site; authored engineering diagrams
+# continue to use their original local mirror assets.
+CN_BRAND_MEDIA={
+    "assets/qilylean-aircraft-hero-approved-20260826.png":
+        "/assets/qilylean-aircraft-hero-cn-v2-20260919.png",
+}
 
 def split_css(value:str, delimiters:str)->list[str]:
     """Split CSS only outside strings, functions and attribute selectors.
@@ -228,6 +234,11 @@ def local_media(url:str)->str:
     else:return ""
     rel=unquote(path).lstrip("/")
     if ".." in Path(rel).parts:return ""
+    if rel in CN_BRAND_MEDIA:
+        mapped=CN_BRAND_MEDIA[rel]
+        if not (CN/mapped.lstrip("/")).is_file():
+            raise RuntimeError("Missing China-site brand image: "+mapped)
+        return mapped
     if re.search(r"(?:^|[-_/])(qr|qrcode|wechat|weixin|contact)(?:[-_./]|$)",rel,re.I):return ""
     if Path(rel).suffix.lower() not in MEDIA_EXT:return ""
     f=ROOT/rel
@@ -439,6 +450,7 @@ def main():
             '<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading">'
             '<link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading">'
             '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2">'
+            +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
             '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261011-brief-parity-v4">'
@@ -448,6 +460,7 @@ def main():
             '</head><body class="'+html.escape(" ".join(classes),quote=True)+'" data-qily-daily-layout="'+layout_val+'" data-qily-brief-parity="v1">'
             '<a class="skip" href="#main">跳到主要内容</a>'+source.header("briefs")+
             '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
+            source.TRANSLATION_SCRIPT+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
             '<script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script>'
             '</body></html>'
