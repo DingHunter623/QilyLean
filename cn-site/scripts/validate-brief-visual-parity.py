@@ -203,7 +203,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v7' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v8' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -270,6 +270,13 @@ def validate_generated_corpus():
     example=(visual.ROOT/'qilylean/daily/2026-09-13.html').read_text(encoding='utf-8')
     assert '<th>成果类别</th>' in example and '<th>评价重点</th>' in example,'screenshot example lost'
     assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-key-width-v7' in example,'source CSS refresh missing'
+    # Same issue also contains a 3-column comparison table. Short labels
+    # must not consume a full third of the content axis on the CN mirror.
+    tri_marker='QILY-CN-BRIEF-THREE-COLUMN-CONTENT-FIT-V8'
+    assert tri_marker in cn_guard,'CN three-column comparison layout guard missing'
+    assert ':nth-child(3):last-child' in cn_guard,'three-column guard must not affect 4+ column data tables'
+    assert 'white-space:nowrap!important' in cn_guard,'short three-column labels must remain on one line'
+    assert '<th>核心工作</th>' in example and '<th>需要建立的内容</th>' in example and '<th>应当回答的问题</th>' in example, 'three-column screenshot comparison table lost'
     # A custom checklist and adjacent navigation must keep the canonical readable scale.
     typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
     for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):
