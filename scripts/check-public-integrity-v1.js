@@ -34,7 +34,9 @@ if (!capabilities.includes('平台官方网站，非本证书核验入口')) fai
 if (capabilities.includes('/assets/certificates/ai-large-model-engineer.jpg')) fail('Broken certificate placeholder path reappeared');
 if (!capabilities.includes('/site-certificate-facts-v2.js')) fail('Certificate runtime fact guard missing');
 if (!certificateGuard.includes('GPT-LE-2025-0422')) fail('Certificate fact runtime is incomplete');
-if (!certificateGuard.includes('不表述为 OpenAI 官方颁发、认证或授权')) fail('Certificate OpenAI boundary missing');
+if (!certificateGuard.includes('该证书并非 OpenAI 官方颁发或官方认证') ||
+    !certificateGuard.includes('不构成 OpenAI 官方认证、授权、政府资质或行业认证') ||
+    !certificateGuard.includes('并非本证书的颁发或认证机构')) fail('Certificate OpenAI boundary missing');
 if (!integrity.includes('data-qily-certificate-verification')) fail('Certificate verification matrix runtime missing');
 if (!integrity.includes('/qilylean/site-data.json')) fail('Terminology live source binding missing');
 if (!navigation.includes('/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2')) fail('Sitewide integrity runtime is not loaded');
