@@ -82,8 +82,8 @@ async function auditPage(page, route, limits, label){
         if(headers.some(el=>el.colSpan>1 || el.rowSpan>1))return null;
         const rows=[...table.querySelectorAll('tbody tr')].filter(row=>row.querySelectorAll(':scope>td').length===headers.length);
         if(rows.length<2)return null;
-        const labels=rows.map(row=>(row.querySelector(':scope>td:first-child')?.textContent||'').trim().replace(/\\s+/g,''));
-        const heading=(headers[0].textContent||'').trim().replace(/\\s+/g,'');
+        const labels=rows.map(row=>(row.querySelector(':scope>td:first-child')?.textContent||'').trim().replace(/\s+/g,''));
+        const heading=(headers[0].textContent||'').trim().replace(/\s+/g,'');
         if(!labels.length || labels.some(x=>!x || x.length>16) || heading.length>16)return null;
         const first=rows[0].querySelector(':scope>td:first-child');
         if(!first)return null;
