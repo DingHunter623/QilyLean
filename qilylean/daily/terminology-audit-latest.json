@@ -1,14 +1,26 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-09-28",
-  "briefPath": "qilylean/daily/2026-09-28.html",
-  "checkedAt": "2026-09-28T00:00:00.000Z",
+  "briefDate": "2026-10-11",
+  "briefPath": "qilylean/daily/2026-10-11.html",
+  "checkedAt": "2026-10-11T00:00:00.000Z",
   "candidates": [
+    {
+      "term": "APP",
+      "explanation": "",
+      "explicit": false,
+      "source": "APP"
+    },
     {
       "term": "APS",
       "explanation": "",
       "explicit": false,
-      "source": "APS"
+      "source": "ERP/MES/APS"
+    },
+    {
+      "term": "BOM",
+      "explanation": "",
+      "explicit": false,
+      "source": "BOM"
     },
     {
       "term": "CT",
@@ -17,45 +29,138 @@
       "source": "CT"
     },
     {
+      "term": "ECRS",
+      "explanation": "",
+      "explicit": false,
+      "source": "ECRS"
+    },
+    {
       "term": "ERP",
       "explanation": "",
       "explicit": false,
-      "source": "ERP"
+      "source": "ERP/MES/APS"
+    },
+    {
+      "term": "FPY",
+      "explanation": "首次通过率",
+      "explicit": true,
+      "source": "FPY（首次通过率）"
+    },
+    {
+      "term": "IE",
+      "explanation": "",
+      "explicit": false,
+      "source": "IE"
     },
     {
       "term": "MES",
       "explanation": "",
       "explicit": false,
-      "source": "MES"
+      "source": "ERP/MES/APS"
     },
     {
       "term": "OEE",
+      "explanation": "设备综合效率",
+      "explicit": true,
+      "source": "OEE（设备综合效率）"
+    },
+    {
+      "term": "PCE",
       "explanation": "",
       "explicit": false,
-      "source": "OEE"
+      "source": "PCE"
+    },
+    {
+      "term": "PDCA",
+      "explanation": "",
+      "explicit": false,
+      "source": "PDCA"
+    },
+    {
+      "term": "PFMEA",
+      "explanation": "",
+      "explicit": false,
+      "source": "PFMEA"
+    },
+    {
+      "term": "PMC",
+      "explanation": "",
+      "explicit": false,
+      "source": "PMC"
     },
     {
       "term": "SMED",
       "explanation": "",
       "explicit": false,
       "source": "SMED"
+    },
+    {
+      "term": "SOP",
+      "explanation": "",
+      "explicit": false,
+      "source": "SOP"
+    },
+    {
+      "term": "TPM",
+      "explanation": "",
+      "explicit": false,
+      "source": "TPM"
+    },
+    {
+      "term": "UPPH",
+      "explanation": "单位人时产出",
+      "explicit": true,
+      "source": "UPPH（单位人时产出）"
+    },
+    {
+      "term": "VI",
+      "explanation": "",
+      "explicit": false,
+      "source": "VI"
+    },
+    {
+      "term": "VSM",
+      "explanation": "",
+      "explicit": false,
+      "source": "VSM"
+    },
+    {
+      "term": "WIP",
+      "explanation": "",
+      "explicit": false,
+      "source": "WIP"
     }
   ],
   "coveredTerms": [
+    "APP",
     "APS",
+    "BOM",
     "CT",
+    "ECRS",
     "ERP",
+    "FPY",
+    "IE",
     "MES",
     "OEE",
-    "SMED"
+    "PCE",
+    "PDCA",
+    "PFMEA",
+    "PMC",
+    "SMED",
+    "SOP",
+    "TPM",
+    "UPPH",
+    "VI",
+    "VSM",
+    "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "ERP",
-    "SMED",
-    "OEE"
+    "UPPH",
+    "OEE",
+    "FPY"
   ],
   "status": "passed"
 }

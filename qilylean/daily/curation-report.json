@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-09-28T00:00:00.000Z",
-  "total_before": 380,
-  "total_after": 380,
+  "generated_at": "2026-10-11T00:00:00.000Z",
+  "total_before": 381,
+  "total_after": 381,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -124,7 +124,7 @@
         {
           "date": "2019-09-07",
           "title": "为什么“工位忙闲明显却仍然欠产”不能只靠催产：NPI四阶段实绩验证",
-          "score": 275,
+          "score": 277,
           "protected": false
         }
       ],
@@ -358,7 +358,7 @@
         {
           "date": "2020-01-09",
           "title": "NPI四阶段的现场判断：让异常进入关闭链之后怎样诊断切入",
-          "score": 273,
+          "score": 275,
           "protected": false
         }
       ],
@@ -709,7 +709,7 @@
         {
           "date": "2020-07-13",
           "title": "不靠经验硬撑：NPI四阶段的诊断切入要把改善变成日常能力",
-          "score": 273,
+          "score": 275,
           "protected": false
         }
       ],
@@ -995,7 +995,7 @@
         {
           "date": "2020-12-15",
           "title": "现场出现“人员都在动作但线体仍有堵点”，先用NPI四阶段做诊断切入",
-          "score": 273,
+          "score": 275,
           "protected": false
         }
       ],
@@ -1853,7 +1853,7 @@
         {
           "date": "2022-03-25",
           "title": "从波动中寻找真因——来自批次制程现场的一次NPI四阶段复盘",
-          "score": 264,
+          "score": 266,
           "protected": false
         }
       ],
@@ -1970,7 +1970,7 @@
         {
           "date": "2022-05-26",
           "title": "看见波动以后，NPI四阶段如何完成诊断切入（批次制程现场现场）",
-          "score": 264,
+          "score": 266,
           "protected": false
         }
       ],
@@ -2204,7 +2204,7 @@
         {
           "date": "2022-09-27",
           "title": "从一组原始记录开始，把NPI四阶段做到诊断切入（批次制程现场现场）",
-          "score": 264,
+          "score": 266,
           "protected": false
         }
       ],
@@ -2256,7 +2256,7 @@
         {
           "date": "2022-10-28",
           "title": "诊断切入为何决定NPI四阶段能否真正维持（批次制程现场现场）",
-          "score": 289,
+          "score": 291,
           "protected": false
         }
       ],
@@ -2373,7 +2373,7 @@
         {
           "date": "2022-12-29",
           "title": "一项可验收的NPI四阶段，怎样完成诊断切入（批次制程现场现场）",
-          "score": 264,
+          "score": 266,
           "protected": false
         }
       ],
@@ -2724,7 +2724,7 @@
         {
           "date": "2023-07-03",
           "title": "当“装配节拍满足而测试工位持续排队”，怎样用NPI四阶段破题",
-          "score": 291,
+          "score": 293,
           "protected": false
         }
       ],
@@ -3010,7 +3010,7 @@
         {
           "date": "2023-12-05",
           "title": "NPI四阶段的现场判断：把等待与库存显性化之后怎样标准固化",
-          "score": 286,
+          "score": 288,
           "protected": false
         }
       ],
@@ -3231,7 +3231,7 @@
         {
           "date": "2024-04-07",
           "title": "过程质量与追溯的基准建立，先从NPI四阶段证据链开始",
-          "score": 312,
+          "score": 314,
           "protected": false
         }
       ],
@@ -3296,7 +3296,7 @@
         {
           "date": "2024-05-08",
           "title": "让投入对应可验收收益——来自过程质量与追溯的一次NPI四阶段复盘",
-          "score": 312,
+          "score": 314,
           "protected": false
         }
       ],
@@ -3985,7 +3985,7 @@
         {
           "date": "2025-05-15",
           "title": "现场出现“计划频繁变更导致前后工序失去节奏”，先用NPI四阶段做标准固化",
-          "score": 300,
+          "score": 302,
           "protected": false
         }
       ],
@@ -4336,7 +4336,7 @@
         {
           "date": "2025-11-17",
           "title": "为什么“计划频繁变更导致前后工序失去节奏”不能只靠催产：NPI四阶段标准固化",
-          "score": 308,
+          "score": 310,
           "protected": false
         }
       ],
@@ -4388,7 +4388,7 @@
         {
           "date": "2025-12-18",
           "title": "交付不止“做完”：NPI四阶段在标准固化如何验证结果（季节性订单排产现场）",
-          "score": 300,
+          "score": 302,
           "protected": false
         }
       ],
@@ -4934,6 +4934,19 @@
           "date": "2026-09-28",
           "title": "计划不是排出来的，而是算出来的：制造业排产闭环的7个关键节点",
           "score": 141,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-10-05",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-10-11",
+          "title": "从工程经验到制造价值：六项能力、九类问题与一套改善闭环",
+          "score": 398,
           "protected": false
         }
       ],
