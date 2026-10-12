@@ -203,7 +203,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v6' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v7' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -257,6 +257,19 @@ def validate_generated_corpus():
     for date in ('2026-09-04','2026-08-25'):
         international=(visual.ROOT/'qilylean/daily'/f'{date}.html').read_text(encoding='utf-8')
         assert 'site-daily-brief-layout-guard-v1.css?v=20261012-selected-brief-contrast-v6' in international, (date,'stale international visual CSS')
+    # Regression: two-column key/evidence tables must never return to a 50/50
+    # fixed layout. This explicitly covers section 8 of the 2026-09-13 issue,
+    # and shares selectors for every cloned Selected Brief archive page.
+    for path,marker in ((visual.CN/'assets/brief-visual-parity.css','QILY-CN-BRIEF-TWO-COLUMN-READABILITY-V7'),
+                        (visual.ROOT/'site-daily-brief-layout-guard-v1.css','QILY-BRIEF-TWO-COLUMN-READABILITY-V7')):
+        sheet=path.read_text(encoding='utf-8')
+        assert marker in sheet,(str(path),'comparison column contract missing')
+        assert 'table-layout:auto!important' in sheet,(str(path),'two-column auto layout missing')
+        assert 'white-space:nowrap!important' in sheet,(str(path),'short label no-wrap missing')
+        assert ':nth-child(2):last-child' in sheet,(str(path),'must target only two-column tables')
+    example=(visual.ROOT/'qilylean/daily/2026-09-13.html').read_text(encoding='utf-8')
+    assert '<th>成果类别</th>' in example and '<th>评价重点</th>' in example,'screenshot example lost'
+    assert 'site-daily-brief-layout-guard-v1.css?v=20261012-brief-key-width-v7' in example,'source CSS refresh missing'
     # A custom checklist and adjacent navigation must keep the canonical readable scale.
     typography=(visual.CN/'assets/brief-visual-parity.css').read_text(encoding='utf-8')
     for class_name in ('.tripod-checklist>div>span','.brief-adjacent>a','.tripod-closing>span'):
