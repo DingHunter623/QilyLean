@@ -187,6 +187,18 @@ def replace_article(doc: str, content: str) -> str:
     return doc[:match.start(2)] + content + doc[match.end(2):]
 
 
+def scope_article_footer(doc: str) -> str:
+    match = ARTICLE.search(doc)
+    if not match:
+        raise RuntimeError("Generated mirror article missing")
+    def classes(found: re.Match) -> str:
+        before, tokens, after = found.groups()
+        names = ["qily-public-content-footer" if name == "footer" else name for name in tokens.split()]
+        return before + " ".join(names) + after
+    content = re.sub(r'(<div\b[^>]*\bclass=")([^"]*)(")', classes, match.group(2))
+    return doc[:match.start(2)] + content + doc[match.end(2):]
+
+
 def brief_index_content() -> str:
     cards = []
     for page in sorted((s for s in source.SOURCES if source.is_date_brief(s.path)), key=lambda s: s.path.stem, reverse=True):
@@ -274,6 +286,10 @@ def main() -> None:
             for identifier in ("gbt2828PdfOpen", "gbt2828PdfDownload"):
                 extra = ' download="GB-T-2828-reference.pdf"' if identifier.endswith("Download") else ' target="_blank" rel="noopener"'
                 doc = re.sub(r'<a\b([^>]*\bid="' + identifier + r'"[^>]*)>', lambda m: '<a' + re.sub(r'\s(?:href|aria-disabled|target|rel|download)="[^"]*"', '', m.group(1)) + ' href="' + pdf_url + '"' + extra + '>', doc, count=1)
+            # The legacy "full training" source is only a short placeholder
+            # and is not a materialized archive page. Offer the real PDF.
+            doc = doc.replace('href="/archive/reference/gbt2828/"', 'href="#preview" data-public-pdf-preview')
+            doc = doc.replace('>查看完整培训</a>', '>查看PDF资料预览</a>')
             doc = doc.replace("正在载入高清版本……", "高清资料已就绪，可打开预览并缩放查阅。")
             kind = "pdf"
         elif path == "ai.html":
@@ -312,6 +328,24 @@ def main() -> None:
             doc = re.sub(r'<canvas\b(?![^>]*data-preview-key)', '<canvas data-preview-key="' + key + '"', doc)
         if path == "tools/times26001/index.html":
             doc = re.sub(r'<button\b[^>]*\bclass="[^"]*\bapp-share-trigger\b[^"]*"[^>]*>[\s\S]*?</button>', "", doc)
+            # Neither the APK nor its checksum is present in the approved CN
+            # publication inputs. Keep version information without dead CTAs.
+            doc = re.sub(r'<a\b[^>]*\bhref="/Times26001-[^"]+\.apk(?:\?[^"]*)?"[^>]*>[\s\S]*?</a>', '<span class="status" role="status" data-public-download-unavailable="apk">安装包暂不可下载</span>', doc)
+            doc = re.sub(r'<a\b[^>]*\bhref="/Times26001-[^"]+\.sha256\.txt(?:\?[^"]*)?"[^>]*>[\s\S]*?</a>', '<span data-public-download-unavailable="checksum">校验文件暂不可用</span>', doc)
+            doc = doc.replace("当前可直接下载 v1.1.14 Android 官网标准LOGO统一修正版 APK。", "归档版本为 v1.1.14 Android 官网标准LOGO统一修正版；当前中国站暂不提供安装包下载。")
+            doc = doc.replace("当前可下载：Times26001", "版本说明：Times26001")
+            doc = doc.replace("<h2>Android 下载</h2>", "<h2>Android 版本说明</h2>")
+            doc = doc.replace("下载入口优先于分享入口；与分享链接均指向本页 Android 下载区。", "本页可分享版本与功能说明；安装包及校验文件当前暂不可用。")
+            doc = doc.replace(">分享下载页</button>", ">分享本页说明</button>")
+        # The first sanitizer strips mailto destinations, but an inert email
+        # label can survive in span/div footers. Remove only this known contact
+        # residue, preserving nearby public-source links and print controls.
+        doc = re.sub(r'<span\b[^>]*>\s*官网邮箱\s*[:：]?\s*<a\b[^>]*>\s*admin@qilylean\.com\s*</a>\s*</span>', "", doc, flags=re.I)
+        doc = re.sub(r'[；;]?\s*官网邮箱\s*[:：]?\s*<a\b[^>]*>\s*admin@qilylean\.com\s*</a>', "", doc, flags=re.I)
+        doc = re.sub(r'<a\b[^>]*>\s*admin@qilylean\.com\s*</a>', "", doc, flags=re.I)
+        # Authored lesson footers are content, not the CN fixed site footer.
+        # Scope only nested div class tokens and retain the real footer element.
+        doc = scope_article_footer(doc)
         doc = attach(doc, kind, path == TERM_PATH)
         page.out.write_text(doc, encoding="utf-8")
         evidence.append({"source": path, "url": page.url, "kind": kind})

@@ -52,6 +52,9 @@ def main() -> None:
         page = inventory[item["source"]]
         doc = page.out.read_text(encoding="utf-8")
         parsed = Nodes(doc)
+        require("admin@qilylean.com" not in doc, "Inert international email contact remains: " + item["url"])
+        require(all(a.get("href") for a in parsed.matching("a")), "Public archive anchor has no destination: " + item["url"])
+        require(not any("footer" in str(a.get("class", "")).split() for a in parsed.matching("div")), "Authored div.footer collides with the CN site footer: " + item["url"])
         assets = parsed.matching("script", "data-cn-public-interactions") + parsed.matching("link", "data-cn-public-interactions")
         require(len(assets) == (4 if item["kind"] == "terminology" else 2), "Missing interaction resources: " + item["url"])
         for asset in assets:
@@ -77,6 +80,13 @@ def main() -> None:
             frames = parsed.matching("iframe", "id", "gbt2828PdfPreview")
             require(len(frames) == 1 and str(frames[0].get("src", "")).startswith("/assets/public-gbt2828-reference.pdf?v="), "Approved PDF preview missing")
             require((CN / "assets/public-gbt2828-reference.pdf").read_bytes().startswith(b"%PDF-"), "Approved PDF missing")
+            for identifier in ("gbt2828PdfOpen", "gbt2828PdfDownload"):
+                links = parsed.matching("a", "id", identifier)
+                require(len(links) == 1 and str(links[0].get("href", "")).startswith("/assets/public-gbt2828-reference.pdf?v="), "Approved PDF action missing: " + identifier)
+            require(bool(parsed.matching("a", "id", "gbt2828PdfDownload")[0].get("download")), "Approved PDF download action missing")
+            require(len(parsed.matching("a", "data-public-pdf-preview")) == 1 and parsed.matching("a", "data-public-pdf-preview")[0].get("href") == "#preview", "GB/T preview navigation missing")
+            require(bool(parsed.matching("section", "id", "preview")), "GB/T PDF preview hash target missing")
+            require(not any(a.get("href") == "/archive/reference/gbt2828/" for a in parsed.matching("a")), "GB/T placeholder training link remains")
         if item["source"].startswith("qilylean/reference-"):
             original = Nodes(source.extract_fragment((ROOT / page.path).read_text(encoding="utf-8")))
             expected = len(original.matching("canvas"))
@@ -100,6 +110,12 @@ def main() -> None:
             require(all('href' in a for a in parsed.matching('a') if 'button' in str(a.get('class','')).split()), "Public resource action has no destination")
         if item["source"] in ("knowledge/pdca-gantt-milestone-opl.html", "knowledge/terminology/mtbf.html", "knowledge/terminology/mttr.html"):
             require(bool(parsed.matching("button", "data-public-print")), "Public print action missing: " + item["url"])
+        if item["source"] == "tools/times26001/index.html":
+            require(not any(re.search(r'\.apk(?:\?|$)|\.sha256\.txt(?:\?|$)', str(a.get("href", "")), re.I) for a in parsed.matching("a")), "Unavailable Times download link remains")
+            require(len(parsed.matching("span", "data-public-download-unavailable", "apk")) == 2, "Times APK unavailability status missing")
+            require(len(parsed.matching("span", "data-public-download-unavailable", "checksum")) == 1, "Times checksum unavailability status missing")
+            require("安装包暂不可下载" in doc and "校验文件暂不可用" in doc and "当前可直接下载" not in doc, "Times availability copy contradicts the publication inputs")
+            require(bool(parsed.matching("button", "id", "copyIntro")) and bool(parsed.matching("button", "id", "copyUrl")), "Times public copy controls lost")
         checked += 1
     require(checked == report["checked"] and checked >= 20, "Public interaction route inventory incomplete")
     print(f"CN public interaction contracts passed: {checked} routes / {report['terminology_lessons']} terminology lessons")

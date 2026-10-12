@@ -194,3 +194,10 @@ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-content{pad
  body[data-cn-public-kind="terminology"].term-opl-standalone :is(.site-header,.footer){display:none!important}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{display:none!important}
 }
+/* A lesson's own footer is ordinary content, separate from the site Dock. */
+.mirror-article-fidelity .qily-public-content-footer{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid #cbdedd;
+  color:#426367;
+}
+
