@@ -286,3 +286,49 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
     line-height:1.6!important;
   }
 }
+
+/* QILY-SELECTED-BRIEF-VISUAL-PARITY-V6 | 2026-10-12
+ * CN-approved gold section numbering / dark-surface contrast / dense IE flows.
+ * Scope exclusively to dated Selected Brief content.
+ */
+html:root:root body.qily-knowledge-brief-page main .knowledge-brief-section .module-heading>.module-eyebrow{
+  display:block!important;width:auto!important;margin:0 0 12px!important;
+  color:#85601f!important;-webkit-text-fill-color:#85601f!important;
+  font-size:21px!important;font-weight:400!important;line-height:1.45!important;
+  letter-spacing:.02em!important;opacity:1!important;text-shadow:none!important;
+}
+html:root:root body.qily-knowledge-brief-page main .knowledge-brief-hero .knowledge-breadcrumbs{
+  color:#e8f6f3!important;-webkit-text-fill-color:#e8f6f3!important;
+  font-size:18px!important;line-height:1.5!important;opacity:1!important;
+}
+html:root:root body.qily-knowledge-brief-page main .knowledge-brief-hero .knowledge-breadcrumbs a{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;
+  text-decoration-color:#ffe39b!important;
+}
+html:root:root body.qily-knowledge-brief-page main .knowledge-brief-hero .knowledge-breadcrumbs span[aria-hidden="true"]{
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+}
+/* Adapt to the diagram's actual column width, not the desktop viewport.
+ * This fixes the squeezed SPC/anti-error end node in the waste diagram.
+ */
+html body.daily-single-page article.post.w8 .scene{container-type:inline-size}
+html body.daily-single-page article.post.w8 .scene-flow .node{
+  min-width:0!important;overflow-wrap:normal!important;word-break:keep-all!important;
+  line-height:1.5!important;
+}
+@container (max-width:620px){
+  html body.daily-single-page article.post.w8 .scene-flow{
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;
+  }
+  html body.daily-single-page article.post.w8 .scene-flow>.node{
+    min-height:65px!important;padding:12px 16px!important;
+  }
+  html body.daily-single-page article.post.w8 .scene-flow>.scene-arrow{
+    min-height:22px!important;transform:rotate(90deg);font-size:22px!important;
+  }
+}
+@media(max-width:620px){
+  html:root:root body.qily-knowledge-brief-page main .knowledge-brief-section .module-heading>.module-eyebrow{
+    font-size:20px!important;
+  }
+}
