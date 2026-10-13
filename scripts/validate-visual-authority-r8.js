@@ -62,6 +62,13 @@ for(const file of files()){
     forbid(html,'site-visual-runtime-r8.js','CN local visual runtime');
     continue;
   }
+  if(file==='daily-insights.html'){
+    must(html,'http-equiv="refresh"','Legacy brief index redirect');
+    must(html,"location.replace(target",'Legacy dated brief redirect');
+    forbid(html,'site-visual-runtime-r8.js','Redirect must not initialize the destination runtime');
+    forbid(html,'site-visual-authority-r8.css','Redirect visual ownership');
+    continue;
+  }
   if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
     isolated++;
     must(html,'data-qily-ddz-fast-shell="v155"','DDZ V155 fast visual owner');
