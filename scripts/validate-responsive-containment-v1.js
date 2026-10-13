@@ -4,10 +4,24 @@ const fs=require('fs'),path=require('path'),{execFileSync}=require('child_proces
 const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 const must=(source,token,label)=>{if(!source.includes(token))throw new Error(`${label}: missing ${token}`)};
 const forbid=(source,token,label)=>{if(source.includes(token))throw new Error(`${label}: forbidden ${token}`)};
+const rule=(source,selector,label)=>{
+  const clean=source.replace(/\/\*[\s\S]*?\*\//g,'');
+  const escaped=selector.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  const match=clean.match(new RegExp('(?:^|})\\s*'+escaped+'\\s*\\{([^{}]*)\\}'));
+  if(!match)throw new Error(`${label}: missing rule ${selector}`);
+  return match[1];
+};
 const materialized=process.argv.includes('--materialized');
 const css=read('site-responsive-containment-v1.css');
-for(const token of ['QilyLean Responsive Containment V1','@media (max-width:1179px)','@media (max-width:767px)','overscroll-behavior-inline:contain','-webkit-overflow-scrolling:touch','html body main table','display:block!important','.flow-wrap','.diagram-wrap','.opl-table-wrap','.opl-flow-wrap','max-width:100%!important'])must(css,token,'Responsive containment');
+for(const token of ['QilyLean Responsive Containment V1','QILY-R8-CONTAINMENT-ONLY','@media (max-width:1179px)','@media (max-width:767px)','overscroll-behavior-inline:contain','-webkit-overflow-scrolling:touch','html body main table','.flow-wrap','.diagram-wrap','.opl-table-wrap','.opl-flow-wrap','max-width:100%!important'])must(css,token,'Responsive containment');
 for(const token of ['position:fixed','width:100vw','min-width:680px','min-width:980px'])forbid(css,token,'Responsive containment');
+// R8 owns table layout: wrappers scroll locally while tables retain native layout.
+if(/main\s+table\s*\{[^{}]*display\s*:\s*block\s*!important/i.test(css.replace(/\/\*[\s\S]*?\*\//g,'')))throw new Error('Responsive containment: tables must not become block scroll containers');
+const authority=read('site-visual-authority-r8.css');
+const tableFrame=';'+rule(authority,'html body main .qily-table-scroll','R8 table scroll container').replace(/\s+/g,'');
+for(const token of ['box-sizing:border-box!important','width:100%!important','max-width:100%!important','min-width:0!important','overflow-x:auto!important','overflow-y:hidden!important','overscroll-behavior-inline:contain!important','-webkit-overflow-scrolling:touch!important'])must(tableFrame,';'+token+';','R8 table scroll container');
+const table=';'+rule(authority,'html body main table','R8 native table layout').replace(/\s+/g,'');
+for(const token of ['display:table!important','width:100%!important','max-width:100%!important','height:auto!important','min-height:0!important','table-layout:auto!important','overflow:visible!important'])must(table,';'+token+';','R8 native table layout');
 const components=read('site-visual-components-v1.css');
 must(components,'qily-diagram-frame','Unified diagram frame');must(components,'table.qily-table','Unified Qily Table');must(components,'@media (max-width:767px)','Unified component mobile composition');
 const materializer=read('scripts/materialize-global-language-v3.js');
