@@ -154,6 +154,55 @@ jobs:
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
 
+      - name: Verify CN three-region contacts desktop and mobile
+        env:
+          QA_CN_BASE: https://qilylean.cn
+          QA_BASE: https://qilylean.com
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          const fs=require('fs');
+          const assert=(ok,msg)=>{if(!ok)throw new Error(msg);};
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const numbers=['134 5001 4003','151 6812 0722','176 8178 8259'];
+            for(const [name,width,height,expectedColumns] of [
+              ['desktop',1440,900,3],['mobile',390,844,1]
+            ]){
+              const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+              await page.goto(process.env.QA_CN_BASE+'/about/?visual-qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+              await page.locator('.qily-about-phone-item').first().waitFor({state:'visible',timeout:20000});
+              const metrics=await page.evaluate(()=>{
+                const grid=document.querySelector('.qily-about-phone-grid');
+                const items=[...document.querySelectorAll('.qily-about-phone-item')];
+                const style=getComputedStyle(grid);
+                return {
+                  columns:style.gridTemplateColumns.split(' ').length,
+                  phones:items.map(e=>e.textContent.replace(/\\s+/g,' ').trim()),
+                  overflow:document.documentElement.scrollWidth>innerWidth+1,
+                  goldBorder:items.map(e=>getComputedStyle(e).borderLeftColor),
+                  fontWeights:items.map(e=>getComputedStyle(e.querySelector('span')).fontWeight),
+                  styleUrl:document.getElementById('qilyCnUnifiedViV2')?.href||''
+                };
+              });
+              for(const n of numbers)assert(metrics.phones.some(x=>x.includes(n)),name+' missing phone '+n);
+              assert(metrics.phones.length===3,name+' must show exactly 3 phone cards');
+              assert(metrics.columns===expectedColumns,name+' phone-grid column mismatch: '+metrics.columns);
+              assert(!metrics.overflow,name+' has horizontal document overflow');
+              assert(metrics.fontWeights.every(x=>x==='400'),name+' violates regular-weight VI');
+              assert(metrics.styleUrl.includes('20261014-cn-contact-three-phones-v1'),name+' loaded stale contact CSS');
+              fs.writeFileSync('qa-output/cn-about-contact-'+name+'.json',JSON.stringify(metrics,null,2));
+              await page.locator('.qily-about-phone-grid').screenshot({path:'qa-output/cn-about-contact-'+name+'.png'});
+              await page.close();
+            }
+            const international=await browser.newPage();
+            await international.goto(process.env.QA_BASE+'/contact/?visual-qa='+Date.now(),{waitUntil:'domcontentloaded',timeout:60000});
+            const comPhones=await international.locator('.phone-card a').allTextContents();
+            for(const n of numbers)assert(comPhones.some(x=>x.includes(n)),'COM contact parity mismatch '+n);
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+
       - name: Upload visual evidence
         if: always()
         uses: actions/upload-artifact@v4
