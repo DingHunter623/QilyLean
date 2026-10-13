@@ -38,4 +38,36 @@ const components=read('site-visual-components-v1.css');must(components,'Unified 
 
 const materializer=read('scripts/materialize-global-language-v3.js');for(const token of ['20260831-google-translate-single-runtime-v32','20260901-primary-navigation-native-scroll-v8','20260906-authority-v58-mobile-swipe-fixed-bottom','20260831-r11-semantics-v17-native-range','20260830-r11-semantics-v14-visual-v3-vi-teal','20260901-google-translate-single-runtime-v16','20260901-google-translate-mobile-ui-v16','20260831-r7-single-responsibility-v11-safe-translation','20260831-unified-components-v29-native-range','20260831-project-grade-readability-v3','20260831-r8-observable-overflow-v1','20260903-ddz-fast-knowledge-v155'])must(materializer,token,'Materializer');forbid(materializer,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');forbid(materializer,'const PUBLIC_UI_JS=','Retired translation picker active injection');
 
+/* Career resume visual contract: one full-width chronological article per stage.
+ * Do not shorten or rewrite the original professional resume to make it fit.
+ */
+const careerPage=read('experience/index.html');
+const careerFallback=read('qilylean/career-resume-full.js');
+const careerStyle=(careerPage.match(/<style id="qilyCareerSingleColumnArticle20261013">([\\s\\S]*?)<\\/style>/)||[])[1];
+if(!careerStyle)throw new Error('Career article-only visual style is missing');
+for(const token of [
+  '.career-full-grid{',
+  'display:block!important;',
+  '.career-full-grid>article.career-full-card{',
+  'width:100%!important;',
+  'box-shadow:none!important;'
+])must(careerStyle,token,'Career single-column visual');
+forbid(careerStyle,'repeat(2,minmax(0,1fr))','Career must not return to two columns');
+must(careerFallback,'.career-full-grid{display:block;width:100%;gap:0}','Resume fallback must retain single-column order');
+const careerSection=(careerPage.match(/<section class="module-section alt" id="experience"[\\s\\S]*?<div class="career-chain"/)||[])[0]||'';
+const dateHeadings=[
+  '2025.11—至今',
+  '2019.07—2025.08',
+  '2015.07—2019.06',
+  '2009.07—2015.06',
+  '2006.07—2009.06'
+];
+if((careerSection.match(/<article class="career-full-card"/g)||[]).length!==5)throw new Error('Career must retain all five professional stages');
+let last=-1;
+for(const date of dateHeadings){
+  const pos=careerSection.indexOf(date);
+  if(pos<=last)throw new Error('Career newest-first chronology changed or stage missing: '+date);
+  last=pos;
+}
+
 console.log('PASS: V26 compatibility remains intact on V32: official sticky Header, native-range navigation, Google Translate V1.4, rectangular fixed-bottom compact Dock V5.8, DDZ V155 isolated fast shell and unified VI authority.');
