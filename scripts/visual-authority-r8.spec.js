@@ -261,17 +261,15 @@ test('navigation surface links retain background feedback without underlines',as
 });
 
 
-/* Regression for the historical career design: five career stages do NOT mean
- * five simultaneous reading columns. This must be checked after the R8 runtime
- * has had an opportunity to annotate its card-count attribute. */
-test('career previous two-column layout survives R8 card-count annotation',async({browser})=>{
+/* The resume is a full-width chronological article, NOT a desktop card gallery.
+ * Prevent global R8 card-count layout rules from returning it to two columns.
+ */
+test('career five-stage single-column article geometry',async({browser})=>{
   const cases=[
-    {width:1600,height:950,columns:2},
-    {width:1366,height:900,columns:2},
-    {width:1024,height:900,columns:2},
-    {width:768,height:900,columns:1},
-    {width:390,height:844,columns:1}
+    {width:1600,height:950},{width:1366,height:900},
+    {width:1024,height:900},{width:768,height:900},{width:390,height:844}
   ];
+  const order=['2025.11—至今','2019.07—2025.08','2015.07—2019.06','2009.07—2015.06','2006.07—2009.06'];
   for(const vp of cases){
     const context=await browser.newContext({viewport:{width:vp.width,height:vp.height},reducedMotion:'reduce'});
     await context.route('**/*',route=>{
@@ -281,29 +279,32 @@ test('career previous two-column layout survives R8 card-count annotation',async
     try{
       const page=await context.newPage();
       const response=await page.goto(BASE+'/experience/',{waitUntil:'domcontentloaded',timeout:30000});
-      expect(response&&response.ok(),'career page must be served').toBeTruthy();
+      expect(response&&response.ok(),'career article page must load').toBeTruthy();
       await expect(page.locator('#experience .career-full-card')).toHaveCount(5);
-      await expect.poll(()=>page.locator('#experience .career-full-grid').evaluate(el=>
-        getComputedStyle(el).gridTemplateColumns.trim().split(/\\s+/).length
-      ),{timeout:10000,message:`career ${vp.width}px must preserve ${vp.columns} reading column(s)`}).toBe(vp.columns);
+      await expect.poll(()=>page.locator('#experience .career-full-grid').evaluate(el=>getComputedStyle(el).display),
+        {timeout:10000,message:`career ${vp.width}px must be an article stream`}).toBe('block');
       const state=await page.locator('#experience .career-full-grid').evaluate(grid=>{
-        const cards=[...grid.querySelectorAll(':scope>.career-full-card')].map(el=>{
+        const root=grid.getBoundingClientRect();
+        const cards=[...grid.querySelectorAll(':scope>article.career-full-card')].map(el=>{
           const r=el.getBoundingClientRect();
-          return {left:r.left,top:r.top,width:r.width,height:r.height};
+          return {left:r.left,top:r.top,bottom:r.bottom,width:r.width,height:r.height,
+            period:(el.querySelector('small')?.textContent||'').trim()};
         });
-        return {cards,columns:getComputedStyle(grid).gridTemplateColumns};
+        return {root:{left:root.left,width:root.width},cards,overflow:grid.scrollWidth-grid.clientWidth};
       });
       expect(state.cards.length).toBe(5);
-      if(vp.columns===2){
-        expect(Math.abs(state.cards[0].top-state.cards[1].top),`desktop career cards must share a row at ${vp.width}`).toBeLessThan(3);
-        expect(state.cards[1].left-state.cards[0].left,`career cards must be side by side at ${vp.width}`).toBeGreaterThan(300);
-        expect(state.cards[0].width,`career card must remain readable at ${vp.width}`).toBeGreaterThan(300);
-      }else{
-        expect(Math.abs(state.cards[0].left-state.cards[1].left),`career stages stack at ${vp.width}`).toBeLessThan(3);
-        expect(state.cards[1].top-state.cards[0].top,`career stages must be vertically separated at ${vp.width}`).toBeGreaterThan(100);
+      expect(state.overflow,`career ${vp.width}px horizontal overflow`).toBeLessThanOrEqual(2);
+      for(let i=0;i<5;i++){
+        const item=state.cards[i];
+        expect(item.period,`career stage ${i} chronology`).toContain(order[i]);
+        expect(Math.abs(item.left-state.root.left),`career stage ${i} common left axis`).toBeLessThan(3);
+        expect(item.width/state.root.width,`career stage ${i} full-width layout`).toBeGreaterThan(.97);
+        expect(item.height,`career stage ${i} original details`).toBeGreaterThan(180);
+        if(i>0)expect(item.top-state.cards[i-1].bottom,`stage ${i} cannot share a row`).toBeGreaterThanOrEqual(-2);
       }
-    }finally{
-      await context.close();
-    }
+      await page.locator('#experience .career-full-card').first().screenshot({
+        path:path.join(OUT,`career-article-${vp.width}.png`)
+      });
+    }finally{await context.close();}
   }
 });
