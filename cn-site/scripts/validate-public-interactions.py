@@ -9,7 +9,7 @@ import re
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import parse_qs, unquote, urlparse
+from urllib.parse import parse_qs, unquote, urljoin, urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
 CN = ROOT / "cn-site"
@@ -49,7 +49,7 @@ def main() -> None:
     for path, page in inventory.items():
         if source.is_date_brief(page.path):
             continue
-        fragment = source.extract_fragment((ROOT / page.path).read_text(encoding="utf-8"))
+        fragment = source.extract_fragment((ROOT / page.path).read_text(encoding="utf-8"), path)
         if re.search(r'<(?:input|form|select|textarea|canvas|iframe)\b|<button\b(?![^>]*qily-float-btn)', fragment, re.I):
             expected_sources.add(path)
     require({item["source"] for item in report["items"]} == expected_sources, "Public interaction source inventory drifted")
@@ -124,7 +124,40 @@ def main() -> None:
             require(bool(parsed.matching("button", "id", "copyIntro")) and bool(parsed.matching("button", "id", "copyUrl")), "Times public copy controls lost")
         checked += 1
     require(checked == report["checked"] and checked >= 20, "Public interaction route inventory incomplete")
+    tools = Nodes((CN / "archive/reference/lean-tools/index.html").read_text())
+    require(len([a for a in tools.matching("article") if "card" in str(a.get("class", "")).split()]) == 10, "Legacy lean tools truncated before all ten cards")
+    require(bool(tools.matching("article", "id", "flow")), "Single-piece-flow learning anchor missing")
+    execution = Nodes((CN / "archive/reference/execution-loop/index.html").read_text())
+    require(len([a for a in execution.matching("article") if "card" in str(a.get("class", "")).split()]) == 8, "Execution-loop stages incomplete")
+    documents = {p: Nodes(p.read_text(encoding="utf-8")) for p in CN.rglob("*.html")}
+    for path, document in documents.items():
+        route = "/" + path.relative_to(CN).as_posix()
+        if route.endswith("/index.html"):
+            route = route[:-10]
+        for tag, attrs in document.nodes:
+            resource = urlparse(str(attrs.get("src") or attrs.get("href") or ""))
+            if resource.path in {"/assets/cn-nav-rail-v1.js", "/assets/content-mirror.css"}:
+                require(parse_qs(resource.query).get("anchors") == ["20261013-v1"], "Stale CN anchor resource cache identity: " + route)
+        for anchor in document.matching("a"):
+            href = str(anchor.get("href", ""))
+            if not href:
+                continue
+            target = urlparse(urljoin(route, href))
+            if target.scheme or target.netloc:
+                continue
+            if target.path.startswith("/mirror-media/"):
+                candidate = ROOT / unquote(target.path[len("/mirror-media/"):])
+            else:
+                candidate = CN / unquote(target.path.lstrip("/"))
+                if target.path.endswith("/"):
+                    candidate /= "index.html"
+            require(candidate.is_file(), "Broken CN content link: " + route + " -> " + href)
+            fragment = unquote(target.fragment)
+            if fragment and fragment.lower() != "top" and candidate in documents:
+                require(any(a.get("id") == fragment or (t == "a" and a.get("name") == fragment)
+                            for t, a in documents[candidate].nodes), "Broken CN content anchor: " + route + " -> " + href)
     print(f"CN public interaction contracts passed: {checked} routes / {report['terminology_lessons']} terminology lessons")
+    print(f"CN internal content links and anchors passed: {len(documents)} HTML pages")
 
 
 if __name__ == "__main__":

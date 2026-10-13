@@ -128,6 +128,7 @@ def selected_source(path: Path) -> bool:
         "qilylean/gbt2828.html",
         "qilylean/lean-knowledge.html",
         "qilylean/lean-tools.html",
+        "qilylean/execution-loop.html",
         "qilylean/papers.html",
         "qilylean/production-operations-organization.html",
         "qilylean/reference-audit-documents.html",
@@ -334,7 +335,18 @@ def extract_meta(text: str) -> tuple[str, str]:
     desc = clean_text(md.group(1)) if md else ""
     return neutralize(title), neutralize(desc)
 
-def extract_fragment(text: str) -> str:
+def extract_fragment(text: str, source_path: str = "") -> str:
+    # These legacy documents use sibling sections without a <main>. Selecting
+    # their first article loses nine tools / seven execution stages and anchors.
+    if source_path in {"qilylean/lean-tools.html", "qilylean/execution-loop.html"}:
+        body = re.search(r'<body\b[^>]*>([\s\S]*?)</body>', text, re.I)
+        if body:
+            sections = body.group(1)
+            start = re.search(r'<section\b', sections, re.I)
+            ends = list(re.finditer(r'</section\s*>', sections, re.I))
+            if start and ends:
+                return sections[start.start():ends[-1].end()]
+        raise RuntimeError("Legacy public document sections missing: " + source_path)
     for tag in ("main","article","body"):
         m = re.search(fr"<{tag}\b[^>]*>([\s\S]*?)</{tag}>", text, re.I)
         if m:
@@ -386,14 +398,14 @@ def wrap_page(source: Source, title: str, desc: str, body: str) -> str:
     current = "briefs" if source.category == "精选简报" else "knowledge"
     canonical = "https://qilylean.cn" + source.url
     desc = desc or f"{FILED_NAME}公开知识资料：{title}"
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(desc, quote=True)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1">{TRANSLATION_STYLESHEET}<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header(current)}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">{html.escape(source.category)}｜公开知识档案</span><h1>{html.escape(title)}</h1><p>{html.escape(desc)}</p></div></section><section class="section"><div class="content mirror-shell"><article class="article-body mirror-article">{body}</article><aside class="toc mirror-meta"><b>内容来源</b><p>由 QilyLean｜启力精益公开内容资产同步至中国站，并按个人知识站边界完成本地化整理。</p><p><a href="/archive/">返回完整内容档案</a></p></aside></div></section></main>{footer()}{TRANSLATION_SCRIPT}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(desc, quote=True)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1&anchors=20261013-v1">{TRANSLATION_STYLESHEET}<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header(current)}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">{html.escape(source.category)}｜公开知识档案</span><h1>{html.escape(title)}</h1><p>{html.escape(desc)}</p></div></section><section class="section"><div class="content mirror-shell"><article class="article-body mirror-article">{body}</article><aside class="toc mirror-meta"><b>内容来源</b><p>由 QilyLean｜启力精益公开内容资产同步至中国站，并按个人知识站边界完成本地化整理。</p><p><a href="/archive/">返回完整内容档案</a></p></aside></div></section></main>{footer()}{TRANSLATION_SCRIPT}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script></body></html>'''
 
 def render_index(title: str, heading: str, intro: str, rows: list[tuple[str,str,str]], url: str) -> str:
     cards = []
     for label, href, meta in rows:
         cards.append(f'<a class="article-link" href="{href}"><h3>{html.escape(label)}</h3><p>{html.escape(meta)}</p></a>')
     canonical = "https://qilylean.cn" + url
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(intro, quote=True)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header("briefs" if url.startswith("/briefs/") else "knowledge")}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">QILYLEAN CONTENT ARCHIVE｜内容档案</span><h1>{html.escape(heading)}</h1><p>{html.escape(intro)}</p></div></section><section class="section"><div class="content"><div class="article-list mirror-index">{''.join(cards)}</div></div></section></main>{footer()}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(intro, quote=True)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1&anchors=20261013-v1"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header("briefs" if url.startswith("/briefs/") else "knowledge")}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">QILYLEAN CONTENT ARCHIVE｜内容档案</span><h1>{html.escape(heading)}</h1><p>{html.escape(intro)}</p></div></section><section class="section"><div class="content"><div class="article-list mirror-index">{''.join(cards)}</div></div></section></main>{footer()}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script></body></html>'''
 
 def update_sitemap(urls: list[str]):
     path = CN / "sitemap.xml"
@@ -423,7 +435,7 @@ def main():
     for source in SOURCES:
         raw = (ROOT / source.path).read_text(encoding="utf-8", errors="ignore")
         title, desc = extract_meta(raw)
-        fragment = extract_fragment(raw)
+        fragment = extract_fragment(raw, source.path.as_posix())
         parser = FragmentSanitizer()
         parser.feed(fragment)
         body = remove_forbidden_blocks("".join(parser.out))

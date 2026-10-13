@@ -80,6 +80,8 @@ function geometry(nav,rail){
 }
 
 function sync(nav,rail,thumb){
+  var header=nav.closest('header');
+  if(header)d.documentElement.style.setProperty('--qily-cn-header-height',Math.ceil(header.getBoundingClientRect().height)+'px');
   var g=geometry(nav,rail);
   thumb.style.width=g.thumbWidth+'px';
   thumb.style.transform='translate3d('+(g.travel*g.ratio)+'px,-50%,0)';

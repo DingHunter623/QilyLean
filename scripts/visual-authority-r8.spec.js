@@ -49,6 +49,9 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
       return route.abort();
     });
     const page=await context.newPage();
+    const startupErrors=[];
+    page.on('pageerror',error=>startupErrors.push(error.message));
+    page.on('requestfailed',request=>{if(request.url().includes('site-visual-runtime-r8.js'))startupErrors.push(request.url()+': '+request.failure()?.errorText);});
     const cdp=await context.newCDPSession(page);
 
     for(const [name,route] of routes){
@@ -58,6 +61,18 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
         failures.push(`${vp.name}/${name}: HTTP ${response?response.status():'no-response'}`);
         flush();
         continue;
+      }
+      // The legacy index uses both meta refresh and location.replace. Its DCL
+      // belongs to the redirect document, not the canonical page's defer scripts.
+      if(name==='daily-index'){
+        await page.waitForURL(url=>url.pathname==='/qilylean/daily-insights.html',{waitUntil:'domcontentloaded',timeout:30000});
+        await page.waitForLoadState('domcontentloaded');
+        try{
+          await page.locator('header[data-qily-r8-measured="true"]').waitFor({state:'attached',timeout:5000});
+        }catch(error){
+          console.error('Canonical index startup',JSON.stringify({viewport:vp.name,errors:startupErrors.slice(-8),state:await page.evaluate(()=>({url:location.href,ready:document.readyState,runtime:window.__qilyVisualRuntimeR84,header:document.querySelector('header')?.outerHTML.slice(0,300)}))}));
+          throw error;
+        }
       }
       await page.waitForTimeout(260);
 

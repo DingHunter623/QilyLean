@@ -474,7 +474,7 @@ def main():
             '<link rel="canonical" href="https://qilylean.cn'+src.url+'">'
             '<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading">'
             '<link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading">'
-            '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2">'
+            '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1">'
             +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
@@ -487,7 +487,7 @@ def main():
             '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
             source.TRANSLATION_SCRIPT+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
-            '<script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script>'
+            '<script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>'
             '</body></html>'
         )
         src.out.write_text(top,encoding="utf-8")

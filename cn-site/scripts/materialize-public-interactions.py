@@ -16,7 +16,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, unquote, urlparse, urlunsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 CN = ROOT / "cn-site"
@@ -238,6 +238,71 @@ def attach(doc: str, kind: str, term: bool = False) -> str:
     return doc.replace("</body>", "".join('<script defer data-cn-public-interactions="' + STAMP + '" src="' + asset_url(n) + '"></script>' for n in js) + "</body>", 1)
 
 
+def repair_archive_links() -> list[dict]:
+    """Resolve legacy content links locally and label unpublished operations."""
+    aliases = {
+        "/archive/global-knowledge/terminology/": "/archive/knowledge/terminology/",
+        "/archive/reference/gbt2828/": "/archive/profile/gbt2828/",
+        "/qilylean/execution-loop.html": "/archive/reference/execution-loop/",
+        "/legal/qilylean-home/privacy/": "/legal/qilylean-cn-home/privacy/",
+        "/legal/qilylean-home/terms/": "/legal/qilylean-cn-home/terms/",
+        "/trust/": "/standardization/",
+    }
+    changes = []
+    for page in source.SOURCES:
+        if source.is_date_brief(page.path) or not page.out.is_file():
+            continue
+        doc = page.out.read_text(encoding="utf-8")
+        def anchor(match: re.Match) -> str:
+            attrs, content = match.groups()
+            href = re.search(r'\bhref="([^"]*)"', attrs, re.I)
+            if not href:
+                return "<span>" + content + "</span>"
+            old = html.unescape(href.group(1))
+            parsed = urlparse(old)
+            if parsed.scheme or parsed.netloc:
+                return match.group(0)
+            path, query, fragment = parsed.path, parsed.query, parsed.fragment
+            if old == "/#diagnosis" or path.startswith("/projects/qilylean-commercial-deliveries/"):
+                changes.append({"url": page.url, "from": old, "status": "excluded-conversion"})
+                return ""
+            if path == "/archive/global-knowledge/view/":
+                target = parse_qs(query).get("src", [""])[0]
+                mapped = brief.rewrite_brief_href(target)
+                if mapped:
+                    resolved = urlparse(mapped)
+                    path, query, fragment = resolved.path, resolved.query, resolved.fragment
+            if path == "/archive/improvements/" and fragment == "smed":
+                path, fragment = "/archive/improvements/smed/", ""
+            if not path and fragment == "qilylean-home-qr":
+                path, fragment = "/app-support/qilylean-cn-home/", ""
+                content = "中国站 App 使用说明"
+            if path == "/trust/" and fragment:
+                # Detailed international evidence/publication rules are not
+                # mirrored. Do not redirect them to an unrelated CN section.
+                path = ""
+                unavailable = True
+            else:
+                unavailable = False
+                path = aliases.get(path, path)
+            if path.startswith("/") and not path.startswith("/mirror-media/"):
+                candidate = CN / unquote(path.lstrip("/"))
+                if path.endswith("/"):
+                    candidate /= "index.html"
+                unavailable = unavailable or not candidate.is_file()
+            if unavailable:
+                changes.append({"url": page.url, "from": old, "status": "unpublished"})
+                return '<span class="qily-public-unavailable">' + content + '（中国站暂未提供）</span>'
+            new = urlunsplit(("", "", path, query, fragment))
+            if new != old:
+                changes.append({"url": page.url, "from": old, "to": new, "status": "resolved"})
+                attrs = attrs[:href.start(1)] + html.escape(new, quote=True) + attrs[href.end(1):]
+            return "<a" + attrs + ">" + content + "</a>"
+        doc = re.sub(r'<a\b([^>]*)>([\s\S]*?)</a>', anchor, doc, flags=re.I)
+        page.out.write_text(doc, encoding="utf-8")
+    return changes
+
+
 def main() -> None:
     term_source = (ROOT / TERM_PATH).read_text(encoding="utf-8")
     term_count = len(re.findall(r'\bdata-term-card(?:=|\s|>)', source.extract_fragment(term_source)))
@@ -265,7 +330,7 @@ def main() -> None:
             doc = doc.replace('class="article-body mirror-article"', 'class="article-body mirror-article mirror-article-fidelity"', 1)
             page.out.write_text(doc, encoding="utf-8")
         original = (ROOT / page.path).read_text(encoding="utf-8", errors="ignore")
-        fragment = source.extract_fragment(original)
+        fragment = source.extract_fragment(original, path)
         has_content_controls = bool(re.search(r'<(?:input|form|select|textarea|canvas|iframe)\b|<button\b(?![^>]*qily-float-btn)', fragment, re.I))
         if not has_content_controls:
             continue
@@ -349,9 +414,10 @@ def main() -> None:
         doc = attach(doc, kind, path == TERM_PATH)
         page.out.write_text(doc, encoding="utf-8")
         evidence.append({"source": path, "url": page.url, "kind": kind})
+    links = repair_archive_links()
     report = CN / "archive" / "public-interactions.json"
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps({"version": STAMP, "checked": len(evidence), "terminology_lessons": term_count, "items": evidence}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    report.write_text(json.dumps({"version": STAMP, "checked": len(evidence), "terminology_lessons": term_count, "items": evidence, "links": links}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"CN public interactions materialized: {len(evidence)} routes / {term_count} terminology lessons")
 
 

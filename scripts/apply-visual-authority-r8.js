@@ -33,6 +33,11 @@ function cleanR8Refs(html){
 function isDdzFastRoute(file,html){return file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')&&html.includes('data-qily-ddz-fast-shell="v155"');}
 function materializeHtml(html,file){
   let next=cleanR8Refs(html);
+  // CN publishes its own shell assets at /assets, not international root paths.
+  if(file.startsWith('cn-site/'))return next;
+  // The redirect must not start a duplicate deferred runtime request while
+  // navigation to the canonical index is replacing its document.
+  if(file==='daily-insights.html')return next;
   /* DDZ V155 has its own bundled visual authority. Re-adding R8 would restore the mobile load bottleneck. */
   if(isDdzFastRoute(file,next))return next;
   if(!/<\/head>/i.test(next))return next;
