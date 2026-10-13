@@ -65,9 +65,22 @@
 <style id="qilyCareerVisualRestore20261013">
 /* Restore the established career-card visual hierarchy after the shared R8
    card reset. Only #experience is affected; resume content remains unchanged. */
-html body.module-page main #experience .career-full-grid{
-  align-items:start!important;
+/* Revert the R8 runtime's automatic five-card/five-column promotion.
+ * Established career design: two readable columns on desktop, one on phones.
+ * The runtime sets data-qily-card-count="5" dynamically; the #experience
+ * specificity is deliberate to preserve the authored career-only geometry. */
+html:root:root body.module-page main #experience .career-full-grid{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;
   grid-auto-rows:auto!important;
+  align-items:start!important;
+  gap:16px!important;
+}
+@media(max-width:860px){
+  html:root:root body.module-page main #experience .career-full-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
 }
 html body.module-page main #experience .career-full-card{
   align-self:start!important;
