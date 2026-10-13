@@ -620,6 +620,10 @@ jobs:
               if marker not in about:
                   raise SystemExit(f'Production About page missing: {marker}')
 
+          if not all(p in about for p in ('134 5001 4003','151 6812 0722','176 8178 8259','qily-about-phone-grid')):
+              raise SystemExit('Production CN About page does not display the same three public phones as international.')
+          if 'QILY-CN-ABOUT-CONTACT-PARITY-V1' not in vi:
+              raise SystemExit('Production CN three-phone responsive VI style did not reach the live CSS.')
           if re.search(r'<aside\b[^>]*class=["\']toc["\']', about, re.I):
               raise SystemExit('Production About page still exposes retired 本页主旨 panel.')
           if '本页目录' in about or '<b>本页主旨</b>' in about:
@@ -638,8 +642,8 @@ jobs:
           if 'QILYLEAN CHINA｜' in home or '个人制造业知识与实践分享' in home:
               raise SystemExit('Production China home exposed a retired site name.')
 
-          if '进入 Global Knowledge ↗' not in home:
-              raise SystemExit('Production China home missing global-knowledge CTA.')
+          if '进入知识索引 →' not in home:
+              raise SystemExit('Production China home missing local knowledge-index action.')
           if 'QilyLean | <span>启力精益</span>' not in home:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
@@ -658,20 +662,18 @@ jobs:
                   raise SystemExit(f'Production China primary nav missing internal bridge semantics: {marker}')
           if 'data-qily-nav-key="briefs" target="_blank"' in home or 'data-qily-nav-key="resources" target="_blank"' in home:
               raise SystemExit('Production China primary nav still jumps directly to the international site.')
-          if 'href="https://qilylean.com/global-knowledge/briefs/"' not in briefs_bridge:
-              raise SystemExit('Production CN briefs bridge lost its international destination.')
-          if 'target="_blank" rel="noopener noreferrer"' not in briefs_bridge:
-              raise SystemExit('Production CN briefs bridge lost safe external-link behavior.')
-          if 'href="https://qilylean.com/links/cn-public/"' not in resources_bridge:
-              raise SystemExit('Production CN resources bridge lost its international destination.')
-          if 'target="_blank" rel="noopener noreferrer"' not in resources_bridge:
-              raise SystemExit('Production CN resources bridge lost safe external-link behavior.')
+          if 'href="/knowledge/"' not in briefs_bridge:
+              raise SystemExit('Production CN briefs must retain the local professional knowledge index.')
+          if 'href="https://qilylean.com/global-knowledge/briefs/"' in briefs_bridge:
+              raise SystemExit('Production CN briefs still link to international knowledge rather than local archives.')
+          if 'href="https://qilylean.com/links/cn-public/"' in resources_bridge:
+              raise SystemExit('Production CN resources still expose non-approved international click-through.')
           for label,doc in [('briefs',briefs_bridge),('resources',resources_bridge)]:
               footer_match = re.search(r'<footer class="footer">.*?</footer>', doc, re.S)
               if not footer_match or '湘ICP备2026041143号-1' not in footer_match.group(0) or '湘公网安备43020002000443号' not in footer_match.group(0):
                   raise SystemExit(f'Production CN {label} must retain both China-domain filing records.')
-          if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
-              raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
+          if '<a href="/knowledge/" title="中国站制造知识索引">进入知识索引 →</a>' not in home:
+              raise SystemExit('Production China knowledge network must point to the local knowledge index.')
           if '/site-public-footer-type-v1.css?v=20261005-public-footer-v3' not in home:
               raise SystemExit('Production China home missing shared public footer typography.')
           if '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16' not in home:
