@@ -522,7 +522,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation',
+                  ('/assets/qilylean-vi-v2.css?v=20261014-cn-contact-three-phones-v1' if route == '/about/' else '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation'),
                   '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16',
                   '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
                   '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
