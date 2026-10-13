@@ -7,6 +7,7 @@ Counts repeated summaries separately from high-overlap article bodies.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
 import re
@@ -53,26 +54,36 @@ def run() -> dict:
         body = visible_body(path.read_text(encoding="utf-8"))
         if not body:
             errors.append(f"article parser found no body: {date}")
-        corpus[date] = {"body_length": len(body), "shingles": shingles(body)}
+        corpus[date] = {"body_length": len(body), "shingles": shingles(body), "fingerprint": hashlib.sha256(body.encode("utf-8")).hexdigest()}
+    # Corpus-wide comparison, not just same-summary groups: changing an article
+    # summary must never allow truly repeated professional bodies to evade review.
     pairs = []
-    for group in candidates:
-        for i, a in enumerate(group):
-            for b in group[i + 1:]:
-                x = corpus.get(a["date"], {}).get("shingles", set())
-                y = corpus.get(b["date"], {}).get("shingles", set())
-                if not x or not y:
-                    continue
-                intersection = len(x.intersection(y))
-                union = len(x) + len(y) - intersection
-                score = round(intersection / union, 4) if union else 0
-                if score >= 0.72:
-                    pairs.append({"a": a["date"], "b": b["date"], "overlap": score,
-                                  "theme_a": a.get("title", ""), "theme_b": b.get("title", "")})
+    exact_groups = defaultdict(list)
+    for item in items:
+        current = corpus.get(item["date"], {})
+        if current.get("fingerprint"):
+            exact_groups[current["fingerprint"]].append(item["date"])
+    for i, a in enumerate(items):
+        x = corpus.get(a["date"], {}).get("shingles", set())
+        if not x:
+            continue
+        for b in items[i + 1:]:
+            y = corpus.get(b["date"], {}).get("shingles", set())
+            if not y or min(len(x), len(y)) < max(len(x), len(y)) * 0.72:
+                continue
+            intersection = len(x.intersection(y))
+            union = len(x) + len(y) - intersection
+            score = round(intersection / union, 4) if union else 0
+            if score >= 0.72:
+                pairs.append({"a": a["date"], "b": b["date"], "overlap": score,
+                              "same_summary": a.get("summary") == b.get("summary"),
+                              "theme_a": a.get("title", ""), "theme_b": b.get("title", "")})
     pairs.sort(key=lambda x: (-x["overlap"], x["a"], x["b"]))
     return {
         "corpus": len(items),
         "summary_duplicate_groups": len(candidates),
         "pages_in_repeated_summary_groups": sum(len(g) for g in candidates),
+        "exact_same_body_groups": [d for d in exact_groups.values() if len(d) > 1],
         "article_pairs_overlap_ge_090": sum(x["overlap"] >= 0.9 for x in pairs),
         "article_pairs_overlap_ge_080": sum(x["overlap"] >= 0.8 for x in pairs),
         "suspect_pairs": pairs,
