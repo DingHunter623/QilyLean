@@ -176,7 +176,7 @@ body.qily-public-preview-open { overflow: hidden; }
 /* A direct OPL link is a reading page with the shared CN shell. */
 body[data-cn-public-kind="terminology"].term-opl-standalone main>.page-hero{display:none!important}
 body[data-cn-public-kind="terminology"].term-opl-standalone main>.section{padding-block:24px!important}
-html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:30px!important;line-height:1.35!important}
+html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:var(--qily-cn-h2,22px)!important;line-height:1.35!important}
 html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{position:static!important;display:flex;flex-wrap:wrap;gap:10px;padding:12px 16px}
 html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar button{min-height:44px;padding:9px 12px;font-size:20px!important;line-height:1.4!important}
 html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-content{padding-bottom:24px}
@@ -185,7 +185,7 @@ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-content{pad
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-header{padding:18px 54px 18px 18px!important}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-brandbar{margin-bottom:12px!important;padding-bottom:10px!important}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-brandbar>span{display:none!important}
- html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:24px!important}
+ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-title{font-size:var(--qily-cn-h2,21px)!important}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-kicker{font-size:16px!important;letter-spacing:.03em!important}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar{padding:12px}
  html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-toolbar button{flex:1 1 40%;min-width:0;font-size:18px!important}
@@ -200,4 +200,3 @@ html body[data-cn-public-kind="terminology"] #termOplModal .term-opl-content{pad
   gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid #cbdedd;
   color:#426367;
 }
-

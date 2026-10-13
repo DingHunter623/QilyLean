@@ -38,6 +38,12 @@ def require(condition: bool, message: str) -> None:
 
 def main() -> None:
     report = json.loads((CN / "archive/public-interactions.json").read_text(encoding="utf-8"))
+    for path in CN.rglob("*.html"):
+        doc = path.read_text(encoding="utf-8")
+        require(not re.search(
+            r'(?:href|src)=["\']/site-(?:floating-dock-gold-v1\.css|visual-authority-r8\.css|visual-runtime-r8\.js)(?:\?|["\'])',
+            doc, re.I,
+        ), "Unpublished international shell dependency remains: " + str(path.relative_to(CN)))
     inventory = {s.path.as_posix(): s for s in source.SOURCES}
     expected_sources = set()
     for path, page in inventory.items():
