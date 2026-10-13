@@ -312,6 +312,29 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
   }
 }
 
+/* QILY-CN-BRIEF-LEGACY-TAG-CONTRAST-V12 | 2026-10-13
+ * The cloned 2025/2026 brief inline style uses a broad .tag {color:#fff!important}
+ * rule with stronger specificity than earlier CN tag guards. Reassert contrast
+ * only for informational tags inside light .tags rows; keep dark process badges
+ * and branded content artwork untouched. Hide empty legacy share-status ghosts.
+ */
+html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
+article.post .tags>.tag,
+html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
+article.post .tags>.tag :is(span,strong,small,b){
+  color:#254a49!important;
+  -webkit-text-fill-color:#254a49!important;
+  background:#f0f7f4!important;
+  border-color:#b2ccc7!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  mix-blend-mode:normal!important;
+}
+html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
+article.post .status:empty{
+  display:none!important;
+}
+
 /* QILY-CN-BRIEF-DENSE-TABLE-READABILITY-V11 | 2026-10-12
  * Keep four-or-more-column engineering matrices readable at the normal 20px
  * article size. The focusable table region owns any horizontal overflow;
@@ -350,27 +373,4 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 .w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
   width:1%!important;white-space:nowrap!important;
-}
-
-/* QILY-CN-BRIEF-LEGACY-TAG-CONTRAST-V12 | 2026-10-13
- * The cloned 2025/2026 brief inline style uses a broad .tag {color:#fff!important}
- * rule with stronger specificity than earlier CN tag guards. Reassert contrast
- * only for informational tags inside light .tags rows; keep dark process badges
- * and branded content artwork untouched. Hide empty legacy share-status ghosts.
- */
-html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
-article.post .tags>.tag,
-html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
-article.post .tags>.tag :is(span,strong,small,b){
-  color:#254a49!important;
-  -webkit-text-fill-color:#254a49!important;
-  background:#f0f7f4!important;
-  border-color:#b2ccc7!important;
-  opacity:1!important;
-  text-shadow:none!important;
-  mix-blend-mode:normal!important;
-}
-html:root:root:root body[data-qily-brief-parity="v1"] #main#main#main
-article.post .status:empty{
-  display:none!important;
 }
