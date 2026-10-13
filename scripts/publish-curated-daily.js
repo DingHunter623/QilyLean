@@ -26,6 +26,7 @@ const steps = [
   // Language and terminology publishers may reorder head resources. Finish
   // with the same layout/first-paint authority used by the CN mirror build.
   ['publish-daily-brief-layout-guard-v1.js'],
+  ['materialize-brief-focus-overrides-20261014.js'],
   ['validate-weekly-brief-curation.js'],
   ['validate-current-daily-publication.js']
 ];
