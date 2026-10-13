@@ -382,3 +382,23 @@ html:root:root body.qily-knowledge-brief-page main table:has(>thead>tr:first-chi
 html:root:root body.qily-knowledge-brief-page main table:has(>thead>tr:first-child>:nth-child(2):last-child) tr>:nth-child(2){
   width:auto!important;white-space:normal!important;overflow-wrap:break-word!important;
 }
+
+/* QILY-INTL-BRIEF-LEGACY-TAG-CONTRAST-V10 | 2026-10-13
+ * Older dated briefs force all .tag copy white through an embedded !important
+ * rule. Restore only the light, informational .tags strip to dark-legible text.
+ * Retain high-contrast white badges on dark scenes and charts.
+ */
+html:root:root:root body.daily-single-page main article.post .tags>.tag,
+html:root:root:root body.daily-single-page main article.post .tags>.tag :is(span,strong,small,b){
+  color:#254a49!important;
+  -webkit-text-fill-color:#254a49!important;
+  background:#f0f7f4!important;
+  border-color:#b2ccc7!important;
+  opacity:1!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  font-weight:500!important;
+}
+html:root:root:root body.daily-single-page main article.post .status:empty{
+  display:none!important;
+}

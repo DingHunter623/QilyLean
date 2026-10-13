@@ -478,7 +478,7 @@ def main():
             +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
-            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261012-brief-parity-v11">'
+            '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261013-brief-tag-contrast-v12">'
             +inline_css+
             '<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16">'
             '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">'
