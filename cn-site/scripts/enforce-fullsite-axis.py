@@ -5,6 +5,11 @@ import re
 CN = Path(__file__).resolve().parents[1]
 AXIS_HREF = "/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10"
 AXIS_LINK = f'<link id="qilyContentAxisV1" rel="stylesheet" href="{AXIS_HREF}">'
+INTERNATIONAL_SHELL_IMPORT = re.compile(
+    r'<(?:link|script)\b[^>]*(?:href|src)=["\']/site-'
+    r'(?:floating-dock-gold-v1\.css|visual-authority-r8\.css|visual-runtime-r8\.js)'
+    r'(?:\?[^"\']*)?["\'][^>]*>(?:</script>)?\n?', re.I,
+)
 
 changed = 0
 checked = 0
@@ -15,6 +20,10 @@ for path in sorted(CN.rglob("*.html")):
         continue
     checked += 1
     before = text
+
+    # These international shell owners are not published at China-domain paths.
+    # CN owns its navigation, footer and measured header through local assets.
+    text = INTERNATIONAL_SHELL_IMPORT.sub("", text)
 
     # Normalize or append the canonical content-axis authority as the final
     # stylesheet in <head>, so cached/legacy page-local width rules cannot win.
@@ -40,7 +49,7 @@ for path in sorted(CN.rglob("*.html")):
     text = path.read_text(encoding="utf-8", errors="ignore")
     if "/assets/site.css" not in text:
         continue
-    if AXIS_HREF not in text or 'data-qily-site="cn"' not in text:
+    if AXIS_HREF not in text or 'data-qily-site="cn"' not in text or INTERNATIONAL_SHELL_IMPORT.search(text):
         missing.append(str(path.relative_to(CN)))
 
 if missing:
