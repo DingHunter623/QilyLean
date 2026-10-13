@@ -51,11 +51,17 @@ must(redline,'--ql-redline-rail-thumb:#0f4b5a','Redline fallback thumb');
 must(redline,'--ql-redline-header-offset:var(--qily-header-live-height,86px)','Measured redline header offset');
 forbid(redline,'clamp(260px,17vw,300px)','Oversized translator fallback');
 
-let pages=0,covered=0,duplicates=0,isolated=0,fail=[];
+let pages=0,covered=0,duplicates=0,isolated=0,cnIsolated=0,fail=[];
 for(const file of files()){
   if(ownership(file))continue;
   const html=read(file);
   if(!/<\/head>/i.test(html))continue;
+  if(file.startsWith('cn-site/')){
+    cnIsolated++;
+    forbid(html,'site-visual-authority-r8.css','CN local visual owner');
+    forbid(html,'site-visual-runtime-r8.js','CN local visual runtime');
+    continue;
+  }
   if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
     isolated++;
     must(html,'data-qily-ddz-fast-shell="v155"','DDZ V155 fast visual owner');
@@ -83,5 +89,6 @@ if(pages<450)throw new Error(`Unexpected public-page coverage floor: ${pages}`);
 if(covered!==pages)throw new Error(`R8 public coverage regression: covered=${covered}/${pages}; sample=${fail.slice(0,12).join(' | ')}`);
 if(isolated!==1)throw new Error(`DDZ V155 fast-route isolation regression: ${isolated}`);
 if(duplicates)throw new Error(`R8 duplicate authority references detected: ${duplicates}`);
+if(cnIsolated<27)throw new Error(`CN local visual-owner coverage regression: ${cnIsolated}`);
 
 console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155/V158 remains one explicitly isolated bundled fast route with deterministic current first paint; 1180 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
