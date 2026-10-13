@@ -47,7 +47,7 @@ def main()->None:
     evidence=[]
     for page in eligible:
         raw=(ROOT/page.path).read_text(encoding="utf-8",errors="ignore")
-        fragment=source.extract_fragment(raw)
+        fragment=source.extract_fragment(raw,page.path.as_posix())
         # Remove the whole source contact panel before unsupported wrappers
         # are unwrapped; otherwise its empty labels survive as orphan content.
         fragment=re.sub(r'<aside\b[^>]*\bclass="[^"]*\bcontact-panel\b[^"]*"[^>]*>[\s\S]*?</aside>', '', fragment, flags=re.I)

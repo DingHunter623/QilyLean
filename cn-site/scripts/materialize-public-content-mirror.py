@@ -128,6 +128,7 @@ def selected_source(path: Path) -> bool:
         "qilylean/gbt2828.html",
         "qilylean/lean-knowledge.html",
         "qilylean/lean-tools.html",
+        "qilylean/execution-loop.html",
         "qilylean/papers.html",
         "qilylean/production-operations-organization.html",
         "qilylean/reference-audit-documents.html",
@@ -334,7 +335,18 @@ def extract_meta(text: str) -> tuple[str, str]:
     desc = clean_text(md.group(1)) if md else ""
     return neutralize(title), neutralize(desc)
 
-def extract_fragment(text: str) -> str:
+def extract_fragment(text: str, source_path: str = "") -> str:
+    # These legacy documents use sibling sections without a <main>. Selecting
+    # their first article loses nine tools / seven execution stages and anchors.
+    if source_path in {"qilylean/lean-tools.html", "qilylean/execution-loop.html"}:
+        body = re.search(r'<body\b[^>]*>([\s\S]*?)</body>', text, re.I)
+        if body:
+            sections = body.group(1)
+            start = re.search(r'<section\b', sections, re.I)
+            ends = list(re.finditer(r'</section\s*>', sections, re.I))
+            if start and ends:
+                return sections[start.start():ends[-1].end()]
+        raise RuntimeError("Legacy public document sections missing: " + source_path)
     for tag in ("main","article","body"):
         m = re.search(fr"<{tag}\b[^>]*>([\s\S]*?)</{tag}>", text, re.I)
         if m:
@@ -423,7 +435,7 @@ def main():
     for source in SOURCES:
         raw = (ROOT / source.path).read_text(encoding="utf-8", errors="ignore")
         title, desc = extract_meta(raw)
-        fragment = extract_fragment(raw)
+        fragment = extract_fragment(raw, source.path.as_posix())
         parser = FragmentSanitizer()
         parser.feed(fragment)
         body = remove_forbidden_blocks("".join(parser.out))

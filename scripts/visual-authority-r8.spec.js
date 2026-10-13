@@ -59,6 +59,13 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
         flush();
         continue;
       }
+      // The legacy index uses both meta refresh and location.replace. Its DCL
+      // belongs to the redirect document, not the canonical page's defer scripts.
+      if(name==='daily-index'){
+        await page.waitForURL(url=>url.pathname==='/qilylean/daily-insights.html',{waitUntil:'domcontentloaded',timeout:30000});
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('header[data-qily-r8-measured="true"]').waitFor({state:'attached',timeout:5000});
+      }
       await page.waitForTimeout(260);
 
       // Header ResizeObserver updates the CSS height on the next animation frame.
