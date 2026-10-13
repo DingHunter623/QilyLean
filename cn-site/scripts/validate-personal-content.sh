@@ -45,9 +45,8 @@ if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='
   exit 1
 fi
 
-# The CN personal site may reference the isolated Global Knowledge subtree and one
-# exact public resource-collaboration bridge on the international domain. All other
-# qilylean.com URLs remain blocked as commercial-routing risks.
+# SEO/source metadata can reference the knowledge source, but clickable international
+# destinations are separately guarded to prevent China-site commercial redirection.
 ALLOWED_GLOBAL_KNOWLEDGE_PREFIX='https://qilylean.com/global-knowledge/'
 ALLOWED_RESOURCE_COLLAB_URL='https://qilylean.com/links/cn-public/'
 COM_LINKS="$(grep -RhoE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' --include='*.svg' \
@@ -120,7 +119,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
-# Primary-navigation boundary: CN navigation stays on qilylean.cn; briefs are local-first and resource collaboration remains an explicit international bridge.
+# Primary-navigation boundary: CN navigation stays on qilylean.cn; briefs and resource directory are local-first.
 grep -Fq 'href="/briefs/" data-qily-nav-key="briefs">精选简报</a>' "$INDEX_FILE" || {
   echo "ERROR: CN primary navigation briefs entry must stay on qilylean.cn."
   exit 1
@@ -140,10 +139,37 @@ grep -Fq 'data-qily-cn-nav-contract="20260926-v7-bridge"' "$INDEX_FILE" || {
 [[ -f "$BRIEFS_PAGE" ]] || { echo "ERROR: CN briefs bridge page is missing."; exit 1; }
 [[ -f "$RESOURCES_PAGE" ]] || { echo "ERROR: CN resources bridge page is missing."; exit 1; }
 grep -Fq 'href="/briefs/archive/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs page must point to the local full archive."; exit 1; }
-grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs page lost the approved optional international knowledge extension."; exit 1; }
-grep -Fq 'target="_blank" rel="noopener noreferrer"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs optional international extension lost safe external-link behavior."; exit 1; }
-grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge lost its explicit international destination."; exit 1; }
-grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
+
+
+
+
+
+# Mainland click navigation must remain local-first. Non-clickable international SEO metadata
+# may be retained, but visible cross-site links require an explicitly approved brand LOGO.
+python3 - "$ROOT_DIR" <<'PYCNROUTES'
+from pathlib import Path
+from html.parser import HTMLParser
+import sys
+
+class CNLinkAudit(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.bad=[]
+    def handle_starttag(self, tag, attrs):
+        if tag!='a': return
+        a=dict(attrs)
+        href=(a.get('href') or '').strip().lower()
+        if href.startswith(('https://qilylean.com/','http://qilylean.com/','https://www.qilylean.com/','http://www.qilylean.com/')):
+            logo=a.get('data-qily-approved-international-logo')=='true'
+            is_home=href.rstrip('/') in ('https://qilylean.com','http://qilylean.com','https://www.qilylean.com','http://www.qilylean.com')
+            if not (logo and is_home):self.bad.append(href)
+
+for p in Path(sys.argv[1]).rglob('*.html'):
+    reader=CNLinkAudit()
+    reader.feed(p.read_text(encoding='utf-8',errors='replace'))
+    if reader.bad:raise SystemExit(f'ERROR: CN non-logo international click-through in {p}: {reader.bad[:5]}')
+print('PASS: CN international navigation restricted to approved logo only.')
+PYCNROUTES
 
 # China footer is one public component across the whole site.
 # Filing follows the current domain: all China-site documents retain both records.
