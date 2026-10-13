@@ -277,7 +277,7 @@ for(const marker of [
 ]) assert(cnHome.includes(marker),'CN home filed-name marker missing: '+marker);
 assert(!cnHome.includes('QILYLEAN CHINA｜'),'CN home must not prefix the filed site name with a retired alias.');
 assert(!cnHome.includes('个人制造业知识与实践分享'),'CN home retired site name returned.');
-assert(cnHome.includes('<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>'),'CN Global Knowledge CTA must use ↗ and shared external-link semantics.');
+assert(cnHome.includes('<a href="/knowledge/" title="中国站制造知识索引">进入知识索引 →</a>'),'CN knowledge network must link to the local professional index without international business routing.');
 
 const cnAbout=read('cn-site/about/index.html');
 assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');
