@@ -15,7 +15,7 @@ const firstPaint=require('./materialize-public-shell-first-paint-v1.js');
 const ROOT=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const ID='qilyDailyBriefLayoutGuardV1';
-const HREF='/site-daily-brief-layout-guard-v1.css?v=20261012-brief-visual-corpus-v9';
+const HREF='/site-daily-brief-layout-guard-v1.css?v=20261013-legacy-tag-contrast-v10';
 const TAG=`<link id="${ID}" rel="stylesheet" href="${HREF}">`;
 const SEQUENCE_OFF_ID='qilyDailyBriefSequenceOffV1';
 const SEQUENCE_OFF_STYLE=`<style id="${SEQUENCE_OFF_ID}">
