@@ -1,6 +1,9 @@
 /* QilyLean CN full-content mirror | 2026-10-10 */
 .mirror-shell{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:34px;align-items:start}
 .mirror-article{min-width:0;overflow-wrap:anywhere}
+html body .mirror-article [id]{scroll-margin-top:calc(var(--qily-cn-header-height,84px) + 16px)!important}
+@media(max-width:760px){html body .mirror-article [id]{scroll-margin-top:calc(var(--qily-cn-header-height,154px) + 16px)!important}}
+.mirror-article .qily-public-unavailable{display:inline-block;padding:8px 12px;border:1px solid #d5e4e3;border-radius:8px;background:#f3f8f7;color:#526967;line-height:1.6}
 .mirror-article>h1:first-child{display:none}
 .mirror-article img{display:block;max-width:100%;height:auto;margin:18px auto;border-radius:10px}
 .mirror-article figure{margin:22px 0}

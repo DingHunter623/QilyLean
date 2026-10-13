@@ -150,6 +150,21 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(page).toHaveURL(BASE+'/briefs/archive/2026-08-25/');
       await expect(page.locator('main#main[data-qily-brief-content="v2"]')).toBeVisible();
     });
+
+    test('library links reach complete resources below the sticky header',async({page})=>{
+      await open(page,'/archive/global-knowledge/library/');
+      await page.getByRole('link',{name:/流程改善/}).click();
+      await expect(page).toHaveURL(BASE+'/archive/reference/lean-tools/#flow');
+      await expect(page.locator('.mirror-article-fidelity article.card')).toHaveCount(10);
+      await expect.poll(()=>page.evaluate(()=>{
+        const target=document.querySelector('#flow').getBoundingClientRect();
+        const header=document.querySelector('header').getBoundingClientRect();
+        return target.top>=header.bottom-1&&target.top<header.bottom+200;
+      }),{timeout:5000}).toBe(true);
+      await open(page,'/archive/reference/execution-loop/');
+      await expect(page.locator('.mirror-article-fidelity article.card')).toHaveCount(8);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    });
   });
 }
 
