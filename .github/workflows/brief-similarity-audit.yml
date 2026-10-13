@@ -1,0 +1,31 @@
+name: QilyLean Curated Brief Similarity Audit
+on:
+  pull_request:
+    paths:
+      - 'qilylean/daily/**'
+      - 'scripts/audit-brief-similarity.py'
+      - '.github/workflows/brief-similarity-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'qilylean/daily/**'
+      - 'scripts/audit-brief-similarity.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Audit 381+ briefs for actual body overlap
+        run: python3 scripts/audit-brief-similarity.py --output brief-similarity-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: brief-similarity-audit
+          path: brief-similarity-audit.json
+          retention-days: 30
