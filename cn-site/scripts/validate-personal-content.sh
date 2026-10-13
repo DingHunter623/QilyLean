@@ -62,20 +62,33 @@ if [[ -n "$COM_LINKS" ]]; then
   done <<< "$COM_LINKS"
 fi
 
-CONTACT_HOOKS="$(grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' --include='*.svg' \
-  --exclude-dir='scripts' '(tel:|mailto:|weixin:|weChat|whatsapp:)' "$ROOT_DIR" || true)"
-if [[ -n "$CONTACT_HOOKS" ]]; then
-  while IFS= read -r hook; do
-    [[ -z "$hook" ]] && continue
-    # Approved non-commercial contact on the CN About page: one public telephone link only.
-    if [[ "$hook" == "$ROOT_DIR/about/index.html:"*'href="tel:15168120722"'* ]]; then
-      continue
-    fi
-    echo "$hook"
-    echo "ERROR: Mainland personal site contains direct contact/conversion hooks."
-    exit 1
-  done <<< "$CONTACT_HOOKS"
-fi
+# Non-commercial public contact belongs only to /about/. Compare its three
+# telephone links with the international contact page (no commercial CTAs).
+python3 - "$ROOT_DIR" <<'PYCNCONTACT'
+from html.parser import HTMLParser
+from pathlib import Path
+import re, sys
+root=Path(sys.argv[1])
+expected={'13450014003','15168120722','17681788259'}
+class ContactLinks(HTMLParser):
+    def __init__(self): super().__init__(); self.tel=[]
+    def handle_starttag(self,tag,attrs):
+        if tag=='a':
+            href=dict(attrs).get('href','')
+            if href.startswith('tel:'): self.tel.append(href.removeprefix('tel:'))
+about=root/'about/index.html'
+p=ContactLinks()
+p.feed(about.read_text(encoding='utf-8'))
+if set(p.tel)!=expected or len(p.tel)!=3:
+    raise SystemExit(f'ERROR: CN about page phone set differs from international contact: {p.tel}')
+for path in root.rglob('*'):
+    if not path.is_file() or path==about or path.suffix.lower() not in {'.html','.htm','.xml','.json','.js','.svg'} or 'scripts' in path.parts:
+        continue
+    body=path.read_text(encoding='utf-8',errors='replace')
+    if re.search(r'(?:tel:|mailto:|weixin:|whatsapp:)',body,re.I):
+        raise SystemExit(f'ERROR: non-about CN contact/conversion hook: {path}')
+print('PASS: CN three public telephone links match COM contact and remain confined to the About page.')
+PYCNCONTACT
 
 # Dual-site relationship contract: the CN homepage must remain self-canonical and may
 # only expose the isolated Global Knowledge page as its reciprocal language/knowledge bridge.
