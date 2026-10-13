@@ -43,7 +43,7 @@ const materializer=read('scripts/materialize-global-language-v3.js');for(const t
  */
 const careerPage=read('experience/index.html');
 const careerFallback=read('qilylean/career-resume-full.js');
-const careerStyle=(careerPage.match(/<style id="qilyCareerSingleColumnArticle20261013">([\\s\\S]*?)<\\/style>/)||[])[1];
+const careerStyle=(careerPage.match(/<style id="qilyCareerSingleColumnArticle20261013">([\s\S]*?)<\/style>/)||[])[1];
 if(!careerStyle)throw new Error('Career article-only visual style is missing');
 for(const token of [
   '.career-full-grid{',
@@ -54,7 +54,7 @@ for(const token of [
 ])must(careerStyle,token,'Career single-column visual');
 forbid(careerStyle,'repeat(2,minmax(0,1fr))','Career must not return to two columns');
 must(careerFallback,'.career-full-grid{display:block;width:100%;gap:0}','Resume fallback must retain single-column order');
-const careerSection=(careerPage.match(/<section class="module-section alt" id="experience"[\\s\\S]*?<div class="career-chain"/)||[])[0]||'';
+const careerSection=(careerPage.match(/<section class="module-section alt" id="experience"[\s\S]*?<div class="career-chain"/)||[])[0]||'';
 const dateHeadings=[
   '2025.11—至今',
   '2019.07—2025.08',
