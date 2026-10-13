@@ -221,7 +221,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261012-brief-parity-v11' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261013-brief-tag-contrast-v12' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
