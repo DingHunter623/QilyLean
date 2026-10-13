@@ -60,8 +60,8 @@ def main() -> None:
     if updated != page:
         PAGE.write_text(updated, encoding="utf-8")
 
-    if "https://qilylean.com/links/cn-public/" not in updated:
-        raise SystemExit("Approved public international resource introduction must remain accessible")
+    if "https://qilylean.com/links/cn-public/" in updated:
+        raise SystemExit("China resource directory must not expose an international collaboration CTA")
     print(f"CN public technology directory synced: {len(rows)} records, 6 industry classes + navigation, rev={version}")
 
 
