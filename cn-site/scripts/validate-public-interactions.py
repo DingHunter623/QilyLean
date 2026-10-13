@@ -134,6 +134,10 @@ def main() -> None:
         route = "/" + path.relative_to(CN).as_posix()
         if route.endswith("/index.html"):
             route = route[:-10]
+        for tag, attrs in document.nodes:
+            resource = urlparse(str(attrs.get("src") or attrs.get("href") or ""))
+            if resource.path in {"/assets/cn-nav-rail-v1.js", "/assets/content-mirror.css"}:
+                require(parse_qs(resource.query).get("anchors") == ["20261013-v1"], "Stale CN anchor resource cache identity: " + route)
         for anchor in document.matching("a"):
             href = str(anchor.get("href", ""))
             if not href:
