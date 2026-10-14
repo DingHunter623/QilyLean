@@ -83,7 +83,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
         const measure=el=>{const cs=getComputedStyle(el);const props=['fontSize','lineHeight','fontWeight','fontFamily','color','backgroundColor','backgroundImage','display','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','borderTopWidth','borderRadius','gap'];return Object.fromEntries(props.map(p=>[p,cs[p]]));};
         const expected=await reference.locator('main '+selector).first().evaluate(measure);
         const actual=await root.locator(selector).first().evaluate(measure);
-        expect(actual,'international computed styles: '+selector).toEqual(expected);
+        expect.soft(actual,'international computed styles: '+selector).toEqual(expected);
       }
       const sourceLinks=await reference.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href));
       expect(await root.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href))).toEqual(sourceLinks);
