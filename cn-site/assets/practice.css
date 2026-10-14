@@ -224,3 +224,58 @@
   .award-flow-step::after{display:none!important}
   .metric-value{font-size:30px}
 }
+
+/* QILY-CN-PRACTICE-SINGLE-COLUMN-V1 | 2026-10-14
+ * 与国际站代表项目及“履历主线”保持同一纵向浏览节奏。
+ * 仅调整八项实践的卡片排布；所有正文、图表、链接与后续模块不变。
+ */
+.practice-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:clamp(18px,2vw,26px)!important;
+  align-items:start!important;
+  grid-auto-rows:auto!important;
+}
+.practice-grid > .practice-card{
+  display:grid!important;
+  grid-template-columns:minmax(0,42fr) minmax(0,58fr)!important;
+  align-items:stretch!important;
+  min-width:0!important;
+  height:auto!important;
+}
+.practice-grid > .practice-card > .practice-visual{
+  display:grid!important;
+  place-items:center!important;
+  min-width:0!important;
+  margin:0!important;
+  border-bottom:0!important;
+  border-right:1px solid var(--qily-line)!important;
+  background:#f3f8f6!important;
+}
+.practice-grid > .practice-card > .practice-visual img,
+.practice-grid > .practice-card.is-portrait > .practice-visual img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:420px!important;
+  aspect-ratio:auto!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+.practice-grid > .practice-card > .practice-copy{
+  min-width:0!important;
+  padding:clamp(19px,2.1vw,30px)!important;
+}
+@media(max-width:760px){
+  .practice-grid > .practice-card{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .practice-grid > .practice-card > .practice-visual{
+    border-right:0!important;
+    border-bottom:1px solid var(--qily-line)!important;
+  }
+  .practice-grid > .practice-card > .practice-visual img,
+  .practice-grid > .practice-card.is-portrait > .practice-visual img{
+    max-height:350px!important;
+  }
+}
