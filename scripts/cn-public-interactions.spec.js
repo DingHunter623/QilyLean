@@ -71,10 +71,13 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(root.locator('#industryResourceService,#industry-resource-network,form,a[href*="/cooperation/"],a[href*="/links/onboarding/"]')).toHaveCount(0);
       await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
       await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
+      fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
+      await page.screenshot({path:'visual-cn-typography-v23/resources-'+device.name+'-top.png'});
 
       const reference=await context.newPage();
       const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
       await reference.goto(globalBase+'/links/',{waitUntil:'networkidle'});
+      await reference.screenshot({path:'visual-cn-typography-v23/resources-reference-'+device.name+'-top.png'});
       const selectors=['.hero','.hero-inner','.eyebrow','h1','.lead','.stat','.stat strong','.stat span','.section','.inner','.notice','#navigationPartnerLinks a','#qilyChinaKnowledgeBridge a','.toolbar','.search','.filters','.filter','.grid','.card','.card h2','.mark','.cn','.meta','.tag'];
       for(const selector of selectors){
         const measure=el=>{const cs=getComputedStyle(el);const props=['fontSize','lineHeight','fontWeight','fontFamily','color','backgroundColor','backgroundImage','display','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','borderTopWidth','borderRadius','gap'];return Object.fromEntries(props.map(p=>[p,cs[p]]));};
@@ -97,8 +100,8 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await root.locator('#filters button').filter({hasText:'全部'}).click();
       await expect(root.locator('#companyGrid .card')).toHaveCount(100);
       expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'no horizontal page overflow').toBe(true);
-      fs.mkdirSync('visual-cn-resources',{recursive:true});
-      await page.screenshot({path:'visual-cn-resources/'+device.name+'.png'});
+      await root.locator('#companyGrid').scrollIntoViewIfNeeded();
+      await page.screenshot({path:'visual-cn-typography-v23/resources-'+device.name+'-cards.png'});
     });
 
     test('terminology search handles a match, no results and clearing',async({page})=>{
