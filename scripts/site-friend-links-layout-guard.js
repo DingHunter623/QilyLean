@@ -11,7 +11,7 @@ function assert(ok,msg){if(!ok)throw new Error(msg);}
 
 const home=read('index.html');
 const links=read('links/index.html');
-assert(home.includes('<a href="/links/"><strong>友情链接</strong>'),'friend-links guard: homepage direct entry missing');
+assert(home.includes('<a href="/links/"><strong>资源协同</strong>'),'friend-links guard: international homepage resource entry label must match CN');
 assert(!home.includes('<a href="/links/network/"><strong>产业资源协同网络</strong>'),'friend-links guard: homepage module renamed away from 友情链接');
 assert(links.includes('<title>友情链接｜全球科技企业100强官网入口｜QilyLean</title>'),'friend-links guard: page title drifted');
 assert(links.includes('<h1>友情链接｜全球科技企业100强</h1>'),'friend-links guard: H1 drifted');
