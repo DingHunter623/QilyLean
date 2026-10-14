@@ -151,7 +151,10 @@ async function auditPage(page, route, limits, label){
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation')), route+' must load the current VI cache version').toBeTruthy();
+  const expectedVi = route === '/about/'
+    ? 'qilylean-vi-v2.css?v=20261014-cn-contact-three-phones-v1'
+    : 'qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation';
+  expect(data.href.some(x=>x.includes(expectedVi)), route+' must load the current VI cache version').toBeTruthy();
   for(const x of data.heroLabels){
     expect(x.color, route+' hero label color '+x.text).toBe('rgb(255, 227, 155)');
     expect(x.fill, route+' hero label text fill '+x.text).toBe('rgb(255, 227, 155)');
