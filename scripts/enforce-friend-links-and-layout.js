@@ -41,7 +41,7 @@ function patchLinks(){
     .replace(/width:min\((?:1240|1360|1560)px,100%\)/g,'width:min(1180px,100%)')
     .replace('与QilyLean制造业应用价值精选',`与 ${officialBrand} 制造业应用价值精选`)
     .replace('与 QilyLean 制造业应用价值精选',`与 ${officialBrand} 制造业应用价值精选`)
-    .replace('<strong>网址导航友情链接：</strong>QilyLean 已增加主流网址导航官方入口，便于访问与站点收录核验。',`<strong>网址导航友情链接：</strong>${officialBrand} 已增加主流网址导航官方入口，便于访问与站点收录核验。`);
+    .replace('<strong>网址导航友情链接：</strong>QilyLean 已增加主流网址导航官方入口，便于访问与站点收录核验。','<strong>网址导航入口（不参与企业目录）：</strong>hao123 仅作为常用网址导航入口，不属于全球科技企业100家收录对象、不参与企业排名，也不代表合作或推荐。');
 
   const chinaKnowledgeBlock=`<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->
       <div class="notice" id="qilyChinaKnowledgeBridge"><strong>精益制造经验分享（${officialBrand}中国站）：</strong> <a class="resource-action qily-cross-site-primary" href="https://qilylean.cn/" target="_blank" rel="noopener" aria-label="进入精益制造经验分享">进入精益制造经验分享 ↗</a> <span>qilylean.cn 网站名称为“精益制造经验分享”，属于 ${officialBrand} 制造知识体系，聚焦精益生产、工业工程、标准化、工厂规划与数智工厂知识；该入口属于知识体系关联，不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>
@@ -74,7 +74,7 @@ function patchLinks(){
   assert(html.includes('id="qilyChinaKnowledgeBridge"'),'links/index.html: China knowledge bridge missing');
   assert(html.includes(`<strong>精益制造经验分享（${officialBrand}中国站）：</strong>`),'links/index.html: filed China-site name is missing');
   assert(html.includes('进入精益制造经验分享 ↗'),'links/index.html: filed China-site CTA is missing');
-  assert(html.includes(`qilylean.cn 为 ${officialBrand} 制造知识体系`),'links/index.html: China knowledge description lost full official brand');
+  assert(html.includes(`qilylean.cn 网站名称为“精益制造经验分享”，属于 ${officialBrand} 制造知识体系`),'links/index.html: China knowledge description lost full official brand');
   assert(html.includes('href="https://qilylean.cn/"'),'links/index.html: qilylean.cn direct knowledge entry missing');
   assert(html.includes('不作为“全球科技企业100强”的企业收录项或排名依据'),'links/index.html: non-ranking boundary for China knowledge bridge missing');
   assert(!html.includes(haoRow),'links/index.html: hao123 must not appear in enterprise rows');
