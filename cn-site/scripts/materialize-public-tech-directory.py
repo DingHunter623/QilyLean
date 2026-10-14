@@ -199,6 +199,7 @@ def main() -> None:
     rendered_css += final_scope + " .eyebrow{line-height:1.45!important}\n"
     rendered_css += final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}\n"
     rendered_css += final_scope + " h1" + EXCLUDE_SERVICES + "{font-weight:950!important}\n"
+    rendered_css += ",".join(final_scope + " " + token + EXCLUDE_SERVICES for token in [".cn",".tag",".meta",".result"]) + "{font-size:20px!important;line-height:1.62!important}\n"
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
