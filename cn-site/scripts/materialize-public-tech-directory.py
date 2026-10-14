@@ -157,6 +157,9 @@ def main() -> None:
     for names in re.findall(r'class="([^"]+)"', fragment): PUBLIC_CLASSES.update(names.split())
     PUBLIC_CLASSES.update({"card", "card-head", "mark", "external", "cn", "meta", "tag", "filter", "active", "qily-visual-card"})
     PUBLIC_IDS.update(re.findall(r'id="([^"]+)"', fragment))
+    # The destination wrapper owns #main; the source <main> has no ID. Do not
+    # activate unrelated legacy rules that never match the international page.
+    PUBLIC_IDS.discard("main")
     PUBLIC_TAGS.update(re.findall(r"<([a-zA-Z][\w-]*)", fragment))
     PUBLIC_TAGS.update({"html", "body", "a", "h2", "button"})
 
@@ -178,6 +181,12 @@ def main() -> None:
         for base, block in head.blocks:
             rendered_css += public_styles(block, base, priority) + "\n"
     css.CONTENT_SCOPE = SCOPE
+    # Freeze the source's settled semantic label and mobile R8 composition.
+    # Shell runtimes reorder global authorities; the cloned content has no
+    # shell runtime, so these source contracts are materialized explicitly.
+    final_scope = SCOPE.replace("#main", "#main" * 12)
+    rendered_css += final_scope + " .eyebrow{line-height:1.45!important}\n"
+    rendered_css += "@media(max-width:767px){" + final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}" + final_scope + " h1{font-weight:950!important}}\n"
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
