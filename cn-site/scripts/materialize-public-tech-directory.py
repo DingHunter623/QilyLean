@@ -70,7 +70,7 @@ class HeadStyles(HTMLParser):
     def handle_data(self, data):
         if self.in_style: self.current += data
 
-def public_styles(content: str, base: str, important: bool) -> str:
+def public_styles(content: str, base: str, important: bool, imports=()) -> str:
     """Scope the original cascade; keep source-important declarations last.
 
     The reset prevents destination-only padding or typography from leaking in.
@@ -78,12 +78,21 @@ def public_styles(content: str, base: str, important: bool) -> str:
     """
     output = []
     for prelude, body in css.css_rules(content):
-        if body is None: continue
         if prelude.startswith("@"):
+            if re.match(r"@import\b", prelude):
+                match = re.search(r"url\([\"']?([^\"')]+)", prelude)
+                if not match: raise ValueError("Unsupported source CSS import")
+                rel = match.group(1).split("?", 1)[0].lstrip("/")
+                target = ROOT / rel
+                if rel in imports or Path(rel).suffix != ".css" or ".." in Path(rel).parts or not target.is_file():
+                    raise ValueError("Invalid source CSS import: " + rel)
+                output.append(public_styles(target.read_text(encoding="utf-8"), rel, important, imports + (rel,)))
+                continue
             if re.match(r"@(?:media|supports|container|layer)\b", prelude):
-                nested = public_styles(body, base, important)
+                nested = public_styles(body, base, important, imports)
                 if nested: output.append(prelude + "{" + nested + "}")
             continue
+        if body is None: continue
         selectors = []
         for selector in css.split_css(prelude, ","):
             if re.search(r"data-qily-site=[\"']cn", selector, re.I):
@@ -93,7 +102,7 @@ def public_styles(content: str, base: str, important: bool) -> str:
             if scoped: selectors.append(scoped)
         if not selectors: continue
         declarations = []
-        root_rule = all(s.endswith(SCOPE) for s in selectors)
+        root_rule = all(s.endswith(css.CONTENT_SCOPE) for s in selectors)
         for item in css.split_css(css.safe_declarations(body, base), ";"):
             prop, sep, value = item.partition(":")
             if not sep: continue
@@ -154,12 +163,21 @@ def main() -> None:
     runtime = re.findall(r"<script>\s*((?:\(function\(\)\{)[\s\S]*?var rows=\x60[\s\S]*?)</script>", original)
     if len(runtime) != 1: raise ValueError("Expected one directory search runtime")
     rendered_js = "/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | international SSOT */\n" + runtime[0].strip()
+    # Local scoped declarations are protected from destination CSS. Retain the
+    # original runtime visibility state with the corresponding inline priority.
+    empty_display = "empty.style.display=list.length?'none':'block';"
+    if rendered_js.count(empty_display) != 1: raise ValueError("Empty-state visibility owner changed")
+    rendered_js = rendered_js.replace(empty_display, "empty.style.setProperty('display',list.length?'none':'block','important');")
     head = HeadStyles(); head.feed(original)
     rendered_css = "/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | scoped international source cascade */\n"
     rendered_css += SCOPE + " *{all:revert!important;box-sizing:border-box!important}\n"
     for priority in [False, True]:
+        # Original !important rules must outrank normal source rules regardless
+        # of selector specificity, even after both are isolated from CN styles.
+        css.CONTENT_SCOPE = SCOPE.replace("#main", "#main" * 8) if priority else SCOPE
         for base, block in head.blocks:
             rendered_css += public_styles(block, base, priority) + "\n"
+    css.CONTENT_SCOPE = SCOPE
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
