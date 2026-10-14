@@ -12,7 +12,9 @@ SOURCE = ROOT / "links/index.html"
 PAGE = CN / "resources/index.html"
 RUNTIME = CN / "assets/cn-public-tech-directory-v1.js"
 STYLE = CN / "assets/cn-public-tech-directory-v1.css"
-SCOPE = 'main#main[data-qily-public-tech-directory="v2"]'
+SCOPE = 'main:is(#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"]'
+PUBLIC_STYLE = ROOT / "site-public-tech-directory-v1.css"
+EXCLUDE_SERVICES = ':not(:where(.resource-service,.resource-service *,.qily-resource-network,.qily-resource-network *))'
 PUBLIC_URL = "https://qilylean.com/links/cn-public/"
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(CN / "scripts"))
@@ -58,6 +60,7 @@ class HeadStyles(HTMLParser):
         if not self.in_head: return
         if tag == "style": self.in_style = True; self.current = ""
         if tag == "link" and attrs.get("rel") == "stylesheet":
+            if attrs.get("id") == "qilyPublicTechDirectoryStyles": return
             rel = attrs.get("href", "").split("?", 1)[0].lstrip("/")
             path = ROOT / rel
             if Path(rel).suffix != ".css" or ".." in Path(rel).parts or not path.is_file():
@@ -99,10 +102,15 @@ def public_styles(content: str, base: str, important: bool, imports=()) -> str:
                 continue
             if not relevant_selector(selector): continue
             scoped = css.scope_selector(selector)
-            if scoped: selectors.append(scoped)
+            if scoped:
+                if "::" in scoped:
+                    left, right = scoped.split("::", 1)
+                    scoped = left + EXCLUDE_SERVICES + "::" + right
+                else: scoped += EXCLUDE_SERVICES
+                selectors.append(scoped)
         if not selectors: continue
         declarations = []
-        root_rule = all(s.endswith(css.CONTENT_SCOPE) for s in selectors)
+        root_rule = all(s.removesuffix(EXCLUDE_SERVICES).endswith(css.CONTENT_SCOPE) for s in selectors)
         for item in css.split_css(css.safe_declarations(body, base), ";"):
             prop, sep, value = item.partition(":")
             if not sep: continue
@@ -136,7 +144,7 @@ def main() -> None:
     if any(row[2] == "网址导航" or row[0].lower() == "hao123" for row in rows):
         raise ValueError("hao123 must remain outside the enterprise directory")
 
-    main_match = re.search(r"<main>\s*([\s\S]*?)</main>", original)
+    main_match = re.search(r"<main\b[^>]*>\s*([\s\S]*?)</main>", original)
     boundary = "<!-- QILY-RESOURCE-NETWORK:LINKS:START -->"
     if not main_match or main_match.group(1).count(boundary) != 1:
         raise ValueError("Public/commercial source boundary missing")
@@ -169,11 +177,14 @@ def main() -> None:
     # Local scoped declarations are protected from destination CSS. Retain the
     # original runtime visibility state with the corresponding inline priority.
     empty_display = "empty.style.display=list.length?'none':'block';"
-    if rendered_js.count(empty_display) != 1: raise ValueError("Empty-state visibility owner changed")
-    rendered_js = rendered_js.replace(empty_display, "empty.style.setProperty('display',list.length?'none':'block','important');")
+    protected_display = "empty.style.setProperty('display',list.length?'none':'block','important');"
+    if rendered_js.count(empty_display) == 1:
+        rendered_js = rendered_js.replace(empty_display, protected_display)
+    elif rendered_js.count(protected_display) != 1:
+        raise ValueError("Empty-state visibility owner changed")
     head = HeadStyles(); head.feed(original)
     rendered_css = "/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | scoped international source cascade */\n"
-    rendered_css += SCOPE + " *{all:revert!important;box-sizing:border-box!important}\n"
+    rendered_css += SCOPE + " *" + EXCLUDE_SERVICES + "{all:revert!important;box-sizing:border-box!important}\n"
     for priority in [False, True]:
         # Original !important rules must outrank normal source rules regardless
         # of selector specificity, even after both are isolated from CN styles.
@@ -187,7 +198,7 @@ def main() -> None:
     final_scope = SCOPE.replace("#main", "#main" * 12)
     rendered_css += final_scope + " .eyebrow{line-height:1.45!important}\n"
     rendered_css += final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}\n"
-    rendered_css += final_scope + " h1{font-weight:950!important}\n"
+    rendered_css += final_scope + " h1" + EXCLUDE_SERVICES + "{font-weight:950!important}\n"
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
@@ -199,6 +210,14 @@ def main() -> None:
     if count != 1: raise ValueError("China search runtime reference missing")
     page = re.sub(r'(<meta name="description" content=")[^"]*(">)', r'\g<1>全球100家科技企业官网目录、五类产业资料检索与公开知识入口。\2', page)
     write(RUNTIME, rendered_js); write(STYLE, rendered_css); write(PAGE, page)
+    # Both public directories use the exact same scoped layer. Service modules
+    # are excluded by every selector and never copied into the China document.
+    write(PUBLIC_STYLE, rendered_css)
+    international = re.sub(r'<main\b[^>]*>', '<main id="qilyResourcePublicDirectory" data-qily-public-tech-directory="v2">', original, count=1)
+    international = re.sub(r'<link id="qilyPublicTechDirectoryStyles"[^>]*>\s*', "", international)
+    international = international.replace("</head>", '<link id="qilyPublicTechDirectoryStyles" rel="stylesheet" href="/site-public-tech-directory-v1.css?v=' + version + '">\n</head>', 1)
+    international = international.replace(empty_display, protected_display)
+    write(SOURCE, international)
     print(f"CN directory cloned: 100 enterprises / 5 categories; markup + styles + search; public bridge only; rev={version}")
 
 if __name__ == "__main__": main()
