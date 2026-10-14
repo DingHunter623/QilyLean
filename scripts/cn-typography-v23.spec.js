@@ -37,12 +37,18 @@ async function auditPage(page, route, limits, label){
   expect(res && res.ok(), route+' must load').toBeTruthy();
   await page.waitForTimeout(120);
   const data=await page.evaluate(()=>{
-    const read=(sel)=>[...document.querySelectorAll(sel)].map(el=>({
+    const read=(sel)=>[...document.querySelectorAll(sel)].map(el=>{
+      // Company metadata containers contain no direct text: measure the
+      // rendered category/country tags instead of an unused inherited size.
+      const tags=el.matches('#companyGrid .card .meta')?[...el.querySelectorAll('.tag')]:[];
+      return {
       text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120),
-      px:parseFloat(getComputedStyle(el).fontSize)
-    }));
+      px:tags.length?Math.min(...tags.map(tag=>parseFloat(getComputedStyle(tag).fontSize))):parseFloat(getComputedStyle(el).fontSize),
+      companyTitle:el.matches('#companyGrid .card h2')
+    };});
     return {
       briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
+      sourceDirectory:!!document.querySelector('main[data-qily-public-tech-directory="v2"] #companyGrid'),
       translation:(()=>{
         const controls=[...document.querySelectorAll('[data-qily-header-utility="translation"]')];
         const control=document.querySelector('#qilyCnTranslateV3');
@@ -151,7 +157,8 @@ async function auditPage(page, route, limits, label){
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation')), route+' must load the current VI cache version').toBeTruthy();
+  const viRevision=route==='/about/'?'20261014-cn-contact-three-phones-v1':'20261008-cn-vi-v50-cache-revalidation';
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v='+viRevision)), route+' must load the current VI cache version').toBeTruthy();
   for(const x of data.heroLabels){
     expect(x.color, route+' hero label color '+x.text).toBe('rgb(255, 227, 155)');
     expect(x.fill, route+' hero label text fill '+x.text).toBe('rgb(255, 227, 155)');
@@ -197,7 +204,13 @@ async function auditPage(page, route, limits, label){
     }
   }else{
     for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
-    for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
+    for(const x of data.h2){
+      // Source company names use the international card hierarchy. Its exact
+      // typography is independently compared by the resource parity test.
+      const sourceCard=route==='/resources/'&&data.sourceDirectory&&x.companyTitle;
+      const ceiling=sourceCard?(label==='mobile'?26:30):limits.h2;
+      expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(ceiling);
+    }
     for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
     for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
     for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(19.9);

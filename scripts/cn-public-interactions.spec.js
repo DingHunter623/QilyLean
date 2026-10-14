@@ -77,13 +77,22 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const reference=await context.newPage();
       const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
       await reference.goto(globalBase+'/links/',{waitUntil:'networkidle'});
+      // International shell owners finish their last presentation pass at
+      // 1400ms. Compare the settled source cascade, not an intermediate frame.
+      await reference.waitForTimeout(1800);
+      await reference.evaluate(()=>document.fonts.ready);
       await reference.screenshot({path:'visual-cn-typography-v23/resources-reference-'+device.name+'-top.png'});
       const selectors=['.hero','.hero-inner','.eyebrow','h1','.lead','.stat','.stat strong','.stat span','.section','.inner','.notice','#navigationPartnerLinks a','#qilyChinaKnowledgeBridge a','.toolbar','.search','.filters','.filter','.grid','.card','.card h2','.mark','.cn','.meta','.tag'];
       for(const selector of selectors){
-        const measure=el=>{const cs=getComputedStyle(el);const props=['fontSize','lineHeight','fontWeight','fontFamily','color','backgroundColor','backgroundImage','display','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','borderTopWidth','borderRadius','gap'];return Object.fromEntries(props.map(p=>[p,cs[p]]));};
+        const measure=el=>{const cs=getComputedStyle(el);const props=['fontSize','lineHeight','fontWeight','fontFamily','letterSpacing','color','webkitTextFillColor','backgroundColor','backgroundImage','display','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','borderTopWidth','borderRadius','gap'];return Object.fromEntries(props.map(p=>[p,cs[p]]));};
         const expected=await reference.locator('main '+selector).first().evaluate(measure);
         const actual=await root.locator(selector).first().evaluate(measure);
         expect.soft(actual,'international computed styles: '+selector).toEqual(expected);
+      }
+      for(const selector of ['.hero-inner','.inner','.toolbar','.grid']){
+        const sourceWidth=await reference.locator('main '+selector).first().evaluate(el=>el.getBoundingClientRect().width);
+        const chinaWidth=await root.locator(selector).first().evaluate(el=>el.getBoundingClientRect().width);
+        expect.soft(chinaWidth,'international content width: '+selector).toBeCloseTo(sourceWidth,1);
       }
       const sourceLinks=await reference.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href));
       expect(await root.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href))).toEqual(sourceLinks);
