@@ -18,8 +18,12 @@ assert(links.includes('<h1>友情链接｜全球科技企业100强</h1>'),'frien
 assert(links.includes('aria-label="搜索友情链接"'),'friend-links guard: search identity drifted');
 assert(links.includes('href="/links/network/"'),'friend-links guard: industry resource network was removed instead of retained as a sub-module');
 assert(links.includes(`与 ${officialBrand} 制造业应用价值精选`),'friend-links guard: collection notice lost full official brand');
-assert(links.includes(`<strong>网址导航友情链接：</strong>${officialBrand} 已增加主流网址导航官方入口`),'friend-links guard: navigation notice lost full official brand');
+assert(links.includes('<strong>网址导航入口（不参与企业目录）：</strong>hao123 仅作为常用网址导航入口'),'friend-links guard: standalone navigation notice missing');
 assert(links.includes('id="qilyChinaKnowledgeBridge"'),'friend-links guard: China knowledge bridge missing');
+assert(links.includes('<strong id="totalCount">100</strong><span>科技企业官网</span>'),'friend-links guard: count must be 100 enterprises');
+assert(links.includes('<strong>5</strong><span>产业分类</span>'),'friend-links guard: five enterprise categories required');
+assert(!links.includes('hao123|hao123 上网导航|网址导航|中国|'),'friend-links guard: navigation row inserted into enterprise data');
+assert(links.includes('href="https://www.hao123.com/"'),'friend-links guard: standalone hao123 entry missing');
 assert(links.includes(`<strong>精益制造经验分享（${officialBrand}中国站）：</strong>`),'friend-links guard: filed China-site name missing');
 assert(links.includes('进入精益制造经验分享 ↗'),'friend-links guard: filed China-site CTA missing');
 assert(links.includes('qilylean.cn 网站名称为“精益制造经验分享”'),'friend-links guard: filed China-site name missing from description');
