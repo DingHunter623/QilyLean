@@ -95,14 +95,14 @@ function verifyPermanentInteractionBaseline() {
 function verifyFriendLinksAndLayoutBaseline() {
   const homepage=read('index.html');
   const links=read('links/index.html');
-  assert(homepage.includes('<a href="/links/"><strong>友情链接</strong>'),'homepage friend-links entry missing');
+  assert(homepage.includes('<a href="/links/"><strong>资源协同</strong>'),'homepage resource collaboration entry missing');
   assert(!homepage.includes('<a href="/links/network/"><strong>产业资源协同网络</strong>'),'homepage friend-links entry was renamed again');
   assert(links.includes('<title>友情链接｜全球科技企业100强官网入口｜QilyLean</title>'),'friend-links page title missing');
   assert(links.includes('<h1>友情链接｜全球科技企业100强</h1>'),'friend-links page H1 missing');
   assert(links.includes('aria-label="搜索友情链接"'),'friend-links search identity missing');
   assert(links.includes('href="/links/network/"'),'industry resource network must remain inside friend-links module');
   assert(!links.includes('width:min(1360px,100%)'),'friend-links page returned to 1360px content width');
-  assert((links.match(/width:min\(1240px,100%\)/g)||[]).length>=2,'friend-links page 1240px content axis incomplete');
+  assert((links.match(/width:min\(1180px,100%\)/g)||[]).length>=2,'resource directory must retain unified 1180px content axis');
 }
 
 function main() {

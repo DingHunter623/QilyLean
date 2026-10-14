@@ -41,11 +41,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'hao123|hao123 上网导航|网址导航|中国|https://www.hao123.com/' links/index.html
-          grep -q "'网址导航'" links/index.html
+          if grep -q 'hao123|hao123 上网导航|网址导航|中国|https://www.hao123.com/' links/index.html; then
+            echo 'hao123 must not appear in the top-100 enterprise dataset.' >&2
+            exit 1
+          fi
+          grep -Fq '<strong id="totalCount">100</strong><span>科技企业官网</span>' links/index.html
+          grep -Fq '<strong>5</strong><span>产业分类</span>' links/index.html
+          grep -Fq 'href="https://www.hao123.com/"' links/index.html
           grep -q '友情链接｜全球科技企业100强' links/index.html
           grep -Fq '与 QilyLean | 启力精益 制造业应用价值精选' links/index.html
-          grep -Fq '<strong>网址导航友情链接：</strong>QilyLean | 启力精益 已增加主流网址导航官方入口' links/index.html
+          grep -Fq '<strong>网址导航入口（不参与企业目录）：</strong>hao123 仅作为常用网址导航入口' links/index.html
+          grep -Fq '<a href="/links/"><strong>资源协同</strong>' index.html
           grep -q 'id="qilyChinaKnowledgeBridge"' links/index.html
           grep -Fq '<strong>精益制造经验分享（QilyLean | 启力精益中国站）：</strong>' links/index.html
           grep -Fq '进入精益制造经验分享 ↗' links/index.html
