@@ -65,8 +65,15 @@ def main() -> None:
     if updated != page:
         PAGE.write_text(updated, encoding="utf-8")
 
-    if "https://qilylean.com/links/cn-public/" in updated:
-        raise SystemExit("China resource directory must not expose an international collaboration CTA")
+    # The approved international public-information bridge is not a commercial CTA.
+    # Prohibit direct paths to international onboarding, cooperation or network services.
+    forbidden = (
+        "https://qilylean.com/links/network/",
+        "https://qilylean.com/links/onboarding/",
+        "https://qilylean.com/cooperation/",
+    )
+    if any(href in updated for href in forbidden):
+        raise SystemExit("China resource directory must not expose international commercial CTAs")
     print(f"CN public technology directory synced: {len(rows)} companies / 5 industry categories; hao123 standalone, rev={version}")
 
 
