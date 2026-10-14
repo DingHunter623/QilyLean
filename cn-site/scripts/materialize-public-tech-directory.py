@@ -86,7 +86,7 @@ def public_styles(content: str, base: str, important: bool) -> str:
             continue
         selectors = []
         for selector in css.split_css(prelude, ","):
-            if re.search(r"header|footer|floatDock|qily-dock|qily-nav|\.nav\b|\.topbar\b|\.brand\b|resource-service|resource-grid|resource-item|resource-stage|resource-status|resource-kicker|qily-resource-network|commercial|data-qily-site=[\"']cn", selector, re.I):
+            if re.search(r"data-qily-site=[\"']cn", selector, re.I):
                 continue
             if not relevant_selector(selector): continue
             scoped = css.scope_selector(selector)
