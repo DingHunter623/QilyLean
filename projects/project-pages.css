@@ -376,3 +376,60 @@ body.factory-plan-viewer-open{overflow:hidden}
   object-position:center!important;
   background:#eef4f2!important;
 }
+
+/* QILY-PROJECT-LIST-SINGLE-COLUMN-V1 | 2026-10-14
+ * 履历式纵向项目清单：只作用于 /projects/；卡片一行一个，卡内图左文右。
+ * 尊重原图比例、已有证据等级、按钮和高清查看交互。
+ */
+html body.project-list-page main .project-list-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:clamp(18px,2vw,26px)!important;
+  align-items:start!important;
+  grid-auto-rows:auto!important;
+}
+html body.project-list-page main .project-list-grid > .project-list-card{
+  display:grid!important;
+  grid-template-columns:minmax(0,42fr) minmax(0,58fr)!important;
+  gap:clamp(18px,2.2vw,30px)!important;
+  align-items:start!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:clamp(18px,2vw,26px)!important;
+  overflow:hidden!important;
+}
+html body.project-list-page main .project-list-card > .project-list-thumb{
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  aspect-ratio:4/3!important;
+  margin:0!important;
+  align-self:start!important;
+  display:grid!important;
+  place-items:center!important;
+  border:1px solid var(--qily-line,#d5e4e3)!important;
+  border-radius:10px!important;
+  background:#f3f8f6!important;
+}
+html body.project-list-page main .project-list-card > .project-list-thumb img{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  max-height:none!important;
+  object-fit:contain!important;
+  object-position:center!important;
+}
+html body.project-list-page main .project-list-card > .project-list-content{
+  min-width:0!important;
+  padding:0!important;
+}
+@media(max-width:760px){
+  html body.project-list-page main .project-list-grid > .project-list-card{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:16px!important;
+  }
+  html body.project-list-page main .project-list-card > .project-list-thumb{
+    aspect-ratio:16/10!important;
+  }
+}
