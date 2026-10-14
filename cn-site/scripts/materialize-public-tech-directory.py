@@ -1,74 +1,176 @@
 #!/usr/bin/env python3
-"""Materialize the non-commercial 100-company China technology research directory.
-
-Source of truth: international links/index.html's published five-field rows.
-Only the public company names, categories, countries and official URLs are
-replicated; international resource onboarding, referrals and business content
-are deliberately not imported.
-"""
+"""Clone public directory markup, styles and search from the international SSOT."""
 from __future__ import annotations
-
-import hashlib
-import json
-import re
+import hashlib, importlib, re, sys
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "links" / "index.html"
-PAGE = ROOT / "cn-site" / "resources" / "index.html"
-RUNTIME = ROOT / "cn-site" / "assets" / "cn-public-tech-directory-v1.js"
-START = "/* QILY-CN-DIRECTORY-DATA:START */"
-END = "/* QILY-CN-DIRECTORY-DATA:END */"
+CN = ROOT / "cn-site"
+SOURCE = ROOT / "links/index.html"
+PAGE = CN / "resources/index.html"
+RUNTIME = CN / "assets/cn-public-tech-directory-v1.js"
+STYLE = CN / "assets/cn-public-tech-directory-v1.css"
+SCOPE = 'main#main[data-qily-public-tech-directory="v2"]'
+PUBLIC_URL = "https://qilylean.com/links/cn-public/"
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(CN / "scripts"))
+css = importlib.import_module("materialize-brief-visual-parity")
+css.CONTENT_SCOPE = SCOPE
+source = importlib.import_module("materialize-public-content-mirror")
+PUBLIC_CLASSES = set()
+PUBLIC_IDS = set()
+PUBLIC_TAGS = set()
 
+def relevant_selector(selector: str) -> bool:
+    # Consider alternatives independently; classes inside :not() are exclusions,
+    # not required DOM nodes. Keep original selectors in emitted CSS so their
+    # specificity remains the same as the international cascade.
+    function = re.search(r":(is|where|has|not)\(", selector)
+    if function:
+        depth = 1
+        end = function.end()
+        while end < len(selector) and depth:
+            if selector[end] == "(": depth += 1
+            elif selector[end] == ")": depth -= 1
+            end += 1
+        if depth: return False
+        parts = [""] if function.group(1) == "not" else css.split_css(selector[function.end():end-1], ",")
+        return any(relevant_selector(selector[:function.start()] + part + selector[end:]) for part in parts)
+    selector = re.sub(r"\[[^\]]*\]", "", selector)
+    if set(re.findall(r"\.([a-zA-Z_][\w-]*)", selector)) - PUBLIC_CLASSES: return False
+    if set(re.findall(r"#([\w-]+)", selector)) - PUBLIC_IDS: return False
+    for _, _, compound in css.selector_compounds(selector):
+        tag = re.match(r"([a-zA-Z][\w-]*)", compound)
+        if tag and tag.group(1).lower() not in PUBLIC_TAGS: return False
+    return True
+
+class HeadStyles(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.in_head = self.in_style = False
+        self.blocks = []
+        self.current = ""
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "head": self.in_head = True
+        if not self.in_head: return
+        if tag == "style": self.in_style = True; self.current = ""
+        if tag == "link" and attrs.get("rel") == "stylesheet":
+            rel = attrs.get("href", "").split("?", 1)[0].lstrip("/")
+            path = ROOT / rel
+            if Path(rel).suffix != ".css" or ".." in Path(rel).parts or not path.is_file():
+                raise ValueError("Unresolved international stylesheet: " + rel)
+            self.blocks.append((rel, path.read_text(encoding="utf-8")))
+    def handle_endtag(self, tag):
+        if tag == "style" and self.in_style:
+            self.blocks.append(("links/index.html", self.current)); self.in_style = False
+        if tag == "head": self.in_head = False
+    def handle_data(self, data):
+        if self.in_style: self.current += data
+
+def public_styles(content: str, base: str, important: bool) -> str:
+    """Scope the original cascade; keep source-important declarations last.
+
+    The reset prevents destination-only padding or typography from leaking in.
+    Rules stay inside the content main, never the China header or footer.
+    """
+    output = []
+    for prelude, body in css.css_rules(content):
+        if body is None: continue
+        if prelude.startswith("@"):
+            if re.match(r"@(?:media|supports|container|layer)\b", prelude):
+                nested = public_styles(body, base, important)
+                if nested: output.append(prelude + "{" + nested + "}")
+            continue
+        selectors = []
+        for selector in css.split_css(prelude, ","):
+            if re.search(r"header|footer|floatDock|qily-dock|qily-nav|\.nav\b|\.topbar\b|\.brand\b|resource-service|resource-grid|resource-item|resource-stage|resource-status|resource-kicker|qily-resource-network|commercial|data-qily-site=[\"']cn", selector, re.I):
+                continue
+            if not relevant_selector(selector): continue
+            scoped = css.scope_selector(selector)
+            if scoped: selectors.append(scoped)
+        if not selectors: continue
+        declarations = []
+        root_rule = all(s.endswith(SCOPE) for s in selectors)
+        for item in css.split_css(css.safe_declarations(body, base), ";"):
+            prop, sep, value = item.partition(":")
+            if not sep: continue
+            priority = bool(re.search(r"!important\s*$", value, re.I))
+            if priority != important: continue
+            if root_rule and not (prop.startswith("--") or prop.startswith("font") or prop in {"color", "background", "background-color", "line-height", "-webkit-text-fill-color"}):
+                continue
+            if source.FORBIDDEN.search(value):
+                raise ValueError("Commercial text in directory style: " + prop)
+            declarations.append(prop + ":" + re.sub(r"\s*!important\s*$", "", value, flags=re.I) + "!important")
+        if declarations: output.append(",".join(selectors) + "{" + ";".join(declarations) + "}")
+    return "\n".join(output)
+
+def write(path: Path, content: str) -> None:
+    content = content.rstrip() + "\n"
+    if not path.is_file() or path.read_text(encoding="utf-8") != content:
+        path.write_text(content, encoding="utf-8")
 
 def main() -> None:
     original = SOURCE.read_text(encoding="utf-8")
-    found = re.findall(r"var rows=`([\s\S]*?)`;", original)
-    if len(found) != 1:
-        raise SystemExit("Expected one international technology-directory dataset")
-    rows = []
-    for line in found[0].strip().splitlines():
-        fields = line.split("|")
-        if len(fields) != 5:
-            raise SystemExit("Invalid public directory record: " + line)
-        name, cn, category, country, url = fields
-        parsed = urlparse(url)
-        if not all(fields) or parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
-            raise SystemExit("Invalid public directory URL or field: " + line)
-        rows.append({"name": name, "cn": cn, "category": category, "country": country, "url": url})
+    found = re.findall(r"var rows=\x60([\s\S]*?)\x60;", original)
+    if len(found) != 1: raise ValueError("Expected one international directory dataset")
+    rows = [line.split("|") for line in found[0].strip().splitlines()]
+    for row in rows:
+        if len(row) != 5 or not all(row): raise ValueError("Invalid directory record")
+        parsed = urlparse(row[4])
+        if parsed.scheme != "https" or not parsed.netloc or parsed.username or parsed.password:
+            raise ValueError("Invalid official website")
+    if len(rows) != 100 or len({row[4] for row in rows}) != 100 or len({row[2] for row in rows}) != 5:
+        raise ValueError("Expected 100 unique enterprises and five categories")
+    if any(row[2] == "网址导航" or row[0].lower() == "hao123" for row in rows):
+        raise ValueError("hao123 must remain outside the enterprise directory")
 
-    if len(rows) != 100 or len({record["url"] for record in rows}) != 100:
-        raise SystemExit("International enterprise directory must contain 100 unique official websites")
+    main_match = re.search(r"<main>\s*([\s\S]*?)</main>", original)
+    boundary = "<!-- QILY-RESOURCE-NETWORK:LINKS:START -->"
+    if not main_match or main_match.group(1).count(boundary) != 1:
+        raise ValueError("Public/commercial source boundary missing")
+    fragment = main_match.group(1).split(boundary)[0] + "</div></section>"
+    bridge = ('<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->\n'
+        '<div class="notice" id="qilyChinaKnowledgeBridge"><strong>QilyLean | 启力精益国际站：</strong> '
+        '<a class="resource-action qily-cross-site-primary" href="' + PUBLIC_URL + '" '
+        'target="_blank" rel="noopener noreferrer" aria-label="进入国际站" '
+        'data-qily-approved-international-resource="true">进入国际站 ↗</a> '
+        '<span>国际站公开知识入口，提供制造技术与产业资料介绍；该入口属于知识体系关联，'
+        '不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>\n'
+        '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
+    fragment, count = re.subn(r"<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->", lambda _: bridge, fragment)
+    if count != 1: raise ValueError("Reciprocal bridge source missing")
+    if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
+        raise ValueError("Unexpected non-public directory content")
+    fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'
+    for names in re.findall(r'class="([^"]+)"', fragment): PUBLIC_CLASSES.update(names.split())
+    PUBLIC_CLASSES.update({"card", "card-head", "mark", "external", "cn", "meta", "tag", "filter", "active", "qily-visual-card"})
+    PUBLIC_IDS.update(re.findall(r'id="([^"]+)"', fragment))
+    PUBLIC_TAGS.update(re.findall(r"<([a-zA-Z][\w-]*)", fragment))
+    PUBLIC_TAGS.update({"html", "body", "a", "h2", "button"})
 
-    if any(item["category"] == "网址导航" or item["name"].lower() == "hao123" for item in rows):
-        raise SystemExit("Navigation entry must not be inside enterprise directory")
-    if len({item["category"] for item in rows}) != 5:
-        raise SystemExit("Enterprise directory must retain five industry categories")
-
-    data = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
-    asset = RUNTIME.read_text(encoding="utf-8")
-    expression = re.escape(START) + r"[\s\S]*?" + re.escape(END)
-    if len(re.findall(expression, asset)) != 1:
-        raise SystemExit("China directory data ownership markers missing or duplicated")
-    replacement = START + "\nconst companies=" + data + ";\n" + END
-    rendered = re.sub(expression, lambda _: replacement, asset)
-    if rendered != asset:
-        RUNTIME.write_text(rendered, encoding="utf-8")
-
-    version = hashlib.sha256(data.encode("utf-8")).hexdigest()[:12]
+    runtime = re.findall(r"<script>\s*((?:\(function\(\)\{)[\s\S]*?var rows=\x60[\s\S]*?)</script>", original)
+    if len(runtime) != 1: raise ValueError("Expected one directory search runtime")
+    rendered_js = "/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | international SSOT */\n" + runtime[0].strip()
+    head = HeadStyles(); head.feed(original)
+    rendered_css = "/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | scoped international source cascade */\n"
+    rendered_css += SCOPE + " *{all:revert!important;box-sizing:border-box!important}\n"
+    for priority in [False, True]:
+        for base, block in head.blocks:
+            rendered_css += public_styles(block, base, priority) + "\n"
+    version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
-    asset_ref = r"(/assets/cn-public-tech-directory-v1\.js\?v=)[^\s\"']+"
-    if len(re.findall(asset_ref, page)) != 1:
-        raise SystemExit("China directory asset reference missing")
-    updated = re.sub(asset_ref, lambda match: match.group(1) + version, page)
-    if updated != page:
-        PAGE.write_text(updated, encoding="utf-8")
+    page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
+    if count != 1: raise ValueError("China content main missing or duplicated")
+    page = re.sub(r'<style id="qilyCnTechResearchDirectoryV1">[\s\S]*?</style>\s*', "", page)
+    page = re.sub(r'<link id="qilyCnTechDirectorySourceStyles"[^>]*>\s*', "", page)
+    page = page.replace("</head>", '<link id="qilyCnTechDirectorySourceStyles" rel="stylesheet" href="/assets/cn-public-tech-directory-v1.css?v=' + version + '">\n</head>', 1)
+    page, count = re.subn(r"(/assets/cn-public-tech-directory-v1\.js\?v=)[^\s\"']+", lambda match: match.group(1) + version, page)
+    if count != 1: raise ValueError("China search runtime reference missing")
+    page = re.sub(r'(<meta name="description" content=")[^"]*(">)', r'\g<1>全球100家科技企业官网目录、五类产业资料检索与公开知识入口。\2', page)
+    write(RUNTIME, rendered_js); write(STYLE, rendered_css); write(PAGE, page)
+    print(f"CN directory cloned: 100 enterprises / 5 categories; markup + styles + search; public bridge only; rev={version}")
 
-    if "https://qilylean.com/links/cn-public/" in updated:
-        raise SystemExit("China resource directory must not expose an international collaboration CTA")
-    print(f"CN public technology directory synced: {len(rows)} companies / 5 industry categories; hao123 standalone, rev={version}")
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__": main()

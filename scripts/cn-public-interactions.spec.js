@@ -60,6 +60,50 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('resource directory clones public international layout and keeps only the isolated entry',async({page,context})=>{
+      await open(page,'/resources/');
+      const root=page.locator('main[data-qily-public-tech-directory="v2"]');
+      await expect(root.locator('#companyGrid .card')).toHaveCount(100);
+      await expect(root.locator('#filters button')).toHaveCount(6);
+      await expect(root.locator('#qilyChinaKnowledgeBridge a')).toHaveText('进入国际站 ↗');
+      await expect(root.locator('#qilyChinaKnowledgeBridge a')).toHaveAttribute('href','https://qilylean.com/links/cn-public/');
+      await expect(root.locator('#navigationPartnerLinks a')).toHaveAttribute('href','https://www.hao123.com/');
+      await expect(root.locator('#industryResourceService,#industry-resource-network,form,a[href*="/cooperation/"],a[href*="/links/onboarding/"]')).toHaveCount(0);
+      await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
+      await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
+      fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
+      await page.screenshot({path:'visual-cn-typography-v23/resources-'+device.name+'-top.png'});
+
+      const reference=await context.newPage();
+      const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
+      await reference.goto(globalBase+'/links/',{waitUntil:'networkidle'});
+      await reference.screenshot({path:'visual-cn-typography-v23/resources-reference-'+device.name+'-top.png'});
+      const selectors=['.hero','.hero-inner','.eyebrow','h1','.lead','.stat','.stat strong','.stat span','.section','.inner','.notice','#navigationPartnerLinks a','#qilyChinaKnowledgeBridge a','.toolbar','.search','.filters','.filter','.grid','.card','.card h2','.mark','.cn','.meta','.tag'];
+      for(const selector of selectors){
+        const measure=el=>{const cs=getComputedStyle(el);const props=['fontSize','lineHeight','fontWeight','fontFamily','color','backgroundColor','backgroundImage','display','paddingTop','paddingBottom','paddingLeft','paddingRight','marginTop','marginBottom','borderTopWidth','borderRadius','gap'];return Object.fromEntries(props.map(p=>[p,cs[p]]));};
+        const expected=await reference.locator('main '+selector).first().evaluate(measure);
+        const actual=await root.locator(selector).first().evaluate(measure);
+        expect(actual,'international computed styles: '+selector).toEqual(expected);
+      }
+      const sourceLinks=await reference.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href));
+      expect(await root.locator('#companyGrid .card').evaluateAll(nodes=>nodes.map(a=>a.href))).toEqual(sourceLinks);
+      await reference.close();
+      await root.locator('#searchInput').fill('台积电');
+      await expect(root.locator('#companyGrid .card')).toHaveCount(1);
+      await root.locator('#searchInput').fill('__CN_DIRECTORY_NO_MATCH__');
+      await expect(root.locator('#companyGrid .card')).toHaveCount(0);
+      await expect(root.locator('#emptyState')).toBeVisible();
+      await root.locator('#searchInput').fill('');
+      await root.locator('#filters button').filter({hasText:'半导体'}).click();
+      const count=await root.locator('#companyGrid .card').count();
+      expect(count).toBeGreaterThan(0);expect(count).toBeLessThan(100);
+      await root.locator('#filters button').filter({hasText:'全部'}).click();
+      await expect(root.locator('#companyGrid .card')).toHaveCount(100);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'no horizontal page overflow').toBe(true);
+      await root.locator('#companyGrid').scrollIntoViewIfNeeded();
+      await page.screenshot({path:'visual-cn-typography-v23/resources-'+device.name+'-cards.png'});
+    });
+
     test('terminology search handles a match, no results and clearing',async({page})=>{
       await open(page,TERM);
       const search=page.locator('#termSearch');

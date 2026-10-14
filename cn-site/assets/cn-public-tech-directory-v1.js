@@ -1,50 +1,113 @@
-/* QILY-CN-PUBLIC-TECH-DIRECTORY-V1 | educational links only; international SSOT */
+/* QILY-CN-PUBLIC-TECH-DIRECTORY-V2 | international SSOT */
 (function(){
-'use strict';
-/* QILY-CN-DIRECTORY-DATA:START */
-const companies=[{"name":"Google / Alphabet","cn":"谷歌 / Alphabet","category":"AI云软件","country":"美国","url":"https://about.google/"},{"name":"Microsoft","cn":"微软","category":"AI云软件","country":"美国","url":"https://www.microsoft.com/"},{"name":"OpenAI","cn":"OpenAI","category":"AI云软件","country":"美国","url":"https://openai.com/"},{"name":"Amazon","cn":"亚马逊","category":"AI云软件","country":"美国","url":"https://www.amazon.com/"},{"name":"IBM","cn":"IBM","category":"AI云软件","country":"美国","url":"https://www.ibm.com/"},{"name":"Oracle","cn":"甲骨文","category":"AI云软件","country":"美国","url":"https://www.oracle.com/"},{"name":"SAP","cn":"SAP","category":"AI云软件","country":"德国","url":"https://www.sap.com/"},{"name":"Salesforce","cn":"赛富时","category":"AI云软件","country":"美国","url":"https://www.salesforce.com/"},{"name":"Adobe","cn":"奥多比","category":"AI云软件","country":"美国","url":"https://www.adobe.com/"},{"name":"ServiceNow","cn":"ServiceNow","category":"AI云软件","country":"美国","url":"https://www.servicenow.com/"},{"name":"Palantir","cn":"帕兰提尔","category":"AI云软件","country":"美国","url":"https://www.palantir.com/"},{"name":"Snowflake","cn":"Snowflake","category":"AI云软件","country":"美国","url":"https://www.snowflake.com/"},{"name":"Cloudflare","cn":"Cloudflare","category":"AI云软件","country":"美国","url":"https://www.cloudflare.com/"},{"name":"CrowdStrike","cn":"CrowdStrike","category":"AI云软件","country":"美国","url":"https://www.crowdstrike.com/"},{"name":"Palo Alto Networks","cn":"派拓网络","category":"AI云软件","country":"美国","url":"https://www.paloaltonetworks.com/"},{"name":"Fortinet","cn":"飞塔","category":"AI云软件","country":"美国","url":"https://www.fortinet.com/"},{"name":"Synopsys","cn":"新思科技","category":"AI云软件","country":"美国","url":"https://www.synopsys.com/"},{"name":"Cadence","cn":"楷登电子","category":"AI云软件","country":"美国","url":"https://www.cadence.com/"},{"name":"Arm","cn":"安谋","category":"AI云软件","country":"英国","url":"https://www.arm.com/"},{"name":"GitHub","cn":"GitHub","category":"AI云软件","country":"美国","url":"https://github.com/"},{"name":"NVIDIA","cn":"英伟达","category":"半导体","country":"美国","url":"https://www.nvidia.com/"},{"name":"TSMC","cn":"台积电","category":"半导体","country":"中国台湾","url":"https://www.tsmc.com/"},{"name":"Samsung Electronics","cn":"三星电子","category":"半导体","country":"韩国","url":"https://www.samsung.com/"},{"name":"Intel","cn":"英特尔","category":"半导体","country":"美国","url":"https://www.intel.com/"},{"name":"AMD","cn":"超威半导体","category":"半导体","country":"美国","url":"https://www.amd.com/"},{"name":"Broadcom","cn":"博通","category":"半导体","country":"美国","url":"https://www.broadcom.com/"},{"name":"Qualcomm","cn":"高通","category":"半导体","country":"美国","url":"https://www.qualcomm.com/"},{"name":"ASML","cn":"阿斯麦","category":"半导体","country":"荷兰","url":"https://www.asml.com/"},{"name":"Applied Materials","cn":"应用材料","category":"半导体","country":"美国","url":"https://www.appliedmaterials.com/"},{"name":"Lam Research","cn":"泛林集团","category":"半导体","country":"美国","url":"https://www.lamresearch.com/"},{"name":"KLA","cn":"科磊","category":"半导体","country":"美国","url":"https://www.kla.com/"},{"name":"Micron Technology","cn":"美光科技","category":"半导体","country":"美国","url":"https://www.micron.com/"},{"name":"SK hynix","cn":"SK海力士","category":"半导体","country":"韩国","url":"https://www.skhynix.com/"},{"name":"Texas Instruments","cn":"德州仪器","category":"半导体","country":"美国","url":"https://www.ti.com/"},{"name":"Analog Devices","cn":"亚德诺","category":"半导体","country":"美国","url":"https://www.analog.com/"},{"name":"NXP Semiconductors","cn":"恩智浦","category":"半导体","country":"荷兰","url":"https://www.nxp.com/"},{"name":"Infineon","cn":"英飞凌","category":"半导体","country":"德国","url":"https://www.infineon.com/"},{"name":"STMicroelectronics","cn":"意法半导体","category":"半导体","country":"瑞士","url":"https://www.st.com/"},{"name":"Renesas Electronics","cn":"瑞萨电子","category":"半导体","country":"日本","url":"https://www.renesas.com/"},{"name":"MediaTek","cn":"联发科技","category":"半导体","country":"中国台湾","url":"https://www.mediatek.com/"},{"name":"Marvell Technology","cn":"迈威尔科技","category":"半导体","country":"美国","url":"https://www.marvell.com/"},{"name":"GlobalFoundries","cn":"格芯","category":"半导体","country":"美国","url":"https://gf.com/"},{"name":"UMC","cn":"联华电子","category":"半导体","country":"中国台湾","url":"https://www.umc.com/"},{"name":"ASE Technology","cn":"日月光投控","category":"半导体","country":"中国台湾","url":"https://www.aseglobal.com/"},{"name":"Tokyo Electron","cn":"东京电子","category":"半导体","country":"日本","url":"https://www.tel.com/"},{"name":"Advantest","cn":"爱德万测试","category":"半导体","country":"日本","url":"https://www.advantest.com/"},{"name":"Teradyne","cn":"泰瑞达","category":"半导体","country":"美国","url":"https://www.teradyne.com/"},{"name":"ROHM Semiconductor","cn":"罗姆半导体","category":"半导体","country":"日本","url":"https://www.rohm.com/"},{"name":"onsemi","cn":"安森美","category":"半导体","country":"美国","url":"https://www.onsemi.com/"},{"name":"Monolithic Power Systems","cn":"芯源系统","category":"半导体","country":"美国","url":"https://www.monolithicpower.com/"},{"name":"Apple","cn":"苹果","category":"硬件工业","country":"美国","url":"https://www.apple.com/"},{"name":"Cisco","cn":"思科","category":"硬件工业","country":"美国","url":"https://www.cisco.com/"},{"name":"Dell Technologies","cn":"戴尔科技","category":"硬件工业","country":"美国","url":"https://www.dell.com/"},{"name":"HP Inc.","cn":"惠普","category":"硬件工业","country":"美国","url":"https://www.hp.com/"},{"name":"Lenovo","cn":"联想集团","category":"硬件工业","country":"中国","url":"https://www.lenovo.com/"},{"name":"Sony","cn":"索尼","category":"硬件工业","country":"日本","url":"https://www.sony.com/"},{"name":"Panasonic Holdings","cn":"松下控股","category":"硬件工业","country":"日本","url":"https://holdings.panasonic/"},{"name":"Hitachi","cn":"日立","category":"硬件工业","country":"日本","url":"https://www.hitachi.com/"},{"name":"Toshiba","cn":"东芝","category":"硬件工业","country":"日本","url":"https://www.global.toshiba/"},{"name":"Siemens","cn":"西门子","category":"硬件工业","country":"德国","url":"https://www.siemens.com/"},{"name":"Schneider Electric","cn":"施耐德电气","category":"硬件工业","country":"法国","url":"https://www.se.com/"},{"name":"ABB","cn":"ABB","category":"硬件工业","country":"瑞士","url":"https://global.abb/"},{"name":"Honeywell","cn":"霍尼韦尔","category":"硬件工业","country":"美国","url":"https://www.honeywell.com/"},{"name":"Rockwell Automation","cn":"罗克韦尔自动化","category":"硬件工业","country":"美国","url":"https://www.rockwellautomation.com/"},{"name":"Mitsubishi Electric","cn":"三菱电机","category":"硬件工业","country":"日本","url":"https://www.mitsubishielectric.com/"},{"name":"KEYENCE","cn":"基恩士","category":"硬件工业","country":"日本","url":"https://www.keyence.com/"},{"name":"FANUC","cn":"发那科","category":"硬件工业","country":"日本","url":"https://www.fanuc.co.jp/eindex.html"},{"name":"Bosch","cn":"博世","category":"硬件工业","country":"德国","url":"https://www.bosch.com/"},{"name":"Foxconn","cn":"富士康科技集团","category":"硬件工业","country":"中国台湾","url":"https://www.foxconn.com/"},{"name":"Pegatron","cn":"和硕联合科技","category":"硬件工业","country":"中国台湾","url":"https://www.pegatroncorp.com/"},{"name":"Quanta Computer","cn":"广达电脑","category":"硬件工业","country":"中国台湾","url":"https://www.quantatw.com/"},{"name":"Acer","cn":"宏碁","category":"硬件工业","country":"中国台湾","url":"https://www.acer.com/"},{"name":"Logitech","cn":"罗技","category":"硬件工业","country":"瑞士","url":"https://www.logitech.com/"},{"name":"Arista Networks","cn":"Arista Networks","category":"硬件工业","country":"美国","url":"https://www.arista.com/"},{"name":"Nokia","cn":"诺基亚","category":"硬件工业","country":"芬兰","url":"https://www.nokia.com/"},{"name":"Tesla","cn":"特斯拉","category":"前沿科技","country":"美国","url":"https://www.tesla.com/"},{"name":"SpaceX","cn":"太空探索技术公司","category":"前沿科技","country":"美国","url":"https://www.spacex.com/"},{"name":"xAI","cn":"xAI","category":"前沿科技","country":"美国","url":"https://x.ai/"},{"name":"Neuralink","cn":"Neuralink","category":"前沿科技","country":"美国","url":"https://neuralink.com/"},{"name":"The Boring Company","cn":"无聊公司","category":"前沿科技","country":"美国","url":"https://www.boringcompany.com/"},{"name":"X","cn":"X","category":"前沿科技","country":"美国","url":"https://x.com/"},{"name":"Rocket Lab","cn":"火箭实验室","category":"前沿科技","country":"美国","url":"https://www.rocketlabusa.com/"},{"name":"Blue Origin","cn":"蓝色起源","category":"前沿科技","country":"美国","url":"https://www.blueorigin.com/"},{"name":"Boston Dynamics","cn":"波士顿动力","category":"前沿科技","country":"美国","url":"https://bostondynamics.com/"},{"name":"Rivian","cn":"Rivian","category":"前沿科技","country":"美国","url":"https://rivian.com/"},{"name":"Huawei","cn":"华为","category":"中国硬科技","country":"中国","url":"https://www.huawei.com/"},{"name":"ZTE","cn":"中兴通讯","category":"中国硬科技","country":"中国","url":"https://www.zte.com.cn/"},{"name":"Xiaomi","cn":"小米集团","category":"中国硬科技","country":"中国","url":"https://www.mi.com/"},{"name":"BYD","cn":"比亚迪","category":"中国硬科技","country":"中国","url":"https://www.bydglobal.com/"},{"name":"CATL","cn":"宁德时代","category":"中国硬科技","country":"中国","url":"https://www.catl.com/"},{"name":"SMIC","cn":"中芯国际","category":"中国硬科技","country":"中国","url":"https://www.smics.com/"},{"name":"YMTC","cn":"长江存储","category":"中国硬科技","country":"中国","url":"https://www.ymtc.com/"},{"name":"CXMT","cn":"长鑫存储","category":"中国硬科技","country":"中国","url":"https://www.cxmt.com/"},{"name":"NAURA Technology","cn":"北方华创","category":"中国硬科技","country":"中国","url":"https://www.naura.com/"},{"name":"AMEC","cn":"中微公司","category":"中国硬科技","country":"中国","url":"https://www.amec-inc.com/"},{"name":"BOE Technology","cn":"京东方","category":"中国硬科技","country":"中国","url":"https://www.boe.com/"},{"name":"DJI","cn":"大疆创新","category":"中国硬科技","country":"中国","url":"https://www.dji.com/"},{"name":"Inspur","cn":"浪潮信息","category":"中国硬科技","country":"中国","url":"https://www.inspur.com/"},{"name":"H3C","cn":"新华三","category":"中国硬科技","country":"中国","url":"https://www.h3c.com/"},{"name":"Hikvision","cn":"海康威视","category":"中国硬科技","country":"中国","url":"https://www.hikvision.com/"}];
-/* QILY-CN-DIRECTORY-DATA:END */
-const root=document.getElementById('qily-cn-tech-directory');
-if(!root)return;
-const input=root.querySelector('#qily-tech-search');
-const filters=root.querySelector('#qily-tech-filters');
-const grid=root.querySelector('#qily-tech-grid');
-const result=root.querySelector('#qily-tech-results');
-const empty=root.querySelector('#qily-tech-empty');
-const count=root.querySelector('#qily-tech-count');
-if(!input||!filters||!grid||!result||!empty||!count)return;
-const categories=['全部',...new Set(companies.map(c=>c.category))];
-// hao123 belongs only to the independent navigation notice, never to company filter/count.
-let active='全部';
-count.textContent=companies.length;
-function add(tag,className,text,parent){const el=document.createElement(tag);if(className)el.className=className;if(text!==null)el.textContent=text;if(parent)parent.appendChild(el);return el;}
-function render(){
- const key=input.value.trim().toLocaleLowerCase();
- const filtered=companies.filter(c=>(active==='全部'||c.category===active)&&(!key||(c.name+' '+c.cn+' '+c.category+' '+c.country).toLocaleLowerCase().includes(key)));
- const fragment=document.createDocumentFragment();
- for(const c of filtered){
-   const card=add('a','qily-tech-card',null,fragment);
-   card.href=c.url;card.target='_blank';card.rel='noopener noreferrer';
-   card.setAttribute('aria-label','访问'+c.cn+'官方网站（新窗口）');
-   const head=add('div','qily-tech-card-head',null,card);
-   add('span','qily-tech-mark',(c.name.replace(/[^A-Za-z0-9]/g,'').slice(0,2)||'QL').toUpperCase(),head);
-   add('span','qily-tech-external','↗',head).setAttribute('aria-hidden','true');
-   add('h2','',c.name,card);add('div','qily-tech-cn',c.cn,card);
-   const tags=add('div','qily-tech-meta',null,card);
-   add('span','qily-tech-tag',c.category,tags);add('span','qily-tech-tag',c.country,tags);
- }
- grid.replaceChildren(fragment);
- result.textContent='当前显示 '+filtered.length+' 家企业';
- empty.hidden=filtered.length!==0;
-}
-for(const label of categories){
- const b=add('button','qily-tech-filter'+(label===active?' active':''),label,filters);
- b.type='button';b.setAttribute('aria-pressed',String(label===active));
- b.addEventListener('click',()=>{
-   active=label;
-   filters.querySelectorAll('button').forEach(btn=>{const selected=btn===b;btn.classList.toggle('active',selected);btn.setAttribute('aria-pressed',String(selected));});
-   render();
- });
-}
-input.addEventListener('input',render);render();
-})();
+    'use strict';
+    var rows=`Google / Alphabet|谷歌 / Alphabet|AI云软件|美国|https://about.google/
+Microsoft|微软|AI云软件|美国|https://www.microsoft.com/
+OpenAI|OpenAI|AI云软件|美国|https://openai.com/
+Amazon|亚马逊|AI云软件|美国|https://www.amazon.com/
+IBM|IBM|AI云软件|美国|https://www.ibm.com/
+Oracle|甲骨文|AI云软件|美国|https://www.oracle.com/
+SAP|SAP|AI云软件|德国|https://www.sap.com/
+Salesforce|赛富时|AI云软件|美国|https://www.salesforce.com/
+Adobe|奥多比|AI云软件|美国|https://www.adobe.com/
+ServiceNow|ServiceNow|AI云软件|美国|https://www.servicenow.com/
+Palantir|帕兰提尔|AI云软件|美国|https://www.palantir.com/
+Snowflake|Snowflake|AI云软件|美国|https://www.snowflake.com/
+Cloudflare|Cloudflare|AI云软件|美国|https://www.cloudflare.com/
+CrowdStrike|CrowdStrike|AI云软件|美国|https://www.crowdstrike.com/
+Palo Alto Networks|派拓网络|AI云软件|美国|https://www.paloaltonetworks.com/
+Fortinet|飞塔|AI云软件|美国|https://www.fortinet.com/
+Synopsys|新思科技|AI云软件|美国|https://www.synopsys.com/
+Cadence|楷登电子|AI云软件|美国|https://www.cadence.com/
+Arm|安谋|AI云软件|英国|https://www.arm.com/
+GitHub|GitHub|AI云软件|美国|https://github.com/
+NVIDIA|英伟达|半导体|美国|https://www.nvidia.com/
+TSMC|台积电|半导体|中国台湾|https://www.tsmc.com/
+Samsung Electronics|三星电子|半导体|韩国|https://www.samsung.com/
+Intel|英特尔|半导体|美国|https://www.intel.com/
+AMD|超威半导体|半导体|美国|https://www.amd.com/
+Broadcom|博通|半导体|美国|https://www.broadcom.com/
+Qualcomm|高通|半导体|美国|https://www.qualcomm.com/
+ASML|阿斯麦|半导体|荷兰|https://www.asml.com/
+Applied Materials|应用材料|半导体|美国|https://www.appliedmaterials.com/
+Lam Research|泛林集团|半导体|美国|https://www.lamresearch.com/
+KLA|科磊|半导体|美国|https://www.kla.com/
+Micron Technology|美光科技|半导体|美国|https://www.micron.com/
+SK hynix|SK海力士|半导体|韩国|https://www.skhynix.com/
+Texas Instruments|德州仪器|半导体|美国|https://www.ti.com/
+Analog Devices|亚德诺|半导体|美国|https://www.analog.com/
+NXP Semiconductors|恩智浦|半导体|荷兰|https://www.nxp.com/
+Infineon|英飞凌|半导体|德国|https://www.infineon.com/
+STMicroelectronics|意法半导体|半导体|瑞士|https://www.st.com/
+Renesas Electronics|瑞萨电子|半导体|日本|https://www.renesas.com/
+MediaTek|联发科技|半导体|中国台湾|https://www.mediatek.com/
+Marvell Technology|迈威尔科技|半导体|美国|https://www.marvell.com/
+GlobalFoundries|格芯|半导体|美国|https://gf.com/
+UMC|联华电子|半导体|中国台湾|https://www.umc.com/
+ASE Technology|日月光投控|半导体|中国台湾|https://www.aseglobal.com/
+Tokyo Electron|东京电子|半导体|日本|https://www.tel.com/
+Advantest|爱德万测试|半导体|日本|https://www.advantest.com/
+Teradyne|泰瑞达|半导体|美国|https://www.teradyne.com/
+ROHM Semiconductor|罗姆半导体|半导体|日本|https://www.rohm.com/
+onsemi|安森美|半导体|美国|https://www.onsemi.com/
+Monolithic Power Systems|芯源系统|半导体|美国|https://www.monolithicpower.com/
+Apple|苹果|硬件工业|美国|https://www.apple.com/
+Cisco|思科|硬件工业|美国|https://www.cisco.com/
+Dell Technologies|戴尔科技|硬件工业|美国|https://www.dell.com/
+HP Inc.|惠普|硬件工业|美国|https://www.hp.com/
+Lenovo|联想集团|硬件工业|中国|https://www.lenovo.com/
+Sony|索尼|硬件工业|日本|https://www.sony.com/
+Panasonic Holdings|松下控股|硬件工业|日本|https://holdings.panasonic/
+Hitachi|日立|硬件工业|日本|https://www.hitachi.com/
+Toshiba|东芝|硬件工业|日本|https://www.global.toshiba/
+Siemens|西门子|硬件工业|德国|https://www.siemens.com/
+Schneider Electric|施耐德电气|硬件工业|法国|https://www.se.com/
+ABB|ABB|硬件工业|瑞士|https://global.abb/
+Honeywell|霍尼韦尔|硬件工业|美国|https://www.honeywell.com/
+Rockwell Automation|罗克韦尔自动化|硬件工业|美国|https://www.rockwellautomation.com/
+Mitsubishi Electric|三菱电机|硬件工业|日本|https://www.mitsubishielectric.com/
+KEYENCE|基恩士|硬件工业|日本|https://www.keyence.com/
+FANUC|发那科|硬件工业|日本|https://www.fanuc.co.jp/eindex.html
+Bosch|博世|硬件工业|德国|https://www.bosch.com/
+Foxconn|富士康科技集团|硬件工业|中国台湾|https://www.foxconn.com/
+Pegatron|和硕联合科技|硬件工业|中国台湾|https://www.pegatroncorp.com/
+Quanta Computer|广达电脑|硬件工业|中国台湾|https://www.quantatw.com/
+Acer|宏碁|硬件工业|中国台湾|https://www.acer.com/
+Logitech|罗技|硬件工业|瑞士|https://www.logitech.com/
+Arista Networks|Arista Networks|硬件工业|美国|https://www.arista.com/
+Nokia|诺基亚|硬件工业|芬兰|https://www.nokia.com/
+Tesla|特斯拉|前沿科技|美国|https://www.tesla.com/
+SpaceX|太空探索技术公司|前沿科技|美国|https://www.spacex.com/
+xAI|xAI|前沿科技|美国|https://x.ai/
+Neuralink|Neuralink|前沿科技|美国|https://neuralink.com/
+The Boring Company|无聊公司|前沿科技|美国|https://www.boringcompany.com/
+X|X|前沿科技|美国|https://x.com/
+Rocket Lab|火箭实验室|前沿科技|美国|https://www.rocketlabusa.com/
+Blue Origin|蓝色起源|前沿科技|美国|https://www.blueorigin.com/
+Boston Dynamics|波士顿动力|前沿科技|美国|https://bostondynamics.com/
+Rivian|Rivian|前沿科技|美国|https://rivian.com/
+Huawei|华为|中国硬科技|中国|https://www.huawei.com/
+ZTE|中兴通讯|中国硬科技|中国|https://www.zte.com.cn/
+Xiaomi|小米集团|中国硬科技|中国|https://www.mi.com/
+BYD|比亚迪|中国硬科技|中国|https://www.bydglobal.com/
+CATL|宁德时代|中国硬科技|中国|https://www.catl.com/
+SMIC|中芯国际|中国硬科技|中国|https://www.smics.com/
+YMTC|长江存储|中国硬科技|中国|https://www.ymtc.com/
+CXMT|长鑫存储|中国硬科技|中国|https://www.cxmt.com/
+NAURA Technology|北方华创|中国硬科技|中国|https://www.naura.com/
+AMEC|中微公司|中国硬科技|中国|https://www.amec-inc.com/
+BOE Technology|京东方|中国硬科技|中国|https://www.boe.com/
+DJI|大疆创新|中国硬科技|中国|https://www.dji.com/
+Inspur|浪潮信息|中国硬科技|中国|https://www.inspur.com/
+H3C|新华三|中国硬科技|中国|https://www.h3c.com/
+Hikvision|海康威视|中国硬科技|中国|https://www.hikvision.com/`;
+    var companies=rows.trim().split('\n').map(function(row){var p=row.split('|');return{name:p[0],cn:p[1],category:p[2],country:p[3],url:p[4]};});
+    var categories=['全部','AI云软件','半导体','硬件工业','前沿科技','中国硬科技'];
+    var active='全部';
+    var input=document.getElementById('searchInput');var grid=document.getElementById('companyGrid');var filters=document.getElementById('filters');var result=document.getElementById('resultText');var empty=document.getElementById('emptyState');
+    function escapeHtml(value){return value.replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+    function mark(name){var clean=name.replace(/[^A-Za-z0-9]/g,'');return(clean.slice(0,2)||'QL').toUpperCase();}
+    function render(){var key=(input.value||'').trim().toLowerCase();var list=companies.filter(function(item){var matchCategory=active==='全部'||item.category===active;var text=(item.name+' '+item.cn+' '+item.category+' '+item.country).toLowerCase();return matchCategory&&(!key||text.indexOf(key)!==-1);});grid.innerHTML=list.map(function(item){return'<a class="card" href="'+escapeHtml(item.url)+'" target="_blank" rel="noopener noreferrer" aria-label="访问 '+escapeHtml(item.cn)+' 官方网站"><div class="card-head"><span class="mark">'+mark(item.name)+'</span><span class="external" aria-hidden="true">↗</span></div><h2>'+escapeHtml(item.name)+'</h2><div class="cn">'+escapeHtml(item.cn)+'</div><div class="meta"><span class="tag">'+escapeHtml(item.category)+'</span><span class="tag">'+escapeHtml(item.country)+'</span></div></a>';}).join('');result.textContent='当前显示 '+list.length+' 家企业';empty.style.display=list.length?'none':'block';}
+    categories.forEach(function(category){var button=document.createElement('button');button.type='button';button.className='filter'+(category==='全部'?' active':'');button.textContent=category;button.addEventListener('click',function(){active=category;filters.querySelectorAll('.filter').forEach(function(item){item.classList.toggle('active',item===button);});render();});filters.appendChild(button);});
+    input.addEventListener('input',render);document.getElementById('totalCount').textContent=companies.length;render();
+  })();
