@@ -1672,4 +1672,5 @@ html:root:root body main#main#main#main#main#main#main#main#main[data-qily-publi
 html:root:root body main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"] :is(input,select,textarea,button){font-size:max(16px,1em)!important}
 
 main#main#main#main#main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"] .eyebrow{line-height:1.45!important}
-@media(max-width:767px){main#main#main#main#main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"]>.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}main#main#main#main#main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"] h1{font-weight:950!important}}
+main#main#main#main#main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"]>.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}
+main#main#main#main#main#main#main#main#main#main#main#main#main[data-qily-public-tech-directory="v2"] h1{font-weight:950!important}

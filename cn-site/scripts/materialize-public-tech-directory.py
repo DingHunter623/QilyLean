@@ -186,7 +186,8 @@ def main() -> None:
     # shell runtime, so these source contracts are materialized explicitly.
     final_scope = SCOPE.replace("#main", "#main" * 12)
     rendered_css += final_scope + " .eyebrow{line-height:1.45!important}\n"
-    rendered_css += "@media(max-width:767px){" + final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}" + final_scope + " h1{font-weight:950!important}}\n"
+    rendered_css += final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}\n"
+    rendered_css += final_scope + " h1{font-weight:950!important}\n"
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
