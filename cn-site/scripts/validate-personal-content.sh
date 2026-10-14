@@ -325,7 +325,7 @@ grep -Fq '跨部门共同推进，评审、风险确认与结果复盘构成完�
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
 grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card must use the finished-product visual cache marker."; exit 1; }
 grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
-grep -Fq '/assets/practice.css?v=20260923-practice-visual-v4-reading' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V3 equal-layout cache marker is missing."; exit 1; }
+grep -Fq '/assets/practice.css?v=20261014-single-column-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice single-column layout asset version is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
 grep -Fq '6S改善机制：从稽核到激励的运行记录' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S public-facing section headline is missing."; exit 1; }
 grep -Fq '机制说明：' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism explanation is missing."; exit 1; }
