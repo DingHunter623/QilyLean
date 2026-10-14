@@ -39,10 +39,12 @@ async function auditPage(page, route, limits, label){
   const data=await page.evaluate(()=>{
     const read=(sel)=>[...document.querySelectorAll(sel)].map(el=>({
       text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120),
-      px:parseFloat(getComputedStyle(el).fontSize)
+      px:parseFloat(getComputedStyle(el).fontSize),
+      companyTitle:el.matches('#companyGrid .card h2')
     }));
     return {
       briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
+      sourceDirectory:!!document.querySelector('main[data-qily-public-tech-directory="v2"] #companyGrid'),
       translation:(()=>{
         const controls=[...document.querySelectorAll('[data-qily-header-utility="translation"]')];
         const control=document.querySelector('#qilyCnTranslateV3');
@@ -198,7 +200,13 @@ async function auditPage(page, route, limits, label){
     }
   }else{
     for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
-    for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
+    for(const x of data.h2){
+      // Source company names use the international card hierarchy. Its exact
+      // typography is independently compared by the resource parity test.
+      const sourceCard=route==='/resources/'&&data.sourceDirectory&&x.companyTitle;
+      const ceiling=sourceCard?(label==='mobile'?26:30):limits.h2;
+      expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(ceiling);
+    }
     for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
     for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
     for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(19.9);
