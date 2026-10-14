@@ -102,7 +102,7 @@ function verifyFriendLinksAndLayoutBaseline() {
   assert(links.includes('aria-label="搜索友情链接"'),'friend-links search identity missing');
   assert(links.includes('href="/links/network/"'),'industry resource network must remain inside friend-links module');
   assert(!links.includes('width:min(1360px,100%)'),'friend-links page returned to 1360px content width');
-  assert((links.match(/width:min\(1240px,100%\)/g)||[]).length>=2,'friend-links page 1240px content axis incomplete');
+  assert((links.match(/width:min\(1180px,100%\)/g)||[]).length>=2,'resource directory must retain unified 1180px content axis');
 }
 
 function main() {
