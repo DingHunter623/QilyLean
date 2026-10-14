@@ -3,7 +3,7 @@
 
 /* QilyLean 友情链接 + 版式永久防回退｜2026-09-17
  * 1) /links/ 保留为独立资源模块；一级导航显示名统一为“资源协同”；
- * 2) 首页辅助资产继续保留“友情链接”直达 /links/，用于明确全球科技企业官网入口属性；
+ * 2) 国际站首页与中国站统一以“资源协同”进入各自资源目录，原 /links/ 地址不变；
  * 3) /links/ 页面保留“友情链接｜全球科技企业100强”身份，同时继续承载产业资源协同内容；
  * 4) 本页内容轴统一到全站 1180px 主内容宽度；禁止 1240/1360/1560px 回退；
  * 5) hao123 仅是单独的网址导航入口，绝不纳入100家科技企业名单或排名；
@@ -21,14 +21,14 @@ function assert(ok,msg){if(!ok)throw new Error(msg);}
 
 function patchHome(){
   let html=read('index.html');
-  const desired='<a href="/links/"><strong>友情链接</strong><span>全球科技企业100强官网入口，并保留产业资源协同网络与入驻服务。</span></a>';
+  const desired='<a href="/links/"><strong>资源协同</strong><span>全球科技企业100家官网目录、独立网址导航入口及产业资源协同网络。</span></a>';
   if(!html.includes(desired)){
-    const old=/<a href="\/links\/network\/"><strong>产业资源协同网络<\/strong><span>[\s\S]*?<\/span><\/a>/;
+    const old=/<a href="\/(?:links|links\/network)\/"><strong>(?:友情链接|产业资源协同网络)<\/strong><span>[\s\S]*?<\/span><\/a>/;
     assert(old.test(html),'index.html: missing current产业资源协同网络 card; refusing blind rewrite');
     html=html.replace(old,desired);
   }
   assert(html.includes(desired),'index.html: 友情链接 home entry missing');
-  assert(!/<a href="\/links\/network\/"><strong>产业资源协同网络<\/strong>/.test(html),'index.html: renamed friend-link card returned');
+  assert(!/<a href="\/links\/network\/"><strong>产业资源协同网络<\/strong>/.test(html),'index.html: old resource card returned');
   write('index.html',html);
 }
 
