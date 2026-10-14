@@ -234,7 +234,11 @@ for(const width of [320,360,390,1041,1100,1600]){
         expect(g.buttons[0]).toBeCloseTo(g.buttons[1],0);
       }
       await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
-      const link=page.locator('main a[data-qily-external="international"]');
+      // Briefs are local-first; resources are a local 100-company directory.
+      // Check the actual final content link against the fixed China footer.
+      const link=route==='/briefs/'
+        ? page.locator('main a[href^="/briefs/archive/"]').last()
+        : page.locator('#companyGrid .card').last();
       await link.click({trial:true});
       const clearance=await link.evaluate(el=>document.querySelector('.footer').getBoundingClientRect().top-el.getBoundingClientRect().bottom);
       expect(clearance).toBeGreaterThanOrEqual(8);
