@@ -37,11 +37,15 @@ async function auditPage(page, route, limits, label){
   expect(res && res.ok(), route+' must load').toBeTruthy();
   await page.waitForTimeout(120);
   const data=await page.evaluate(()=>{
-    const read=(sel)=>[...document.querySelectorAll(sel)].map(el=>({
+    const read=(sel)=>[...document.querySelectorAll(sel)].map(el=>{
+      // Company metadata containers contain no direct text: measure the
+      // rendered category/country tags instead of an unused inherited size.
+      const tags=el.matches('#companyGrid .card .meta')?[...el.querySelectorAll('.tag')]:[];
+      return {
       text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120),
-      px:parseFloat(getComputedStyle(el).fontSize),
+      px:tags.length?Math.min(...tags.map(tag=>parseFloat(getComputedStyle(tag).fontSize))):parseFloat(getComputedStyle(el).fontSize),
       companyTitle:el.matches('#companyGrid .card h2')
-    }));
+    };});
     return {
       briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
       sourceDirectory:!!document.querySelector('main[data-qily-public-tech-directory="v2"] #companyGrid'),
