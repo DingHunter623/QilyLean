@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Materialize the non-commercial 101-link China technology research directory.
+"""Materialize the non-commercial 100-company China technology research directory.
 
 Source of truth: international links/index.html's published five-field rows.
 Only the public company names, categories, countries and official URLs are
@@ -38,8 +38,13 @@ def main() -> None:
             raise SystemExit("Invalid public directory URL or field: " + line)
         rows.append({"name": name, "cn": cn, "category": category, "country": country, "url": url})
 
-    if len(rows) != 101 or len({record["url"] for record in rows}) != 101:
-        raise SystemExit("International official directory deviates from the approved 101 unique entries")
+    if len(rows) != 100 or len({record["url"] for record in rows}) != 100:
+        raise SystemExit("International enterprise directory must contain 100 unique official websites")
+
+    if any(item["category"] == "网址导航" or item["name"].lower() == "hao123" for item in rows):
+        raise SystemExit("Navigation entry must not be inside enterprise directory")
+    if len({item["category"] for item in rows}) != 5:
+        raise SystemExit("Enterprise directory must retain five industry categories")
 
     data = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
     asset = RUNTIME.read_text(encoding="utf-8")
@@ -62,7 +67,7 @@ def main() -> None:
 
     if "https://qilylean.com/links/cn-public/" in updated:
         raise SystemExit("China resource directory must not expose an international collaboration CTA")
-    print(f"CN public technology directory synced: {len(rows)} records, 6 industry classes + navigation, rev={version}")
+    print(f"CN public technology directory synced: {len(rows)} companies / 5 industry categories; hao123 standalone, rev={version}")
 
 
 if __name__ == "__main__":
