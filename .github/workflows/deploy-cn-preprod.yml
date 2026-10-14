@@ -666,8 +666,13 @@ jobs:
               raise SystemExit('Production CN briefs must retain the local professional knowledge index.')
           if 'href="https://qilylean.com/global-knowledge/briefs/"' in briefs_bridge:
               raise SystemExit('Production CN briefs still link to international knowledge rather than local archives.')
-          if 'href="https://qilylean.com/links/cn-public/"' in resources_bridge:
-              raise SystemExit('Production CN resources still expose non-approved international click-through.')
+          resource_entry = re.findall(r'<a\b[^>]*data-qily-approved-international-resource="true"[^>]*>进入国际站 ↗</a>', resources_bridge)
+          if len(resource_entry) != 1 or 'href="https://qilylean.com/links/cn-public/"' not in resource_entry[0]:
+              raise SystemExit('Production CN resources missing the approved isolated international entry.')
+          if 'data-qily-public-tech-directory="v2"' not in resources_bridge or '/assets/cn-public-tech-directory-v1.css?v=' not in resources_bridge:
+              raise SystemExit('Production CN resources missing the cloned international public layout.')
+          if any(marker in resources_bridge for marker in ('industryResourceService', 'industry-resource-network', '/links/onboarding/', '/cooperation/')):
+              raise SystemExit('Production CN resources exposed excluded commercial modules.')
           for label,doc in [('briefs',briefs_bridge),('resources',resources_bridge)]:
               footer_match = re.search(r'<footer class="footer">.*?</footer>', doc, re.S)
               if not footer_match or '湘ICP备2026041143号-1' not in footer_match.group(0) or '湘公网安备43020002000443号' not in footer_match.group(0):

@@ -158,16 +158,19 @@ grep -Fq 'href="/briefs/archive/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs pa
 
 
 # Mainland click navigation must remain local-first. Non-clickable international SEO metadata
-# may be retained, but visible cross-site links require an explicitly approved brand LOGO.
+# may be retained. The resource directory has one explicitly approved public
+# international entry; all other cross-site clicks remain logo-only.
 python3 - "$ROOT_DIR" <<'PYCNROUTES'
 from pathlib import Path
 from html.parser import HTMLParser
 import sys
 
 class CNLinkAudit(HTMLParser):
-    def __init__(self):
+    def __init__(self, resource_page=False):
         super().__init__()
         self.bad=[]
+        self.resource_page=resource_page
+        self.public_entries=0
     def handle_starttag(self, tag, attrs):
         if tag!='a': return
         a=dict(attrs)
@@ -175,13 +178,24 @@ class CNLinkAudit(HTMLParser):
         if href.startswith(('https://qilylean.com/','http://qilylean.com/','https://www.qilylean.com/','http://www.qilylean.com/')):
             logo=a.get('data-qily-approved-international-logo')=='true'
             is_home=href.rstrip('/') in ('https://qilylean.com','http://qilylean.com','https://www.qilylean.com','http://www.qilylean.com')
-            if not (logo and is_home):self.bad.append(href)
+            public_entry=(self.resource_page
+                and a.get('data-qily-approved-international-resource')=='true'
+                and href=='https://qilylean.com/links/cn-public/'
+                and a.get('aria-label')=='进入国际站'
+                and a.get('target')=='_blank'
+                and {'noopener','noreferrer'}.issubset(set(a.get('rel','').split())))
+            if public_entry:self.public_entries+=1
+            if not ((logo and is_home) or public_entry):self.bad.append(href)
 
-for p in Path(sys.argv[1]).rglob('*.html'):
-    reader=CNLinkAudit()
+root=Path(sys.argv[1])
+for p in root.rglob('*.html'):
+    is_resource=p==root/'resources/index.html'
+    reader=CNLinkAudit(resource_page=is_resource)
     reader.feed(p.read_text(encoding='utf-8',errors='replace'))
-    if reader.bad:raise SystemExit(f'ERROR: CN non-logo international click-through in {p}: {reader.bad[:5]}')
-print('PASS: CN international navigation restricted to approved logo only.')
+    if reader.bad:raise SystemExit(f'ERROR: CN unapproved international click-through in {p}: {reader.bad[:5]}')
+    if is_resource and reader.public_entries!=1:
+        raise SystemExit('ERROR: resources must retain exactly one approved public international entry.')
+print('PASS: CN international navigation restricted to approved logo and one isolated resource entry.')
 PYCNROUTES
 
 # China footer is one public component across the whole site.
