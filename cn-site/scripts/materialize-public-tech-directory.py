@@ -149,14 +149,7 @@ def main() -> None:
     if not main_match or main_match.group(1).count(boundary) != 1:
         raise ValueError("Public/commercial source boundary missing")
     fragment = main_match.group(1).split(boundary)[0] + "</div></section>"
-    bridge = ('<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->\n'
-        '<div class="notice" id="qilyChinaKnowledgeBridge"><strong>QilyLean | 启力精益国际站：</strong> '
-        '<a class="resource-action qily-cross-site-primary" href="' + PUBLIC_URL + '" '
-        'target="_blank" rel="noopener noreferrer" aria-label="进入国际站" '
-        'data-qily-approved-international-resource="true">进入国际站 ↗</a> '
-        '<span>国际站公开知识入口，提供制造技术与产业资料介绍；该入口属于知识体系关联，'
-        '不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>\n'
-        '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
+    bridge = ''
     fragment, count = re.subn(r"<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->", lambda _: bridge, fragment)
     if count != 1: raise ValueError("Reciprocal bridge source missing")
     if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
