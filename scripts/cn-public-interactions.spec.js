@@ -92,7 +92,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(root.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
     });
 
-    test('2026-09-04 role upgrade is a visible dark card, not orphan grid text',async({page})=>{
+    test('2026-09-04 role card typography follows the international approved sample',async({page,context})=>{
       await open(page,'/briefs/archive/2026-09-04/');
       const row=page.locator('main[data-qily-brief-content="v2"] #selected-brief .brief-topic-statement');
       const summary=row.locator('article.brief-asset-card');
@@ -110,13 +110,34 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
           article:{x:article.x,y:article.y,width:article.width,height:article.height},
           bg:css.backgroundImage,color:css.color,layout:css.display,
           titleColor:title.color,titleSize:parseFloat(title.fontSize),
+          labelSize:parseFloat(getComputedStyle(node.querySelector('small')).fontSize),
+          descriptionSize:parseFloat(getComputedStyle(node.querySelector('span')).fontSize),
           overflow:document.documentElement.scrollWidth-innerWidth
         };
       });
       expect(geometry.layout,'role panel follows the approved international grid layout').toBe('grid');
       expect(geometry.bg,'role panel retains a dark gradient background').toContain('gradient');
       expect(geometry.titleColor,'role heading uses readable gold against dark background').toBe('rgb(255, 227, 155)');
-      expect(geometry.titleSize,'heading remains readable').toBeGreaterThanOrEqual(20);
+      expect(geometry.titleSize,'role title must not grow beyond the international heading scale').toBeLessThanOrEqual(24);
+      const source=await context.newPage();
+      try{
+        const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
+        const response=await source.goto(globalBase+'/qilylean/daily/2026-09-04.html',{waitUntil:'domcontentloaded'});
+        expect(response&&response.ok(),'international sample must load').toBeTruthy();
+        await expect(source.locator('aside.brief-role-shift strong')).toBeVisible();
+        await source.waitForTimeout(1200);
+        await source.evaluate(()=>document.fonts.ready);
+        const reference=await source.locator('aside.brief-role-shift').evaluate(node=>({
+          strong:parseFloat(getComputedStyle(node.querySelector('strong')).fontSize),
+          small:parseFloat(getComputedStyle(node.querySelector('small')).fontSize),
+          span:parseFloat(getComputedStyle(node.querySelector('span')).fontSize)
+        }));
+        expect(Math.abs(geometry.titleSize-reference.strong),'CN role heading vs international: '+JSON.stringify({cn:geometry.titleSize,global:reference.strong})).toBeLessThanOrEqual(2);
+        expect(geometry.labelSize,'CN gold role label must not exceed international size by more than 2px').toBeLessThanOrEqual(reference.small+2);
+        expect(geometry.descriptionSize,'CN role description must not exceed international size by more than 2px').toBeLessThanOrEqual(reference.span+2);
+      }finally{
+        await source.close();
+      }
       expect(geometry.side.width,'the role panel cannot collapse to loose text').toBeGreaterThan(200);
       expect(geometry.side.height,'the role panel retains card geometry').toBeGreaterThan(180);
       expect(geometry.overflow,'the layout does not overflow the viewport horizontally').toBeLessThanOrEqual(1);
