@@ -92,6 +92,49 @@ def card(label: str, href: str, meta: str, count: int | None = None) -> str:
 def article_link(item: dict) -> str:
     return f'<a class="article-link" href="{html.escape(item["url"], quote=True)}"><h3>{html.escape(item["title"])}</h3><p>{html.escape(item["category"])} · 中国站本地内容</p></a>'
 
+def international_brief_cards(briefs: list[dict]) -> dict[str, str]:
+    """Use the international curated-directory SSOT for date, theme, summary and card layout."""
+    directory = (CN.parent / "qilylean/daily-insights.html").read_text(encoding="utf-8")
+    expected = {Path(item["source"]).stem for item in briefs}
+    cards: dict[str, str] = {}
+    pattern = re.compile(r'<article class="brief-index-card" data-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?</article>')
+    for match in pattern.finditer(directory):
+        date, fragment = match.group(1), match.group(0)
+        original = f"/qilylean/daily/{date}.html"
+        links = re.findall(r'\bhref="([^"]+)"', fragment)
+        if (date in cards or links != [original, original]
+                or f'<time datetime="{date}">' not in fragment
+                or '<p class="brief-index-summary">' not in fragment
+                or re.search(r'<(?:script|form|iframe)\b|\bon\w+\s*=', fragment, re.I)):
+            raise ValueError(f"International brief directory card violates public-knowledge contract: {date}")
+        cards[date] = fragment.replace(f'href="{original}"', f'href="/briefs/archive/{date}/"')
+    if set(cards) != expected:
+        raise ValueError(f"International/CN brief metadata mismatch: missing={sorted(expected-set(cards))[:5]}, extra={sorted(set(cards)-expected)[:5]}")
+    return cards
+
+
+def brief_year_search(year: str, total: int, year_count: int) -> str:
+    """Local-only, client-side directory filter; no network, external links or commercial forms."""
+    js = """<script data-qily-brief-year-search="v1">(function(){
+"use strict";
+var input=document.getElementById("briefSearch"),grid=document.getElementById("briefCuratedGrid"),status=document.getElementById("briefFilterStatus");
+if(!input||!grid||!status)return;
+var cards=Array.prototype.slice.call(grid.querySelectorAll(".brief-index-card"));
+function apply(){
+  var query=input.value.normalize("NFKC").trim().toLocaleLowerCase("zh-CN"),visible=0;
+  cards.forEach(function(card){
+    var searchable=(card.getAttribute("data-search")||"").normalize("NFKC").toLocaleLowerCase("zh-CN");
+    var matched=!query||searchable.indexOf(query)!==-1;
+    card.hidden=!matched;if(matched)visible++;
+  });
+  status.textContent=query?"找到 "+visible+" 篇相关精选（__YEAR__年）｜全站 __TOTAL__ 篇精选":"当前 __TOTAL__ 篇精选｜__YEAR__年 __YEAR_COUNT__ 篇";
+}
+input.addEventListener("input",apply);apply();
+})();</script>"""
+    return (js.replace("__YEAR__", year).replace("__TOTAL__", str(total))
+              .replace("__YEAR_COUNT__", str(year_count)))
+
+
 def add_css_link(text: str) -> str:
     href = '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1'
     if href in text:
@@ -182,17 +225,30 @@ def main() -> None:
         m = re.search(r'/(\d{4})-(\d{2})-(\d{2})\.html$', item.get("source", ""))
         if m:
             years[m.group(1)].append(item)
+    # Metadata and card structure follow the international directory, while links
+    # remain on China's local brief archive. Never infer titles, topics or summaries.
+    source_brief_cards = international_brief_cards(grouped["briefs"])
     for year in sorted(years, reverse=True):
-        rows = "".join(article_link(x) for x in years[year])
+        rows = "".join(source_brief_cards[Path(x["source"]).stem] for x in years[year])
+        search = (
+            f'<div class="brief-directory-tools" id="brief-directory">'
+            f'<label for="briefSearch"><span>搜索日期、主题或关键词</span>'
+            f'<input type="search" id="briefSearch" placeholder="例如：NPI、SMED、标准工时、PMO" autocomplete="off"></label>'
+            f'<p id="briefFilterStatus" role="status" aria-live="polite">当前 {brief_total} 篇精选｜{year}年 {len(years[year])} 篇</p></div>'
+        )
+        directory = f'<div class="brief-grid" id="briefCuratedGrid">{rows}</div>'
+        search_runtime = brief_year_search(year, brief_total, len(years[year]))
         url = f"/briefs/archive/year/{year}/"
         page = shell(
             f"{year}年精选简报",
             f"{year}年 QilyLean 制造工程精选简报中国站本地档案。",
             "briefs",
-            f'<section class="page-hero"><div class="content"><span class="hero-eyebrow">SELECTED BRIEFS｜年度档案</span><h1>{year}年精选简报｜{len(years[year])}篇</h1><p>按发布日期连续浏览该年度已经同步到中国服务器的制造工程精选简报。</p></div></section><section class="section"><div class="content"><div class="catalog-breadcrumb"><a href="/briefs/">精选简报</a><span>›</span><b>{year}</b></div><div class="article-list catalog-list">{rows}</div></div></section>',
+            f'<section class="page-hero"><div class="content"><span class="hero-eyebrow">SELECTED BRIEFS｜年度档案</span><h1>{year}年精选简报｜{len(years[year])}篇</h1><p>按发布日期连续浏览该年度已经同步到中国服务器的制造工程精选简报。</p></div></section><section class="section"><div class="content"><div class="catalog-breadcrumb"><a href="/briefs/">精选简报</a><span>›</span><b>{year}</b></div>{search}{directory}{search_runtime}</div></section>',
             url,
-            f'data-qily-knowledge-discovery="v1" data-qily-brief-total="{brief_total}"',
+            f'data-qily-knowledge-discovery="v1" data-qily-brief-total="{brief_total}" data-qily-brief-year-catalog="v2"',
         )
+        page = page.replace("/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1",
+                            "/assets/content-mirror.css?v=20261015-brief-year-cards-v1", 1)
         target = CN / url.lstrip("/") / "index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(page, encoding="utf-8")
