@@ -60,6 +60,74 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('knowledge modules cross-station visual geometry baseline',async({page,context})=>{
+      await open(page,'/knowledge/');
+      const source=await context.newPage();
+      try{
+        const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
+        const response=await source.goto(globalBase+'/knowledge/',{waitUntil:'domcontentloaded'});
+        expect(response&&response.ok(),'International source knowledge page must load').toBeTruthy();
+        await page.evaluate(()=>document.fonts.ready);
+        await source.evaluate(()=>document.fonts.ready);
+        await page.waitForTimeout(800);
+        await source.waitForTimeout(800);
+        const sample=async(target,prefix)=>{
+          return await target.evaluate(({prefix})=>{
+            const id=['knowledge-stats','ai-manufacturing-knowledge','terminology','daily','tools','lean-series','documents'];
+            const number=x=>Math.round(x*100)/100;
+            const rect=node=>{
+              if(!node)return null;
+              const r=node.getBoundingClientRect();
+              return {width:number(r.width),height:number(r.height),x:number(r.left),y:number(r.top)};
+            };
+            const computed=node=>{
+              if(!node)return null;
+              const css=getComputedStyle(node);
+              return {font:number(parseFloat(css.fontSize)),line:number(parseFloat(css.lineHeight)),
+                weight:css.fontWeight,color:css.color,background:css.backgroundColor,
+                fill:css.webkitTextFillColor,decoration:css.textDecorationLine,
+                border:css.borderLeftWidth+' '+css.borderLeftColor,
+                borderTop:css.borderTopWidth+' '+css.borderTopColor,
+                radius:css.borderRadius,shadow:css.boxShadow,
+                pad:[css.paddingTop,css.paddingRight,css.paddingBottom,css.paddingLeft],
+                margin:[css.marginTop,css.marginRight,css.marginBottom,css.marginLeft],
+                display:css.display,gap:css.gap,columns:css.gridTemplateColumns,
+              };
+            };
+            const out={};
+            for(const name of id){
+              const section=document.getElementById(prefix+name);
+              if(!section){out[name]={missing:true};continue}
+              const inner=section.querySelector('.module-inner');
+              const grid=section.querySelector('.module-grid');
+              const card=section.querySelector('.module-card');
+              out[name]={
+                section:{rect:rect(section),css:computed(section)},
+                inner:rect(inner),heading:computed(section.querySelector('.module-heading h2')),
+                headCopy:computed(section.querySelector('.module-heading p')),
+                grid:computed(grid),
+                cards:section.querySelectorAll('.module-card').length,
+                card:{rect:rect(card),css:computed(card)},
+                label:computed(card?.querySelector('small')),
+                cardTitle:computed(card?.querySelector('h3')),
+                body:computed(card?.querySelector('p')),
+                action:computed(card?.querySelector('.knowledge-stat-jump,.module-actions a')),
+              };
+            }
+            return out;
+          },{prefix});
+        };
+        const [intl,cn]=await Promise.all([sample(source,''),sample(page,'cn-global-')]);
+        console.log('QILY-KNOWLEDGE-VI-BASELINE '+JSON.stringify({viewport:device.width,international:intl,china:cn}));
+        for(const key of Object.keys(intl)){
+          expect(intl[key].missing,'International section '+key).toBeFalsy();
+          expect(cn[key].missing,'CN section '+key).toBeFalsy();
+        }
+      }finally{
+        await source.close();
+      }
+    });
+
     test('complete international knowledge hub is locally mirrored with professional links and VI',async({page})=>{
       await open(page,'/knowledge/');
       const hub=page.locator('#main .qily-cn-knowledge-hub[data-qily-international-knowledge-mirror="v1"]');
