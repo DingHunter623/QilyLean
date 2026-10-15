@@ -121,3 +121,112 @@ body[data-qily-brief-year-catalog="v2"] #main .brief-index-actions a:focus-visib
   body[data-qily-brief-year-catalog="v2"] #main .brief-index-card{min-height:0;padding:20px}
   body[data-qily-brief-year-catalog="v2"] #main .brief-index-actions a{min-width:0;width:100%}
 }
+
+/* QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB-V1 | 2026-10-15
+ * International knowledge content/VI is the SSOT; selectors are confined to
+ * China knowledge index. No global navigation, filing, translate or card edits.
+ */
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub{
+  width:100%;max-width:100%;margin:0;color:#415b59;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-section{
+  padding:46px 0 50px;background:#fff;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-section.alt{
+  background:#f3f8f7;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-inner{
+  width:min(1180px,calc(100% - 36px));max-width:100%;margin:0 auto;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-heading{
+  margin:0 0 26px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-heading h2{
+  margin:0 0 13px;color:#0f4b5a;font-size:clamp(24px,2.05vw,29px);
+  line-height:1.35;font-weight:700;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-heading p{
+  margin:0;color:#506866;font-size:18px;line-height:1.72;font-weight:400;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-eyebrow{
+  color:#ba8b40;font-size:18px;font-weight:400;line-height:1.45;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.two{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.three{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card{
+  display:flex;flex-direction:column;align-items:stretch;min-width:0;
+  padding:22px 23px 24px;border:1px solid #d2ad73;border-left:5px solid #caa15f;
+  border-radius:12px;background:#fff;color:#385956;
+  box-shadow:0 12px 28px rgba(7,60,71,.08);
+  overflow-wrap:anywhere;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a.module-card{
+  text-decoration:none;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card small{
+  display:block;color:#143f43;font-size:18px;line-height:1.5;font-weight:400;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card h3{
+  margin:8px 0 14px;color:#0f4b5a;font-size:clamp(20px,1.45vw,24px);
+  line-height:1.3;font-weight:700;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card p{
+  margin:0 0 18px;color:#4e6966;font-size:18px;line-height:1.7;font-weight:400;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .knowledge-stat-card{
+  min-height:245px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .knowledge-stat-jump{
+  display:block;margin-top:auto;padding-top:9px;color:#0f4b5a;
+  font-size:18px;line-height:1.5;font-weight:600;text-decoration:underline;
+  text-decoration-color:#178b94;text-underline-offset:4px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions{
+  display:flex;flex-wrap:wrap;gap:12px;margin-top:auto;padding-top:12px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:8px 15px;border:1px solid #0f4b5a;border-radius:8px;
+  color:#fff;background:#0f4b5a;text-decoration:none;font-size:18px;
+  font-weight:400;line-height:1.4;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a.secondary{
+  background:#fff;color:#0f4b5a;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-result{
+  padding:11px 13px;margin:12px 0 15px;border-radius:8px;
+  background:#f3f8f7;color:#536d68;font-size:16px;line-height:1.55;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a:focus-visible{
+  outline:3px solid #caa15f;outline-offset:3px;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a.module-card:hover{
+  border-color:#b68b46;box-shadow:0 16px 32px rgba(7,60,71,.12);
+}
+@media(max-width:980px){
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid,
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.three{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:640px){
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-section{padding:30px 0 35px}
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid,
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.two,
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.three{
+    grid-template-columns:minmax(0,1fr);gap:14px;
+  }
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card{
+    min-height:0;padding:19px 18px 20px;
+  }
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a{
+    width:100%;
+  }
+}

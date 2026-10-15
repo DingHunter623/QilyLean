@@ -839,6 +839,12 @@ jobs:
           checks=[
               ('data-qily-generated-total="'+str(total)+'"',home,"homepage total"),
               ("QILY-CN-KNOWLEDGE-ASSET-CATALOG",knowledge,"knowledge catalog"),
+              ('data-qily-international-knowledge-mirror="v1"',knowledge,"international knowledge hub"),
+              ('data-qily-terminology-total="193"',knowledge,"193 independent training topics"),
+              ("16 项",knowledge,"16 eligible tools, topics and reference entries"),
+              ('href="/archive/knowledge/terminology/"',knowledge,"local terminology entry"),
+              ('href="#cn-global-tools"',knowledge,"local tools section"),
+              ('knowledge-hub-v1&anchors=20261013-v1',knowledge,"knowledge-only CSS cache identity"),
               ('data-qily-brief-total="'+str(briefs)+'"',brief_page,"brief total"),
               ('data-qily-generated-total="'+str(total)+'"',archive,"archive total"),
               ("制造工程与 IE",manufacturing,"manufacturing category"),
@@ -846,6 +852,31 @@ jobs:
           for needle,body,label in checks:
               if needle not in body:
                   raise SystemExit(f"CN knowledge discovery closure failed: {label} missing {needle}")
+          for section in ("knowledge-stats","ai-manufacturing-knowledge","terminology","daily","tools","lean-series","documents"):
+              if knowledge.count('id="cn-global-'+section+'"')!=1:
+                  raise SystemExit("CN knowledge section missing in production: "+section)
+          style=fetch("/assets/content-mirror.css?v=20261015-knowledge-hub-v1")
+          if "QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB-V1" not in style:
+              raise SystemExit("CN international knowledge UI CSS not live")
+          import hashlib
+          training="/assets/knowledge/%E7%8E%B0%E5%9C%BA%E7%AE%A1%E7%90%86.pdf"
+          src=pathlib.Path("cn-site/assets/knowledge/现场管理.pdf").read_bytes()
+          source_hash=hashlib.sha256(src).hexdigest()
+          error=None
+          for attempt in range(6):
+              try:
+                  request=urllib.request.Request("https://qilylean.cn"+training+"?closure="+sha,
+                      headers={"User-Agent":"QilyLean-Knowledge-PDF-Integrity/1.0","Cache-Control":"no-cache"})
+                  with urllib.request.urlopen(request,timeout=30) as response:
+                      actual=response.read()
+                  if hashlib.sha256(actual).hexdigest()!=source_hash:
+                      raise RuntimeError("Published 150-page PDF differs from full source bytes")
+                  break
+              except Exception as exc:
+                  error=exc
+                  if attempt==5:raise SystemExit(f"Knowledge PDF production validation failed: {error}")
+                  time.sleep(4)
+          print(f"PASS: CN international knowledge module live: 7 sections / 193 lesson entries / 16 content assets / {briefs} briefs; original training PDF byte-identical.")
           print(f"PASS: CN knowledge discovery is live: {total} pages / {briefs} briefs.")
           PY
 
