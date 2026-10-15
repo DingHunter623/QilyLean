@@ -112,6 +112,10 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
                 cardTitle:computed(card?.querySelector('h3')),
                 body:computed(card?.querySelector('p')),
                 action:computed(card?.querySelector('.knowledge-stat-jump,.module-actions a')),
+                actionRect:rect(card?.querySelector('.knowledge-stat-jump,.module-actions a')),
+                eyebrow:computed(section.querySelector('.module-eyebrow')),
+                result:computed(section.querySelector('.module-result')),
+                secondary:computed(section.querySelector('.module-actions a.secondary')),
               };
             }
             return out;
@@ -159,6 +163,9 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
           within(a.action.font,b.action.font,.35,key+' action font');
           expect(b.action.weight,key+' action weight').toBe(a.action.weight);
           expect(b.action.color,key+' action ink').toBe(a.action.color);
+          if(device.name==='mobile' && key!=='knowledge-stats'){
+            within(a.actionRect.width,b.actionRect.width,2,key+' mobile button width');
+          }
           // Existing China accessibility gate requires all small labels >=18px;
           // international small labels are 15.75-16.65px for non-stat cards.
           expect(b.label.font,key+' China label accessibility floor').toBeGreaterThanOrEqual(18);
@@ -170,6 +177,12 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
               key+' responsive column count').toBe(a.grid.columns.trim().split(/\s+/).length);
           }
         }
+        // Also retain computed evidence for exceptional components: gold
+        // module label, OPL information strip and secondary actions.
+        console.log('QILY-KNOWLEDGE-VI-SPECIAL '+JSON.stringify({viewport:device.width,
+          eyebrow:[intl['ai-manufacturing-knowledge'].eyebrow,cn['ai-manufacturing-knowledge'].eyebrow],
+          result:[intl.terminology.result,cn.terminology.result],
+          secondary:[intl.daily.secondary,cn.daily.secondary]}));
         for(const name of ['knowledge-stats','lean-series']){
           const intlSection=source.locator('#'+name);
           const cnSection=page.locator('#cn-global-'+name);
