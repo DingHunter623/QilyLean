@@ -118,11 +118,68 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
           },{prefix});
         };
         const [intl,cn]=await Promise.all([sample(source,''),sample(page,'cn-global-')]);
-        console.log('QILY-KNOWLEDGE-VI-BASELINE '+JSON.stringify({viewport:device.width,international:intl,china:cn}));
+        const reference={viewport:device.width,international:intl,china:cn};
+        const evidenceDir=path.join(ROOT,'visual-cn-typography-v23');
+        fs.mkdirSync(evidenceDir,{recursive:true});
+        fs.writeFileSync(path.join(evidenceDir,'knowledge-vi-parity-'+device.width+'.json'),
+          JSON.stringify(reference,null,2));
+        const within=(a,b,limit,label)=>{
+          expect(typeof a,'international '+label).toBe('number');
+          expect(typeof b,'China '+label).toBe('number');
+          expect(Math.abs(a-b),label+' international='+a+' cn='+b).toBeLessThanOrEqual(limit);
+        };
+        const px=x=>parseFloat(x);
         for(const key of Object.keys(intl)){
-          expect(intl[key].missing,'International section '+key).toBeFalsy();
-          expect(cn[key].missing,'CN section '+key).toBeFalsy();
+          const a=intl[key],b=cn[key];
+          expect(a.missing,'International section '+key).toBeFalsy();
+          expect(b.missing,'CN section '+key).toBeFalsy();
+          within(a.inner.width,b.inner.width,1,key+' content axis');
+          for(let i=0;i<4;i++){
+            within(px(a.section.css.pad[i]),px(b.section.css.pad[i]),1,key+' section padding '+i);
+          }
+          expect(b.section.css.background,key+' section surface').toBe(a.section.css.background);
+          within(a.heading.font,b.heading.font,.35,key+' section heading');
+          expect(b.heading.weight,key+' heading weight').toBe(a.heading.weight);
+          expect(b.heading.color,key+' heading ink').toBe(a.heading.color);
+          within(a.card.rect.width,b.card.rect.width,2,key+' card width');
+          for(let i=0;i<4;i++){
+            within(px(a.card.css.pad[i]),px(b.card.css.pad[i]),1,key+' card padding '+i);
+          }
+          expect(b.card.css.radius,key+' card radius').toBe(a.card.css.radius);
+          expect(b.card.css.border,key+' card edge').toBe(a.card.css.border);
+          expect(b.card.css.borderTop,key+' card top edge').toBe(a.card.css.borderTop);
+          expect(b.card.css.background,key+' card background').toBe(a.card.css.background);
+          expect(b.card.css.decoration,key+' card text emphasis').toBe(a.card.css.decoration);
+          within(a.cardTitle.font,b.cardTitle.font,.35,key+' card heading font');
+          expect(b.cardTitle.weight,key+' card heading weight').toBe(a.cardTitle.weight);
+          expect(b.cardTitle.fill,key+' card heading color').toBe(a.cardTitle.fill);
+          within(a.body.font,b.body.font,.35,key+' body font');
+          expect(b.body.weight,key+' body weight').toBe(a.body.weight);
+          expect(b.body.color,key+' body ink').toBe(a.body.color);
+          within(a.action.font,b.action.font,.35,key+' action font');
+          expect(b.action.weight,key+' action weight').toBe(a.action.weight);
+          expect(b.action.color,key+' action ink').toBe(a.action.color);
+          // Existing China accessibility gate requires all small labels >=18px;
+          // international small labels are 15.75-16.65px for non-stat cards.
+          expect(b.label.font,key+' China label accessibility floor').toBeGreaterThanOrEqual(18);
+          within(a.label.font,b.label.font,2.5,key+' label semantic scale');
+          expect(b.label.weight,key+' label weight').toBe(a.label.weight);
+          if(a.grid&&b.grid){
+            within(px(a.grid.gap),px(b.grid.gap),1,key+' column gap');
+            expect(b.grid.columns.trim().split(/\s+/).length,
+              key+' responsive column count').toBe(a.grid.columns.trim().split(/\s+/).length);
+          }
         }
+        for(const name of ['knowledge-stats','lean-series']){
+          const intlSection=source.locator('#'+name);
+          const cnSection=page.locator('#cn-global-'+name);
+          await intlSection.screenshot({path:path.join(evidenceDir,'knowledge-intl-'+name+'-'+device.width+'.png'),
+            animations:'disabled',timeout:15000});
+          await cnSection.screenshot({path:path.join(evidenceDir,'knowledge-cn-'+name+'-'+device.width+'.png'),
+            animations:'disabled',timeout:15000});
+        }
+        console.log('PASS: QILY-CN-KNOWLEDGE-COMPUTED-VI-PARITY '+device.width+'px / 7 sections / typography, width, paddings, color, card borders and action styles');
+
       }finally{
         await source.close();
       }
