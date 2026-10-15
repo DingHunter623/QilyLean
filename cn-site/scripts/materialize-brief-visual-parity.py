@@ -279,7 +279,7 @@ class VisualSanitizer(HTMLParser):
         "h1","h2","h3","h4","h5","h6","p","ul","ol","li","blockquote",
         "pre","code","table","caption","colgroup","col","thead","tbody","tfoot",
         "tr","th","td","figure","figcaption","img","a","strong","b","em","i",
-        "span","div","section","article","nav","br","hr","small","time","sup",
+        "span","div","section","article","aside","nav","br","hr","small","time","sup",
         "sub","details","summary","picture","source","video","main","dl","dt","dd"
     }
     skip_tags={"script","style","noscript","iframe","form","button","input","select","textarea","object","embed"}

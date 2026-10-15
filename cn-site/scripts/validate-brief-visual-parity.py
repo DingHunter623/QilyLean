@@ -88,6 +88,21 @@ class RendererRegression(unittest.TestCase):
         self.assertIn('https://qilylean.com'+original,international)
         self.assertNotIn(china,international)
 
+    def test_semantic_aside_preserves_role_card_structure(self):
+        # Screenshot regression: 2026-09-04 CN role-upgrade card was plain,
+        # ungrouped text because the mirror sanitizer silently dropped <aside>.
+        source=(visual.ROOT/'qilylean/daily/2026-09-04.html').read_text(encoding='utf-8')
+        main=re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>',source,re.I).group(1)
+        safe,svg_count,visual_nodes=visual.sanitize_main(main,'qilylean/daily/2026-09-04.html')
+        self.assertIn('<aside class="brief-role-shift" aria-label="角色升级方向">',safe)
+        self.assertIn('</strong><span>现场事实仍是起点，系统闭环成为新的交付边界。</span></aside>',safe)
+        self.assertIn('brief-topic-statement',safe)
+        # Preserved structural semantics must not authorize executable markup.
+        parser=visual.VisualSanitizer()
+        parser.feed('<aside class="brief-role-shift" aria-label="角色升级方向" onclick="alert(1)"><strong>制造系统设计者</strong></aside>')
+        markup=''.join(parser.parts)
+        self.assertEqual(markup,'<aside class="brief-role-shift" aria-label="角色升级方向"><strong>制造系统设计者</strong></aside>')
+
     def test_dense_tables_get_keyboard_scroll_regions(self):
         source='<section><table class="rule-table"><tr><td>CT</td></tr></table></section>'
         result=visual.contain_brief_tables(source)
@@ -226,6 +241,14 @@ def validate_generated_corpus():
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
         assert table_count==scroll_count,(src.path,'table scroll containment missing')
+        # All international semantic side cards must survive the CN mirror.
+        # Previous regression dropped the <aside> wrapper but kept its text,
+        # leaving an invisible role panel and broken two-column layout.
+        original_asides=[(a.get('class',''),a.get('aria-label','')) for tag,a in original_page.nodes if tag=='aside']
+        mirrored_asides=[(a.get('class',''),a.get('aria-label','')) for tag,a in main_page.nodes if tag=='aside']
+        assert original_asides==mirrored_asides,(src.path,'semantic side-card container lost',original_asides,mirrored_asides)
+        if src.path.as_posix()=='qilylean/daily/2026-09-04.html':
+            assert ('brief-role-shift','角色升级方向') in mirrored_asides,(src.path,'dark role-shift panel lost')
         # Legacy issue IDs drive special layouts via :has() and must survive.
         original_ids={attrs['id'] for tag,attrs in original_page.nodes if tag=='article' and attrs.get('id')}
         generated_ids={attrs['id'] for tag,attrs in main_page.nodes if tag=='article' and attrs.get('id')}
