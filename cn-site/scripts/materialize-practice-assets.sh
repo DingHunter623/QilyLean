@@ -60,7 +60,7 @@ cn=pathlib.Path(sys.argv[1])
 raw=(cn/"knowledge/index.html").read_text(encoding="utf-8")
 report=json.loads((cn/"archive/content-catalog.json").read_text(encoding="utf-8"))
 assert 'data-qily-international-knowledge-mirror="v1"' in raw
-assert 'knowledge-hub-v1&anchors=20261013-v1' in raw
+assert 'knowledge-vi-parity-v2&anchors=20261013-v1' in raw
 for name in ("knowledge-stats","ai-manufacturing-knowledge","terminology",
              "daily","tools","lean-series","documents"):
     assert raw.count(f'id="cn-global-{name}"')==1,name
