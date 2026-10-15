@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import html
 import json
+import importlib
+from urllib.parse import urlsplit
 import re
 from collections import OrderedDict, defaultdict
 from pathlib import Path
@@ -133,6 +135,88 @@ input.addEventListener("input",apply);apply();
 })();</script>"""
     return (js.replace("__YEAR__", year).replace("__TOTAL__", str(total))
               .replace("__YEAR_COUNT__", str(year_count)))
+
+
+def international_knowledge_hub(brief_total: int) -> str:
+    """Mirror all seven noncommercial international knowledge sections, with local links.
+
+    The international page is the content SSOT. Its native navigation, commercial
+    operating axis, translation and overseas runtimes are intentionally excluded.
+    Fail closed on any source drift or destination that cannot be served locally.
+    """
+    import_path = importlib.import_module("materialize-public-content-mirror")
+    source = (CN.parent / "knowledge/index.html").read_text(encoding="utf-8")
+    report = json.loads((CN / "archive/public-interactions.json").read_text(encoding="utf-8"))
+    lessons = int(report.get("terminology_lessons", 0))
+    if lessons < 190 or f"<h3>{lessons} 项</h3>" not in source:
+        raise ValueError("International/CN terminology training count differs")
+    if f"<h3>{brief_total} 篇</h3>" not in source:
+        raise ValueError("International/CN knowledge brief count differs")
+    if "<h3>16 项</h3>" not in source:
+        raise ValueError("International tool/topic/reference total changed; review before syncing")
+
+    ids = (
+        "knowledge-stats", "ai-manufacturing-knowledge", "terminology",
+        "daily", "tools", "lean-series", "documents",
+    )
+    jump = {
+        "/knowledge/#terminology": "#cn-global-knowledge-architecture",
+        "/knowledge/#tools": "#cn-global-tools",
+        "/qilylean/daily-insights.html": "/briefs/",
+    }
+    def local_url(value: str) -> str:
+        if value in jump:
+            return jump[value]
+        parsed = urlsplit(value)
+        if parsed.scheme or parsed.netloc or not parsed.path.startswith("/"):
+            raise ValueError("Unapproved knowledge source link: " + value)
+        if parsed.path == "/%E7%8E%B0%E5%9C%BA%E7%AE%A1%E7%90%86.pdf":
+            local = CN / "assets/knowledge/现场管理.pdf"
+            if not local.is_file() or local.stat().st_size < 1_000_000:
+                raise ValueError("Full-quality local training PDF absent")
+            return "/assets/knowledge/%E7%8E%B0%E5%9C%BA%E7%AE%A1%E7%90%86.pdf"
+        src = import_path.source_file_for_url(parsed.path)
+        out = import_path.SOURCE_TO_URL.get(src or "")
+        if not out:
+            raise ValueError("Knowledge content not approved for CN local mirror: " + value)
+        dest = CN / out.lstrip("/") / "index.html" if out.endswith("/") else CN / out.lstrip("/")
+        if not dest.is_file():
+            raise ValueError("Missing local knowledge destination: " + out)
+        # Fragment anchors from international pages are not guaranteed to
+        # survive mirror sanitization. Link to the correct local article.
+        return out
+
+    rendered = []
+    for name in ids:
+        match = re.search(
+            r'<section\b(?=[^>]*\bid="' + re.escape(name) + r'")[^>]*>[\s\S]*?</section>',
+            source,
+        )
+        if match is None:
+            raise ValueError("Missing international knowledge section: " + name)
+        fragment = match.group(0)
+        fragment = fragment.replace(f'id="{name}"', f'id="cn-global-{name}"', 1)
+        fragment = re.sub(r'\sdata-site-metadata-source="[^"]+"', "", fragment)
+        fragment = re.sub(r'\sdata-latest-brief-(?:card|date|title|summary|meta|link)(?:="[^"]*")?', "", fragment)
+        # Preserve source card hierarchy and visible content; replace href
+        # values only after verifying their CN-local production destinations.
+        def route(match: re.Match) -> str:
+            return 'href="' + html.escape(local_url(html.unescape(match.group(1))), quote=True) + '"'
+        fragment = re.sub(r'href="([^"]+)"', route, fragment)
+        if re.search(r'href="(?:https?://|//)|\bonclick=|<script\b|<form\b', fragment, re.I):
+            raise ValueError("Commercial/remote action slipped into China knowledge module")
+        if name == "ai-manufacturing-knowledge":
+            fragment = fragment.replace("企业级知识资产库", "公开制造知识资料库")
+        rendered.append(fragment)
+    # The 16 original cards (4 tools + 6 topics + 6 reference documents)
+    # must remain complete, not be reduced to a four-card statistics copy.
+    card_total = sum(len(re.findall(r'<article class="module-card"', block))
+                     for block in rendered[-3:])
+    if card_total != 16:
+        raise ValueError(f"International 16-asset structure changed: {card_total}")
+    return ('<div class="qily-cn-knowledge-hub" data-qily-international-knowledge-mirror="v1" '
+            f'data-qily-brief-total="{brief_total}" data-qily-terminology-total="{lessons}">'
+            + "".join(rendered) + '</div>')
 
 
 def add_css_link(text: str) -> str:
@@ -280,12 +364,21 @@ def main() -> None:
     knowledge_path = CN / "knowledge/index.html"
     knowledge = add_css_link(knowledge_path.read_text(encoding="utf-8"))
     knowledge = remove_legacy_archive_section(knowledge)
+    global_hub = international_knowledge_hub(brief_total)
+    global_start = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:START -->"
+    global_end = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:END -->"
+    if global_start not in knowledge:
+        knowledge_intro = '<section class="section"><div class="content"><div class="section-head"><small>KNOWLEDGE MAP｜知识地图</small>'
+        if knowledge_intro not in knowledge:
+            raise ValueError("China knowledge page placement anchor changed")
+    knowledge = replace_managed(knowledge, global_start, global_end, global_hub,
+                                fallback_before=knowledge_intro if global_start not in knowledge else "</main>")
     knowledge_cards = []
     for key, meta in GROUPS.items():
         if key == "briefs":
             continue
         knowledge_cards.append(card(meta["name"], f'/archive/categories/{meta["slug"]}/', meta["desc"], len(grouped[key])))
-    knowledge_block = f'''<section class="section" data-qily-generated-total="{total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{nonbrief_total}篇专题资料 + {brief_total}篇精选简报，已进入中国站可发现体系</h2><p>国际站符合个人知识站边界的公开内容已经同步到国内服务器，并按制造业专业维度组织，不再隐藏在技术归档目录中。</p></div><div class="catalog-grid">{''.join(knowledge_cards)}</div><div class="catalog-actions"><a class="btn primary" href="/archive/">进入完整知识库</a><a class="btn" href="/briefs/">浏览{brief_total}篇精选简报</a></div></div></section>'''
+    knowledge_block = f'''<section class="section" id="cn-global-knowledge-architecture" data-qily-generated-total="{total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{nonbrief_total}篇专题资料 + {brief_total}篇精选简报，已进入中国站可发现体系</h2><p>国际站符合个人知识站边界的公开内容已经同步到国内服务器，并按制造业专业维度组织，不再隐藏在技术归档目录中。</p></div><div class="catalog-grid">{''.join(knowledge_cards)}</div><div class="catalog-actions"><a class="btn primary" href="/archive/">进入完整知识库</a><a class="btn" href="/briefs/">浏览{brief_total}篇精选简报</a></div></div></section>'''
     knowledge = replace_managed(
         knowledge,
         "<!-- QILY-CN-KNOWLEDGE-ASSET-CATALOG:START -->",
