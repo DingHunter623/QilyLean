@@ -76,11 +76,12 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
         return {
           side:{x:side.x,y:side.y,width:side.width,height:side.height},
           article:{x:article.x,y:article.y,width:article.width,height:article.height},
-          bg:css.backgroundImage,color:css.color,
+          bg:css.backgroundImage,color:css.color,layout:css.display,
           titleColor:title.color,titleSize:parseFloat(title.fontSize),
           overflow:document.documentElement.scrollWidth-innerWidth
         };
       });
+      expect(geometry.layout,'role panel follows the approved international grid layout').toBe('grid');
       expect(geometry.bg,'role panel retains a dark gradient background').toContain('gradient');
       expect(geometry.titleColor,'role heading uses readable gold against dark background').toBe('rgb(255, 227, 155)');
       expect(geometry.titleSize,'heading remains readable').toBeGreaterThanOrEqual(20);
