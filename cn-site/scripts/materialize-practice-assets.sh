@@ -25,6 +25,19 @@ test -s "$TARGET"
 cmp -s "$SOURCE" "$TARGET"
 echo "CN practice award asset materialized locally."
 
+# Localize the full-quality 150-page public IE/onsite-management training PDF.
+# This public knowledge asset must never link visitors back to the commercial site.
+TRAINING_PDF_SOURCE="$REPO_ROOT/现场管理.pdf"
+TRAINING_PDF_TARGET="$CN_ROOT/assets/knowledge/现场管理.pdf"
+test -s "$TRAINING_PDF_SOURCE"
+mkdir -p "$(dirname "$TRAINING_PDF_TARGET")"
+if [[ ! -f "$TRAINING_PDF_TARGET" ]] || ! cmp -s "$TRAINING_PDF_SOURCE" "$TRAINING_PDF_TARGET"; then
+  cp "$TRAINING_PDF_SOURCE" "$TRAINING_PDF_TARGET"
+fi
+cmp -s "$TRAINING_PDF_SOURCE" "$TRAINING_PDF_TARGET"
+echo "CN original training PDF verified at full source-byte quality."
+
+
 
 # Restore the single current international VI stylesheet URL for all dated
 # briefs BEFORE mirroring. This neutralizes stale auto-publisher links and keeps
