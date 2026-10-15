@@ -178,14 +178,7 @@ class CNLinkAudit(HTMLParser):
         if href.startswith(('https://qilylean.com/','http://qilylean.com/','https://www.qilylean.com/','http://www.qilylean.com/')):
             logo=a.get('data-qily-approved-international-logo')=='true'
             is_home=href.rstrip('/') in ('https://qilylean.com','http://qilylean.com','https://www.qilylean.com','http://www.qilylean.com')
-            public_entry=(self.resource_page
-                and a.get('data-qily-approved-international-resource')=='true'
-                and href=='https://qilylean.com/links/cn-public/'
-                and a.get('aria-label')=='进入国际站'
-                and a.get('target')=='_blank'
-                and {'noopener','noreferrer'}.issubset(set(a.get('rel','').split())))
-            if public_entry:self.public_entries+=1
-            if not ((logo and is_home) or public_entry):self.bad.append(href)
+            if not (logo and is_home):self.bad.append(href)
 
 root=Path(sys.argv[1])
 for p in root.rglob('*.html'):
@@ -193,8 +186,8 @@ for p in root.rglob('*.html'):
     reader=CNLinkAudit(resource_page=is_resource)
     reader.feed(p.read_text(encoding='utf-8',errors='replace'))
     if reader.bad:raise SystemExit(f'ERROR: CN unapproved international click-through in {p}: {reader.bad[:5]}')
-    if is_resource and reader.public_entries!=1:
-        raise SystemExit('ERROR: resources must retain exactly one approved public international entry.')
+    if is_resource and reader.public_entries!=0:
+        raise SystemExit('ERROR: unexpected cross-site resource entry')
 print('PASS: CN international navigation restricted to approved logo and one isolated resource entry.')
 PYCNROUTES
 
