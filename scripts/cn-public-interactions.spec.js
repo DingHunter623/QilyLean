@@ -66,7 +66,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const main=body.locator('main#main');
       await expect(main).toBeVisible();
       const expectedYears=fs.readdirSync(path.join(CN,'briefs/archive/year'))
-        .filter(name=>/^20\\d{2}$/.test(name));
+        .filter(name=>/^20[0-9]{2}$/.test(name));
       const yearCards=main.locator('.catalog-year-grid>a.catalog-card');
       await expect(yearCards).toHaveCount(expectedYears.length);
       expect(expectedYears.length).toBe(8);
