@@ -149,9 +149,11 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-adjacent>a.directory{font-size:20px!important}
 html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-closing>span{font-size:20px!important;line-height:1.6!important}
 
-/* QILY-CN-BRIEF-COMPONENT-CONTRAST-V6 | 2026-10-12
- * Restore the approved original dark role card after global CN theme rules.
- * Confined to the cloned archive's article main; never touch CN shell/record footer.
+/* QILY-CN-BRIEF-ROLE-TYPE-PARITY-V14 | 2026-10-15
+ * Use the international 2026-09-04 role panel hierarchy (h3: 19-22px,
+ * supporting copy: 16px), not the cloned CN override (24-34px).
+ * Keep its original dark gradient, geometry, gold color and responsive grid;
+ * never touch site shell, general briefs, archive indexes or legal footer.
  */
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-topic-statement{
   display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(250px,.55fr)!important;
@@ -170,18 +172,18 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shi
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift small{
   color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  font-size:18px!important;line-height:1.5!important;
+  font-size:16px!important;line-height:1.5!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift strong{
   display:block!important;width:100%!important;color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
-  font-size:clamp(24px,2.2vw,34px)!important;line-height:1.4!important;
+  font-size:clamp(19px,1.25vw,22px)!important;line-height:1.45!important;
   font-weight:600!important;word-break:keep-all!important;overflow-wrap:normal!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift span{
   display:block!important;margin:0!important;color:#e8f6f3!important;
   -webkit-text-fill-color:#e8f6f3!important;
-  font-size:19px!important;line-height:1.7!important;
+  font-size:16px!important;line-height:1.65!important;
 }
 /* Source hero is dark after mirror parity. Never apply a white-card breadcrumb
  * label color (#0f4b5a) to this dark teal background.
