@@ -198,7 +198,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
         expect(buttonB.radius).toBe(buttonA.radius);
         // Also retain computed evidence for exceptional components: gold
         // module label, OPL information strip and secondary actions.
-        console.log('QILY-KNOWLEDGE-VI-SPECIAL +JSON.stringify({viewport:device.width,
+        console.log('QILY-KNOWLEDGE-VI-SPECIAL '+JSON.stringify({viewport:device.width,
           eyebrow:[intl['ai-manufacturing-knowledge'].eyebrow,cn['ai-manufacturing-knowledge'].eyebrow],
           result:[intl.terminology.result,cn.terminology.result],
           secondary:[intl.daily.secondary,cn.daily.secondary]}));
