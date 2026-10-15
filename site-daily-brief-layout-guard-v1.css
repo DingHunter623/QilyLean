@@ -402,3 +402,16 @@ html:root:root:root body.daily-single-page main article.post .tags>.tag :is(span
 html:root:root:root body.daily-single-page main article.post .status:empty{
   display:none!important;
 }
+
+/* QILY-20261015-DIAGRAM-IMAGE-CONTRAST | Both-site source authority.
+ * Preserve white step numbers against deep-teal circular chips even when
+ * global article typography overrides bold/inherited text fill.
+ */
+html:root:root body main .lean-delivery-brief .flow-step>b{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  opacity:1!important;text-shadow:none!important;
+}
+html:root:root body main :is(.brief-scene-figure-v1,.knowledge-visual,.engineering-flow) img{
+  display:block;max-width:100%!important;height:auto!important;
+  object-fit:contain!important;
+}
