@@ -236,7 +236,7 @@ def validate_generated_corpus():
         assert any('header-inner' in attrs.get('class','').split() for tag,attrs in page.nodes),src.path
         main=[attrs for tag,attrs in page.nodes if tag=='main']
         assert len(main)==1 and main[0].get('data-qily-brief-content')=='v2',src.path
-        assert '/assets/brief-visual-parity.css?v=20261015-vi-diagram-image-parity-v13' in generated,(src.path,'stale brief CSS version')
+        assert '/assets/brief-visual-parity.css?v=20261015-role-type-parity-v14' in generated,(src.path,'stale brief CSS version')
         assert sum(tag=='h1' for tag,attrs in main_page.nodes)==1,(src.path,'brief must have one real h1')
         table_count=sum(tag=='table' for tag,attrs in main_page.nodes)
         scroll_count=sum(tag=='div' and attrs.get('class')=='qily-brief-table-scroll' for tag,attrs in main_page.nodes)
@@ -289,6 +289,9 @@ def validate_generated_corpus():
     for selector in ('.brief-topic-statement','.brief-role-shift strong',
                      '.knowledge-brief-hero .knowledge-breadcrumbs','.w8 .scene-flow'):
         assert selector in cn_guard,(selector,'CN contrast/role/flow guard missing')
+    assert 'QILY-CN-BRIEF-ROLE-TYPE-PARITY-V14' in cn_guard,'CN role heading style contract missing'
+    assert 'font-size:clamp(19px,1.25vw,22px)!important;line-height:1.45!important' in cn_guard,'CN role heading must follow 19–22px international scale'
+    assert 'font-size:clamp(24px,2.2vw,34px)!important' not in cn_guard,'Old oversized CN role heading override returned'
     for marker in ('QILY-SELECTED-BRIEF-VISUAL-PARITY-V6',
                    '.knowledge-brief-section .module-heading>.module-eyebrow',
                    '.knowledge-brief-hero .knowledge-breadcrumbs',
