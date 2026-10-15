@@ -4,7 +4,7 @@
   --qily-type-nav-1:17px;
   --qily-type-nav-2:16px;
   --qily-type-nav-3:15px;
-  --qily-type-h1:clamp(30px,2.65vw,44px);
+  --qily-type-h1:clamp(28px,2.25vw,38px);
   --qily-type-h2:clamp(26px,2.15vw,36px);
   --qily-type-h3:clamp(22px,1.55vw,26px);
   --qily-type-h4:19px;
@@ -305,7 +305,7 @@ small,
     --qily-type-nav-1:12px;
     --qily-type-nav-2:13.5px;
     --qily-type-nav-3:13px;
-    --qily-type-h1:clamp(30px,8.2vw,38px);
+    --qily-type-h1:clamp(27px,7.2vw,33px);
     --qily-type-h2:clamp(25px,7vw,32px);
     --qily-type-h3:21px;
     --qily-type-h4:18px;
