@@ -161,8 +161,8 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-topic-st
   min-width:0!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift{
-  display:flex!important;flex-direction:column!important;justify-content:center!important;
-  align-items:flex-start!important;gap:12px!important;min-width:0!important;
+  display:grid!important;place-content:center!important;
+  align-items:stretch!important;gap:12px!important;min-width:0!important;
   min-height:100%!important;padding:28px!important;border:1px solid #0f4b5a!important;
   border-radius:12px!important;background:linear-gradient(145deg,#073c47,#0f4b5a 60%,#126d77)!important;
   color:#f4fbfa!important;-webkit-text-fill-color:#f4fbfa!important;
