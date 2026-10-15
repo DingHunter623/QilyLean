@@ -60,6 +60,38 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('yearly CN brief directory matches international cards, metadata and live filtering',async({page})=>{
+      await open(page,'/briefs/archive/year/2026/');
+      const root=page.locator('body[data-qily-brief-year-catalog="v2"]');
+      const grid=root.locator('#briefCuratedGrid');
+      const cards=grid.locator('.brief-index-card');
+      const expected=fs.readdirSync(path.join(CN,'briefs/archive'))
+        .filter(x=>/^2026-\d{2}-\d{2}$/.test(x)).length;
+      expect(expected).toBeGreaterThan(30);
+      await expect(cards).toHaveCount(expected);
+      await expect(root.locator('#briefFilterStatus')).toContainText('当前 '+BRIEF_COUNT+' 篇精选');
+      await expect(root.locator('#briefFilterStatus')).toContainText('2026年 '+expected+' 篇');
+      const reference=cards.filter({has:page.locator('time[datetime="2026-09-28"]')});
+      await expect(reference.locator('.brief-index-meta span')).toContainText('生产计划闭环与产能经营');
+      await expect(reference.locator('.brief-index-summary')).toContainText('净需求');
+      await expect(reference.locator('h2 a')).toHaveAttribute('href','/briefs/archive/2026-09-28/');
+      await expect(reference.locator('.brief-index-actions a')).toHaveAttribute('href','/briefs/archive/2026-09-28/');
+      const columns=await grid.evaluate(el=>getComputedStyle(el).gridTemplateColumns.trim().split(/\s+/).length);
+      expect(columns).toBe(device.name==='mobile'?1:2);
+      const search=root.locator('#briefSearch');
+      await expect(search).toHaveAttribute('placeholder','例如：NPI、SMED、标准工时、PMO');
+      await search.fill('2026-09-28');
+      await expect(cards.filter({visible:true})).toHaveCount(1);
+      await expect(root.locator('#briefFilterStatus')).toContainText('找到 1 篇相关精选');
+      await search.fill('不可能匹配的目录字段_7x8q');
+      await expect(cards.filter({visible:true})).toHaveCount(0);
+      await search.fill('');
+      await expect(cards.filter({visible:true})).toHaveCount(expected);
+      await expect(root.locator('main a[href*="qilylean.com"]')).toHaveCount(0);
+      await expect(root.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
+      await expect(root.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
+    });
+
     test('2026-09-04 role upgrade is a visible dark card, not orphan grid text',async({page})=>{
       await open(page,'/briefs/archive/2026-09-04/');
       const row=page.locator('main[data-qily-brief-content="v2"] #selected-brief .brief-topic-statement');
