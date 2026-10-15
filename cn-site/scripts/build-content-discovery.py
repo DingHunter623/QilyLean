@@ -176,6 +176,11 @@ def international_knowledge_hub(brief_total: int) -> str:
                 raise ValueError("Full-quality local training PDF absent")
             return "/assets/knowledge/%E7%8E%B0%E5%9C%BA%E7%AE%A1%E7%90%86.pdf"
         src = import_path.source_file_for_url(parsed.path)
+        # The older QilyLean GB/T2828 training shell is script-only and fails
+        # the public static-content gate. Use the real mirrored 2828 reference
+        # table instead of linking to a nonexistent local training shell.
+        public_equivalents = {"qilylean/gbt2828.html": "gbt2828.html"}
+        src = public_equivalents.get(src or "", src)
         out = import_path.SOURCE_TO_URL.get(src or "")
         if not out:
             raise ValueError("Knowledge content not approved for CN local mirror: " + value)
