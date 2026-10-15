@@ -52,6 +52,34 @@ python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 # Synchronize non-commercial public directory from the international SSOT.
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
+# New local international-knowledge mirror must be complete and link-safe.
+python3 - "$CN_ROOT" <<'PYKNOWLEDGE'
+import pathlib,re,sys,json
+from html.parser import HTMLParser
+cn=pathlib.Path(sys.argv[1])
+raw=(cn/"knowledge/index.html").read_text(encoding="utf-8")
+report=json.loads((cn/"archive/content-catalog.json").read_text(encoding="utf-8"))
+assert 'data-qily-international-knowledge-mirror="v1"' in raw
+assert 'knowledge-hub-v1&anchors=20261013-v1' in raw
+for name in ("knowledge-stats","ai-manufacturing-knowledge","terminology",
+             "daily","tools","lean-series","documents"):
+    assert raw.count(f'id="cn-global-{name}"')==1,name
+assert raw.count('class="module-card"')>=16
+assert f'data-qily-brief-total="{report["briefs"]}"' in raw
+assert '193 项' in raw and '16 项' in raw
+assert 'href="/archive/knowledge/terminology/"' in raw
+assert 'href="/briefs/"' in raw
+assert 'href="#cn-global-tools"' in raw
+assert 'href="#cn-global-knowledge-architecture"' in raw
+hub=raw.split('<div class="qily-cn-knowledge-hub"',1)[1].split('</div><!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:END -->',1)[0]
+assert 'qilylean.com/' not in hub and 'href="/cooperation/' not in hub
+local=cn/"assets/knowledge/现场管理.pdf"
+original=cn.parent/"现场管理.pdf"
+assert local.read_bytes()==original.read_bytes(),"Knowledge PDF source-byte mismatch"
+assert "湘ICP备2026041143号-1" in raw
+assert "湘公网安备43020002000443号" in raw
+print("CN full knowledge hub validated: seven noncommercial sections / 193 lessons / 16 tools-topics-docs / 381 brief library.")
+PYKNOWLEDGE
 python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
 test -f "$CN_ROOT/archive/index.html"
 test -f "$CN_ROOT/briefs/archive/index.html"
