@@ -60,6 +60,41 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('2026-09-04 role upgrade is a visible dark card, not orphan grid text',async({page})=>{
+      await open(page,'/briefs/archive/2026-09-04/');
+      const row=page.locator('main[data-qily-brief-content="v2"] #selected-brief .brief-topic-statement');
+      const summary=row.locator('article.brief-asset-card');
+      const side=row.locator('aside.brief-role-shift[aria-label="角色升级方向"]');
+      await expect(summary).toBeVisible();
+      await expect(side).toBeVisible();
+      await expect(side.locator('strong')).toContainText('制造系统设计者');
+      const geometry=await side.evaluate(node=>{
+        const side=node.getBoundingClientRect();
+        const article=node.parentElement.querySelector('article.brief-asset-card').getBoundingClientRect();
+        const css=getComputedStyle(node);
+        const title=getComputedStyle(node.querySelector('strong'));
+        return {
+          side:{x:side.x,y:side.y,width:side.width,height:side.height},
+          article:{x:article.x,y:article.y,width:article.width,height:article.height},
+          bg:css.backgroundImage,color:css.color,
+          titleColor:title.color,titleSize:parseFloat(title.fontSize),
+          overflow:document.documentElement.scrollWidth-innerWidth
+        };
+      });
+      expect(geometry.bg,'role panel retains a dark gradient background').toContain('gradient');
+      expect(geometry.titleColor,'role heading uses readable gold against dark background').toBe('rgb(255, 227, 155)');
+      expect(geometry.titleSize,'heading remains readable').toBeGreaterThanOrEqual(20);
+      expect(geometry.side.width,'the role panel cannot collapse to loose text').toBeGreaterThan(200);
+      expect(geometry.side.height,'the role panel retains card geometry').toBeGreaterThan(180);
+      expect(geometry.overflow,'the layout does not overflow the viewport horizontally').toBeLessThanOrEqual(1);
+      if(device.name==='desktop'){
+        expect(geometry.side.x,'aside remains to the right of the abstract card').toBeGreaterThan(geometry.article.x+geometry.article.width);
+        expect(Math.abs(geometry.side.y-geometry.article.y),'desktop cards start at the same row').toBeLessThanOrEqual(5);
+      }else{
+        expect(geometry.side.y,'mobile card stacks after the abstract').toBeGreaterThanOrEqual(geometry.article.y+geometry.article.height-2);
+      }
+    });
+
     test('resource directory clones public international layout and keeps only the isolated entry',async({page,context})=>{
       await open(page,'/resources/');
       const root=page.locator('main[data-qily-public-tech-directory="v2"]');
