@@ -272,6 +272,15 @@ def validate_generated_corpus():
                    '.scene-flow>.scene-arrow'):
         assert marker in global_guard,(marker,'international VI guard missing')
     assert '.scene-flow>.scene-arrow' in mirrored_guard,'CN source brief flow guard missing'
+    # Screenshot-led cross-site diagram/image closure (2026-10-15).
+    for sheet in (cn_guard, global_guard):
+        assert '20261015-DIAGRAM-IMAGE-CONTRAST' in sheet,'Diagram and media VI guard missing'
+        assert '.lean-delivery-brief .flow-step>b' in sheet,'White text on dark numbered chips missing'
+        assert '-webkit-text-fill-color:#fff!important' in sheet,'Numbered-chip WebKit contrast missing'
+        assert 'object-fit:contain!important' in sheet,'Engineering-image aspect protection missing'
+    system_svg=(visual.ROOT/'qilylean/daily/assets/2026-09-13-system.svg').read_text(encoding='utf-8')
+    assert 'M612 470H655V128H636V134L620 126L636 118V124H660V474H612Z' in system_svg,'Continuous orthogonal feedback arrow missing'
+    assert 'M612 472H658V124H631V118.5' not in system_svg,'Broken segmented return path remains'
     for date in ('2026-09-04','2026-08-25'):
         international=(visual.ROOT/'qilylean/daily'/f'{date}.html').read_text(encoding='utf-8')
         assert 'site-daily-brief-layout-guard-v1.css?v=20261013-legacy-tag-contrast-v10' in international, (date,'stale international visual CSS')
