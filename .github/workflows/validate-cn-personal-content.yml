@@ -5,6 +5,12 @@ on:
     paths:
       - 'cn-site/**'
       - 'links/index.html'
+      # International knowledge is the VI source: changes must revalidate the China clone.
+      - 'knowledge/index.html'
+      - 'site-shell.css'
+      - 'site-visual-readability-v5.css'
+      - 'site-visual-authority-r8.css'
+      - 'site-vi-standard-v4.css'
       - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
@@ -19,6 +25,12 @@ on:
     paths:
       - 'cn-site/**'
       - 'links/index.html'
+      # International knowledge is the VI source: changes must revalidate the China clone.
+      - 'knowledge/index.html'
+      - 'site-shell.css'
+      - 'site-visual-readability-v5.css'
+      - 'site-visual-authority-r8.css'
+      - 'site-vi-standard-v4.css'
       - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
@@ -153,6 +165,11 @@ jobs:
           grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' cn-site/assets/practice.css
           ! grep -Fq 'evidence-strip' cn-site/notes/index.html
           ! grep -Fq 'raw.githubusercontent.com' cn-site/notes/index.html
+
+      - name: Syntax-check CN visual regression scripts
+        run: |
+          node --check scripts/cn-public-interactions.spec.js
+          node --check scripts/cn-typography-v23.spec.js
 
       - name: Install Chromium typography audit dependency
         run: |
