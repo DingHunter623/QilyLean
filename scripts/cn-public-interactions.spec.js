@@ -65,8 +65,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const root=page.locator('main[data-qily-public-tech-directory="v2"]');
       await expect(root.locator('#companyGrid .card')).toHaveCount(100);
       await expect(root.locator('#filters button')).toHaveCount(6);
-      await expect(root.locator('#qilyChinaKnowledgeBridge a')).toHaveText('进入国际站 ↗');
-      await expect(root.locator('#qilyChinaKnowledgeBridge a')).toHaveAttribute('href','https://qilylean.com/links/cn-public/');
+      await expect(root.locator('#qilyChinaKnowledgeBridge a')).toHaveCount(0);
       await expect(root.locator('#navigationPartnerLinks a')).toHaveAttribute('href','https://www.hao123.com/');
       await expect(root.locator('#industryResourceService,#industry-resource-network,form,a[href*="/cooperation/"],a[href*="/links/onboarding/"]')).toHaveCount(0);
       await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
