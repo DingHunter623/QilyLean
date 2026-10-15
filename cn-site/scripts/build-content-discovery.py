@@ -371,7 +371,7 @@ def main() -> None:
     # Cache-bust this page only; do not change shared CN styles on other pages.
     knowledge = knowledge.replace(
         '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1',
-        '/assets/content-mirror.css?v=20261015-knowledge-hub-v1&anchors=20261013-v1',
+        '/assets/content-mirror.css?v=20261015-knowledge-vi-parity-v2&anchors=20261013-v1',
     )
     knowledge = remove_legacy_archive_section(knowledge)
     global_hub = international_knowledge_hub(brief_total)
