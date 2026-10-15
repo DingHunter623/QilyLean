@@ -876,12 +876,14 @@ jobs:
           legacy=fetch("/briefs/archive/2020-01-09/?brief-vi=20261011-v1")
           modern_css=fetch("/assets/brief-visual-source/qilylean/daily/assets/2026-09-28-brief.css?v=20261011-v1")
           standard_css=fetch("/assets/brief-visual-source/qilylean/daily/brief-layout-standard.css?v=20261011-v1")
-          role_page=fetch("/briefs/archive/2026-09-04/?brief-vi=20261015-aside-container-v1")
-          role_css=fetch("/assets/brief-visual-parity.css?v=20261015-aside-container-v1")
+          role_page=fetch("/briefs/archive/2026-09-04/?brief-vi=20261015-role-type-parity-v14")
+          role_css=fetch("/assets/brief-visual-parity.css?v=20261015-role-type-parity-v14")
           conditions=[
               ("modern brief original layout",modern,('data-qily-brief-parity="v1"','class="plan-chain"','class="formula-grid"')),
               ("semantic role panel",role_page,('class="brief-topic-statement"','<aside class="brief-role-shift" aria-label="角色升级方向">','制造系统设计者</strong><span>现场事实仍是起点')),
               ("semantic role CSS",role_css,('.brief-topic-statement{','.brief-role-shift{','background:linear-gradient(145deg,#073c47,#0f4b5a')),
+              ("source role typography and cache",role_page,('/assets/brief-visual-parity.css?v=20261015-role-type-parity-v14',)),
+              ("CN role font matches international 19–22px",role_css,('QILY-CN-BRIEF-ROLE-TYPE-PARITY-V14','font-size:clamp(19px,1.25vw,22px)!important;line-height:1.45!important')),
               ("legacy brief original layout",legacy,('data-qily-brief-parity="v1"','brief-one-point-training','/mirror-media/qilylean/assets/daily-2020-01-09.svg')),
               ("source issue styles",modern_css,('.plan-chain','/assets/brief-visual-source/qilylean/daily/brief-layout-standard.css')),
               ("original shared styles",standard_css,('--qily-brief-font-h1','.knowledge-brief-hero')),
