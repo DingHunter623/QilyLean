@@ -86,7 +86,7 @@ assert(readabilityCss.includes('--qily-v5-gold-text:#b88b45'),'Sitewide VI gold 
 assert(readabilityCss.includes('color:var(--qily-v5-gold-text)!important'),'Sitewide section kicker no longer uses governed VI gold');
 assert(!readabilityCss.includes('--qily-v5-red:#9e4a34'),'Retired red section-kicker token returned');
 assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V5'),'Homepage V5 VI/readability contract missing');
-assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Homepage hero title readable-size override missing');
+assert(homeVisualFix.includes('font-size:clamp(28px,2.25vw,38px)!important'),'Homepage title must match the China H1 38px VI authority');
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
 assert(homeVisualFix.includes('cursor:default!important')&&homeVisualFix.includes('transition:none!important'),'Homepage non-routing capsules must remain visually static');
 assert(homeVisualFix.includes('color:#b88b45!important')&&homeVisualFix.includes('font-size:20px!important'),'Homepage light-surface section kickers must use one VI-gold 20px hierarchy');
