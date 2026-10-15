@@ -16,10 +16,10 @@ const pngPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.
 const EXPECTED_CANONICAL_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4';
 const EXPECTED_CANONICAL_BYTES=2270808;
 const ASSET_VERSION='20260918-aircraft-ultraclear-v1';
-const HOME_VERSION='20260901-home-conversion-axis-v2';
+const HOME_VERSION='20261015-cn-parity-home-axis-v3';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
-const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
+const HOME_VISUAL_FIX_VERSION='20261015-cn-parity-home-visual-v6';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const readabilityVersionMatch=readabilityPublisher.match(/const VERSION = '([^']+)'/);
 if(!readabilityVersionMatch)throw new Error('Readability publisher cache version is missing');
