@@ -15,7 +15,6 @@ STYLE = CN / "assets/cn-public-tech-directory-v1.css"
 SCOPE = 'main:is(#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"]'
 PUBLIC_STYLE = ROOT / "site-public-tech-directory-v1.css"
 EXCLUDE_SERVICES = ':not(:where(.resource-service,.resource-service *,.qily-resource-network,.qily-resource-network *))'
-PUBLIC_URL = "https://qilylean.com/links/cn-public/"
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(CN / "scripts"))
 css = importlib.import_module("materialize-brief-visual-parity")
@@ -151,9 +150,8 @@ def main() -> None:
     fragment = main_match.group(1).split(boundary)[0] + "</div></section>"
     bridge = ('<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->\n'
         '<div class="notice" id="qilyChinaKnowledgeBridge"><strong>QilyLean | 启力精益国际站：</strong> '
-        '<a class="resource-action qily-cross-site-primary" href="' + PUBLIC_URL + '" '
-        'target="_blank" rel="noopener noreferrer" aria-label="进入国际站" '
-        'data-qily-approved-international-resource="true">进入国际站 ↗</a> '
+        '<a class="resource-action qily-cross-site-primary" role="note" aria-disabled="true" '
+        'style="pointer-events:none">国际站知识资料</a> '
         '<span>国际站公开知识入口，提供制造技术与产业资料介绍；该入口属于知识体系关联，'
         '不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>\n'
         '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
