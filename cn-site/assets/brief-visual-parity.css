@@ -374,3 +374,16 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
 .w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
   width:1%!important;white-space:nowrap!important;
 }
+
+/* QILY-CN-20261015-DIAGRAM-IMAGE-CONTRAST | Mirrors the original VI.
+ * Fix authored numbered steps and contain engineering diagrams only;
+ * do not recolor CN navigation, badges, photos, or statutory footer.
+ */
+html:root:root:root body[data-qily-brief-parity] #main#main#main .lean-delivery-brief .flow-step>b{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  opacity:1!important;text-shadow:none!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main :is(.brief-scene-figure-v1,.knowledge-visual,.engineering-flow) img{
+  display:block;max-width:100%!important;height:auto!important;
+  object-fit:contain!important;
+}
