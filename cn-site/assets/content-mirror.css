@@ -260,7 +260,7 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-result{
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a:focus-visible{
   outline:3px solid #caa15f;outline-offset:3px;
 }
-@media(max-width:980px){
+@media(min-width:641px) and (max-width:980px){
   body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid:not(.two),
   body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub #cn-global-lean-series .module-grid.three{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -288,5 +288,8 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a:focus-visible{
   }
   body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .knowledge-stat-card{
     min-height:0!important;
+  }
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a{
+    width:100%!important;max-width:100%!important;
   }
 }
