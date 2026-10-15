@@ -163,7 +163,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const grid=hub.locator('#cn-global-knowledge-stats .knowledge-stat-grid');
       const cols=await grid.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
       expect(cols).toBe(device.name==='mobile'?1:3);
-      const origin=await page.locator('head link[href*="knowledge-hub-v1"]').count();
+      const origin=await page.locator('head link[href*="knowledge-vi-parity-v2"]').count();
       expect(origin,'Knowledge index must load the updated, scoped style version').toBe(1);
       await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
       await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
