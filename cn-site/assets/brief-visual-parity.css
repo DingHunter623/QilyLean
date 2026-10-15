@@ -151,7 +151,7 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .tripod-closing
 
 /* QILY-CN-BRIEF-ROLE-TYPE-PARITY-V14 | 2026-10-15
  * Use the international 2026-09-04 role panel hierarchy (h3: 19-22px,
- * supporting copy: 16px), not the cloned CN override (24-34px).
+ * supporting copy: 16px); retain the China-site 18px caption floor.
  * Keep its original dark gradient, geometry, gold color and responsive grid;
  * never touch site shell, general briefs, archive indexes or legal footer.
  */
@@ -172,7 +172,7 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shi
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift small{
   color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  font-size:16px!important;line-height:1.5!important;
+  font-size:18px!important;line-height:1.5!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main .brief-role-shift strong{
   display:block!important;width:100%!important;color:#ffe39b!important;
