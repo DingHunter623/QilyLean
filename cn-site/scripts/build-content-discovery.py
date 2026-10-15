@@ -363,6 +363,11 @@ def main() -> None:
     # Knowledge index: convert the old hidden archive CTA into a professional matrix.
     knowledge_path = CN / "knowledge/index.html"
     knowledge = add_css_link(knowledge_path.read_text(encoding="utf-8"))
+    # Cache-bust this page only; do not change shared CN styles on other pages.
+    knowledge = knowledge.replace(
+        '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1',
+        '/assets/content-mirror.css?v=20261015-knowledge-hub-v1&anchors=20261013-v1',
+    )
     knowledge = remove_legacy_archive_section(knowledge)
     global_hub = international_knowledge_hub(brief_total)
     global_start = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:START -->"
