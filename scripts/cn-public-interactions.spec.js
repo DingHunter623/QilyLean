@@ -60,6 +60,47 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('complete international knowledge hub is locally mirrored with professional links and VI',async({page})=>{
+      await open(page,'/knowledge/');
+      const hub=page.locator('#main .qily-cn-knowledge-hub[data-qily-international-knowledge-mirror="v1"]');
+      await expect(hub).toBeVisible();
+      const sections=[
+        'knowledge-stats','ai-manufacturing-knowledge','terminology',
+        'daily','tools','lean-series','documents',
+      ];
+      for(const name of sections){
+        await expect(hub.locator('#cn-global-'+name)).toHaveCount(1);
+      }
+      await expect(hub).toHaveAttribute('data-qily-brief-total',String(BRIEF_COUNT));
+      await expect(hub).toHaveAttribute('data-qily-terminology-total','193');
+      const stats=hub.locator('#cn-global-knowledge-stats .knowledge-stat-card');
+      await expect(stats).toHaveCount(4);
+      await expect(stats.nth(0)).toContainText('6 大模块');
+      await expect(stats.nth(1)).toContainText('193 项');
+      await expect(stats.nth(2)).toContainText(String(BRIEF_COUNT)+' 篇');
+      await expect(stats.nth(3)).toContainText('16 项');
+      await expect(stats.nth(0)).toHaveAttribute('href','#cn-global-knowledge-architecture');
+      await expect(stats.nth(1)).toHaveAttribute('href','/archive/knowledge/terminology/');
+      await expect(stats.nth(2)).toHaveAttribute('href','/briefs/');
+      await expect(stats.nth(3)).toHaveAttribute('href','#cn-global-tools');
+      await expect(page.locator('#cn-global-knowledge-architecture')).toBeVisible();
+      await expect(hub.locator('#cn-global-tools article.module-card')).toHaveCount(4);
+      await expect(hub.locator('#cn-global-lean-series article.module-card')).toHaveCount(6);
+      await expect(hub.locator('#cn-global-documents article.module-card')).toHaveCount(6);
+      await expect(hub.locator('#cn-global-documents a[href="/assets/knowledge/%E7%8E%B0%E5%9C%BA%E7%AE%A1%E7%90%86.pdf"]')).toHaveCount(2);
+      const localLinks=await hub.locator('a[href]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
+      expect(localLinks.length).toBeGreaterThan(25);
+      expect(localLinks.every(href=>href.startsWith('/')||href.startsWith('#')),'No overseas or commercial link inside personal knowledge hub').toBeTruthy();
+      expect(localLinks.some(href=>href.includes('/cooperation/'))).toBeFalsy();
+      const grid=hub.locator('#cn-global-knowledge-stats .knowledge-stat-grid');
+      const cols=await grid.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
+      expect(cols).toBe(device.name==='mobile'?1:3);
+      const origin=await page.locator('head link[href*="knowledge-hub-v1"]').count();
+      expect(origin,'Knowledge index must load the updated, scoped style version').toBe(1);
+      await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
+      await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
+    });
+
     test('CN brief landing retains only the year-index module, without the duplicate latest list',async({page})=>{
       await open(page,'/briefs/');
       const body=page.locator('body[data-qily-knowledge-discovery="v1"]');
