@@ -62,7 +62,8 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
 
     test('CN brief landing retains only the year-index module, without the duplicate latest list',async({page})=>{
       await open(page,'/briefs/');
-      const main=page.locator('main#main[data-qily-knowledge-discovery="v1"]');
+      const body=page.locator('body[data-qily-knowledge-discovery="v1"]');
+      const main=body.locator('main#main');
       await expect(main).toBeVisible();
       const expectedYears=fs.readdirSync(path.join(CN,'briefs/archive/year'))
         .filter(name=>/^20\\d{2}$/.test(name));
@@ -73,7 +74,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
         await expect(yearCards.filter({has:page.locator('h3:text-is("'+year+'年")')}))
           .toHaveAttribute('href','/briefs/archive/year/'+year+'/');
       }
-      await expect(main).toHaveAttribute('data-qily-brief-total',String(BRIEF_COUNT));
+      await expect(body).toHaveAttribute('data-qily-brief-total',String(BRIEF_COUNT));
       await expect(main.locator('.catalog-stats')).toContainText(String(BRIEF_COUNT));
       await expect(main.locator('section.section')).toHaveCount(1);
       await expect(main.locator('section.section.alt,.article-list.catalog-list,.catalog-more,.catalog-extension')).toHaveCount(0);
