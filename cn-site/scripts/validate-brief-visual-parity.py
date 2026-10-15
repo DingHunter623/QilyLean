@@ -92,7 +92,7 @@ class RendererRegression(unittest.TestCase):
         # Screenshot regression: 2026-09-04 CN role-upgrade card was plain,
         # ungrouped text because the mirror sanitizer silently dropped <aside>.
         source=(visual.ROOT/'qilylean/daily/2026-09-04.html').read_text(encoding='utf-8')
-        main=re.search(r'<main\\b[^>]*>([\\s\\S]*?)</main\\s*>',source,re.I).group(1)
+        main=re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>',source,re.I).group(1)
         safe,svg_count,visual_nodes=visual.sanitize_main(main,'qilylean/daily/2026-09-04.html')
         self.assertIn('<aside class="brief-role-shift" aria-label="角色升级方向">',safe)
         self.assertIn('</strong><span>现场事实仍是起点，系统闭环成为新的交付边界。</span></aside>',safe)
