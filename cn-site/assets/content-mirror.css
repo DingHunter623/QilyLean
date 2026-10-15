@@ -163,8 +163,8 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-heading p{
   font-size:20px!important;line-height:1.72!important;font-weight:400!important;
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-eyebrow{
-  color:#ba8b40!important;font-size:18px!important;font-weight:400!important;
-  line-height:1.45!important;
+  color:#caa15f!important;-webkit-text-fill-color:#caa15f!important;
+  font-size:21px!important;font-weight:400!important;line-height:1.45!important;
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid{
   display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
@@ -172,9 +172,13 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid{
   align-items:stretch!important;grid-auto-rows:auto!important;
   min-width:0;
 }
-body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.two,
-body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub #cn-global-lean-series .module-grid.three{
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-grid.two{
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+@media(min-width:641px){
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub #cn-global-lean-series .module-grid.three{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-card{
   box-sizing:border-box!important;
@@ -249,13 +253,14 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a{
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a.secondary{
   background:#fff!important;color:#0f4b5a!important;
-  -webkit-text-fill-color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;border-color:#a9cbc7!important;
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-result{
   padding:13px 15px;margin-top:16px;
   border-left:4px solid #caa15f;
-  border-radius:8px;background:#eef8f6;color:#17443b;
-  font-size:18px!important;line-height:1.7!important;
+  border-radius:0!important;background:#eef8f6;
+  color:#244c4e!important;-webkit-text-fill-color:#244c4e!important;
+  font-size:18.5px!important;line-height:1.7!important;font-weight:850!important;
 }
 body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a:focus-visible{
   outline:3px solid #caa15f;outline-offset:3px;
