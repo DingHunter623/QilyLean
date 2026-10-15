@@ -289,6 +289,9 @@ def validate_generated_corpus():
     for selector in ('.brief-topic-statement','.brief-role-shift strong',
                      '.knowledge-brief-hero .knowledge-breadcrumbs','.w8 .scene-flow'):
         assert selector in cn_guard,(selector,'CN contrast/role/flow guard missing')
+    assert 'QILY-CN-BRIEF-ROLE-TYPE-PARITY-V14' in cn_guard,'CN role heading style contract missing'
+    assert 'font-size:clamp(19px,1.25vw,22px)!important;line-height:1.45!important' in cn_guard,'CN role heading must follow 19–22px international scale'
+    assert 'font-size:clamp(24px,2.2vw,34px)!important' not in cn_guard,'Old oversized CN role heading override returned'
     for marker in ('QILY-SELECTED-BRIEF-VISUAL-PARITY-V6',
                    '.knowledge-brief-section .module-heading>.module-eyebrow',
                    '.knowledge-brief-hero .knowledge-breadcrumbs',
