@@ -20,8 +20,8 @@ for(const rel of tracked('*.html').filter(rel=>!rel.startsWith('cn-site/'))){
 
 /* 1) International VI authority */
 const readability=read('site-visual-readability-v5.css');
-assert(readability.includes('--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)'), 'International heading ceiling must remain 44px.');
-assert(readability.includes('font-size:clamp(30px,8.2vw,38px)!important'), 'International mobile H1 ceiling must remain 38px.');
+assert(readability.includes('--qily-r8-heading-ceiling:clamp(28px,2.25vw,38px)'), 'International H1 must match the CN 38px ceiling.');
+assert(readability.includes('font-size:clamp(27px,7.2vw,33px)!important'), 'International mobile H1 must match the CN 33px ceiling.');
 
 const interaction=read('site-interaction-semantics-v1.css');
 assert(interaction.includes('QILY-ROUTE-CARD-FEEDBACK-V2'), 'International route-card feedback contract is missing.');
