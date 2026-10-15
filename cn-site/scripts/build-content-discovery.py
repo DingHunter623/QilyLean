@@ -248,7 +248,7 @@ def main() -> None:
             f'data-qily-knowledge-discovery="v1" data-qily-brief-total="{brief_total}" data-qily-brief-year-catalog="v2"',
         )
         page = page.replace("/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1",
-                            "/assets/content-mirror.css?v=20261015-brief-year-cards-v1", 1)
+                            "/assets/content-mirror.css?v=20261015-brief-year-cards-v1&anchors=20261013-v1", 1)
         target = CN / url.lstrip("/") / "index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(page, encoding="utf-8")
