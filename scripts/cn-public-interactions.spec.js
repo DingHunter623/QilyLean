@@ -177,9 +177,28 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
               key+' responsive column count').toBe(a.grid.columns.trim().split(/\s+/).length);
           }
         }
+        // Additional parity assertions for less common knowledge components.
+        const aiA=intl['ai-manufacturing-knowledge'].eyebrow;
+        const aiB=cn['ai-manufacturing-knowledge'].eyebrow;
+        within(aiA.font,aiB.font,.35,'AI module gold-eyebrow font');
+        expect(aiB.weight).toBe(aiA.weight);
+        expect(aiB.color).toBe(aiA.color);
+        expect(aiB.fill).toBe(aiA.fill);
+        const oplA=intl.terminology.result,oplB=cn.terminology.result;
+        within(oplA.font,oplB.font,.35,'OPL result caption font');
+        expect(oplB.weight).toBe(oplA.weight);
+        expect(oplB.color).toBe(oplA.color);
+        expect(oplB.fill).toBe(oplA.fill);
+        expect(oplB.radius).toBe(oplA.radius);
+        const buttonA=intl.daily.secondary,buttonB=cn.daily.secondary;
+        within(buttonA.font,buttonB.font,.35,'secondary brief button font');
+        expect(buttonB.weight).toBe(buttonA.weight);
+        expect(buttonB.color).toBe(buttonA.color);
+        expect(buttonB.border).toBe(buttonA.border);
+        expect(buttonB.radius).toBe(buttonA.radius);
         // Also retain computed evidence for exceptional components: gold
         // module label, OPL information strip and secondary actions.
-        console.log('QILY-KNOWLEDGE-VI-SPECIAL '+JSON.stringify({viewport:device.width,
+        console.log('QILY-KNOWLEDGE-VI-SPECIAL +JSON.stringify({viewport:device.width,
           eyebrow:[intl['ai-manufacturing-knowledge'].eyebrow,cn['ai-manufacturing-knowledge'].eyebrow],
           result:[intl.terminology.result,cn.terminology.result],
           secondary:[intl.daily.secondary,cn.daily.secondary]}));
