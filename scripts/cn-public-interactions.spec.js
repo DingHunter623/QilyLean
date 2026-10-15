@@ -81,12 +81,12 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const search=root.locator('#briefSearch');
       await expect(search).toHaveAttribute('placeholder','例如：NPI、SMED、标准工时、PMO');
       await search.fill('2026-09-28');
-      await expect(cards.filter({visible:true})).toHaveCount(1);
+      await expect(grid.locator('.brief-index-card:visible')).toHaveCount(1);
       await expect(root.locator('#briefFilterStatus')).toContainText('找到 1 篇相关精选');
       await search.fill('不可能匹配的目录字段_7x8q');
-      await expect(cards.filter({visible:true})).toHaveCount(0);
+      await expect(grid.locator('.brief-index-card:visible')).toHaveCount(0);
       await search.fill('');
-      await expect(cards.filter({visible:true})).toHaveCount(expected);
+      await expect(grid.locator('.brief-index-card:visible')).toHaveCount(expected);
       await expect(root.locator('main a[href*="qilylean.com"]')).toHaveCount(0);
       await expect(root.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
       await expect(root.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
