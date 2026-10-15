@@ -60,6 +60,29 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('CN brief landing retains only the year-index module, without the duplicate latest list',async({page})=>{
+      await open(page,'/briefs/');
+      const main=page.locator('main#main[data-qily-knowledge-discovery="v1"]');
+      await expect(main).toBeVisible();
+      const expectedYears=fs.readdirSync(path.join(CN,'briefs/archive/year'))
+        .filter(name=>/^20\\d{2}$/.test(name));
+      const yearCards=main.locator('.catalog-year-grid>a.catalog-card');
+      await expect(yearCards).toHaveCount(expectedYears.length);
+      expect(expectedYears.length).toBe(8);
+      for(const year of expectedYears){
+        await expect(yearCards.filter({has:page.locator('h3:text-is("'+year+'年")')}))
+          .toHaveAttribute('href','/briefs/archive/year/'+year+'/');
+      }
+      await expect(main).toHaveAttribute('data-qily-brief-total',String(BRIEF_COUNT));
+      await expect(main.locator('.catalog-stats')).toContainText(String(BRIEF_COUNT));
+      await expect(main.locator('section.section')).toHaveCount(1);
+      await expect(main.locator('section.section.alt,.article-list.catalog-list,.catalog-more,.catalog-extension')).toHaveCount(0);
+      await expect(main).not.toContainText('LATEST BRIEFS');
+      await expect(main).not.toContainText('最近同步的24篇');
+      await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
+      await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
+    });
+
     test('yearly CN brief directory matches international cards, metadata and live filtering',async({page})=>{
       await open(page,'/briefs/archive/year/2026/');
       const root=page.locator('body[data-qily-brief-year-catalog="v2"]');
