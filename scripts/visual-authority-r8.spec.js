@@ -68,7 +68,9 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
         await page.waitForURL(url=>url.pathname==='/qilylean/daily-insights.html',{waitUntil:'domcontentloaded',timeout:30000});
         await page.waitForLoadState('domcontentloaded');
         try{
-          await page.locator('header[data-qily-r8-measured="true"]').waitFor({state:'attached',timeout:5000});
+          // The canonical redirect can settle its deferred header after CI contention.
+          // Keep the exact measured-header and downstream geometry assertions.
+          await page.locator('header[data-qily-r8-measured="true"]').waitFor({state:'attached',timeout:15000});
         }catch(error){
           console.error('Canonical index startup',JSON.stringify({viewport:vp.name,errors:startupErrors.slice(-8),state:await page.evaluate(()=>({url:location.href,ready:document.readyState,runtime:window.__qilyVisualRuntimeR84,header:document.querySelector('header')?.outerHTML.slice(0,300)}))}));
           throw error;

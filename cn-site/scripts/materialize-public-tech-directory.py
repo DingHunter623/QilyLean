@@ -150,8 +150,9 @@ def main() -> None:
     fragment = main_match.group(1).split(boundary)[0] + "</div></section>"
     bridge = ('<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->\n'
         '<div class="notice" id="qilyChinaKnowledgeBridge"><strong>QilyLean | 启力精益国际站：</strong> '
-        '<a class="resource-action qily-cross-site-primary" role="note" aria-disabled="true" '
-        'style="pointer-events:none">国际站知识资料</a> '
+        '<a class="resource-action qily-cross-site-primary" href="https://qilylean.com/links/cn-public/" '
+        'target="_blank" rel="noopener noreferrer" aria-label="进入国际站" '
+        'data-qily-approved-international-resource="true">进入国际站 ↗</a> '
         '<span>国际站公开知识入口，提供制造技术与产业资料介绍；该入口属于知识体系关联，'
         '不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>\n'
         '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
