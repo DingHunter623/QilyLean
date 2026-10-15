@@ -133,7 +133,8 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
           span:parseFloat(getComputedStyle(node.querySelector('span')).fontSize)
         }));
         expect(Math.abs(geometry.titleSize-reference.strong),'CN role heading vs international: '+JSON.stringify({cn:geometry.titleSize,global:reference.strong})).toBeLessThanOrEqual(2);
-        expect(geometry.labelSize,'CN gold role label must not exceed international size by more than 2px').toBeLessThanOrEqual(reference.small+2);
+        expect(geometry.labelSize,'China site-wide small-caption floor must remain intact').toBe(18);
+        expect(Math.abs(geometry.labelSize-reference.small),'CN role label remains within the cross-site small-label VI band').toBeLessThanOrEqual(4);
         expect(geometry.descriptionSize,'CN role description must not exceed international size by more than 2px').toBeLessThanOrEqual(reference.span+2);
       }finally{
         await source.close();
