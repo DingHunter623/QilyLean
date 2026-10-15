@@ -151,7 +151,18 @@ grep -Fq 'data-qily-cn-nav-contract="20260926-v7-bridge"' "$INDEX_FILE" || {
 }
 [[ -f "$BRIEFS_PAGE" ]] || { echo "ERROR: CN briefs bridge page is missing."; exit 1; }
 [[ -f "$RESOURCES_PAGE" ]] || { echo "ERROR: CN resources bridge page is missing."; exit 1; }
-grep -Fq 'href="/briefs/archive/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs page must point to the local full archive."; exit 1; }
+# The approved briefs landing is year-only: each year is a complete local archive
+# entry. Never require or restore the deleted duplicate "latest 24" section.
+for year in 2019 2020 2021 2022 2023 2024 2025 2026; do
+  grep -Fq "href=\"/briefs/archive/year/${year}/\"" "$BRIEFS_PAGE" || {
+    echo "ERROR: CN briefs year ${year} local archive entry missing."
+    exit 1
+  }
+done
+if grep -Eq 'LATEST BRIEFS|最近同步的24篇|article-list catalog-list|catalog-more|catalog-extension' "$BRIEFS_PAGE"; then
+  echo "ERROR: CN briefs page must not regenerate duplicate latest-brief listing."
+  exit 1
+fi
 
 
 
