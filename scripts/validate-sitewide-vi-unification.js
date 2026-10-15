@@ -52,7 +52,7 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
  * Catch the exact missing-main / stale-cache regression reported in visual QA. */
 assert(read('site-visual-readability-v5.css').includes('QILY-FULL-SITE-HERO-LABEL-OUTSIDE-MAIN-V2'),
   'International direct-body Hero label parity rule missing.');
-assert(read('qilylean/gbt2828.html').includes('site-visual-readability-v5.css?v=20261007-hero-label-outside-main-v5'),
+assert(read('qilylean/gbt2828.html').includes('site-visual-readability-v5.css?v=20261015-cn-parity-h1-38px-v6'),
   'GB/T 2828 live page must reference the corrected Hero label CSS cache version.');
 assert(gkCss.includes('QILY-GK-DARK-HERO-SEMANTIC-LABEL-V6'),
   'Global Knowledge dark Hero label parity rule missing.');
