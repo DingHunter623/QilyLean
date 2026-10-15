@@ -15,7 +15,6 @@ STYLE = CN / "assets/cn-public-tech-directory-v1.css"
 SCOPE = 'main:is(#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"]'
 PUBLIC_STYLE = ROOT / "site-public-tech-directory-v1.css"
 EXCLUDE_SERVICES = ':not(:where(.resource-service,.resource-service *,.qily-resource-network,.qily-resource-network *))'
-PUBLIC_URL = "https://qilylean.com/links/cn-public/"
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(CN / "scripts"))
 css = importlib.import_module("materialize-brief-visual-parity")
@@ -149,16 +148,11 @@ def main() -> None:
     if not main_match or main_match.group(1).count(boundary) != 1:
         raise ValueError("Public/commercial source boundary missing")
     fragment = main_match.group(1).split(boundary)[0] + "</div></section>"
-    bridge = ('<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->\n'
-        '<div class="notice" id="qilyChinaKnowledgeBridge"><strong>QilyLean | 启力精益国际站：</strong> '
-        '<a class="resource-action qily-cross-site-primary" href="' + PUBLIC_URL + '" '
-        'target="_blank" rel="noopener noreferrer" aria-label="进入国际站" '
-        'data-qily-approved-international-resource="true">进入国际站 ↗</a> '
-        '<span>国际站公开知识入口，提供制造技术与产业资料介绍；该入口属于知识体系关联，'
-        '不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>\n'
-        '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
+    # Keep the international source bridge intact, but do not mirror its clickable CTA to CN.
+    # The China personal knowledge site is local-first; logo exceptions are handled elsewhere.
+    bridge = ""
     fragment, count = re.subn(r"<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->", lambda _: bridge, fragment)
-    if count != 1: raise ValueError("Reciprocal bridge source missing")
+    if count != 1: raise ValueError("International source bridge marker missing")
     if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
         raise ValueError("Unexpected non-public directory content")
     fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'
@@ -224,6 +218,6 @@ def main() -> None:
         "const fs=require('fs'),m=require('./scripts/materialize-public-shell-first-paint-v1.js');"
         "const p='links/index.html';fs.writeFileSync(p,m.materialize(fs.readFileSync(p,'utf8'),p));"],
         cwd=ROOT, check=True)
-    print(f"CN directory cloned: 100 enterprises / 5 categories; markup + styles + search; public bridge only; rev={version}")
+    print(f"CN directory cloned: 100 enterprises / 5 categories; markup + styles + search; no international CTA; rev={version}")
 
 if __name__ == "__main__": main()
