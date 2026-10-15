@@ -265,13 +265,12 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    # Brief home: show years and latest items immediately.
+    # Brief home: year index is the sole brief-discovery module (no repeated latest list).
     year_cards = "".join(
         card(f"{year}年", f"/briefs/archive/year/{year}/", f"{len(years[year])}篇本地精选简报", len(years[year]))
         for year in sorted(years, reverse=True)
     )
-    latest = "".join(article_link(x) for x in grouped["briefs"][:24])
-    briefs_body = f'''<section class="page-hero"><div class="content"><span class="hero-eyebrow">SELECTED BRIEFS｜精选简报</span><h1>精选简报｜{brief_total}篇国内本地档案</h1><p>国际站公开制造工程简报已按合规规则同步到中国服务器；进入本页即可按年份或最新发布连续浏览，无需跳转国际站。</p></div></section><section class="section"><div class="content"><div class="catalog-stats"><div><b>{brief_total}</b><span>本地精选简报</span></div><div><b>{len(years)}</b><span>年度档案</span></div><div><b>100%</b><span>中国站本地阅读入口</span></div></div><div class="section-head"><small>YEAR ARCHIVE｜年度索引</small><h2>按年份连续浏览</h2></div><div class="catalog-grid catalog-year-grid">{year_cards}</div></div></section><section class="section alt"><div class="content"><div class="section-head"><small>LATEST BRIEFS｜最新简报</small><h2>最近同步的24篇</h2><p>完整 {brief_total} 篇仍可通过年度索引或完整档案连续浏览。</p></div><div class="article-list catalog-list">{latest}</div><p class="catalog-more"><a class="btn primary" href="/briefs/archive/">进入全部{brief_total}篇简报档案</a></p><p class="catalog-extension">按主题关联阅读，可通过 <a href="/knowledge/">制造知识索引</a> 找到工业工程、精益改善、标准化与数智工厂相关专题；精选简报均在中国站本地阅读。</p></div></section>'''
+    briefs_body = f'''<section class="page-hero"><div class="content"><span class="hero-eyebrow">SELECTED BRIEFS｜精选简报</span><h1>精选简报｜{brief_total}篇国内本地档案</h1><p>国际站公开制造工程简报已按合规规则同步到中国服务器；进入本页即可按年份连续浏览，无需跳转国际站。</p></div></section><section class="section"><div class="content"><div class="catalog-stats"><div><b>{brief_total}</b><span>本地精选简报</span></div><div><b>{len(years)}</b><span>年度档案</span></div><div><b>100%</b><span>中国站本地阅读入口</span></div></div><div class="section-head"><small>YEAR ARCHIVE｜年度索引</small><h2>按年份连续浏览</h2></div><div class="catalog-grid catalog-year-grid">{year_cards}</div></div></section>'''
     (CN / "briefs/index.html").write_text(
         shell("精选简报", "QilyLean 中国站制造工程精选简报完整本地档案。", "briefs", briefs_body, "/briefs/", f'data-qily-knowledge-discovery="v1" data-qily-brief-total="{brief_total}"'),
         encoding="utf-8",
@@ -300,7 +299,7 @@ def main() -> None:
     home = add_css_link(home_path.read_text(encoding="utf-8"))
     home_cards = [
         card("完整知识库", "/archive/", "国际站合规公开内容的中国服务器本地承接。", total),
-        card("精选简报", "/briefs/", "按年份与最新发布连续浏览制造工程简报。", brief_total),
+        card("精选简报", "/briefs/", "按年份连续浏览制造工程简报。", brief_total),
         card("专业知识索引", "/knowledge/", "按制造工程、精益改善、实践、数智化与工具资料浏览。", len(GROUPS)-1),
     ]
     home_block = f'''<section class="section alt" data-qily-generated-total="{total}" data-qily-brief-total="{brief_total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{total}篇公开知识内容已经进入中国服务器</h2><p>内容完成合规过滤后在国内本地呈现，并通过知识索引、专业分类和年度简报入口直接可发现。</p></div><div class="catalog-grid catalog-home-grid">{''.join(home_cards)}</div></div></section>'''
