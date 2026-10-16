@@ -44,10 +44,12 @@ async function auditPage(page, route, limits, label){
       return {
       text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,120),
       px:tags.length?Math.min(...tags.map(tag=>parseFloat(getComputedStyle(tag).fontSize))):parseFloat(getComputedStyle(el).fontSize),
-      companyTitle:el.matches('#companyGrid .card h2')
+      companyTitle:el.matches('#companyGrid .card h2'),
+      mirroredKnowledge:!!el.closest('.qily-cn-knowledge-hub')
     };});
     return {
       briefReading:document.body.matches('[data-qily-brief-parity="v1"]') && !!document.querySelector('main#main[data-qily-brief-content="v2"]'),
+      knowledgeMirror:!!document.querySelector('#main .qily-cn-knowledge-hub[data-qily-international-knowledge-mirror="v1"]'),
       sourceDirectory:!!document.querySelector('main[data-qily-public-tech-directory="v2"] #companyGrid'),
       translation:(()=>{
         const controls=[...document.querySelectorAll('[data-qily-header-utility="translation"]')];
@@ -208,12 +210,25 @@ async function auditPage(page, route, limits, label){
       // Source company names use the international card hierarchy. Its exact
       // typography is independently compared by the resource parity test.
       const sourceCard=route==='/resources/'&&data.sourceDirectory&&x.companyTitle;
-      const ceiling=sourceCard?(label==='mobile'?26:30):limits.h2;
+      // Knowledge mirror uses the APPROVED international heading scale, not
+      // CN generic section H2. The separate seven-section parity test checks
+      // exact computed font against the real international reference (±0.35px).
+      const sourceKnowledge=route==='/knowledge/'&&data.knowledgeMirror&&x.mirroredKnowledge;
+      const ceiling=sourceKnowledge?(label==='mobile'?28.5:34.5):
+        sourceCard?(label==='mobile'?26:30):limits.h2;
       expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(ceiling);
     }
-    for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
+    for(const x of data.h3){
+      const sourceKnowledge=route==='/knowledge/'&&data.knowledgeMirror&&x.mirroredKnowledge;
+      expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(sourceKnowledge?24.5:limits.h3);
+    }
     for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
-    for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(19.9);
+    for(const x of data.small){
+      const sourceKnowledge=route==='/knowledge/'&&data.knowledgeMirror&&x.mirroredKnowledge;
+      // Original international card labels are smaller, but the confirmed
+      // China accessibility minimum is 18px. Keep both boundaries enforced.
+      expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(sourceKnowledge?17.9:19.9);
+    }
   }
   for(const x of data.labels){
     expect(x.px, route+' module label floor '+x.text).toBeGreaterThanOrEqual(20.5);

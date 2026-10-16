@@ -257,6 +257,70 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       }
     });
 
+    test('all navigable knowledge cards and module CTAs show real pointer, keyboard and pressed feedback',async({page})=>{
+      await open(page,'/knowledge/');
+      const hub=page.locator('#main .qily-cn-knowledge-hub');
+      await expect(hub).toBeVisible();
+      const targets=[
+        {name:'entire knowledge-stat card',selector:'#cn-global-knowledge-stats a.knowledge-stat-card[href]'},
+        {name:'AI knowledge navigation button',selector:'#cn-global-ai-manufacturing-knowledge .module-actions a[href]'},
+        {name:'OPL training route',selector:'#cn-global-terminology .module-actions a[href]'},
+        {name:'curated briefs navigation',selector:'#cn-global-daily .module-actions a[href]'},
+        {name:'tools navigation',selector:'#cn-global-tools .module-actions a[href]'},
+        {name:'lean topic route',selector:'#cn-global-lean-series .module-actions a[href]'},
+        {name:'reference document route',selector:'#cn-global-documents .module-actions a[href]'},
+      ];
+      const state=async el=>el.evaluate(node=>{
+        const st=getComputedStyle(node),r=node.getBoundingClientRect();
+        return {background:st.backgroundColor,border:st.borderColor,
+          shadow:st.boxShadow,outline:parseFloat(st.outlineWidth),
+          color:st.color,transform:st.transform,decoration:st.textDecorationLine,
+          cursor:st.cursor,width:r.width,height:r.height,
+          visible:r.width>0&&r.height>0};
+      });
+      for(const target of targets){
+        const item=hub.locator(target.selector).first();
+        await expect(item,target.name+' must exist').toBeVisible();
+        await item.scrollIntoViewIfNeeded();
+        await page.mouse.move(2,2);
+        await page.waitForTimeout(185);
+        const normal=await state(item);
+        expect(normal.cursor,target.name+' advertises clickability').toBe('pointer');
+        expect(normal.height,target.name+' real touch target').toBeGreaterThanOrEqual(35);
+        if(device.name==='desktop'){
+          await item.hover();
+          await page.waitForTimeout(205);
+          const hover=await state(item);
+          const delta=['background','border','shadow','color','transform','decoration']
+            .some(k=>String(normal[k])!==String(hover[k]));
+          expect(delta,target.name+' must visibly change on hover').toBe(true);
+          const area=await item.boundingBox();
+          expect(area,target.name+' visible bounding box').not.toBeNull();
+          await page.mouse.move(area.x+area.width/2,area.y+area.height/2);
+          await page.evaluate(()=>document.addEventListener('click',e=>e.preventDefault(),true));
+          await page.mouse.down();
+          await page.waitForTimeout(110); // allow the 150ms visual press transition to start
+          const pressed=await state(item);
+          const pseudo=await item.evaluate(node=>node.matches(':active'));
+          expect(pseudo,target.name+' actually receives pointer-down').toBe(true);
+          expect(pressed.transform,target.name+' must give depressed-state feedback').not.toBe(hover.transform);
+          await page.mouse.up();
+        }
+        await page.keyboard.press('Tab');
+        await item.focus();
+        const focused=await state(item);
+        expect(focused.outline,target.name+' keyboard focus indicator').toBeGreaterThanOrEqual(2);
+      }
+      const staticCard=hub.locator('#cn-global-tools article.module-card').first();
+      await expect(staticCard).toBeVisible();
+      expect(await staticCard.evaluate(node=>getComputedStyle(node).cursor),
+        'Nonclickable article wrapper must not pretend to be a link').not.toBe('pointer');
+      const localRoute=hub.locator('#cn-global-knowledge-stats a.knowledge-stat-card[href="/briefs/"]');
+      await expect(localRoute).toHaveCount(1);
+      await expect(localRoute).toHaveAttribute('href','/briefs/');
+      await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
+    });
+
     test('complete international knowledge hub is locally mirrored with professional links and VI',async({page})=>{
       await open(page,'/knowledge/');
       const hub=page.locator('#main .qily-cn-knowledge-hub[data-qily-international-knowledge-mirror="v1"]');
@@ -292,7 +356,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const grid=hub.locator('#cn-global-knowledge-stats .knowledge-stat-grid');
       const cols=await grid.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
       expect(cols).toBe(device.name==='mobile'?1:3);
-      const origin=await page.locator('head link[href*="knowledge-vi-parity-v2"]').count();
+      const origin=await page.locator('head link[href*="knowledge-route-feedback-v3"]').count();
       expect(origin,'Knowledge index must load the updated, scoped style version').toBe(1);
       await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
       await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');

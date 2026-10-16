@@ -298,3 +298,70 @@ body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub a:focus-visible{
     width:100%!important;max-width:100%!important;
   }
 }
+
+/* QILY-CN-KNOWLEDGE-ROUTE-FEEDBACK-V3 | 2026-10-16
+ * Follow international site-interaction-semantics-v1.css. Only REAL links
+ * react; static knowledge text, category tags and non-linked cards do not.
+ * Scope to the approved CN-local mirror. Preserve original font/VI layout.
+ */
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+  .knowledge-stat-card[href],
+  .module-card[href],
+  .module-actions a[href]
+){
+  cursor:pointer!important;
+  transition:transform .15s ease,background-color .15s ease,
+    border-color .15s ease,box-shadow .15s ease,color .15s ease!important;
+}
+@media(hover:hover) and (pointer:fine){
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+    .knowledge-stat-card[href],
+    .module-card[href]
+  ):hover{
+    transform:translateY(-3px)!important;
+    border-color:#caa15f!important;
+    background-color:#f4fbfa!important;
+    box-shadow:0 16px 34px rgba(15,75,90,.18)!important;
+  }
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a[href]:hover{
+    transform:translateY(-1px)!important;
+    border-color:#caa15f!important;
+    background-color:#12606f!important;
+    color:#fff!important;-webkit-text-fill-color:#fff!important;
+    box-shadow:0 9px 22px rgba(15,75,90,.20)!important;
+  }
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub .module-actions a.secondary[href]:hover{
+    background-color:#f4fbfa!important;
+    color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  }
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+  .knowledge-stat-card[href],
+  .module-card[href],
+  .module-actions a[href]
+):focus-visible{
+  outline:3px solid #caa15f!important;
+  outline-offset:3px!important;
+  border-color:#caa15f!important;
+  box-shadow:0 12px 28px rgba(15,75,90,.16)!important;
+}
+body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+  .knowledge-stat-card[href],
+  .module-card[href],
+  .module-actions a[href]
+):active{
+  transform:translateY(1px) scale(.985)!important;
+  box-shadow:0 4px 10px rgba(15,75,90,.13)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+    .knowledge-stat-card[href],
+    .module-card[href],
+    .module-actions a[href]
+  ){transition:none!important}
+  body:has(.qily-cn-knowledge-hub) #main .qily-cn-knowledge-hub :is(
+    .knowledge-stat-card[href],
+    .module-card[href],
+    .module-actions a[href]
+  ):is(:hover,:active,:focus-visible){transform:none!important}
+}
