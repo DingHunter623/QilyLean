@@ -101,14 +101,21 @@ def terminology_runtime(raw: str) -> str:
     if len(searches) != 1 or len(lessons) != 1:
         raise RuntimeError("Terminology search/lesson source must be unambiguous")
     lesson = lessons[0]
-    # Remove the single runtime-generated contact card, rather than allowing
-    # contact data to bypass the mirror's static content restrictions.
-    lesson, removed = re.subn(
-        r"    '<section class=\"term-opl-contact-card\"[\s\S]*?    '</section>'\+\n",
-        "", lesson, count=1,
+    # Keep the COM lesson's card geometry, but never copy its external
+    # contacts or business-conversion entry into the personal CN archive.
+    safe_contact = (
+        "    '<section class=\"term-opl-contact-card qily-cn-opl-knowledge-card\" aria-label=\"QilyLean制造知识与实践分享\">'+\n"
+        "      '<div class=\"term-opl-contact-copy\"><h3>QilyLean｜启力精益 · 制造知识与实践分享</h3><p>精益生产管理 · 工业工程IE · PQCD改善 · 数智化工厂规划 · 目视化实践</p><p class=\"term-opl-contact-lines\">本站：<a href=\"/\">qilylean.cn</a><br>知识索引：<a href=\"/knowledge/\">制造管理知识索引</a><br>精选简报：<a href=\"/briefs/\">公开工程实践与经验分享</a></p></div>'+\n"
+        "      '<a class=\"term-opl-qr\" href=\"/\"><img src=\"/assets/qily-cn-home-code.svg\" alt=\"扫码访问中国站知识首页\" decoding=\"async\" loading=\"lazy\"><span>扫码访问中国站</span></a>'+\n"
+        "      '<a class=\"term-opl-qr\" href=\"/knowledge/\"><img src=\"/assets/qily-cn-knowledge-code.svg\" alt=\"扫码浏览知识索引\" decoding=\"async\" loading=\"lazy\"><span>扫码浏览知识索引</span></a>'+\n"
+        "    '</section>'+\n"
     )
-    if removed != 1:
-        raise RuntimeError("Terminology runtime contact panel changed")
+    lesson, replaced = re.subn(
+        r"    '<section class=\\\"term-opl-contact-card\\\"[\\s\\S]*?    '</section>'\\+\\n",
+        lambda _: safe_contact, lesson, count=1,
+    )
+    if replaced != 1:
+        raise RuntimeError("Terminology runtime contact card changed")
     lesson, removed = re.subn(
         r'  var wechatCopy=event\.target\.closest\([\s\S]*?(?=  if\(event\.target\.closest\(\x27\[data-opl-link\]\x27\)\))',
         "", lesson, count=1,
@@ -150,7 +157,7 @@ def scope_terminology_css(content: str) -> str:
         selectors = []
         for selector in brief.split_css(prelude, ","):
             selector = selector.strip()
-            if re.search(r"term-opl-(contact|qr|copy-wechat)|wx-qr", selector):
+            if re.search(r"term-opl-copy-wechat|wx-qr", selector):
                 continue
             # Standalone lessons keep the CN header/footer. Only the archive's
             # lesson siblings are hidden, never the site's top-level children.
