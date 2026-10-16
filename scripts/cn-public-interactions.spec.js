@@ -60,6 +60,46 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('AI archive application actions are separated and responsive',async({page})=>{
+      await open(page,'/archive/ai/');
+      const group=page.locator('.mirror-article-fidelity .module-section .module-actions');
+      await expect(group).toHaveCount(1);
+      const links=group.locator('a');
+      await expect(links).toHaveCount(3);
+      expect(await links.allTextContents()).toEqual(['精益工具库','制造改善知识库','精选简报']);
+      const urls=await links.evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')));
+      for(const href of urls){
+        expect(href,'same-origin public knowledge destination').toMatch(/^\/(?!\/)/);
+        expect(href).not.toMatch(/^\/(?:contact|cooperation)\//);
+      }
+      await group.scrollIntoViewIfNeeded();
+      const layout=await group.evaluate(node=>{
+        const style=getComputedStyle(node);
+        const rects=[...node.querySelectorAll('a')].map(el=>{
+          const b=el.getBoundingClientRect();
+          return {x:b.x,y:b.y,w:b.width,h:b.height};
+        });
+        return {display:style.display,gap:parseFloat(style.columnGap),rects,
+          overflow:document.documentElement.scrollWidth>innerWidth+1};
+      });
+      expect(layout.display).toBe('flex');
+      expect(layout.gap).toBeGreaterThanOrEqual(10);
+      expect(layout.overflow).toBe(false);
+      for(let i=0;i<layout.rects.length;i++){
+        const a=layout.rects[i];
+        expect(a.h,'touch height').toBeGreaterThanOrEqual(42);
+        for(let j=0;j<i;j++){
+          const b=layout.rects[j];
+          const horizontal=Math.max(a.x-(b.x+b.w),b.x-(a.x+a.w),0);
+          const vertical=Math.max(a.y-(b.y+b.h),b.y-(a.y+a.h),0);
+          expect(Math.max(horizontal,vertical),'each link must be spatially distinct').toBeGreaterThanOrEqual(9);
+        }
+      }
+      const dir=path.join(ROOT,'visual-cn-typography-v23');
+      fs.mkdirSync(dir,{recursive:true});
+      await group.screenshot({path:path.join(dir,'ai-application-actions-'+device.name+'.png')});
+    });
+
     test('knowledge modules cross-station visual geometry baseline',async({page,context})=>{
       await open(page,'/knowledge/');
       const source=await context.newPage();
