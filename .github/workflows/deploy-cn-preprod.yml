@@ -855,7 +855,7 @@ jobs:
           for section in ("knowledge-stats","ai-manufacturing-knowledge","terminology","daily","tools","lean-series","documents"):
               if knowledge.count('id="cn-global-'+section+'"')!=1:
                   raise SystemExit("CN knowledge section missing in production: "+section)
-          style=fetch("/assets/content-mirror.css?v=20261015-knowledge-route-feedback-v3")
+          style=fetch("/assets/content-mirror.css?v=20261016-knowledge-route-feedback-v3")
           if ("QILY-CN-INTERNATIONAL-KNOWLEDGE-VI-PARITY-V2" not in style
                   or "QILY-CN-KNOWLEDGE-ROUTE-FEEDBACK-V3" not in style):
               raise SystemExit("CN international knowledge UI CSS not live")
