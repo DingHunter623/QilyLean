@@ -60,6 +60,163 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
   test.describe(device.name,()=>{
     test.use({viewport:{width:device.width,height:device.height},isMobile:device.name==='mobile'});
 
+    test('knowledge modules cross-station visual geometry baseline',async({page,context})=>{
+      await open(page,'/knowledge/');
+      const source=await context.newPage();
+      try{
+        const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
+        const response=await source.goto(globalBase+'/knowledge/',{waitUntil:'domcontentloaded'});
+        expect(response&&response.ok(),'International source knowledge page must load').toBeTruthy();
+        await page.evaluate(()=>document.fonts.ready);
+        await source.evaluate(()=>document.fonts.ready);
+        await page.waitForTimeout(800);
+        await source.waitForTimeout(800);
+        const sample=async(target,prefix)=>{
+          return await target.evaluate(({prefix})=>{
+            const id=['knowledge-stats','ai-manufacturing-knowledge','terminology','daily','tools','lean-series','documents'];
+            const number=x=>Math.round(x*100)/100;
+            const rect=node=>{
+              if(!node)return null;
+              const r=node.getBoundingClientRect();
+              return {width:number(r.width),height:number(r.height),x:number(r.left),y:number(r.top)};
+            };
+            const computed=node=>{
+              if(!node)return null;
+              const css=getComputedStyle(node);
+              return {font:number(parseFloat(css.fontSize)),line:number(parseFloat(css.lineHeight)),
+                weight:css.fontWeight,color:css.color,background:css.backgroundColor,
+                fill:css.webkitTextFillColor,decoration:css.textDecorationLine,
+                border:css.borderLeftWidth+' '+css.borderLeftColor,
+                borderTop:css.borderTopWidth+' '+css.borderTopColor,
+                radius:css.borderRadius,shadow:css.boxShadow,
+                pad:[css.paddingTop,css.paddingRight,css.paddingBottom,css.paddingLeft],
+                margin:[css.marginTop,css.marginRight,css.marginBottom,css.marginLeft],
+                display:css.display,gap:css.gap,columns:css.gridTemplateColumns,
+              };
+            };
+            const out={};
+            for(const name of id){
+              const section=document.getElementById(prefix+name);
+              if(!section){out[name]={missing:true};continue}
+              const inner=section.querySelector('.module-inner');
+              const grid=section.querySelector('.module-grid');
+              const card=section.querySelector('.module-card');
+              out[name]={
+                section:{rect:rect(section),css:computed(section)},
+                inner:rect(inner),heading:computed(section.querySelector('.module-heading h2')),
+                headCopy:computed(section.querySelector('.module-heading p')),
+                grid:computed(grid),
+                cards:section.querySelectorAll('.module-card').length,
+                card:{rect:rect(card),css:computed(card)},
+                label:computed(card?.querySelector('small')),
+                cardTitle:computed(card?.querySelector('h3')),
+                body:computed(card?.querySelector('p')),
+                action:computed(card?.querySelector('.knowledge-stat-jump,.module-actions a')),
+                actionRect:rect(card?.querySelector('.knowledge-stat-jump,.module-actions a')),
+                eyebrow:computed(section.querySelector('.module-eyebrow')),
+                result:computed(section.querySelector('.module-result')),
+                secondary:computed(section.querySelector('.module-actions a.secondary')),
+              };
+            }
+            return out;
+          },{prefix});
+        };
+        const [intl,cn]=await Promise.all([sample(source,''),sample(page,'cn-global-')]);
+        const reference={viewport:device.width,international:intl,china:cn};
+        const evidenceDir=path.join(ROOT,'visual-cn-typography-v23');
+        fs.mkdirSync(evidenceDir,{recursive:true});
+        fs.writeFileSync(path.join(evidenceDir,'knowledge-vi-parity-'+device.width+'.json'),
+          JSON.stringify(reference,null,2));
+        const within=(a,b,limit,label)=>{
+          expect(typeof a,'international '+label).toBe('number');
+          expect(typeof b,'China '+label).toBe('number');
+          expect(Math.abs(a-b),label+' international='+a+' cn='+b).toBeLessThanOrEqual(limit);
+        };
+        const px=x=>parseFloat(x);
+        for(const key of Object.keys(intl)){
+          const a=intl[key],b=cn[key];
+          expect(a.missing,'International section '+key).toBeFalsy();
+          expect(b.missing,'CN section '+key).toBeFalsy();
+          within(a.inner.width,b.inner.width,1,key+' content axis');
+          for(let i=0;i<4;i++){
+            within(px(a.section.css.pad[i]),px(b.section.css.pad[i]),1,key+' section padding '+i);
+          }
+          expect(b.section.css.background,key+' section surface').toBe(a.section.css.background);
+          within(a.heading.font,b.heading.font,.35,key+' section heading');
+          expect(b.heading.weight,key+' heading weight').toBe(a.heading.weight);
+          expect(b.heading.color,key+' heading ink').toBe(a.heading.color);
+          within(a.card.rect.width,b.card.rect.width,2,key+' card width');
+          for(let i=0;i<4;i++){
+            within(px(a.card.css.pad[i]),px(b.card.css.pad[i]),1,key+' card padding '+i);
+          }
+          expect(b.card.css.radius,key+' card radius').toBe(a.card.css.radius);
+          expect(b.card.css.border,key+' card edge').toBe(a.card.css.border);
+          expect(b.card.css.borderTop,key+' card top edge').toBe(a.card.css.borderTop);
+          expect(b.card.css.background,key+' card background').toBe(a.card.css.background);
+          expect(b.card.css.decoration,key+' card text emphasis').toBe(a.card.css.decoration);
+          within(a.cardTitle.font,b.cardTitle.font,.35,key+' card heading font');
+          expect(b.cardTitle.weight,key+' card heading weight').toBe(a.cardTitle.weight);
+          expect(b.cardTitle.fill,key+' card heading color').toBe(a.cardTitle.fill);
+          within(a.body.font,b.body.font,.35,key+' body font');
+          expect(b.body.weight,key+' body weight').toBe(a.body.weight);
+          expect(b.body.color,key+' body ink').toBe(a.body.color);
+          within(a.action.font,b.action.font,.35,key+' action font');
+          expect(b.action.weight,key+' action weight').toBe(a.action.weight);
+          expect(b.action.color,key+' action ink').toBe(a.action.color);
+          if(device.name==='mobile' && key!=='knowledge-stats'){
+            within(a.actionRect.width,b.actionRect.width,2,key+' mobile button width');
+          }
+          // Existing China accessibility gate requires all small labels >=18px;
+          // international small labels are 15.75-16.65px for non-stat cards.
+          expect(b.label.font,key+' China label accessibility floor').toBeGreaterThanOrEqual(18);
+          within(a.label.font,b.label.font,2.5,key+' label semantic scale');
+          expect(b.label.weight,key+' label weight').toBe(a.label.weight);
+          if(a.grid&&b.grid){
+            within(px(a.grid.gap),px(b.grid.gap),1,key+' column gap');
+            expect(b.grid.columns.trim().split(/\s+/).length,
+              key+' responsive column count').toBe(a.grid.columns.trim().split(/\s+/).length);
+          }
+        }
+        // Additional parity assertions for less common knowledge components.
+        const aiA=intl['ai-manufacturing-knowledge'].eyebrow;
+        const aiB=cn['ai-manufacturing-knowledge'].eyebrow;
+        within(aiA.font,aiB.font,.35,'AI module gold-eyebrow font');
+        expect(aiB.weight).toBe(aiA.weight);
+        expect(aiB.color).toBe(aiA.color);
+        expect(aiB.fill).toBe(aiA.fill);
+        const oplA=intl.terminology.result,oplB=cn.terminology.result;
+        within(oplA.font,oplB.font,.35,'OPL result caption font');
+        expect(oplB.weight).toBe(oplA.weight);
+        expect(oplB.color).toBe(oplA.color);
+        expect(oplB.fill).toBe(oplA.fill);
+        expect(oplB.radius).toBe(oplA.radius);
+        const buttonA=intl.daily.secondary,buttonB=cn.daily.secondary;
+        within(buttonA.font,buttonB.font,.35,'secondary brief button font');
+        expect(buttonB.weight).toBe(buttonA.weight);
+        expect(buttonB.color).toBe(buttonA.color);
+        expect(buttonB.border).toBe(buttonA.border);
+        expect(buttonB.radius).toBe(buttonA.radius);
+        // Also retain computed evidence for exceptional components: gold
+        // module label, OPL information strip and secondary actions.
+        console.log('QILY-KNOWLEDGE-VI-SPECIAL '+JSON.stringify({viewport:device.width,
+          eyebrow:[intl['ai-manufacturing-knowledge'].eyebrow,cn['ai-manufacturing-knowledge'].eyebrow],
+          result:[intl.terminology.result,cn.terminology.result],
+          secondary:[intl.daily.secondary,cn.daily.secondary]}));
+        for(const name of ['knowledge-stats','lean-series']){
+          const intlSection=source.locator('#'+name);
+          const cnSection=page.locator('#cn-global-'+name);
+          await intlSection.screenshot({path:path.join(evidenceDir,'knowledge-intl-'+name+'-'+device.width+'.png'),
+            animations:'disabled',timeout:15000});
+          await cnSection.screenshot({path:path.join(evidenceDir,'knowledge-cn-'+name+'-'+device.width+'.png'),
+            animations:'disabled',timeout:15000});
+        }
+        console.log('PASS: QILY-CN-KNOWLEDGE-COMPUTED-VI-PARITY '+device.width+'px / 7 sections / typography, width, paddings, color, card borders and action styles');
+
+      }finally{
+        await source.close();
+      }
+    });
+
     test('complete international knowledge hub is locally mirrored with professional links and VI',async({page})=>{
       await open(page,'/knowledge/');
       const hub=page.locator('#main .qily-cn-knowledge-hub[data-qily-international-knowledge-mirror="v1"]');
@@ -95,7 +252,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       const grid=hub.locator('#cn-global-knowledge-stats .knowledge-stat-grid');
       const cols=await grid.evaluate(node=>getComputedStyle(node).gridTemplateColumns.split(/\s+/).filter(Boolean).length);
       expect(cols).toBe(device.name==='mobile'?1:3);
-      const origin=await page.locator('head link[href*="knowledge-hub-v1"]').count();
+      const origin=await page.locator('head link[href*="knowledge-vi-parity-v2"]').count();
       expect(origin,'Knowledge index must load the updated, scoped style version').toBe(1);
       await expect(page.locator('footer.footer')).toContainText('湘ICP备2026041143号-1');
       await expect(page.locator('footer.footer')).toContainText('湘公网安备43020002000443号');
