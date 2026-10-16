@@ -299,7 +299,10 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
           await page.mouse.move(area.x+area.width/2,area.y+area.height/2);
           await page.evaluate(()=>document.addEventListener('click',e=>e.preventDefault(),true));
           await page.mouse.down();
+          await page.waitForTimeout(110); // allow the 150ms visual press transition to start
           const pressed=await state(item);
+          const pseudo=await item.evaluate(node=>node.matches(':active'));
+          expect(pseudo,target.name+' actually receives pointer-down').toBe(true);
           expect(pressed.transform,target.name+' must give depressed-state feedback').not.toBe(hover.transform);
           await page.mouse.up();
         }
