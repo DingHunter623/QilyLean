@@ -111,7 +111,7 @@ def terminology_runtime(raw: str) -> str:
         "    '</section>'+\n"
     )
     lesson, replaced = re.subn(
-        r"    '<section class=\\\"term-opl-contact-card\\\"[\\s\\S]*?    '</section>'\\+\\n",
+        r"    '<section class=[^\n]*term-opl-contact-card[^\n]*\n[\s\S]*?    '</section>'\+\n",
         lambda _: safe_contact, lesson, count=1,
     )
     if replaced != 1:
