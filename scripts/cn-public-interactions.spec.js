@@ -297,7 +297,14 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(page.locator('#termOplPage')).toContainText('／'+LESSONS);
       await expect(page.locator('#termOplContent')).toContainText('制造现场案例');
       await expect(page.locator('header.site-header')).toBeVisible();
-      await expect(modal.locator('a[href^="mailto:"],a[href^="tel:"],.term-opl-contact-card')).toHaveCount(0);
+      await expect(modal.locator('a[href^="mailto:"],a[href^="tel:"]')).toHaveCount(0);
+      const cnCard=modal.locator('.term-opl-contact-card');
+      await expect(cnCard).toHaveCount(1);
+      await expect(cnCard).toContainText('制造知识与实践分享');
+      await expect(cnCard.locator('a[href^="https://qilylean.com"]')).toHaveCount(0);
+      await expect(cnCard.locator('img[src^="/assets/qily-cn-"]')).toHaveCount(2);
+      await cnCard.scrollIntoViewIfNeeded();
+      await expect.poll(()=>cnCard.locator('img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
       await modal.locator('[data-opl-print]').click();
       await expect.poll(()=>page.evaluate(()=>window.__qilyPublicPrintCalls)).toBe(1);
       await modal.locator('[data-opl-close].term-opl-close').click();
