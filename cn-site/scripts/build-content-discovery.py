@@ -61,7 +61,7 @@ GROUPS = OrderedDict([
     }),
 ])
 
-COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">"""
+COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">"""
 
 COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>"""
 
@@ -225,7 +225,7 @@ def international_knowledge_hub(brief_total: int) -> str:
 
 
 def add_css_link(text: str) -> str:
-    href = '/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1'
+    href = '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1'
     if href in text:
         return text
     return text.replace("</head>", f'<link rel="stylesheet" href="{href}">\n</head>', 1)
@@ -336,8 +336,8 @@ def main() -> None:
             url,
             f'data-qily-knowledge-discovery="v1" data-qily-brief-total="{brief_total}" data-qily-brief-year-catalog="v2"',
         )
-        page = page.replace("/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1",
-                            "/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1", 1)
+        page = page.replace("/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1",
+                            "/assets/content-mirror.css?v=20261015-brief-year-cards-v1&anchors=20261013-v1", 1)
         target = CN / url.lstrip("/") / "index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(page, encoding="utf-8")
@@ -370,8 +370,8 @@ def main() -> None:
     knowledge = add_css_link(knowledge_path.read_text(encoding="utf-8"))
     # Cache-bust this page only; do not change shared CN styles on other pages.
     knowledge = knowledge.replace(
-        '/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1',
-        '/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1',
+        '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1',
+        '/assets/content-mirror.css?v=20261016-knowledge-route-feedback-v3&anchors=20261013-v1',
     )
     knowledge = remove_legacy_archive_section(knowledge)
     global_hub = international_knowledge_hub(brief_total)
