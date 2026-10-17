@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11",
+  "generatedAt": "2026-10-18",
   "schemaVersion": 1,
   "terminology": {
     "total": 193,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 381,
-    "latestDate": "2026-10-11",
-    "latestTheme": "制造工程能力与改善价值",
-    "latestTitle": "从工程经验到制造价值：六项能力、九类问题与一套改善闭环",
-    "latestSummary": "以新工厂规划、精益改善、目视化、数字化工厂、APP工具协同与知识传播六项能力为基础，回答制造企业问题如何诊断、如何形成方案、如何实施验证，最终沉淀为可持续的经营改善成果。",
-    "latestUrl": "/qilylean/daily/2026-10-11.html",
+    "total": 382,
+    "latestDate": "2026-10-18",
+    "latestTheme": "包装自动化与技能固化",
+    "latestTitle": "自动化包装的最后一公里：从产品身份识别到包装交付的全流程防错闭环",
+    "latestSummary": "以U形动力输送包装线为案例，解析开箱、一字封箱、90°转向及端面封箱的调机要点、胶带封贴硬件突破，以及两位五十多岁操作工从抵触到熟练的技能传承。",
+    "latestUrl": "/qilylean/daily/2026-10-18.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
     "earliestDate": "2019-07-10",
@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 748,
-    "indexedPages": 649,
+    "indexedEntries": 749,
+    "indexedPages": 650,
     "terminologyTotal": 193,
-    "briefTotal": 381,
-    "latestBriefDate": "2026-10-11",
-    "sitemapLastmod": "2026-10-15"
+    "briefTotal": 382,
+    "latestBriefDate": "2026-10-18",
+    "sitemapLastmod": "2026-10-18"
   }
 }

@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-10-11T00:00:00.000Z",
-  "total_before": 381,
-  "total_after": 381,
+  "generated_at": "2026-10-18T00:00:00.000Z",
+  "total_before": 382,
+  "total_after": 382,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -4947,6 +4947,19 @@
           "date": "2026-10-11",
           "title": "从工程经验到制造价值：六项能力、九类问题与一套改善闭环",
           "score": 398,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-10-12",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-10-18",
+          "title": "自动化包装的最后一公里：从产品身份识别到包装交付的全流程防错闭环",
+          "score": 239,
           "protected": false
         }
       ],
