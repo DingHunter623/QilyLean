@@ -25,7 +25,7 @@ jobs:
           from pathlib import Path
           f=Path('qilylean/daily/assets/2026-10-18-automated-packaging-approved.png')
           b=f.read_bytes()
-          assert len(b)>100_000 and b[:8]==b'\\x89PNG\\r\\n\\x1a\\n', 'Unexpected asset; abort import'
+          assert len(b)>100_000 and b[:4]==bytes([137,80,78,71]), 'Unexpected asset; abort import'
           print('Original PNG imported:',len(b),'bytes')
           PY
       - name: Commit approved PNG to repository
