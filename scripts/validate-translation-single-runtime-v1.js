@@ -60,7 +60,7 @@ must(publicCss,'body > iframe.VIpgJd-ZVi9od-ORHb-OEVmcd','current Google top ban
 must(publicCss,'body > iframe.VIpgJd-ZVi9od-xl07Ob-OEVmcd','new Google top banner suppression');
 must(publicCss,'html.translated-ltr body','translated LTR body offset reset');
 must(publicCss,'html.translated-rtl body','translated RTL body offset reset');
-must(publicCss,'height:38px!important','complete primary select height');
+must(publicCss,'height:40px!important','CN-parity primary select height');
 must(publicCss,'margin-top:0!important','translated body margin reset');
 must(publicCss,'20260901-google-attribution-nowrap-v2','single-line attribution cache');
 if(/qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
