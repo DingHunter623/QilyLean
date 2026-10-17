@@ -28,8 +28,8 @@ jobs:
           css_version = '20261008-cn-vi-v50-cache-revalidation'
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260926-nav-rail-v20-cn-bridge'
-          translate_version = '20260922-translate-v6-baidu'
-          translate_js_version = '20261006-youdao-nmt-closure-v1'
+          translate_version = '20261017-cn-mainland-nmt-v2'
+          translate_js_version = '20261017-cn-mainland-nmt-v2'
           footer_actions_version = '20260930-footer-domain-v15'
           footer_actions_css_version = '20261007-mobile-footer-row-merge-v16'
           official_brand = 'QilyLean | 启力精益'
@@ -162,8 +162,8 @@ jobs:
               documents += 1
               css_count = text.count(css_marker)
               nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge')
-              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1')
+              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer"(?: data-qily-footer-filing="none")?>', text))
               if css_count != 1:

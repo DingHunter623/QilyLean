@@ -17,8 +17,8 @@ FILED_NAME = "精益制造经验分享"
 BRAND = "QilyLean | 启力精益"
 
 # Both mirror renderers use the same public translation UI and runtime.
-TRANSLATION_STYLESHEET = '<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu">'
-TRANSLATION_SCRIPT = '<script defer src="/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1"></script>'
+TRANSLATION_STYLESHEET = '<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2">'
+TRANSLATION_SCRIPT = '<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script>'
 
 FORBIDDEN = re.compile(
     r"项目合作|商务合作|业务合作|业务承接|项目承接|签单|签约|报价|收费|付款|合同|发票|收款|"

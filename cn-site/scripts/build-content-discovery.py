@@ -61,9 +61,9 @@ GROUPS = OrderedDict([
     }),
 ])
 
-COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">"""
+COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">"""
 
-COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>"""
+COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>"""
 
 def header(current: str) -> str:
     nav = [

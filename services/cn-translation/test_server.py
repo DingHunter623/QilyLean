@@ -15,18 +15,60 @@ KEYS = {'YOUDAO_APP_KEY': 'test-app', 'YOUDAO_APP_SECRET': 'test-secret'}
 
 
 class TranslationTests(unittest.TestCase):
+    def setUp(self):
+        server.NMT_NEXT_CALL = 0
+
     def test_signed_batch_contract(self):
+        calls = []
         def upstream(request, timeout):
+            calls.append(request)
             self.assertEqual(request.full_url, 'https://openapi.youdao.com/api')
             form = urllib.parse.parse_qs(request.data.decode())
-            self.assertIn(form['q'][0], ['现场问题', '工程改善'])
+            self.assertEqual(form['q'][0], '现场问题\n工程改善')
             self.assertEqual(form['strict'], ['true'])
             self.assertEqual(form['to'], ['en'])
             signed = 'test-app' + form['q'][0] + form['salt'][0] + form['curtime'][0] + 'test-secret'
             self.assertEqual(form['sign'][0], hashlib.sha256(signed.encode()).hexdigest())
-            return io.BytesIO(json.dumps({'errorCode': '0', 'translation': [{'现场问题': 'Site issue', '工程改善': 'Engineering improvement'}[form['q'][0]]]}).encode())
+            return io.BytesIO(json.dumps({'errorCode': '0', 'translation': ['Site issue\nEngineering improvement']}).encode())
         with patch.object(server.urllib.request, 'build_opener', lambda handler: SimpleNamespace(open=upstream)):
             self.assertEqual(server.youdao(['现场问题', '工程改善'], 'en', KEYS), ['Site issue', 'Engineering improvement'])
+        self.assertEqual(len(calls), 1)
+
+    def test_batch_boundaries_newlines_and_upstream_limit(self):
+        def translate(text, *args):
+            self.assertLessEqual(len(text), 5000)
+            return text.replace('现场', 'Site').replace('工程', 'Engineering')
+        with patch.object(server, 'nmt', side_effect=translate) as upstream:
+            self.assertEqual(server.youdao(['现场\r\n工程', '\n现场\n\n'], 'en', KEYS),
+                             ['Site\r\nEngineering', '\nSite\n\n'])
+            self.assertEqual(upstream.call_count, 1)
+            self.assertEqual(server.youdao(['中' * 4999, '文'], 'en', KEYS), ['中' * 4999, '文'])
+            self.assertEqual(upstream.call_count, 3)
+
+    def test_changed_line_count_uses_safe_individual_fallback(self):
+        with patch.object(server, 'nmt', side_effect=['Merged response', 'Site', 'Engineering']) as upstream:
+            self.assertEqual(server.youdao(['现场', '工程'], 'en', KEYS), ['Site', 'Engineering'])
+            self.assertEqual(upstream.call_count, 3)
+
+    def test_rate_limit_backoff_and_authentication_failure(self):
+        clock, started = [0.0], []
+        def request(*args):
+            started.append(clock[0])
+            if len(started) == 1:
+                raise server.TranslationError('Youdao NMT error 411')
+            return 'Translated'
+        with patch.object(server.time, 'monotonic', side_effect=lambda: clock[0]), \
+             patch.object(server.time, 'sleep', side_effect=lambda delay: clock.__setitem__(0, clock[0] + delay)), \
+             patch.object(server, 'nmt_request', side_effect=request):
+            self.assertEqual(server.nmt('现场', 'en', KEYS), 'Translated')
+            self.assertEqual(server.nmt('工程', 'en', KEYS), 'Translated')
+        self.assertGreaterEqual(started[1] - started[0], 1.5)
+        self.assertGreaterEqual(started[2] - started[1], 1.1)
+        server.NMT_NEXT_CALL = 0
+        with patch.object(server, 'nmt_request', side_effect=server.TranslationError('Youdao NMT error 108')) as upstream:
+            with self.assertRaises(server.TranslationError):
+                server.nmt('现场', 'en', KEYS)
+            self.assertEqual(upstream.call_count, 1)
 
     def test_long_batch_signature_and_upstream_failures(self):
         texts = ['制造现场的数据验证' * 3, '🙂质量工程']

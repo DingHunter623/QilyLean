@@ -127,6 +127,7 @@ jobs:
           WAS_ENABLED=false
           rollback() {
             echo 'Translation verification failed; restoring previous translation service.' >&2
+            python3 "$STAGE/refresh-browser-cache.py" --backup "$BACKUP/browser-cache" --restore || return 1
             systemctl disable --now qilylean-cn-translation >/dev/null 2>&1 || true
             rm -rf "$DEST" || return 1
             if "$HAD_DEST"; then cp -a "$BACKUP/service" "$DEST" || return 1; fi
@@ -172,7 +173,7 @@ jobs:
           TOUCHED=true
           bash /tmp/qilylean-cn-translation/install.sh
 
-          EXPECTED_BUILD="$(sha256sum "$STAGE/server.py" | cut -d' ' -f1)" python3 - <<'PY'
+          EXPECTED_BUILD="$(sha256sum "$STAGE/server.py" | cut -d' ' -f1)" PAGE_SAMPLES="$STAGE/page-smoke-samples.json" python3 - <<'PY'
           import json, os, urllib.request, uuid
           opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
           with opener.open('http://127.0.0.1:8081/health', timeout=10) as response:
@@ -189,14 +190,28 @@ jobs:
               assert result.get('ok') is True and result.get('provider') == 'youdao' and result.get('cached') is False, 'Fresh Youdao call required'
               assert len(translations) == 1 and isinstance(translations[0], str) and translations[0].strip() and translations[0] != source, 'Actual translation required'
               tests.append({'target': target, 'source': source, 'translation': translations[0], 'provider': result['provider'], 'cached': result['cached']})
+          samples = json.load(open(os.environ['PAGE_SAMPLES']))
+          for target in ('en', 'zh-TW'):
+              request = urllib.request.Request('https://qilylean.cn/translate',
+                  data=json.dumps({'target_language': target, 'texts': samples}).encode(),
+                  headers={'Content-Type': 'application/json'})
+              with opener.open(request, timeout=65) as response:
+                  result = json.load(response)
+              assert result.get('ok') is True and result.get('provider') == 'youdao' and result.get('cached') is False
+              assert len(result.get('translations', [])) == len(samples)
+              assert all(isinstance(text, str) and text.strip() for text in result['translations'])
+              assert result['translations'][9] != samples[9], 'Actual page heading must be translated'
+              assert 'QilyLean' in result['translations'][13] and 'SMED' in result['translations'][17]
+              tests.append({'target': target, 'page_batch_texts': len(samples), 'provider': result['provider'], 'cached': result['cached']})
           print(json.dumps({'ok': True, 'endpoint': 'https://qilylean.cn/translate', 'build_sha256': health['build_sha256'], 'tests': tests}, ensure_ascii=False))
           PY
+          python3 "$STAGE/refresh-browser-cache.py" --root /var/www/qilylean-cn/current --backup "$BACKUP/browser-cache"
           INSTALLED=true
           echo 'PASS: translation service repaired; fresh English and Traditional Chinese verified.'
           REMOTE
 
           ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "mkdir -m 700 '$STAGE'"
-          scp -q "${SSH_OPTS[@]}" services/cn-translation/{server.py,protected-tokens.json,qilylean-cn-translation.service,install.sh,verify-production.py} "$SSH_DIR/repair.sh" "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
+          scp -q "${SSH_OPTS[@]}" services/cn-translation/{server.py,protected-tokens.json,qilylean-cn-translation.service,install.sh,verify-production.py,refresh-browser-cache.py,page-smoke-samples.json} cn-site/assets/cn-translate-baidu-v1.{js,css} "$SSH_DIR/repair.sh" "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
           # Never put credential values in argv, command text, artifacts, or logs.
           python3 - <<'PY' | ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import json,os,pathlib,sys; data=json.load(sys.stdin); assert all(isinstance(data.get(k),str) and data[k].strip() for k in (\"YOUDAO_APP_KEY\",\"YOUDAO_APP_SECRET\")); dest=pathlib.Path(\"$STAGE/youdao\"); fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); os.write(fd,json.dumps(data).encode()); os.close(fd)'"
           import json, os, sys
