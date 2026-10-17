@@ -1,0 +1,157 @@
+name: Repair CN Youdao translation service
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Serialize with the existing CN deployment, which also installs this service.
+concurrency:
+  group: qilylean-cn-production-v12
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout approved translation service
+        uses: actions/checkout@v4
+
+      - name: Test translation service
+        run: python3 services/cn-translation/test_server.py
+
+      - name: Preflight, install, and verify translation service only
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          test -n "$YOUDAO_APP_KEY"
+          test -n "$YOUDAO_APP_SECRET"
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          STAGE="/tmp/qily-cn-translation-repair-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          SSH_DIR="$(mktemp -d "$RUNNER_TEMP/qily-cn-translation-ssh.XXXXXX")"
+          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -o StrictHostKeyChecking=yes -o UserKnownHostsFile="$SSH_DIR/known_hosts" -i "$SSH_DIR/key")
+          cleanup() {
+            local status=$?
+            trap - EXIT
+            # A disconnected repair retains its lock until its rollback/cleanup finishes.
+            if test -s "$SSH_DIR/key" && test -s "$SSH_DIR/known_hosts"; then
+              timeout 30s ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo flock -n /run/lock/qily-cn-translation-repair.lock rm -rf '$STAGE'" || true
+            fi
+            rm -rf "$SSH_DIR"
+            exit "$status"
+          }
+          trap cleanup EXIT
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > "$SSH_DIR/key"
+          chmod 600 "$SSH_DIR/key"
+          ssh-keyscan -T 10 -H "$CN_PREPROD_HOST" > "$SSH_DIR/known_hosts"
+
+          cat > "$SSH_DIR/repair.sh" <<'REMOTE'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          STAGE="$1"
+          test "$(id -u)" = 0
+          [[ "$STAGE" =~ ^/tmp/qily-cn-translation-repair-[0-9]+-[0-9]+$ ]]
+          exec 9>/run/lock/qily-cn-translation-repair.lock
+          flock -w 60 9
+          BACKUP="$(mktemp -d /tmp/qily-cn-translation-rollback.XXXXXX)"
+          chmod 700 "$BACKUP"
+          DEST=/opt/qilylean-cn-translation
+          UNIT=/etc/systemd/system/qilylean-cn-translation.service
+          CONF=/etc/qilylean-cn/translate.json
+          INSTALLED=false
+          TOUCHED=false
+          HAD_DEST=false
+          HAD_UNIT=false
+          HAD_CONF=false
+          HAD_CONF_DIR=false
+          WAS_ACTIVE=false
+          WAS_ENABLED=false
+          rollback() {
+            echo 'Translation verification failed; restoring previous translation service.' >&2
+            systemctl disable --now qilylean-cn-translation >/dev/null 2>&1 || true
+            rm -rf "$DEST" || return 1
+            if "$HAD_DEST"; then cp -a "$BACKUP/service" "$DEST" || return 1; fi
+            if "$HAD_UNIT"; then cp -a "$BACKUP/unit" "$UNIT" || return 1; else rm -f "$UNIT" || return 1; fi
+            if "$HAD_CONF"; then cp -a "$BACKUP/credentials" "$CONF" || return 1; else rm -f "$CONF" || return 1; fi
+            if "$HAD_CONF_DIR"; then chmod "$CONF_DIR_MODE" /etc/qilylean-cn || return 1; else rmdir /etc/qilylean-cn 2>/dev/null || true; fi
+            systemctl daemon-reload || return 1
+            if "$WAS_ENABLED"; then systemctl enable qilylean-cn-translation || return 1; fi
+            if "$WAS_ACTIVE"; then systemctl restart qilylean-cn-translation || return 1; fi
+          }
+          cleanup() {
+            status=$?
+            trap - EXIT HUP INT TERM
+            KEEP_BACKUP=false
+            if ! "$INSTALLED" && "$TOUCHED"; then
+              rollback || { status=1; KEEP_BACKUP=true; echo "Rollback incomplete; protected recovery backup retained at $BACKUP" >&2; }
+            fi
+            rm -rf /tmp/qilylean-cn-youdao /tmp/qilylean-cn-translation "$STAGE"
+            if ! "$KEEP_BACKUP"; then rm -rf "$BACKUP"; fi
+            exit "$status"
+          }
+          trap cleanup EXIT
+          trap 'exit 129' HUP
+          trap 'exit 130' INT
+          trap 'exit 143' TERM
+
+          # This verifies actual NMT over direct mainland TLS before any service change.
+          CREDENTIALS_DIRECTORY="$STAGE" python3 "$STAGE/verify-production.py"
+          if test -d "$DEST"; then HAD_DEST=true; cp -a "$DEST" "$BACKUP/service"; fi
+          if test -f "$UNIT"; then HAD_UNIT=true; cp -a "$UNIT" "$BACKUP/unit"; fi
+          if test -f "$CONF"; then HAD_CONF=true; cp -a "$CONF" "$BACKUP/credentials"; fi
+          if test -d /etc/qilylean-cn; then HAD_CONF_DIR=true; CONF_DIR_MODE="$(stat -c '%a' /etc/qilylean-cn)"; fi
+          if systemctl is-active --quiet qilylean-cn-translation; then WAS_ACTIVE=true; fi
+          if systemctl is-enabled --quiet qilylean-cn-translation; then WAS_ENABLED=true; fi
+
+          # install.sh owns these fixed staging paths; both workflow and host locks protect them.
+          rm -rf /tmp/qilylean-cn-youdao /tmp/qilylean-cn-translation
+          install -d -m 700 /tmp/qilylean-cn-youdao /tmp/qilylean-cn-translation
+          install -m 600 "$STAGE/youdao" /tmp/qilylean-cn-youdao/youdao
+          for file in server.py protected-tokens.json qilylean-cn-translation.service install.sh; do
+            install -m 644 "$STAGE/$file" "/tmp/qilylean-cn-translation/$file"
+          done
+          TOUCHED=true
+          bash /tmp/qilylean-cn-translation/install.sh
+
+          EXPECTED_BUILD="$(sha256sum "$STAGE/server.py" | cut -d' ' -f1)" python3 - <<'PY'
+          import json, os, urllib.request, uuid
+          opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+          with opener.open('http://127.0.0.1:8081/health', timeout=10) as response:
+              health = json.load(response)
+          assert health.get('build_sha256') == os.environ['EXPECTED_BUILD'], 'Unexpected installed translation build'
+          tests = []
+          for target in ('en', 'zh-TW'):
+              source = '制造现场的数据验证，质量改善与资源协调。验收编号：' + uuid.uuid4().hex
+              payload = json.dumps({'target_language': target, 'texts': [source]}).encode()
+              request = urllib.request.Request('https://qilylean.cn/translate', data=payload, headers={'Content-Type': 'application/json'})
+              with opener.open(request, timeout=65) as response:
+                  result = json.load(response)
+              translations = result.get('translations', [])
+              assert result.get('ok') is True and result.get('provider') == 'youdao' and result.get('cached') is False, 'Fresh Youdao call required'
+              assert len(translations) == 1 and isinstance(translations[0], str) and translations[0].strip() and translations[0] != source, 'Actual translation required'
+              tests.append({'target': target, 'source': source, 'translation': translations[0], 'provider': result['provider'], 'cached': result['cached']})
+          print(json.dumps({'ok': True, 'endpoint': 'https://qilylean.cn/translate', 'build_sha256': health['build_sha256'], 'tests': tests}, ensure_ascii=False))
+          PY
+          INSTALLED=true
+          echo 'PASS: translation service repaired; fresh English and Traditional Chinese verified.'
+          REMOTE
+
+          ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "mkdir -m 700 '$STAGE'"
+          scp -q "${SSH_OPTS[@]}" services/cn-translation/{server.py,protected-tokens.json,qilylean-cn-translation.service,install.sh,verify-production.py} "$SSH_DIR/repair.sh" "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
+          # Never put credential values in argv, command text, artifacts, or logs.
+          python3 - <<'PY' | ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import json,os,pathlib,sys; data=json.load(sys.stdin); assert all(isinstance(data.get(k),str) and data[k].strip() for k in (\"YOUDAO_APP_KEY\",\"YOUDAO_APP_SECRET\")); dest=pathlib.Path(\"$STAGE/youdao\"); fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); os.write(fd,json.dumps(data).encode()); os.close(fd)'"
+          import json, os, sys
+          json.dump({name: os.environ[name] for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}, sys.stdout)
+          PY
+          ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo timeout --signal=TERM --kill-after=90s 900s bash '$STAGE/repair.sh' '$STAGE'"
