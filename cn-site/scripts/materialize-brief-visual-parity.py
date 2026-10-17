@@ -474,7 +474,7 @@ def main():
             '<link rel="canonical" href="https://qilylean.cn'+src.url+'">'
             '<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading">'
             '<link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading">'
-            '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261018-knowledge-spacing-parity-v1&anchors=20261013-v1">'
+            '<link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1">'
             +source.TRANSLATION_STYLESHEET+
             '<link rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">'
             +style_tags+
