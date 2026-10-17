@@ -206,6 +206,7 @@ jobs:
           print(json.dumps({'ok': True, 'endpoint': 'https://qilylean.cn/translate', 'build_sha256': health['build_sha256'], 'tests': tests}, ensure_ascii=False))
           PY
           python3 "$STAGE/refresh-browser-cache.py" --root /var/www/qilylean-cn/current --backup "$BACKUP/browser-cache"
+          python3 "$STAGE/verify-production.py" --production
           INSTALLED=true
           echo 'PASS: translation service repaired; fresh English and Traditional Chinese verified.'
           REMOTE
