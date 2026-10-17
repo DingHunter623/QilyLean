@@ -2,6 +2,11 @@ name: Repair CN Youdao translation service
 
 on:
   workflow_dispatch:
+    inputs:
+      inspect_only:
+        description: 'Read-only inspection of active translation routing'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -13,7 +18,7 @@ concurrency:
 
 jobs:
   repair:
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && (github.ref == 'refs/heads/main' || inputs.inspect_only)
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -31,6 +36,7 @@ jobs:
           CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
           YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
           YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+          INSPECT_ONLY: ${{ inputs.inspect_only }}
         run: |
           set -euo pipefail
           test -n "$CN_PREPROD_HOST"
@@ -56,6 +62,48 @@ jobs:
           chmod 600 "$SSH_DIR/key"
           ssh-keyscan -T 10 -H "$CN_PREPROD_HOST" > "$SSH_DIR/known_hosts"
 
+          if test "$INSPECT_ONLY" = true; then
+            ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 -' <<'DIAG'
+          import json, pathlib, re, subprocess, urllib.parse, urllib.request
+          config = subprocess.check_output(['nginx', '-T'], stderr=subprocess.DEVNULL).decode()
+          sections = re.split(r'# configuration file ([^\n]+):\n', config)
+          routes = []
+          for index in range(1, len(sections), 2):
+              path, text = sections[index:index+2]
+              for match in re.finditer(r'location\s+(?:=\s+|\^~\s+)?[^\n{]*translate[^\n{]*\{', text):
+                  end, depth = match.end(), 1
+                  while depth and end < len(text):
+                      depth += (text[end] == '{') - (text[end] == '}')
+                      end += 1
+                  block = text[match.start():end]
+                  proxy = re.search(r'proxy_pass\s+([^;]+);', block)
+                  origin = None
+                  if proxy:
+                      url = urllib.parse.urlsplit(proxy.group(1).strip())
+                      origin = str(url.scheme) + '://' + str(url.hostname) + (':' + str(url.port) if url.port else '')
+                  routes.append({'config_file': path, 'location': block.split('{')[0].strip(), 'proxy_origin': origin})
+          state = subprocess.run(['systemctl', 'is-active', 'qilylean-cn-translation'], capture_output=True, text=True).stdout.strip()
+          print(json.dumps({'active_translation_routes': routes, 'service_state': state}, ensure_ascii=False))
+          errors = []
+          log = pathlib.Path('/var/log/nginx/error.log')
+          for line in (log.read_text(errors='replace').splitlines()[-1000:] if log.exists() else []):
+              if '/translate' not in line:
+                  continue
+              failure = re.search(r'(connect\(\) failed \([^)]*\)|upstream timed out|upstream prematurely closed connection)', line)
+              upstream = re.search(r'upstream: "(https?://[^/"]+)', line)
+              if failure:
+                  errors.append({'failure': failure.group(1), 'upstream': upstream.group(1) if upstream else None})
+          print(json.dumps({'recent_translation_upstream_errors': errors[-5:]}))
+          for url in ('http://127.0.0.1:8081/health', 'https://qilylean.cn/translate'):
+              try:
+                  with urllib.request.urlopen(url, timeout=10) as response:
+                      print(json.dumps({'url': url, 'status': response.status}))
+              except Exception as error:
+                  print(json.dumps({'url': url, 'error': str(error)}))
+          DIAG
+            exit 0
+          fi
+
           cat > "$SSH_DIR/repair.sh" <<'REMOTE'
           #!/usr/bin/env bash
           set -euo pipefail
@@ -79,6 +127,7 @@ jobs:
           WAS_ENABLED=false
           rollback() {
             echo 'Translation verification failed; restoring previous translation service.' >&2
+            python3 "$STAGE/refresh-browser-cache.py" --backup "$BACKUP/browser-cache" --restore || return 1
             systemctl disable --now qilylean-cn-translation >/dev/null 2>&1 || true
             rm -rf "$DEST" || return 1
             if "$HAD_DEST"; then cp -a "$BACKUP/service" "$DEST" || return 1; fi
@@ -124,7 +173,7 @@ jobs:
           TOUCHED=true
           bash /tmp/qilylean-cn-translation/install.sh
 
-          EXPECTED_BUILD="$(sha256sum "$STAGE/server.py" | cut -d' ' -f1)" python3 - <<'PY'
+          EXPECTED_BUILD="$(sha256sum "$STAGE/server.py" | cut -d' ' -f1)" PAGE_SAMPLES="$STAGE/page-smoke-samples.json" python3 - <<'PY'
           import json, os, urllib.request, uuid
           opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
           with opener.open('http://127.0.0.1:8081/health', timeout=10) as response:
@@ -141,14 +190,29 @@ jobs:
               assert result.get('ok') is True and result.get('provider') == 'youdao' and result.get('cached') is False, 'Fresh Youdao call required'
               assert len(translations) == 1 and isinstance(translations[0], str) and translations[0].strip() and translations[0] != source, 'Actual translation required'
               tests.append({'target': target, 'source': source, 'translation': translations[0], 'provider': result['provider'], 'cached': result['cached']})
+          samples = json.load(open(os.environ['PAGE_SAMPLES']))
+          for target in ('en', 'zh-TW'):
+              request = urllib.request.Request('https://qilylean.cn/translate',
+                  data=json.dumps({'target_language': target, 'texts': samples}).encode(),
+                  headers={'Content-Type': 'application/json'})
+              with opener.open(request, timeout=65) as response:
+                  result = json.load(response)
+              assert result.get('ok') is True and result.get('provider') == 'youdao' and result.get('cached') is False
+              assert len(result.get('translations', [])) == len(samples)
+              assert all(isinstance(text, str) and text.strip() for text in result['translations'])
+              assert result['translations'][9] != samples[9], 'Actual page heading must be translated'
+              assert 'QilyLean' in result['translations'][13] and 'SMED' in result['translations'][17]
+              tests.append({'target': target, 'page_batch_texts': len(samples), 'provider': result['provider'], 'cached': result['cached']})
           print(json.dumps({'ok': True, 'endpoint': 'https://qilylean.cn/translate', 'build_sha256': health['build_sha256'], 'tests': tests}, ensure_ascii=False))
           PY
+          python3 "$STAGE/refresh-browser-cache.py" --root /var/www/qilylean-cn/current --backup "$BACKUP/browser-cache"
+          python3 "$STAGE/verify-production.py" --production
           INSTALLED=true
           echo 'PASS: translation service repaired; fresh English and Traditional Chinese verified.'
           REMOTE
 
           ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "mkdir -m 700 '$STAGE'"
-          scp -q "${SSH_OPTS[@]}" services/cn-translation/{server.py,protected-tokens.json,qilylean-cn-translation.service,install.sh,verify-production.py} "$SSH_DIR/repair.sh" "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
+          scp -q "${SSH_OPTS[@]}" services/cn-translation/{server.py,protected-tokens.json,qilylean-cn-translation.service,install.sh,verify-production.py,refresh-browser-cache.py,page-smoke-samples.json} cn-site/assets/cn-translate-baidu-v1.{js,css} "$SSH_DIR/repair.sh" "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
           # Never put credential values in argv, command text, artifacts, or logs.
           python3 - <<'PY' | ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import json,os,pathlib,sys; data=json.load(sys.stdin); assert all(isinstance(data.get(k),str) and data[k].strip() for k in (\"YOUDAO_APP_KEY\",\"YOUDAO_APP_SECRET\")); dest=pathlib.Path(\"$STAGE/youdao\"); fd=os.open(dest,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600); os.write(fd,json.dumps(data).encode()); os.close(fd)'"
           import json, os, sys

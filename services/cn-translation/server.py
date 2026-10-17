@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Loopback-only mainland translation endpoint. Uses Python standard library."""
 import collections
-import concurrent.futures
 import hashlib
 import json
 import os
@@ -21,6 +20,8 @@ LANGUAGES.update({'zh-CN': 'zh-CHS', 'zh-TW': 'zh-CHT'})
 TOKENS = sorted(json.loads(Path(__file__).with_name('protected-tokens.json').read_text()), key=len, reverse=True)
 URL = 'https://openapi.youdao.com/api'  # Text translation NMT application, not batch-service credentials.
 BUILD_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+NMT_LOCK = threading.Lock()
+NMT_NEXT_CALL = 0.0
 
 
 class TranslationError(Exception):
@@ -52,19 +53,68 @@ def normalize_credentials(data):
 
 
 def youdao(texts, target, keys, timeout=18):
-    # Parallel individual NMT calls preserve the browser's text-node boundaries.
+    # NMT supports newline-separated queries. Batch them without losing DOM-node
+    # boundaries; individual parallel calls exceed the original application's QPS.
     keys = normalize_credentials(keys)
     deadline = time.monotonic() + timeout
-    def invoke(text):
+    lines, layouts = [], []
+    for text in texts:
+        layout = []
+        for part in re.split(r'(\r\n|\r|\n)', text):
+            if part.strip():
+                layout.append(len(lines))
+                lines.append(part)
+            else:
+                layout.append(part)
+        layouts.append(layout)
+    translated = []
+    group, size = [], 0
+    groups = []
+    for line in lines:
+        if group and size + len(line) + 1 > 5000:
+            groups.append(group)
+            group, size = [], 0
+        size += len(line) + bool(group)
+        group.append(line)
+    if group:
+        groups.append(group)
+    for group in groups:
         remaining = deadline - time.monotonic()
         if remaining < 1:
             raise TranslationError('Translation timed out', 504)
-        return nmt(text, target, keys, remaining)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-        return list(pool.map(invoke, texts))
+        result = nmt('\n'.join(group), target, keys, remaining)
+        parts = result.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+        if len(parts) != len(group) or any(not part.strip() for part in parts):
+            # Never assign a merged/split translation to the wrong text node.
+            parts = [nmt(line, target, keys, deadline - time.monotonic()) for line in group]
+        translated.extend(parts)
+    return [''.join(translated[part] if isinstance(part, int) else part for part in layout) for layout in layouts]
 
 
 def nmt(joined, target, keys, timeout=18):
+    global NMT_NEXT_CALL
+    deadline = time.monotonic() + timeout
+    if not NMT_LOCK.acquire(timeout=max(0, timeout)):
+        raise TranslationError('Translation timed out', 504)
+    try:
+        for attempt in range(3):
+            delay = max(0, NMT_NEXT_CALL - time.monotonic())
+            if deadline - time.monotonic() < delay + 1:
+                raise TranslationError('Translation timed out', 504)
+            if delay:
+                time.sleep(delay)
+            NMT_NEXT_CALL = time.monotonic() + 1.1
+            try:
+                return nmt_request(joined, target, keys, deadline - time.monotonic())
+            except TranslationError as error:
+                if str(error) not in ('Youdao NMT error 411', 'Youdao NMT error 412') or attempt == 2:
+                    raise
+                NMT_NEXT_CALL = time.monotonic() + 1.5 * (attempt + 1)
+    finally:
+        NMT_LOCK.release()
+
+
+def nmt_request(joined, target, keys, timeout=18):
     value = joined if len(joined) <= 20 else joined[:10] + str(len(joined)) + joined[-10:]
     salt, stamp = uuid.uuid4().hex, str(int(time.time()))
     sign = hashlib.sha256((keys['YOUDAO_APP_KEY'] + value + salt + stamp + keys['YOUDAO_APP_SECRET']).encode()).hexdigest()

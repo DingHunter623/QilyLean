@@ -39,7 +39,7 @@ concurrency:
 
 jobs:
   inspect-translation:
-    continue-on-error: true
+    if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -101,7 +101,7 @@ jobs:
           ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo env CREDENTIALS_DIRECTORY=$STAGE python3 $STAGE/verify-production.py"
 
   validate-and-deploy:
-    if: github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only
+    if: (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[translation-only]'))
     timeout-minutes: 50
     runs-on: ubuntu-latest
     steps:
@@ -685,9 +685,9 @@ jobs:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
           if '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
-          if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
+          if '/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
-          if '/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1' not in home:
+          if '/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2' not in home:
               raise SystemExit('Production China home missing in-page translator runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
