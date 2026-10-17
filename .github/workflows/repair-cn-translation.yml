@@ -64,14 +64,18 @@ jobs:
 
           if test "$INSPECT_ONLY" = true; then
             ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 -' <<'DIAG'
-          import json, re, subprocess, urllib.parse, urllib.request
+          import json, pathlib, re, subprocess, urllib.parse, urllib.request
           config = subprocess.check_output(['nginx', '-T'], stderr=subprocess.DEVNULL).decode()
           sections = re.split(r'# configuration file ([^\n]+):\n', config)
           routes = []
           for index in range(1, len(sections), 2):
               path, text = sections[index:index+2]
-              for match in re.finditer(r'location\s+(?:=\s+|\^~\s+)?[^\n{]*translate[^\n{]*\{[^}]*\}', text):
-                  block = match.group(0)
+              for match in re.finditer(r'location\s+(?:=\s+|\^~\s+)?[^\n{]*translate[^\n{]*\{', text):
+                  end, depth = match.end(), 1
+                  while depth and end < len(text):
+                      depth += (text[end] == '{') - (text[end] == '}')
+                      end += 1
+                  block = text[match.start():end]
                   proxy = re.search(r'proxy_pass\s+([^;]+);', block)
                   origin = None
                   if proxy:
@@ -80,6 +84,16 @@ jobs:
                   routes.append({'config_file': path, 'location': block.split('{')[0].strip(), 'proxy_origin': origin})
           state = subprocess.run(['systemctl', 'is-active', 'qilylean-cn-translation'], capture_output=True, text=True).stdout.strip()
           print(json.dumps({'active_translation_routes': routes, 'service_state': state}, ensure_ascii=False))
+          errors = []
+          log = pathlib.Path('/var/log/nginx/error.log')
+          for line in (log.read_text(errors='replace').splitlines()[-1000:] if log.exists() else []):
+              if '/translate' not in line:
+                  continue
+              failure = re.search(r'(connect\(\) failed \([^)]*\)|upstream timed out|upstream prematurely closed connection)', line)
+              upstream = re.search(r'upstream: "(https?://[^/"]+)', line)
+              if failure:
+                  errors.append({'failure': failure.group(1), 'upstream': upstream.group(1) if upstream else None})
+          print(json.dumps({'recent_translation_upstream_errors': errors[-5:]}))
           for url in ('http://127.0.0.1:8081/health', 'https://qilylean.cn/translate'):
               try:
                   with urllib.request.urlopen(url, timeout=10) as response:
