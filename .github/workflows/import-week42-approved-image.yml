@@ -1,0 +1,39 @@
+name: Import approved Week 42 brief image
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/import-week42-approved-image.yml'
+permissions:
+  contents: write
+jobs:
+  import-approved-image:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Fetch original approved artwork (no recompression)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qilylean/daily/assets
+          curl --fail --location --retry 3 --max-time 180 'https://at.adobe.com/lWUd8mYS8FkeZkFv' --output qilylean/daily/assets/2026-10-18-automated-packaging-approved.png
+          file qilylean/daily/assets/2026-10-18-automated-packaging-approved.png
+          python3 - <<'PY'
+          from pathlib import Path
+          f=Path('qilylean/daily/assets/2026-10-18-automated-packaging-approved.png')
+          b=f.read_bytes()
+          assert len(b)>100_000 and b[:8]==b'\\x89PNG\\r\\n\\x1a\\n', 'Unexpected asset; abort import'
+          print('Original PNG imported:',len(b),'bytes')
+          PY
+      - name: Commit approved PNG to repository
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qilylean/daily/assets/2026-10-18-automated-packaging-approved.png
+          if ! git diff --cached --quiet; then
+            git commit -m 'assets: import approved W42 automated packaging visual'
+            git push origin HEAD:main
+          fi
