@@ -115,11 +115,11 @@
     wrapper.setAttribute('title','默认中文简体；可切换中文繁体、English 或更多语言。');
     wrapper.setAttribute('data-state','loading');
     wrapper.style.setProperty('display','inline-grid','important');
-    wrapper.style.setProperty('grid-template-columns','24px minmax(0,1fr)');
-    wrapper.style.setProperty('grid-template-rows','38px 13px','important');
+    wrapper.style.setProperty('grid-template-columns','22px minmax(0,1fr)','important');
+    wrapper.style.setProperty('grid-template-rows','40px 14px','important');
     wrapper.style.setProperty('column-gap','6px');
     wrapper.style.setProperty('row-gap','0');
-    wrapper.style.setProperty('min-height','60px','important');
+    wrapper.style.setProperty('min-height','var(--qily-translate-height,64px)','important');
     wrapper.style.setProperty('visibility','visible','important');
     wrapper.style.setProperty('opacity','1','important');
     wrapper.style.setProperty('align-items','center');
@@ -138,8 +138,8 @@
     target.className='qily-web-translate__google';
     target.setAttribute('aria-label','Google 网页翻译服务');
     target.style.setProperty('box-sizing','border-box','important');
-    target.style.setProperty('min-height','13px','important');
-    target.style.setProperty('height','13px','important');
+    target.style.setProperty('min-height','14px','important');
+    target.style.setProperty('height','14px','important');
     target.style.setProperty('overflow','visible','important');
 
     morePanel=buildMorePanel();
