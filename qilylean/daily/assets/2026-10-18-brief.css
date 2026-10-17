@@ -13,7 +13,7 @@ html body.daily-single-page main article.post .w42-data-grid ul{margin:8px 0 0;p
 html body.daily-single-page main article.post .w42-tape-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
 html body.daily-single-page main article.post .w42-tape-pair>div{border:1px solid #e1e5e9;border-radius:10px;padding:14px;background:#fbfcfd}
 html body.daily-single-page main article.post .w42-tape-pair strong{color:#163c50}
-html body.daily-single-page main article.post .w42-tape-pair p{margin:8px 0 0;font-size:16px}
+html body.daily-single-page main article.post .w42-tape-pair p{margin:8px 0 0;}
 html body.daily-single-page main article.post .w42-callout{border-left:4px solid #c39b55;background:#fbf5e9;padding:16px 18px;margin:20px 0;border-radius:0 10px 10px 0}
 html body.daily-single-page main article.post .w42-callout strong{line-height:1.45;color:#805410}
 html body.daily-single-page main article.post .w42-u-layout{background:#f5f8f9;border:1px solid #dae4e7;border-radius:10px;padding:14px;margin:18px 0}
