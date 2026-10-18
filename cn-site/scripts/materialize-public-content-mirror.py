@@ -123,7 +123,6 @@ def selected_source(path: Path) -> bool:
         "lean-production/index.html",
         "papers.html",
         "standards.html",
-        "tools.html",
         "knowledge.html",
         "qilylean/gbt2828.html",
         "qilylean/lean-knowledge.html",
@@ -218,6 +217,9 @@ def rewrite_href(value: str) -> str:
         return ""
     if value.startswith("#"):
         return value
+    # The legacy international /tools.html is a redirect with no readable article.
+    if value.split("?", 1)[0].rstrip("/") in ("/tools.html", "https://qilylean.com/tools.html", "https://www.qilylean.com/tools.html"):
+        return "/archive/profile/tools/"
     parsed = urlparse(value)
     if parsed.scheme in ("http", "https"):
         host = parsed.netloc.lower()
