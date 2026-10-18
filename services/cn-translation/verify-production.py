@@ -6,6 +6,8 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
+import socket
 import subprocess
 import urllib.parse
 import urllib.request
@@ -64,6 +66,22 @@ if args.production:
         health = json.load(response)
     assert health['build_sha256'] == hashlib.sha256(installed.read_bytes()).hexdigest() == server.BUILD_SHA256
     evidence['build_sha256'] = health['build_sha256']
+    addresses = sorted({item[4][0] for item in socket.getaddrinfo('qilylean.cn', 443, type=socket.SOCK_STREAM)})
+    assert addresses and all(not address.startswith(('198.18.', '198.19.')) for address in addresses), 'Proxy Fake-IP DNS detected'
+    pages = []
+    for route in ('/', '/knowledge/standard-work-three-elements/', '/briefs/archive/2026-10-11/'):
+        with opener.open('https://qilylean.cn' + route, timeout=30) as response:
+            content = response.read().decode()
+            cache = response.headers.get('Cache-Control')
+        assets = re.findall(r'(?:src|href)=[\x22\x27]([^\x22\x27]*cn-translate-baidu-v1\.(?:js|css)\?v=[^\x22\x27]+)', content)
+        assert len(assets) == 2 and all(asset.startswith('/assets/') and '20261017-cn-mainland-nmt-v2' in asset for asset in assets), 'Stale or offsite translator resource'
+        for asset in assets:
+            name = urllib.parse.urlsplit(asset).path.rsplit('/', 1)[1]
+            with opener.open('https://qilylean.cn' + asset, timeout=30) as response:
+                actual = response.read()
+            assert actual == Path(__file__).with_name(name).read_bytes(), 'Public translator resource differs from approved local asset'
+        pages.append({'route': route, 'cache_control': cache, 'translator_assets': assets, 'exact_asset_bytes': True})
+    evidence['mainland_public_pages'] = {'dns_addresses': addresses, 'pages': pages}
     # Compare real values only inside this root process. Never print values, matches or lines.
     variants = set()
     for value in list(keys.values()) + list(server.normalize_credentials(keys).values()):

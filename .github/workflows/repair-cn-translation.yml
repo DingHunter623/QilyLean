@@ -28,6 +28,16 @@ jobs:
       - name: Test translation service
         run: python3 services/cn-translation/test_server.py
 
+      - name: Prepare isolated CI browser
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install CI browser dependencies outside repository
+        run: |
+          npm install --prefix "$RUNNER_TEMP/cn-browser" --no-save --package-lock=false playwright@1.55.0
+          "$RUNNER_TEMP/cn-browser/node_modules/.bin/playwright" install --with-deps chromium
+
       - name: Preflight, install, and verify translation service only
         shell: bash
         env:
@@ -50,6 +60,7 @@ jobs:
           cleanup() {
             local status=$?
             trap - EXIT
+            if test -n "${TUNNEL_PID:-}"; then kill "$TUNNEL_PID" 2>/dev/null || true; fi
             # A disconnected repair retains its lock until its rollback/cleanup finishes.
             if test -s "$SSH_DIR/key" && test -s "$SSH_DIR/known_hosts"; then
               timeout 30s ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo flock -n /run/lock/qily-cn-translation-repair.lock rm -rf '$STAGE'" || true
@@ -61,6 +72,19 @@ jobs:
           printf '%s\n' "$CN_PREPROD_SSH_KEY" > "$SSH_DIR/key"
           chmod 600 "$SSH_DIR/key"
           ssh-keyscan -T 10 -H "$CN_PREPROD_HOST" > "$SSH_DIR/known_hosts"
+
+          verify_browser() {
+            # Only the CI browser uses this transport, to place its egress in China.
+            # No forwarding/service/browser software is installed on production.
+            ssh "${SSH_OPTS[@]}" -o ExitOnForwardFailure=yes -N -D 127.0.0.1:10880 "$USER_NAME@$CN_PREPROD_HOST" &
+            TUNNEL_PID=$!
+            for attempt in $(seq 1 20); do
+              if nc -z 127.0.0.1 10880; then break; fi
+              kill -0 "$TUNNEL_PID"
+              sleep 1
+            done
+            MAINLAND_BROWSER_PROXY=socks5://127.0.0.1:10880 PLAYWRIGHT_PATH="$RUNNER_TEMP/cn-browser/node_modules/playwright" BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/cn-browser-evidence" BROWSER_INSPECT_ONLY="$INSPECT_ONLY" node services/cn-translation/browser-smoke.cjs
+          }
 
           if test "$INSPECT_ONLY" = true; then
             ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 -' <<'DIAG'
@@ -101,6 +125,7 @@ jobs:
               except Exception as error:
                   print(json.dumps({'url': url, 'error': str(error)}))
           DIAG
+            verify_browser
             exit 0
           fi
 
@@ -180,7 +205,7 @@ jobs:
               health = json.load(response)
           assert health.get('build_sha256') == os.environ['EXPECTED_BUILD'], 'Unexpected installed translation build'
           tests = []
-          for target in ('en', 'zh-TW'):
+          for target in ('en', 'zh-TW', 'ja'):
               source = '制造现场的数据验证，质量改善与资源协调。验收编号：' + uuid.uuid4().hex
               payload = json.dumps({'target_language': target, 'texts': [source]}).encode()
               request = urllib.request.Request('https://qilylean.cn/translate', data=payload, headers={'Content-Type': 'application/json'})
@@ -191,7 +216,7 @@ jobs:
               assert len(translations) == 1 and isinstance(translations[0], str) and translations[0].strip() and translations[0] != source, 'Actual translation required'
               tests.append({'target': target, 'source': source, 'translation': translations[0], 'provider': result['provider'], 'cached': result['cached']})
           samples = json.load(open(os.environ['PAGE_SAMPLES']))
-          for target in ('en', 'zh-TW'):
+          for target in ('en', 'zh-TW', 'ja'):
               request = urllib.request.Request('https://qilylean.cn/translate',
                   data=json.dumps({'target_language': target, 'texts': samples}).encode(),
                   headers={'Content-Type': 'application/json'})
@@ -208,7 +233,7 @@ jobs:
           python3 "$STAGE/refresh-browser-cache.py" --root /var/www/qilylean-cn/current --backup "$BACKUP/browser-cache"
           python3 "$STAGE/verify-production.py" --production
           INSTALLED=true
-          echo 'PASS: translation service repaired; fresh English and Traditional Chinese verified.'
+          echo 'PASS: translation service repaired; fresh English, Traditional Chinese and Japanese verified.'
           REMOTE
 
           ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "mkdir -m 700 '$STAGE'"
@@ -219,3 +244,12 @@ jobs:
           json.dump({name: os.environ[name] for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}, sys.stdout)
           PY
           ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo timeout --signal=TERM --kill-after=90s 900s bash '$STAGE/repair.sh' '$STAGE'"
+          verify_browser
+
+      - name: Save public browser verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-mainland-browser-evidence
+          path: ${{ runner.temp }}/cn-browser-evidence/
+          if-no-files-found: ignore

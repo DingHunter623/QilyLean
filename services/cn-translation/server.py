@@ -18,6 +18,11 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 LANGUAGES = {code: code for code in 'en ja ko fr de es ru pt it ar th vi id ms tr pl nl'.split()}
 LANGUAGES.update({'zh-CN': 'zh-CHS', 'zh-TW': 'zh-CHT'})
 TOKENS = sorted(json.loads(Path(__file__).with_name('protected-tokens.json').read_text()), key=len, reverse=True)
+TOKEN_PATTERNS = [(token, re.compile(
+    (r'(?<![A-Za-z0-9_])' if token[0].isascii() and token[0].isalnum() else '') +
+    re.escape(token) +
+    (r'(?![A-Za-z0-9_])' if token[-1].isascii() and token[-1].isalnum() else '')
+)) for token in TOKENS]
 URL = 'https://openapi.youdao.com/api'  # Text translation NMT application, not batch-service credentials.
 BUILD_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 NMT_LOCK = threading.Lock()
@@ -185,10 +190,10 @@ class Translator:
             prepared, replacements = [], []
             for index, text in enumerate(missing):
                 masked, pairs = text, []
-                for token_index, token in enumerate(TOKENS):
-                    if token in masked:
+                for token_index, (token, pattern) in enumerate(TOKEN_PATTERNS):
+                    if pattern.search(masked):
                         placeholder = f'__QILY_TOKEN_{index}_{token_index}__'
-                        masked = masked.replace(token, placeholder)
+                        masked = pattern.sub(lambda match: placeholder, masked)
                         pairs.append((placeholder, token))
                 prepared.append(masked)
                 replacements.append(pairs)
@@ -225,13 +230,42 @@ class Translator:
                 if not isinstance(text, str) or not text.strip():
                     raise TranslationError('Invalid translation text')
                 joined_results[owner] += text
-            restored = {}
-            for source, text, pairs in zip(missing, joined_results, replacements):
+            restored, fallback = {}, []
+            for index, (source, text, pairs) in enumerate(zip(missing, joined_results, replacements)):
+                if any(placeholder not in text for placeholder, token in pairs):
+                    fallback.append((source, prepared[index], dict(pairs)))
+                    continue
                 for placeholder, token in pairs:
-                    if placeholder not in text:
-                        raise TranslationError('Protected translation token changed')
                     text = text.replace(placeholder, token)
                 restored[source] = text
+            if fallback:
+                # Some languages rewrite opaque markers. Translate only the
+                # surrounding original fragments and reconstruct protected terms.
+                fragments, fragment_ids, jobs = [], {}, []
+                for source, masked, tokens in fallback:
+                    parts = []
+                    for part in re.split(r'(__QILY_TOKEN_\d+_\d+__)', masked):
+                        if part in tokens:
+                            parts.append(tokens[part])
+                        elif any(char.isalpha() for char in part):
+                            core = part.strip()
+                            if core not in fragment_ids:
+                                fragment_ids[core] = len(fragments)
+                                fragments.append(core)
+                            prefix = part[:len(part) - len(part.lstrip())]
+                            suffix = part[len(part.rstrip()):]
+                            parts.append((prefix, fragment_ids[core], suffix))
+                        else:
+                            parts.append(part)
+                    jobs.append((source, parts))
+                remaining = deadline - time.monotonic()
+                if remaining < 1:
+                    raise TranslationError('Translation timed out', 504)
+                results = self.upstream(fragments, target, self.keys, timeout=remaining) if fragments else []
+                if len(results) != len(fragments) or any(not isinstance(text, str) or not text.strip() for text in results):
+                    raise TranslationError('Invalid protected-fragment translation')
+                for source, parts in jobs:
+                    restored[source] = ''.join(part[0] + results[part[1]] + part[2] if isinstance(part, tuple) else part for part in parts)
             with self.lock:
                 for source, text in restored.items():
                     self.cache[(target, source)] = (time.time(), text)
