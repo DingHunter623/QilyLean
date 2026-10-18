@@ -106,10 +106,40 @@ class TranslationTests(unittest.TestCase):
         self.assertEqual(len(calls), 2)
 
     def test_corrupt_protected_token_is_not_cached(self):
-        adapter = server.Translator(KEYS, lambda *args, **kwargs: ['Token removed'])
+        def upstream(*args, **kwargs):
+            if '__QILY_TOKEN_' in args[0][0]:
+                return ['Token removed']
+            raise server.TranslationError('Upstream unavailable')
+        adapter = server.Translator(KEYS, upstream)
         with self.assertRaises(server.TranslationError):
             adapter.translate({'target_language': 'en', 'texts': ['改善 QilyLean']}, 'ip-a')
         self.assertEqual(len(adapter.cache), 0)
+
+    def test_marker_mutation_uses_original_fragments_and_preserves_terms(self):
+        calls = []
+        def upstream(texts, *args, **kwargs):
+            calls.append(texts)
+            if len(calls) == 1:
+                return ['Marker rewritten']
+            self.assertEqual(texts, ['改善', '与', '方法'])
+            return ['Improve', 'and', 'method']
+        adapter = server.Translator(KEYS, upstream)
+        result = adapter.translate({'target_language': 'ja', 'texts': ['改善 QilyLean 与 SMED 方法']}, 'ip')
+        self.assertEqual(result['translations'], ['Improve QilyLean and SMED method'])
+        self.assertFalse(result['cached'])
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(adapter.translate({'target_language': 'ja', 'texts': ['改善 QilyLean 与 SMED 方法']}, 'ip')['cached'])
+        self.assertEqual(len(calls), 2)
+
+    def test_acronyms_are_not_protected_inside_ordinary_words(self):
+        calls = []
+        def upstream(texts, *args, **kwargs):
+            calls.extend(texts)
+            return texts
+        adapter = server.Translator(KEYS, upstream)
+        source = 'PRACTICE & EXPERIENCE'
+        self.assertEqual(adapter.translate({'target_language': 'en', 'texts': [source]}, 'ip')['translations'], [source])
+        self.assertEqual(calls, [source])
 
     def test_input_limits_and_per_client_rate(self):
         adapter = server.Translator(KEYS, lambda texts, *args, **kwargs: texts)
