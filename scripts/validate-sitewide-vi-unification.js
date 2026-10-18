@@ -180,10 +180,10 @@ assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell m
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
 assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
-assert(cnRail.includes("label:'关于我们'"), 'CN primary navigation must use 关于我们.');
-assert(cnRail.includes("key:'briefs',href:'/briefs/',label:'精选简报'"), 'CN brief entry must stay on the China-site bridge route.');
-assert(cnRail.includes("key:'knowledge',href:'/knowledge/',label:'知识索引'"), 'CN knowledge entry must use 知识索引.');
-assert(cnRail.includes("key:'resources',href:'/resources/',label:'资源协同'"), 'CN resource entry must stay on the China-site bridge route.');
+for(const [key,href,label] of [['experience','/archive/profile/experience/','履历主线'],['capabilities','/archive/profile/capabilities/','能力体系'],['tools','/archive/profile/tools/','改善工具'],['lean','/lean/','精益生产'],['projects','/notes/','代表项目'],['trust','/trust/','信任中心'],['knowledge','/knowledge/','知识资产'],['resources','/resources/','资源协同']]){
+  assert(cnRail.includes("key:'"+key+"',href:'"+href+"',label:'"+label+"'"), 'CN navigation must expose noncommercial global module '+label);
+}
+assert(!cnRail.includes("key:'briefs',href:'/briefs/'"), 'CN brief archive belongs inside knowledge assets, not as a competing primary menu.');
 assert(cnRail.includes("data-qily-cn-nav-contract','20260926-v7-bridge'"), 'CN bridge navigation contract runtime is missing.');
 assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
 assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerEvent drag.');
@@ -226,11 +226,11 @@ for(const rel of cnPages){
   assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');
   if(html.includes('aria-label="主导航"')){
     assert(html.includes('data-qily-cn-nav-contract="20260926-v7-bridge"'), rel+' must use the current CN navigation contract.');
-    assert(/<a href="\/about\/" data-qily-nav-key="about"[^>]*>关于我们<\/a>/.test(html), rel+' CN primary-nav static label must use 关于我们.');
-    assert(!/>关于<\/a>/.test(html), rel+' must not retain the retired 关于 navigation label.');
-    assert(/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识索引<\/a>/.test(html), rel+' CN primary-nav static label must use 知识索引.');
-    assert(!/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识分享<\/a>/.test(html), rel+' must not retain the retired 知识分享 navigation label.');
-    assert(/<a href="\/briefs\/" data-qily-nav-key="briefs"[^>]*>精选简报<\/a>/.test(html), rel+' CN brief entry must use the internal bridge route.');
+    assert(/<a href="\/trust\/" data-qily-nav-key="trust"[^>]*>信任中心<\/a>/.test(html), rel+' CN trust center must be in the primary navigation.');
+    assert(/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识资产<\/a>/.test(html), rel+' CN primary knowledge asset label must match the global site.');
+    assert(/<a href="\/archive\/profile\/experience\/" data-qily-nav-key="experience"[^>]*>履历主线<\/a>/.test(html), rel+' CN experience must have a local entry.');
+    assert(/<a href="\/archive\/profile\/capabilities\/" data-qily-nav-key="capabilities"[^>]*>能力体系<\/a>/.test(html), rel+' CN capabilities must have a local entry.');
+    assert(!/data-qily-nav-key="briefs"/.test(html), rel+' CN briefs must remain a secondary knowledge entry.');
     assert(/<a href="\/resources\/" data-qily-nav-key="resources"[^>]*>资源协同<\/a>/.test(html), rel+' CN resource entry must use the internal bridge route.');
     assert(!/data-qily-nav-key="(?:briefs|resources)"[^>]*data-qily-external="international"/.test(html), rel+' CN primary navigation must not bypass its internal bridge pages.');
   }
