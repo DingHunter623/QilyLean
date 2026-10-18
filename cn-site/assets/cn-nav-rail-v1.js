@@ -309,7 +309,7 @@ function routeKey(path){
   if(path==='/')return 'home';
   if(/^\/archive\/profile\/experience(?:\/|$)/.test(path))return 'experience';
   if(/^\/archive\/profile\/capabilities(?:\/|$)/.test(path))return 'capabilities';
-  if(/^\/(?:archive\/profile\/tools|archive\/improvements)(?:\/|$)/.test(path))return 'tools';
+  if(/^\/(?:archive\/profile\/tools|archive\/improvements/)(?:\/|$)/.test(path))return 'tools';
   if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
   if(/^\/(?:notes|archive\/practice)(?:\/|$)/.test(path))return 'projects';
   if(/^\/(?:trust|about|archive\/records|archive\/learning)(?:\/|$)/.test(path))return 'trust';
