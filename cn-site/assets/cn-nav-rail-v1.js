@@ -11,12 +11,14 @@ var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]'
 
 var CANONICAL_NAV_ITEMS=[
   {key:'home',href:'/',label:'首页'},
-  {key:'lean',href:'/lean/',label:'精益制造'},
+  {key:'experience',href:'/archive/profile/experience/',label:'履历主线'},
+  {key:'capabilities',href:'/archive/profile/capabilities/',label:'能力体系'},
+  {key:'tools',href:'/archive/profile/tools/',label:'改善工具'},
+  {key:'lean',href:'/lean/',label:'精益生产'},
   {key:'projects',href:'/notes/',label:'代表项目'},
-  {key:'knowledge',href:'/knowledge/',label:'知识索引'},
-  {key:'briefs',href:'/briefs/',label:'精选简报'},
-  {key:'resources',href:'/resources/',label:'资源协同'},
-  {key:'about',href:'/about/',label:'关于我们'}
+  {key:'trust',href:'/trust/',label:'信任中心'},
+  {key:'knowledge',href:'/knowledge/',label:'知识资产'},
+  {key:'resources',href:'/resources/',label:'资源协同'}
 ];
 
 function ensureCanonicalNavigation(nav){
@@ -305,12 +307,14 @@ function normalize(path){
 function routeKey(path){
   path=normalize(path);
   if(path==='/')return 'home';
+  if(/^\/archive\/profile\/experience(?:\/|$)/.test(path))return 'experience';
+  if(/^\/archive\/profile\/capabilities(?:\/|$)/.test(path))return 'capabilities';
+  if(/^\/(?:archive\/profile\/tools|archive\/improvements)(?:\/|$)/.test(path))return 'tools';
   if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
-  if(/^\/notes(?:\/|$)/.test(path))return 'projects';
-  if(/^\/knowledge(?:\/|$)/.test(path))return 'knowledge';
-  if(/^\/briefs(?:\/|$)/.test(path))return 'briefs';
+  if(/^\/(?:notes|archive\/practice)(?:\/|$)/.test(path))return 'projects';
+  if(/^\/(?:trust|about|archive\/records|archive\/learning)(?:\/|$)/.test(path))return 'trust';
   if(/^\/resources(?:\/|$)/.test(path))return 'resources';
-  if(/^\/about(?:\/|$)/.test(path))return 'about';
+  if(/^\/(?:knowledge|briefs|archive)(?:\/|$)/.test(path))return 'knowledge';
   return '';
 }
 function mark(nav){

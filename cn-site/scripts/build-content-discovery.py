@@ -68,13 +68,16 @@ COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=202610
 def header(current: str) -> str:
     nav = [
         ("/", "home", "首页"),
-        ("/lean/", "lean", "精益制造"),
+        ("/archive/profile/experience/", "experience", "履历主线"),
+        ("/archive/profile/capabilities/", "capabilities", "能力体系"),
+        ("/archive/profile/tools/", "tools", "改善工具"),
+        ("/lean/", "lean", "精益生产"),
         ("/notes/", "projects", "代表项目"),
-        ("/knowledge/", "knowledge", "知识索引"),
-        ("/briefs/", "briefs", "精选简报"),
+        ("/trust/", "trust", "信任中心"),
+        ("/knowledge/", "knowledge", "知识资产"),
         ("/resources/", "resources", "资源协同"),
-        ("/about/", "about", "关于我们"),
     ]
+    current = {"briefs": "knowledge", "about": "trust"}.get(current, current)
     links = []
     for href, key, label in nav:
         active = ' aria-current="page"' if key == current else ""

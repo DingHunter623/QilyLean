@@ -132,13 +132,21 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
-# Primary-navigation boundary: CN navigation stays on qilylean.cn; briefs and resource directory are local-first.
-grep -Fq 'href="/briefs/" data-qily-nav-key="briefs">精选简报</a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation briefs entry must stay on qilylean.cn."
+# Primary navigation mirrors the noncommercial global modules; historic brief archives remain a local knowledge submenu.
+grep -Fq 'href="/knowledge/" data-qily-nav-key="knowledge">知识资产</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN knowledge assets must be a primary noncommercial module."
+  exit 1
+}
+grep -Fq 'href="/trust/" data-qily-nav-key="trust">信任中心</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN personal trust center must be a primary noncommercial module."
+  exit 1
+}
+grep -Fq 'href="/briefs/"' "$INDEX_FILE" || {
+  echo "ERROR: CN historic brief archive must remain accessible from the homepage."
   exit 1
 }
 grep -Fq 'href="/resources/" data-qily-nav-key="resources">资源协同</a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation resources entry must stay on qilylean.cn."
+  echo "ERROR: CN resource directory must remain a same-origin primary module."
   exit 1
 }
 if grep -Fq 'data-qily-nav-key="briefs" target="_blank"' "$INDEX_FILE" || grep -Fq 'data-qily-nav-key="resources" target="_blank"' "$INDEX_FILE"; then

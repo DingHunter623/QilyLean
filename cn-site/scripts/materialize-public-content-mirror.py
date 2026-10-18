@@ -123,7 +123,6 @@ def selected_source(path: Path) -> bool:
         "lean-production/index.html",
         "papers.html",
         "standards.html",
-        "tools.html",
         "knowledge.html",
         "qilylean/gbt2828.html",
         "qilylean/lean-knowledge.html",
@@ -218,6 +217,9 @@ def rewrite_href(value: str) -> str:
         return ""
     if value.startswith("#"):
         return value
+    # The legacy international /tools.html is a redirect with no readable article.
+    if value.split("?", 1)[0].rstrip("/") in ("/tools.html", "https://qilylean.com/tools.html", "https://www.qilylean.com/tools.html"):
+        return "/archive/profile/tools/"
     parsed = urlparse(value)
     if parsed.scheme in ("http", "https"):
         host = parsed.netloc.lower()
@@ -381,21 +383,21 @@ def footer() -> str:
     return '''<footer class="footer"><div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'''
 
 def header(current: str = "knowledge") -> str:
-    def a(href, key, label):
+    items = [["home","/","首页"],["experience","/archive/profile/experience/","履历主线"],["capabilities","/archive/profile/capabilities/","能力体系"],["tools","/archive/profile/tools/","改善工具"],["lean","/lean/","精益生产"],["projects","/notes/","代表项目"],["trust","/trust/","信任中心"],["knowledge","/knowledge/","知识资产"],["resources","/resources/","资源协同"]]
+    links = []
+    for key, href, label in items:
         current_attr = ' aria-current="page"' if key == current else ""
-        return f'<a href="{href}" data-qily-nav-key="{key}"{current_attr}>{label}</a>'
-    return '<header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><nav class="nav" aria-label="主导航" data-qily-cn-nav-contract="20260926-v7-bridge">' + "".join([
-        a("/", "home", "首页"),
-        a("/lean/", "lean", "精益制造"),
-        a("/notes/", "projects", "代表项目"),
-        a("/knowledge/", "knowledge", "知识索引"),
-        a("/briefs/", "briefs", "精选简报"),
-        a("/resources/", "resources", "资源协同"),
-        a("/about/", "about", "关于我们"),
-    ]) + '</nav></div></header>'
+        links.append(f'<a href="{href}" data-qily-nav-key="{key}"{current_attr}>{label}</a>')
+    return '<header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><nav class="nav" aria-label="主导航" data-qily-cn-nav-contract="20260926-v7-bridge">' + "".join(links) + '</nav></div></header>'
 
 def wrap_page(source: Source, title: str, desc: str, body: str) -> str:
-    current = "briefs" if source.category == "精选简报" else "knowledge"
+    current = ("experience" if source.path.as_posix() == "experience/index.html"
+               else "capabilities" if source.path.as_posix() == "capabilities/index.html"
+               else "tools" if source.category == "改善方法" or source.path.as_posix() == "tools.html"
+               else "projects" if source.category == "实践档案"
+               else "trust" if source.category in ("公开记录", "学习记录")
+               else "lean" if source.category == "精益制造"
+               else "knowledge")
     canonical = "https://qilylean.cn" + source.url
     desc = desc or f"{FILED_NAME}公开知识资料：{title}"
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(desc, quote=True)}"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1&anchors=20261013-v1">{TRANSLATION_STYLESHEET}<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header(current)}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">{html.escape(source.category)}｜公开知识档案</span><h1>{html.escape(title)}</h1><p>{html.escape(desc)}</p></div></section><section class="section"><div class="content mirror-shell"><article class="article-body mirror-article">{body}</article><aside class="toc mirror-meta"><b>内容来源</b><p>由 QilyLean｜启力精益公开内容资产同步至中国站，并按个人知识站边界完成本地化整理。</p><p><a href="/archive/">返回完整内容档案</a></p></aside></div></section></main>{footer()}{TRANSLATION_SCRIPT}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script></body></html>'''
@@ -405,7 +407,7 @@ def render_index(title: str, heading: str, intro: str, rows: list[tuple[str,str,
     for label, href, meta in rows:
         cards.append(f'<a class="article-link" href="{href}"><h3>{html.escape(label)}</h3><p>{html.escape(meta)}</p></a>')
     canonical = "https://qilylean.cn" + url
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(intro, quote=True)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1&anchors=20261013-v1"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header("briefs" if url.startswith("/briefs/") else "knowledge")}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">QILYLEAN CONTENT ARCHIVE｜内容档案</span><h1>{html.escape(heading)}</h1><p>{html.escape(intro)}</p></div></section><section class="section"><div class="content"><div class="article-list mirror-index">{''.join(cards)}</div></div></section></main>{footer()}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}｜{FILED_NAME}｜{BRAND}</title><meta name="description" content="{html.escape(intro, quote=True)}"><meta name="robots" content="index,follow"><link rel="canonical" href="{canonical}"><link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-full-content-v1&anchors=20261013-v1"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"></head><body><a class="skip" href="#main">跳到主要内容</a>{header("knowledge")}<main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">QILYLEAN CONTENT ARCHIVE｜内容档案</span><h1>{html.escape(heading)}</h1><p>{html.escape(intro)}</p></div></section><section class="section"><div class="content"><div class="article-list mirror-index">{''.join(cards)}</div></div></section></main>{footer()}<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script></body></html>'''
 
 def update_sitemap(urls: list[str]):
     path = CN / "sitemap.xml"
@@ -457,6 +459,25 @@ def main():
             "url": source.url,
             "title": title,
         })
+
+    # The global /tools.html is only an HTTP/JS redirect. A content mirror of that
+    # wrapper has no body, so provide a real local tools landing page instead.
+    # The actual tool explanations are independently mirrored from their original sources.
+    tool_rows = [
+        ("精益生产工具与改善方法", "/archive/reference/lean-tools/", "精益工具的原始公开内容，按个人知识分享边界呈现"),
+        ("改善方法实践档案", "/archive/improvements/", "从现场问题到改善方法的历史公开资料"),
+        ("制造改善专题", "/methods/", "中国站本地 IE 与精益实践方法入口"),
+    ]
+    tool_page = CN / "archive/profile/tools/index.html"
+    tool_page.parent.mkdir(parents=True, exist_ok=True)
+    tool_page.write_text(render_index(
+        "改善工具索引",
+        "改善工具｜工程方法与现场应用",
+        "国际站公开改善工具、流程分析和现场应用方法，在中国站独立阅读。资料不包含商业承接入口。",
+        tool_rows,
+        "/archive/profile/tools/",
+    ), encoding="utf-8")
+    urls.append("/archive/profile/tools/")
 
     brief_rows.sort(key=lambda x: x[1], reverse=True)
     brief_index = CN / "briefs/archive/index.html"
