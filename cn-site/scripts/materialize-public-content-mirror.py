@@ -458,6 +458,25 @@ def main():
             "title": title,
         })
 
+    # The global /tools.html is only an HTTP/JS redirect. A content mirror of that
+    # wrapper has no body, so provide a real local tools landing page instead.
+    # The actual tool explanations are independently mirrored from their original sources.
+    tool_rows = [
+        ("精益生产工具与改善方法", "/archive/reference/lean-tools/", "精益工具的原始公开内容，按个人知识分享边界呈现"),
+        ("改善方法实践档案", "/archive/improvements/", "从现场问题到改善方法的历史公开资料"),
+        ("制造改善专题", "/methods/", "中国站本地 IE 与精益实践方法入口"),
+    ]
+    tool_page = CN / "archive/profile/tools/index.html"
+    tool_page.parent.mkdir(parents=True, exist_ok=True)
+    tool_page.write_text(render_index(
+        "改善工具索引",
+        "改善工具｜工程方法与现场应用",
+        "国际站公开改善工具、流程分析和现场应用方法，在中国站独立阅读。资料不包含商业承接入口。",
+        tool_rows,
+        "/archive/profile/tools/",
+    ), encoding="utf-8")
+    urls.append("/archive/profile/tools/")
+
     brief_rows.sort(key=lambda x: x[1], reverse=True)
     brief_index = CN / "briefs/archive/index.html"
     brief_index.parent.mkdir(parents=True, exist_ok=True)
