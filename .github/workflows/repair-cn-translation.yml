@@ -61,6 +61,10 @@ jobs:
             local status=$?
             trap - EXIT
             if test -n "${TUNNEL_PID:-}"; then kill "$TUNNEL_PID" 2>/dev/null || true; fi
+            if test -n "${REPAIR_PID:-}"; then
+              ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo touch '$STAGE/browser-failed'" || true
+              wait "$REPAIR_PID" || true
+            fi
             # A disconnected repair retains its lock until its rollback/cleanup finishes.
             if test -s "$SSH_DIR/key" && test -s "$SSH_DIR/known_hosts"; then
               timeout 30s ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo flock -n /run/lock/qily-cn-translation-repair.lock rm -rf '$STAGE'" || true
@@ -83,7 +87,7 @@ jobs:
               kill -0 "$TUNNEL_PID"
               sleep 1
             done
-            MAINLAND_BROWSER_PROXY=socks5://127.0.0.1:10880 PLAYWRIGHT_PATH="$RUNNER_TEMP/cn-browser/node_modules/playwright" BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/cn-browser-evidence" BROWSER_INSPECT_ONLY="$INSPECT_ONLY" node services/cn-translation/browser-smoke.cjs
+            env -u YOUDAO_APP_KEY -u YOUDAO_APP_SECRET -u CN_PREPROD_SSH_KEY MAINLAND_BROWSER_PROXY=socks5://127.0.0.1:10880 PLAYWRIGHT_PATH="$RUNNER_TEMP/cn-browser/node_modules/playwright" BROWSER_EVIDENCE_DIR="$RUNNER_TEMP/cn-browser-evidence" BROWSER_INSPECT_ONLY="$INSPECT_ONLY" node services/cn-translation/browser-smoke.cjs
           }
 
           if test "$INSPECT_ONLY" = true; then
@@ -232,6 +236,15 @@ jobs:
           PY
           python3 "$STAGE/refresh-browser-cache.py" --root /var/www/qilylean-cn/current --backup "$BACKUP/browser-cache"
           python3 "$STAGE/verify-production.py" --production
+          # Keep the existing rollback backup and lock until real browser proof.
+          touch "$STAGE/browser-ready"
+          BROWSER_PASSED=false
+          for attempt in $(seq 1 300); do
+            if test -f "$STAGE/browser-failed"; then exit 1; fi
+            if test -f "$STAGE/browser-passed"; then BROWSER_PASSED=true; break; fi
+            sleep 2
+          done
+          "$BROWSER_PASSED" || { echo 'Browser verification timed out; rolling back.' >&2; exit 1; }
           INSTALLED=true
           echo 'PASS: translation service repaired; fresh English, Traditional Chinese and Japanese verified.'
           REMOTE
@@ -243,8 +256,25 @@ jobs:
           import json, os, sys
           json.dump({name: os.environ[name] for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}, sys.stdout)
           PY
-          ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo timeout --signal=TERM --kill-after=90s 900s bash '$STAGE/repair.sh' '$STAGE'"
-          verify_browser
+          ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo timeout --signal=TERM --kill-after=90s 900s bash '$STAGE/repair.sh' '$STAGE'" &
+          REPAIR_PID=$!
+          READY=false
+          for attempt in $(seq 1 120); do
+            if ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "test -f '$STAGE/browser-ready'"; then READY=true; break; fi
+            kill -0 "$REPAIR_PID" 2>/dev/null || { wait "$REPAIR_PID"; exit 1; }
+            sleep 2
+          done
+          "$READY" || { echo 'Translation preflight did not reach browser verification.' >&2; exit 1; }
+          if verify_browser; then
+            ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo touch '$STAGE/browser-passed'"
+          else
+            ssh "${SSH_OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "sudo touch '$STAGE/browser-failed'"
+            wait "$REPAIR_PID" || true
+            REPAIR_PID=
+            exit 1
+          fi
+          wait "$REPAIR_PID"
+          REPAIR_PID=
 
       - name: Save public browser verification evidence
         if: always()
