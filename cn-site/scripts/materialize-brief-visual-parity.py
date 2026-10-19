@@ -190,18 +190,20 @@ def scope_stylesheet(content:str,base_path:str="")->str:
         if body is None:continue
         selectors=[]
         for selector in split_css(prelude,","):
-            # The source once painted a second banner using pseudo-elements,
-            # including a date belonging to one particular issue. CN pages
-            # already contain the actual accessible hero and issue metadata.
-            if base_path=="qilylean/knowledge-brief.css" and re.search(r"(?:main\[data-qily-knowledge-brief\]|\.knowledge-brief-top-nav)::(?:before|after)",selector):continue
+            # The international curated brief paints its canonical turquoise
+            # "精选简报" chapter banner via main::before/::after and the
+            # issue metadata via .knowledge-brief-top-nav::before. Preserve
+            # these scoped public visuals on CN as well; they are not a
+            # duplicated heading and do not touch the China-owned shell.
             if base_path=="qilylean/daily-brief-unified-layout-v2.css" and '[id="2026-08-25"]' in selector:
                 if re.search(r"main\.page-shell:has\([^{}]+\)::(?:before|after)\s*$",selector):continue
                 if re.search(r'article\[id="2026-08-25"\]\s*>\s*\.date\s*$',selector):continue
             scoped=scope_selector(selector)
             if scoped:selectors.append(scoped)
         declarations=safe_declarations(body,base_path)
-        if base_path=="qilylean/knowledge-brief.css" and re.search(r"main\[data-qily-knowledge-brief\]\s*$",prelude):
-            declarations=";".join(item for item in declarations.split(";") if not item.startswith("padding-top:"))
+        # The source's main padding-top reserves the chapter banner region.
+        # Keep it in sync with the pseudo-header: removing it lets CN's
+        # previous-nav controls appear above the banner instead of below it.
         if selectors and declarations:output.append(",".join(selectors)+"{"+declarations+"}")
     return "\n".join(output)
 
@@ -414,6 +416,17 @@ def main():
     copied=set()
     for file in CSS_SET:
         if not copy_stylesheet(file,copied):raise SystemExit("Missing international brief stylesheet: "+file)
+    # Protect the existing rich-brief first-paint authority in the generator,
+    # not just one published page. The international white title card and its
+    # chapter banner are a single visual contract.
+    rich_css=(CN/"assets/brief-visual-source/qilylean/knowledge-brief.css").read_text(encoding="utf-8")
+    for required in ('main#main[data-qily-brief-content="v2"][data-qily-knowledge-brief]::before',
+                     'main#main[data-qily-brief-content="v2"][data-qily-knowledge-brief]::after',
+                     '.knowledge-brief-top-nav::before',
+                     'padding-top:184px!important',
+                     'background:#fff!important'):
+        if required not in rich_css:
+            raise SystemExit("Missing international curated-brief visual authority: "+required)
     evidence=[];briefs=[s for s in source.SOURCES if source.is_date_brief(s.path)]
     if len(briefs)<350:raise SystemExit("Incomplete curated brief source set")
     for src in briefs:
