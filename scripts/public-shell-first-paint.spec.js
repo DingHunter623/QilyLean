@@ -107,7 +107,7 @@ async function paintState(page,labelSelector){
         const outlined=parseFloat(style.borderTopWidth)>0&&style.borderTopStyle!=='none';
         return drawn&&circle&&outlined?[hero.className+pseudo]:[];
       })),
-      dock:dockStyle&&{position:dockStyle.position,color:dockStyle.backgroundColor,border:dockStyle.borderTopWidth,borderColor:dockStyle.borderTopColor,x:rect.x,width:rect.width,height:rect.height,bottom:rect.bottom,visible:visible(dock)},
+      dock:dockStyle&&{position:dockStyle.position,color:dockStyle.backgroundColor,border:dockStyle.borderTopWidth,borderColor:dockStyle.borderTopColor,x:rect.x,width:rect.width,height:rect.height,bottom:rect.bottom,visible:visible(dock),padding:dockStyle.padding,gap:dockStyle.gap,display:dockStyle.display,pseudoHeight:getComputedStyle(dock,'::after').height,buttonHeight:dock.querySelector('button').getBoundingClientRect().height,buttonPadding:getComputedStyle(dock.querySelector('button')).padding,buttonFont:getComputedStyle(dock.querySelector('button')).font},
       docks:document.querySelectorAll('#floatDock').length,
       styles:document.querySelectorAll('#qilyDockUnifiedV58Style').length,
       spacers:document.querySelectorAll('#qilyDockBottomSpacerV58').length,
@@ -179,6 +179,7 @@ for(const [name,url,labelSelector] of pages){
           await expectStaticMenuPreserved(page);
           const hydrated=await paintState(page,labelSelector);
           expectPaint(hydrated,`${name} ${device} JavaScript enabled`);
+          if(name==='lean-production')console.log('QILY-DOCK-DIAG',JSON.stringify({device,first:first.dock,hydrated:hydrated.dock}));
           expect(hydrated.dock.height,`${name} ${device}: loading runtime must not resize the menu`).toBeCloseTo(first.dock.height,0);
           // A visitor may use the rail before a slow core finishes loading.
           // Subsequent active-link reveal timers must retain that choice.
