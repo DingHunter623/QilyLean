@@ -161,6 +161,8 @@ jobs:
           test -f cn-site/notes/index.html
           test -f cn-site/assets/qilylean-vi-v2.css
           test -f cn-site/assets/cn-nav-rail-v1.js
+          node --check cn-site/assets/cn-nav-rail-v1.js
+          python3 scripts/test-normalize-url-contract.py
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
@@ -399,6 +401,13 @@ jobs:
             console.log('PASS: source-content browser parity, ten local navigation entries, translator, contact and filings across four viewports.');
           })().catch(error=>{console.error(error);process.exitCode=1;});
           NODE
+
+      - name: Verify shared resource order and footer geometry
+        if: steps.source-parity.outputs.enabled == 'true'
+        env:
+          QILY_INT_BASE: http://127.0.0.1:4175
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/public-resources-refresh.spec.js --reporter=line --workers=1
 
       - name: Upload source-content clone verification evidence
         if: always() && steps.source-parity.outputs.enabled == 'true'

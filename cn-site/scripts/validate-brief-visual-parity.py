@@ -74,8 +74,8 @@ class RendererRegression(unittest.TestCase):
         self.assertFalse(parser.skip_stack)
 
     def test_cn_aircraft_mapping_is_site_specific(self):
-        original='/assets/qilylean-aircraft-hero-approved-20260826.png'
-        china='/assets/qilylean-aircraft-hero-cn-v2-20260919.png'
+        original='/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%9B%BD%E9%99%85%E7%AB%99.png'
+        china='/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E4%B8%AD%E5%9B%BD%E7%AB%99.png'
         for url in [original,original+'?v=source','https://qilylean.com'+original]:
             self.assertEqual(visual.local_media(url),china)
         self.assertEqual(visual.rewrite_brief_href(original+'?view=full'),china+'?view=full')
@@ -262,8 +262,8 @@ def validate_generated_corpus():
         actual_images=[attrs.get('src','') for tag,attrs in main_page.nodes if tag=='img']
         assert expected_images==actual_images,(src.path,'source diagram/image changed')
         if src.path.as_posix()=='qilylean/daily/2026-10-11.html':
-            assert '/assets/qilylean-aircraft-hero-cn-v2-20260919.png' in actual_images,(src.path,'China brand image missing')
-            assert not any('qilylean-aircraft-hero-approved-20260826.png' in url for url in actual_images),src.path
+            assert '/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E4%B8%AD%E5%9B%BD%E7%AB%99.png' in actual_images,(src.path,'China brand image missing')
+            assert not any('%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%9B%BD%E9%99%85%E7%AB%99.png' in url for url in actual_images),src.path
         counts['images']+=len(actual_images)
         original_times=[attrs['datetime'] for tag,attrs in original_page.nodes if tag=='time' and attrs.get('datetime')]
         generated_times=[attrs['datetime'] for tag,attrs in main_page.nodes if tag=='time' and attrs.get('datetime')]

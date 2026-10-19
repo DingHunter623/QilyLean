@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Clone public directory markup, styles and search from the international SSOT."""
 from __future__ import annotations
-import hashlib, importlib, re, sys, subprocess
+import hashlib, html, importlib, json, re, sys, subprocess
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
@@ -14,6 +14,8 @@ RUNTIME = CN / "assets/cn-public-tech-directory-v1.js"
 STYLE = CN / "assets/cn-public-tech-directory-v1.css"
 SCOPE = 'main:is(#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"]'
 PUBLIC_STYLE = ROOT / "site-public-tech-directory-v1.css"
+RECOMMENDATIONS = ROOT / "links/electrical-recommendations.json"
+RECOMMENDATION_STYLE = ROOT / "links/electrical-recommendations.css"
 EXCLUDE_SERVICES = ':not(:where(.resource-service,.resource-service *,.qily-resource-network,.qily-resource-network *))'
 sys.dont_write_bytecode = True
 sys.path.insert(0, str(CN / "scripts"))
@@ -23,6 +25,69 @@ source = importlib.import_module("materialize-public-content-mirror")
 PUBLIC_CLASSES = set()
 PUBLIC_IDS = set()
 PUBLIC_TAGS = set()
+
+def electrical_recommendations(original: str) -> str:
+    """Render the separate shared references without changing ranked data/search."""
+    companies = json.loads(RECOMMENDATIONS.read_text(encoding="utf-8"))["companies"]
+    expected = {"chint.net", "delixi-electric.com", "chinapeople.com", "tengen.com"}
+    hosts = set()
+    cards = []
+    for company in companies:
+        parsed = urlparse(company["officialUrl"])
+        host = (parsed.hostname or "").removeprefix("www.")
+        if parsed.scheme != "https" or host not in expected or parsed.username or parsed.password:
+            raise ValueError("Invalid electrical-company official website")
+        if host in hosts or not all(company.get(key) for key in ("id", "name", "englishName", "overview", "officialSources")):
+            raise ValueError("Duplicate or incomplete electrical-company reference")
+        hosts.add(host)
+        escape = lambda value: html.escape(value, quote=True)
+        cards.append(
+            '<article class="qily-electrical-recommendation" data-company-reference="' + escape(company["id"]) + '">'
+            '<p class="qily-electrical-recommendation__brand">' + escape(company["englishName"]) + '</p>'
+            '<h3>' + escape(company["name"]) + '</h3>'
+            '<p class="qily-electrical-recommendation__overview">' + escape(company["overview"]) + '</p>'
+            '<a class="qily-electrical-recommendation__link" href="' + escape(company["officialUrl"]) + '" '
+            'target="_blank" rel="noopener noreferrer" aria-label="访问' + escape(company["name"]) + '官方网站">'
+            '官方网站 <span aria-hidden="true">↗</span></a></article>'
+        )
+    if len(companies) != 4 or hosts != expected:
+        raise ValueError("Expected four independent electrical-company references")
+    block = ('<!-- QILY-ELECTRICAL-REFERENCES:START -->\n'
+        '<section class="qily-electrical-recommendations" id="electricalRecommendations" '
+        'aria-labelledby="electricalRecommendationsTitle" data-directory-recommendations="unranked">'
+        '<div class="qily-electrical-recommendations__head"><h2 id="electricalRecommendationsTitle">电气企业推荐</h2>'
+        '<span class="qily-electrical-recommendations__badge">不参与排名</span></div>'
+        '<p class="qily-electrical-recommendations__note">以下为独立列示的企业官网与产品资料入口，'
+        '排列顺序不代表名次，不计入上述100家企业目录及搜索统计。</p>'
+        '<div class="qily-electrical-recommendations__grid">' + ''.join(cards) + '</div></section>\n'
+        '<!-- QILY-ELECTRICAL-REFERENCES:END -->\n')
+    pattern = r'<!-- QILY-ELECTRICAL-REFERENCES:START -->[\s\S]*?<!-- QILY-ELECTRICAL-REFERENCES:END -->\s*'
+    if re.search(pattern, original):
+        original, count = re.subn(pattern, lambda _: block, original)
+        if count != 1: raise ValueError("Duplicate electrical-company reference section")
+    else:
+        anchor = '<div class="toolbar">'
+        if original.count(anchor) != 1: raise ValueError("Directory search toolbar missing or duplicated")
+        original = original.replace(anchor, block + anchor, 1)
+    # Keep the three independent entry modules in the same requested order.
+    bridge_pattern = r'<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->\s*'
+    navigation_pattern = r'<div class="notice" id="navigationPartnerLinks">[\s\S]*?</div>\s*'
+    bridge_block = re.search(bridge_pattern, original)
+    navigation_block = re.search(navigation_pattern, original)
+    if not bridge_block or not navigation_block:
+        raise ValueError("Reciprocal bridge or navigation module missing")
+    original = re.sub(bridge_pattern, '', original)
+    original = re.sub(navigation_pattern, '', original)
+    original = re.sub(pattern, '', original)
+    original = original.replace('<div class="toolbar">', bridge_block.group(0) + block + navigation_block.group(0) + '<div class="toolbar">', 1)
+    if not original.index('id="qilyChinaKnowledgeBridge"') < original.index('id="electricalRecommendations"') < original.index('id="navigationPartnerLinks"'):
+        raise ValueError("Public resource modules are out of order")
+    original = re.sub(r'<link id="qilyElectricalReferencesStyles"[^>]*>\s*', '', original)
+    version = hashlib.sha256(RECOMMENDATION_STYLE.read_bytes()).hexdigest()[:12]
+    tag = '<link id="qilyElectricalReferencesStyles" rel="stylesheet" href="/links/electrical-recommendations.css?v=' + version + '">'
+    original, count = re.subn(r'(<style>[\s\S]*?</style>)', lambda match: match.group(1) + '\n' + tag, original, count=1)
+    if count != 1: raise ValueError("Directory source stylesheet anchor missing")
+    return original
 
 def relevant_selector(selector: str) -> bool:
     # Consider alternatives independently; classes inside :not() are exclusions,
@@ -129,7 +194,7 @@ def write(path: Path, content: str) -> None:
         path.write_text(content, encoding="utf-8")
 
 def main() -> None:
-    original = SOURCE.read_text(encoding="utf-8")
+    original = electrical_recommendations(SOURCE.read_text(encoding="utf-8"))
     found = re.findall(r"var rows=\x60([\s\S]*?)\x60;", original)
     if len(found) != 1: raise ValueError("Expected one international directory dataset")
     rows = [line.split("|") for line in found[0].strip().splitlines()]
@@ -223,6 +288,6 @@ def main() -> None:
         "const fs=require('fs'),m=require('./scripts/materialize-public-shell-first-paint-v1.js');"
         "const p='links/index.html';fs.writeFileSync(p,m.materialize(fs.readFileSync(p,'utf8'),p));"],
         cwd=ROOT, check=True)
-    print(f"CN directory cloned: 100 enterprises / 5 categories; markup + styles + search; public bridge only; rev={version}")
+    print(f"CN directory cloned: 100 enterprises / 5 categories + 4 unranked electrical references; markup + styles + search; public bridge only; rev={version}")
 
 if __name__ == "__main__": main()

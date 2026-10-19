@@ -10,32 +10,21 @@ function chinaFooterRoutes(dir=path.join(process.cwd(),'cn-site')){
   return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
     const file=path.join(dir,entry.name);
     if(entry.isDirectory())return chinaFooterRoutes(file);
-    if(!entry.name.endsWith('.html')||!fs.readFileSync(file,'utf8').includes('class="footer-home"'))return [];
+    if(!entry.name.endsWith('.html')||!fs.readFileSync(file,'utf8').includes('data-qily-footer-contract="home,top,back,previous,search,current,contact"'))return [];
     const relative=path.relative(path.join(process.cwd(),'cn-site'),file).replace(/\\/g,'/');
     return ['/'+relative.replace(/index\.html$/,'')];
   }).sort();
 }
 const chinaRoutes=chinaFooterRoutes();
 
-test('China desktop footer distributes controls and its site name returns home',async({page})=>{
+test('China desktop shared actions retain filings and home returns to China',async({page})=>{
   await page.setViewportSize({width:1600,height:1000});
   await page.goto(cnBase+'/knowledge/',{waitUntil:'domcontentloaded'});
-  const home=page.locator('.footer-home');
-  await expect(home).toBeVisible();
-  await expect(home).toHaveAttribute('href','/');
-  const geometry=await page.locator('.footer-inner').evaluate(el=>{
-    const shell=el.getBoundingClientRect();
-    const items=[...el.querySelectorAll('a,button')].map(e=>e.getBoundingClientRect());
-    const actionButtons=[...el.querySelectorAll('.footer-actions>button')].map(e=>e.getBoundingClientRect());
-    return {left:items[0].left-shell.left,right:shell.right-items.at(-1).right,gaps:items.slice(1).map((r,i)=>r.left-items[i].right),actionWidths:actionButtons.map(r=>r.width)};
-  });
-  expect(Math.abs(geometry.left)).toBeLessThanOrEqual(1);
-  expect(Math.abs(geometry.right)).toBeLessThanOrEqual(1);
-  expect(Math.max(...geometry.gaps)-Math.min(...geometry.gaps)).toBeLessThanOrEqual(1);
-  expect(Math.min(...geometry.gaps)).toBeGreaterThan(8);
-  expect(geometry.actionWidths).toHaveLength(2);
-  expect(Math.abs(geometry.actionWidths[0]-geometry.actionWidths[1])).toBeLessThanOrEqual(1);
-  await home.click();
+  const footer=page.locator('footer.footer');
+  await expect(footer.locator('#floatDock button')).toHaveCount(7);
+  await expect(footer.locator('.footer-home')).toHaveCount(0);
+  await expect(footer.locator('.footer-records>a')).toHaveCount(2);
+  await footer.locator('[data-action="home"]').click();
   await expect(page).toHaveURL(cnBase+'/');
 });
 
@@ -217,22 +206,15 @@ for(const width of [320,360,390,1041,1100,1600]){
       const g=await footer.evaluate(el=>{
         const controls=[...el.querySelectorAll('a,button')].map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,width:r.width,overflow:e.scrollWidth-e.clientWidth};});
         const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
-        return{viewport:innerWidth,controls,buttons:buttons.map(r=>r.width),buttonTops:buttons.map(r=>r.top),homeTop:el.querySelector('.footer-home').getBoundingClientRect().top};
+        return{viewport:innerWidth,controls,buttons:buttons.map(r=>r.width),buttonTops:buttons.map(r=>r.top),homeTop:el.querySelector('[data-action="home"]').getBoundingClientRect().top};
       });
       for(const c of g.controls){
         expect(c.left).toBeGreaterThanOrEqual(0);
         expect(c.right).toBeLessThanOrEqual(g.viewport);
         expect(c.overflow).toBeLessThanOrEqual(1);
       }
-      expect(g.buttons).toHaveLength(2);
-      if(width<=760){
-        // #576 keeps all three controls on the first mobile row. Intrinsic
-        // widths fit their 17px labels, so 分享当前 is two glyphs wider than 顶部.
-        expect(g.buttons[1]-g.buttons[0]).toBeCloseTo(34,0);
-        for(const top of g.buttonTops)expect(Math.abs(top-g.homeTop),'mobile controls share a row, including the 1px hover lift').toBeLessThanOrEqual(1.5);
-      }else{
-        expect(g.buttons[0]).toBeCloseTo(g.buttons[1],0);
-      }
+      expect(g.buttons).toHaveLength(7);
+      expect(Math.max(...g.buttons)-Math.min(...g.buttons)).toBeLessThanOrEqual(1);
       await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
       // Briefs are local-first; resources are a local 100-company directory.
       // Check the actual final content link against the fixed China footer.
@@ -261,7 +243,7 @@ for(const width of [320,390,412,1180,1600]){
     const allPages=width===390||width===1600;
     expect(chinaRoutes.length).toBeGreaterThanOrEqual(24);
     const targets=[
-      ...(allPages?chinaRoutes:['/resources/']).map(route=>({base:cnBase,route,shell:'.footer',home:'.footer-home',controls:'.footer-home,.footer-actions>button,.footer-records>a,.footer-records>a>span',count:6})),
+      ...(allPages?chinaRoutes:['/resources/']).map(route=>({base:cnBase,route,shell:'.footer',home:null,controls:'.footer-actions>button',count:7})),
       ...(allPages?bridgeRoutes:['/links/cn-public/']).map(route=>({base:intBase,route,shell:'.cn-bridge-footer',home:null,controls:'.cn-bridge-footer-actions>button',count:2}))
     ];
     const publicPage=await context.newPage();
@@ -286,7 +268,7 @@ for(const width of [320,390,412,1180,1600]){
         await expect(home,label+' hovered site label').toHaveCSS('text-decoration-line','none');
         await home.focus();
         await expect(home,label+' focused site label').toHaveCSS('text-decoration-line','none');
-      }else{
+      }else if(target.shell==='.cn-bridge-footer'){
         await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
         await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="top"]')).toHaveCount(1);
         await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="share"]')).toHaveCount(1);

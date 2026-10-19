@@ -238,9 +238,9 @@ for(const rel of cnPages){
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
   const footerBlock=(html.match(/<footer class="footer"(?: data-qily-footer-filing="none")?>[\s\S]*?<\/footer>/)||[])[0]||'';
   assert(footerBlock, rel+' must keep the shared China footer component.');
-  assert(footerBlock.includes('<a class="footer-home" href="/"')&&footerBlock.includes('>精益制造经验分享</a>'), rel+' footer site label must link to the China homepage.');
+  assert(!footerBlock.includes('class="footer-home"'), rel+' retired footer site label must be removed.');
   const footerActions=[...footerBlock.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
-  assert(JSON.stringify(footerActions)===JSON.stringify(['top','share']), rel+' China footer must keep only 顶部 / 分享当前.');
+  assert(JSON.stringify(footerActions)===JSON.stringify(['home','top','back','previous','search','current','contact']), rel+' China footer must use the shared seven actions.');
   const filingLinks=[...footerBlock.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
   assert(!footerBlock.includes('data-qily-footer-filing="none"'), rel+' China-domain pages must not use a filing-free footer.');
   assert(filingLinks.length===2, rel+' must retain exactly two official filing links in the footer.');
@@ -265,11 +265,9 @@ assert(cnFooterCss.includes('QILY-CN-FOOTER-REDLINE-V12'), 'CN annotated footer 
 assert(cnFooterCss.includes('QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13'), 'CN top/share equal-width authority is missing.');
 assert(cnFooterCss.includes('width:calc(4em + 24px)!important'), 'CN top/share controls must share one canonical width.');
 assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
-for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
-assert(!cnFooterJs.includes("['previous','上一网页']"), 'CN footer must not restore 上一网页.');
-for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
-assert(cnFooterJs.includes('QilyLean CN Footer Actions V6'), 'CN canonical two-action runtime marker is missing.');
-assert(cnFooterJs.includes("top,share"), 'CN footer runtime must own the two-action contract.');
+assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer stylesheet missing.');
+assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
+assert(cnFooterJs.includes("'/about/#contact'"), 'China contact must retain its original destination.');
 
 const cnHome=read('cn-site/index.html');
 for(const marker of [

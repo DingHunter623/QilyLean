@@ -157,10 +157,12 @@ def build_root_relative_re(routes: set[str]) -> re.Pattern[str] | None:
     if not bare_routes:
         return None
     alternation = "|".join(re.escape(route) for route in bare_routes)
+    # A route must be a complete quoted value. Searching arbitrary source text
+    # also matches the tail of JavaScript regex literals (e.g. \/improvements),
+    # where adding a slash changes the regex delimiter and breaks navigation.
     return re.compile(
-        rf"(?<![A-Za-z0-9._~%+-])(?P<route>{alternation})"
-        rf"(?P<suffix>[?#][^\s\"'<>]*)?"
-        rf"(?P<boundary>[\"'<>\s),\]}};]|$)"
+        rf"(?P<quote>[\"'`])(?P<route>{alternation})"
+        rf"(?P<suffix>[?#][^\s\"'`<>]*)?(?P=quote)"
     )
 
 
@@ -173,9 +175,9 @@ def normalize_root_relative(text: str, route_re: re.Pattern[str] | None) -> tupl
         nonlocal changed
         route = match.group("route")
         suffix = match.group("suffix") or ""
-        boundary = match.group("boundary")
+        quote = match.group("quote")
         changed += 1
-        return f"{route}/{suffix}{boundary}"
+        return f"{quote}{route}/{suffix}{quote}"
 
     return route_re.sub(repl, text), changed
 

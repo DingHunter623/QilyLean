@@ -1,0 +1,74 @@
+{
+  "version": "20261019-aircraft-refresh-v1",
+  "format": "webp-lossless",
+  "sites": {
+    "international": {
+      "source": "飞机模型国际站.png",
+      "source_url": "/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E5%9B%BD%E9%99%85%E7%AB%99.png",
+      "sha256": "e0e02d0872f65faf450af2411d4b31efb8258e63d1ccff545c0f02f56e8ce786",
+      "bytes": 7864872,
+      "width": 2736,
+      "height": 1536,
+      "variants": [
+        {
+          "path": "assets/aircraft/aircraft-international-20261019-912.webp",
+          "url": "/assets/aircraft/aircraft-international-20261019-912.webp",
+          "width": 912,
+          "height": 512,
+          "bytes": 525300,
+          "sha256": "a02c8b25f28bf135fbd153796e784148d8d05c62ec4313d800cc6803883a0881"
+        },
+        {
+          "path": "assets/aircraft/aircraft-international-20261019-1824.webp",
+          "url": "/assets/aircraft/aircraft-international-20261019-1824.webp",
+          "width": 1824,
+          "height": 1024,
+          "bytes": 1920266,
+          "sha256": "c3c71fec9e54d0cecb905a174bae8b31d935a1649deef7c1e4765ef0ea546242"
+        },
+        {
+          "path": "assets/aircraft/aircraft-international-20261019-2736.webp",
+          "url": "/assets/aircraft/aircraft-international-20261019-2736.webp",
+          "width": 2736,
+          "height": 1536,
+          "bytes": 4138458,
+          "sha256": "104cb23bc75219bb86c4683502a9793dcbc5455079eba96fcbdc858c6309a802"
+        }
+      ]
+    },
+    "china": {
+      "source": "cn-site/飞机模型中国站.png",
+      "source_url": "/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E4%B8%AD%E5%9B%BD%E7%AB%99.png",
+      "sha256": "02d9b963986c6b5470ccc4dfad25fe76697876f521c40767a7b3cf0296d32bd7",
+      "bytes": 7664599,
+      "width": 2736,
+      "height": 1536,
+      "variants": [
+        {
+          "path": "cn-site/assets/aircraft/aircraft-china-20261019-912.webp",
+          "url": "/assets/aircraft/aircraft-china-20261019-912.webp",
+          "width": 912,
+          "height": 512,
+          "bytes": 520136,
+          "sha256": "2adbe5df51f3931ebf99449bef1a55ee50585deeaf855c26b2caa5931decbba0"
+        },
+        {
+          "path": "cn-site/assets/aircraft/aircraft-china-20261019-1824.webp",
+          "url": "/assets/aircraft/aircraft-china-20261019-1824.webp",
+          "width": 1824,
+          "height": 1024,
+          "bytes": 1819492,
+          "sha256": "2dd1268211656d437213eb3194c55310d2d5afd81acdc4b5cf65ca293fa10511"
+        },
+        {
+          "path": "cn-site/assets/aircraft/aircraft-china-20261019-2736.webp",
+          "url": "/assets/aircraft/aircraft-china-20261019-2736.webp",
+          "width": 2736,
+          "height": 1536,
+          "bytes": 4031350,
+          "sha256": "87c6a0a04124c2c7c9c455aef875984562cb96eff739849e12cf58ed49fdbc09"
+        }
+      ]
+    }
+  }
+}
