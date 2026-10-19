@@ -138,7 +138,7 @@ jobs:
 
   validate-and-deploy:
     if: (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[translation-only]'))
-    timeout-minutes: 50
+    timeout-minutes: 120
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -334,7 +334,7 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
-        timeout-minutes: 35
+        timeout-minutes: 75
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -344,6 +344,10 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           CONTROL_PATH="$HOME/.ssh/qilylean-cn-%r@%h:%p"
           SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -o ControlMaster=auto -o ControlPersist=30m -o ControlPath="$CONTROL_PATH")
+          # One persistent SSH master avoids opening a separate overseas TCP
+          # connection for every chunk and allows bounded parallel transfers.
+          ssh -MNf "${SSH_OPTS[@]}" -o ControlMaster=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"
+          trap 'ssh "${SSH_OPTS[@]}" -O exit "$USER_NAME@$CN_PREPROD_HOST" >/dev/null 2>&1 || true' EXIT
 
           copy_with_retry() {
             local src="$1"
@@ -370,9 +374,22 @@ jobs:
 
           timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz; mkdir -p /tmp/qilylean-cn-translation'
 
+          # Upload at most three independent 512 KiB streams at once; preserve
+          # the final full-archive SHA-256 check before switching any release.
+          batch=()
           for part in /tmp/qilylean-cn-site.part.*; do
-            copy_with_retry "$part" "/tmp/$(basename "$part")"
+            copy_with_retry "$part" "/tmp/$(basename "$part")" &
+            batch+=("$!")
+            if ((${#batch[@]} == 3)); then
+              failed=0
+              for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
+              test "$failed" -eq 0
+              batch=()
+            fi
           done
+          failed=0
+          for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
+          test "$failed" -eq 0
           copy_with_retry cn-site/scripts/server-bootstrap.sh /tmp/bootstrap-qilylean-cn.sh
           copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
