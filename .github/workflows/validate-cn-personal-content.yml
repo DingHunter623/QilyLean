@@ -302,6 +302,7 @@ jobs:
 
       - name: Browser-verify source-content clone and preserved China controls
         if: steps.source-parity.outputs.enabled == 'true'
+        timeout-minutes: 8
         env:
           QILY_CN_BASE: http://127.0.0.1:4174
         run: |
@@ -336,6 +337,7 @@ jobs:
                 const page=await context.newPage();
                 try{
                   for(const route of ['/','/notes/','/trust/','/knowledge/','/briefs/','/briefs/archive/2026-10-18/','/archive/practice/mold-warehouse/','/archive/records/work/','/about/#contact']){
+                    console.log('Checking source clone:',width,route);
                     const response=await page.goto(base+route,{waitUntil:'networkidle'});
                     assert(response&&response.ok(),route+' must load');
                     await page.locator('#qilyCnTranslateV3').waitFor({state:'visible'});
@@ -370,15 +372,22 @@ jobs:
                       assert.equal(await page.locator('main img').count(),8);
                       for(const image of await page.locator('main img').all()){
                         await image.scrollIntoViewIfNeeded();
-                        await image.evaluate(img=>img.complete&&img.naturalWidth?true:new Promise((resolve,reject)=>{img.onload=()=>resolve(true);img.onerror=()=>reject(new Error('Photo failed: '+img.src));}));
+                        await image.evaluate(img=>{
+                          if(img.complete){if(img.naturalWidth)return true;throw new Error('Photo failed: '+img.currentSrc);}
+                          return new Promise((resolve,reject)=>{
+                            const timer=setTimeout(()=>reject(new Error('Photo load timed out: '+img.currentSrc)),10000);
+                            img.onload=()=>{clearTimeout(timer);resolve(true);};
+                            img.onerror=()=>{clearTimeout(timer);reject(new Error('Photo failed: '+img.currentSrc));};
+                          });
+                        });
                       }
                     }
                     if(route==='/archive/practice/mold-warehouse/'){
                       const video=page.locator('main video');
                       assert.equal(await video.count(),1);
                       await video.scrollIntoViewIfNeeded();
-                      await video.evaluate(async el=>{el.muted=true;await el.play();});
-                      await page.waitForFunction(()=>{const v=document.querySelector('main video');return v.currentTime>0&&!v.paused;});
+                      await video.evaluate(async el=>{el.muted=true;await Promise.race([el.play(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Project video did not start')),10000))]);});
+                      await page.waitForFunction(()=>{const v=document.querySelector('main video');return v.currentTime>0&&!v.paused;},null,{timeout:15000});
                       await video.evaluate(el=>el.pause());
                     }
                     await page.screenshot({path:path.join(evidence,(route==='/'?'home':route.replace(/[^a-zA-Z0-9]+/g,'-'))+'-'+width+'.png')});
