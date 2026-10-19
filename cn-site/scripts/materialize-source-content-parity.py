@@ -21,7 +21,7 @@ CN = ROOT / 'cn-site'
 sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
-TRACKED = set(subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines())
+TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
 VERSION = '20261018-source-content-parity-v1'
 PRIMARY = {
     'index.html': ('/', 'home'),

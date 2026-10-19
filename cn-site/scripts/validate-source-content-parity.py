@@ -189,6 +189,13 @@ def main():
     expected.add('moments/index.html')
     actual = {row['source'] for row in pages}
     require(expected <= actual, 'Public source pages missing from clone manifest: ' + ', '.join(sorted(expected - actual)))
+    photos = {'moments/work/index.html': 8, 'moments/team/index.html': 5,
+              'moments/business/index.html': 9, 'moments/life/index.html': 5}
+    for source, count in photos.items():
+        row = next((row for row in pages if row['source'] == source), None)
+        require(row and row['images'] == count, 'Original photo gallery is incomplete: ' + source)
+    require(next(row for row in pages if row['source'] == 'projects/mold-warehouse/index.html')['videos'] == 1,
+            'The original mold-warehouse project video is missing')
     def verify_local_page(row):
         source = ROOT / row['source']
         require(source.is_file() and parity.file_hash(source) == row['source_html_sha256'], 'Source HTML changed after materialization: ' + row['source'])
