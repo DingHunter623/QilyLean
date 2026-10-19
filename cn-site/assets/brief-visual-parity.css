@@ -389,3 +389,87 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
 .w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
   width:1%!important;white-space:nowrap!important;
 }
+
+/* QILY-CN-BRIEF-HEADER-PARITY-20261019
+ * International curated-brief sample is the VI authority for knowledge briefs.
+ * Restore the international top banner, navigation order and WHITE article
+ * hero without touching the original article, media, translation or CN footer.
+ * Scope is intentionally limited to source pages that use knowledge-brief.
+ */
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main[data-qily-knowledge-brief]{
+  position:relative!important;
+  padding-top:184px!important;
+  background:#eef7f5!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main[data-qily-knowledge-brief]::before{
+  content:"CURATED ENGINEERING BRIEF"!important;display:block!important;
+  position:absolute!important;z-index:1!important;top:0!important;left:0!important;
+  width:100%!important;height:184px!important;box-sizing:border-box!important;
+  padding:22px max(18px,calc((100% - 1180px)/2)) 0!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  background:linear-gradient(102deg,#073c47 0%,#0f4b5a 48%,#168b94 100%)!important;
+  font-size:14px!important;font-weight:950!important;line-height:1.2!important;letter-spacing:.10em!important;
+  pointer-events:none!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main[data-qily-knowledge-brief]::after{
+  content:"精选简报"!important;display:block!important;position:absolute!important;
+  z-index:2!important;top:54px!important;left:max(18px,calc((100% - 1180px)/2))!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font-size:clamp(34px,3.2vw,48px)!important;font-weight:950!important;line-height:1!important;
+  letter-spacing:-.02em!important;pointer-events:none!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-top-nav{
+  position:static!important;
+  padding:clamp(28px,3vw,46px) clamp(18px,2.2vw,56px) 18px!important;
+  border:0!important;background:#eef7f5!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-top-nav[data-brief-meta]::before{
+  content:attr(data-brief-meta)!important;display:block!important;
+  position:absolute!important;top:112px!important;left:max(18px,calc((100% - 1180px)/2))!important;
+  z-index:3!important;color:#edf9f6!important;-webkit-text-fill-color:#edf9f6!important;
+  font-size:clamp(17px,1.5vw,20px)!important;font-weight:600!important;line-height:1.45!important;
+  pointer-events:none!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero{
+  overflow:visible!important;
+  padding:0 clamp(18px,2.2vw,56px) clamp(24px,2.5vw,36px)!important;
+  background:#eef7f5!important;
+  color:#0f4b5a!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero::after{display:none!important;content:none!important}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero>.module-inner{
+  box-sizing:border-box!important;
+  padding:clamp(28px,3.4vw,48px)!important;
+  border:1px solid #cfe0df!important;border-radius:28px!important;
+  background:#fff!important;box-shadow:0 16px 44px rgba(15,75,90,.085)!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .module-eyebrow{
+  display:inline-flex!important;width:auto!important;margin:0 0 12px!important;
+  padding:7px 12px!important;border:1px solid #e4c885!important;border-radius:999px!important;
+  background:#fff7e4!important;color:#8b6830!important;-webkit-text-fill-color:#8b6830!important;
+  font-size:15px!important;font-weight:900!important;letter-spacing:.04em!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero h1{
+  max-width:none!important;margin:18px 0 14px!important;
+  color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  font-size:clamp(28px,2.15vw,34px)!important;line-height:1.18!important;letter-spacing:-.02em!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .module-lead{
+  margin:0!important;color:#3a5756!important;-webkit-text-fill-color:#3a5756!important;
+  font-size:clamp(18px,1.4vw,21px)!important;line-height:1.8!important;font-weight:650!important;
+}
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .lean-brief-date,
+html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero .lean-brief-date time{
+  color:#182420!important;-webkit-text-fill-color:#182420!important;
+}
+@media(max-width:760px){
+  html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-top-nav{
+    padding:26px 18px 16px!important;
+  }
+  html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero{
+    padding:0 18px 24px!important;
+  }
+  html:root:root:root body.qily-knowledge-brief-page[data-qily-brief-parity] #main#main#main .knowledge-brief-hero>.module-inner{
+    padding:24px 18px!important;border-radius:18px!important;
+  }
+}
