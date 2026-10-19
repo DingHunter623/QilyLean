@@ -63,7 +63,7 @@ GROUPS = OrderedDict([
 
 COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">"""
 
-COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>"""
+COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone&anchors=20261013-v1"></script>"""
 
 def header(current: str) -> str:
     nav = [
@@ -76,8 +76,9 @@ def header(current: str) -> str:
         ("/trust/", "trust", "信任中心"),
         ("/knowledge/", "knowledge", "知识资产"),
         ("/resources/", "resources", "资源协同"),
+        ("/about/#contact", "contact", "联系我们"),
     ]
-    current = {"briefs": "knowledge", "about": "trust"}.get(current, current)
+    current = {"briefs": "knowledge", "about": "contact"}.get(current, current)
     links = []
     for href, key, label in nav:
         active = ' aria-current="page"' if key == current else ""
@@ -368,59 +369,61 @@ def main() -> None:
         encoding="utf-8",
     )
 
-    # Knowledge index: convert the old hidden archive CTA into a professional matrix.
-    knowledge_path = CN / "knowledge/index.html"
-    knowledge = add_css_link(knowledge_path.read_text(encoding="utf-8"))
-    # Cache-bust this page only; do not change shared CN styles on other pages.
-    knowledge = knowledge.replace(
-        '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1',
-        '/assets/content-mirror.css?v=20261016-knowledge-route-feedback-v3&anchors=20261013-v1',
-    )
-    knowledge = remove_legacy_archive_section(knowledge)
-    global_hub = international_knowledge_hub(brief_total)
-    global_start = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:START -->"
-    global_end = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:END -->"
-    if global_start not in knowledge:
-        knowledge_intro = '<section class="section"><div class="content"><div class="section-head"><small>KNOWLEDGE MAP｜知识地图</small>'
-        if knowledge_intro not in knowledge:
-            raise ValueError("China knowledge page placement anchor changed")
-    knowledge = replace_managed(knowledge, global_start, global_end, global_hub,
-                                fallback_before=knowledge_intro if global_start not in knowledge else "</main>")
-    knowledge_cards = []
-    for key, meta in GROUPS.items():
-        if key == "briefs":
-            continue
-        knowledge_cards.append(card(meta["name"], f'/archive/categories/{meta["slug"]}/', meta["desc"], len(grouped[key])))
-    knowledge_block = f'''<section class="section" id="cn-global-knowledge-architecture" data-qily-generated-total="{total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{nonbrief_total}篇专题资料 + {brief_total}篇精选简报，已进入中国站可发现体系</h2><p>国际站符合个人知识站边界的公开内容已经同步到国内服务器，并按制造业专业维度组织，不再隐藏在技术归档目录中。</p></div><div class="catalog-grid">{''.join(knowledge_cards)}</div><div class="catalog-actions"><a class="btn primary" href="/archive/">进入完整知识库</a><a class="btn" href="/briefs/">浏览{brief_total}篇精选简报</a></div></div></section>'''
-    knowledge = replace_managed(
-        knowledge,
-        "<!-- QILY-CN-KNOWLEDGE-ASSET-CATALOG:START -->",
-        "<!-- QILY-CN-KNOWLEDGE-ASSET-CATALOG:END -->",
-        knowledge_block,
-    )
-    knowledge_path.write_text(knowledge, encoding="utf-8")
+    # Source-clone releases replace these two legacy front shelves in the final pass.
+    if not (CN / "scripts/materialize-source-content-parity.py").is_file():
+        # Knowledge index: convert the old hidden archive CTA into a professional matrix.
+        knowledge_path = CN / "knowledge/index.html"
+        knowledge = add_css_link(knowledge_path.read_text(encoding="utf-8"))
+        # Cache-bust this page only; do not change shared CN styles on other pages.
+        knowledge = knowledge.replace(
+            '/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1',
+            '/assets/content-mirror.css?v=20261016-knowledge-route-feedback-v3&anchors=20261013-v1',
+        )
+        knowledge = remove_legacy_archive_section(knowledge)
+        global_hub = international_knowledge_hub(brief_total)
+        global_start = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:START -->"
+        global_end = "<!-- QILY-CN-INTERNATIONAL-KNOWLEDGE-HUB:END -->"
+        if global_start not in knowledge:
+            knowledge_intro = '<section class="section"><div class="content"><div class="section-head"><small>KNOWLEDGE MAP｜知识地图</small>'
+            if knowledge_intro not in knowledge:
+                raise ValueError("China knowledge page placement anchor changed")
+        knowledge = replace_managed(knowledge, global_start, global_end, global_hub,
+                                    fallback_before=knowledge_intro if global_start not in knowledge else "</main>")
+        knowledge_cards = []
+        for key, meta in GROUPS.items():
+            if key == "briefs":
+                continue
+            knowledge_cards.append(card(meta["name"], f'/archive/categories/{meta["slug"]}/', meta["desc"], len(grouped[key])))
+        knowledge_block = f'''<section class="section" id="cn-global-knowledge-architecture" data-qily-generated-total="{total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{nonbrief_total}篇专题资料 + {brief_total}篇精选简报，已进入中国站可发现体系</h2><p>国际站符合个人知识站边界的公开内容已经同步到国内服务器，并按制造业专业维度组织，不再隐藏在技术归档目录中。</p></div><div class="catalog-grid">{''.join(knowledge_cards)}</div><div class="catalog-actions"><a class="btn primary" href="/archive/">进入完整知识库</a><a class="btn" href="/briefs/">浏览{brief_total}篇精选简报</a></div></div></section>'''
+        knowledge = replace_managed(
+            knowledge,
+            "<!-- QILY-CN-KNOWLEDGE-ASSET-CATALOG:START -->",
+            "<!-- QILY-CN-KNOWLEDGE-ASSET-CATALOG:END -->",
+            knowledge_block,
+        )
+        knowledge_path.write_text(knowledge, encoding="utf-8")
 
-    # Homepage: one compact, high-value discovery module; no framework redesign.
-    home_path = CN / "index.html"
-    home = add_css_link(home_path.read_text(encoding="utf-8"))
-    home_cards = [
-        card("完整知识库", "/archive/", "国际站合规公开内容的中国服务器本地承接。", total),
-        card("精选简报", "/briefs/", "按年份连续浏览制造工程简报。", brief_total),
-        card("专业知识索引", "/knowledge/", "按制造工程、精益改善、实践、数智化与工具资料浏览。", len(GROUPS)-1),
-    ]
-    home_block = f'''<section class="section alt" data-qily-generated-total="{total}" data-qily-brief-total="{brief_total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{total}篇公开知识内容已经进入中国服务器</h2><p>内容完成合规过滤后在国内本地呈现，并通过知识索引、专业分类和年度简报入口直接可发现。</p></div><div class="catalog-grid catalog-home-grid">{''.join(home_cards)}</div></div></section>'''
-    anchor = '<section class="section alt"><div class="content"><div class="section-head"><small>QILYLEAN KNOWLEDGE NETWORK'
-    start = "<!-- QILY-CN-KNOWLEDGE-ASSET-SUMMARY:START -->"
-    end = "<!-- QILY-CN-KNOWLEDGE-ASSET-SUMMARY:END -->"
-    managed = start + home_block + end
-    existing = re.compile(re.escape(start) + r"[\s\S]*?" + re.escape(end), re.I)
-    if existing.search(home):
-        home = existing.sub(managed, home, count=1)
-    elif anchor in home:
-        home = home.replace(anchor, managed + anchor, 1)
-    else:
-        home = home.replace("</main>", managed + "</main>", 1)
-    home_path.write_text(home, encoding="utf-8")
+        # Homepage: one compact, high-value discovery module; no framework redesign.
+        home_path = CN / "index.html"
+        home = add_css_link(home_path.read_text(encoding="utf-8"))
+        home_cards = [
+            card("完整知识库", "/archive/", "国际站合规公开内容的中国服务器本地承接。", total),
+            card("精选简报", "/briefs/", "按年份连续浏览制造工程简报。", brief_total),
+            card("专业知识索引", "/knowledge/", "按制造工程、精益改善、实践、数智化与工具资料浏览。", len(GROUPS)-1),
+        ]
+        home_block = f'''<section class="section alt" data-qily-generated-total="{total}" data-qily-brief-total="{brief_total}"><div class="content"><div class="section-head"><small>LOCAL KNOWLEDGE ASSETS｜本地知识资产</small><h2>{total}篇公开知识内容已经进入中国服务器</h2><p>内容完成合规过滤后在国内本地呈现，并通过知识索引、专业分类和年度简报入口直接可发现。</p></div><div class="catalog-grid catalog-home-grid">{''.join(home_cards)}</div></div></section>'''
+        anchor = '<section class="section alt"><div class="content"><div class="section-head"><small>QILYLEAN KNOWLEDGE NETWORK'
+        start = "<!-- QILY-CN-KNOWLEDGE-ASSET-SUMMARY:START -->"
+        end = "<!-- QILY-CN-KNOWLEDGE-ASSET-SUMMARY:END -->"
+        managed = start + home_block + end
+        existing = re.compile(re.escape(start) + r"[\s\S]*?" + re.escape(end), re.I)
+        if existing.search(home):
+            home = existing.sub(managed, home, count=1)
+        elif anchor in home:
+            home = home.replace(anchor, managed + anchor, 1)
+        else:
+            home = home.replace("</main>", managed + "</main>", 1)
+        home_path.write_text(home, encoding="utf-8")
 
     catalog = {
         "generated": total,

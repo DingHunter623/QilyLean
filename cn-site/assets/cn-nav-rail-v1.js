@@ -18,7 +18,8 @@ var CANONICAL_NAV_ITEMS=[
   {key:'projects',href:'/notes/',label:'代表项目'},
   {key:'trust',href:'/trust/',label:'信任中心'},
   {key:'knowledge',href:'/knowledge/',label:'知识资产'},
-  {key:'resources',href:'/resources/',label:'资源协同'}
+  {key:'resources',href:'/resources/',label:'资源协同'},
+  {key:'contact',href:'/about/#contact',label:'联系我们'}
 ];
 
 function ensureCanonicalNavigation(nav){
@@ -309,10 +310,11 @@ function routeKey(path){
   if(path==='/')return 'home';
   if(/^\/archive\/profile\/experience(?:\/|$)/.test(path))return 'experience';
   if(/^\/archive\/profile\/capabilities(?:\/|$)/.test(path))return 'capabilities';
-  if(/^\/(?:archive\/profile\/tools|archive\/improvements/)(?:\/|$)/.test(path))return 'tools';
+  if(/^\/(?:archive\/profile\/tools|archive\/improvements)(?:\/|$)/.test(path))return 'tools';
   if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
   if(/^\/(?:notes|archive\/practice)(?:\/|$)/.test(path))return 'projects';
-  if(/^\/(?:trust|about|archive\/records|archive\/learning)(?:\/|$)/.test(path))return 'trust';
+  if(/^\/about(?:\/|$)/.test(path))return 'contact';
+  if(/^\/(?:trust|archive\/records|archive\/learning)(?:\/|$)/.test(path))return 'trust';
   if(/^\/resources(?:\/|$)/.test(path))return 'resources';
   if(/^\/(?:knowledge|briefs|archive)(?:\/|$)/.test(path))return 'knowledge';
   return '';

@@ -1,9 +1,57 @@
 (function () {
   'use strict';
 
-  var roots = Array.prototype.slice.call(document.querySelectorAll('.mirror-article-fidelity, article.mirror-article'));
+  var roots = Array.prototype.slice.call(document.querySelectorAll('.mirror-article-fidelity, article.mirror-article, main[data-cn-source-content]'));
   if (!roots.length || window.__qilyCnPublicContentInteractions) return;
   window.__qilyCnPublicContentInteractions = true;
+
+  // Match the source R8 reading enhancement without taking over China controls.
+  roots.forEach(function (root) {
+    Array.prototype.forEach.call(root.querySelectorAll('table'), function (table) {
+      var dense = Array.prototype.slice.call(table.rows || [], 0, 6).some(function (row) { return row.cells.length >= 4; }) ||
+        (table.textContent || '').replace(/\s+/g, ' ').trim().length > 900;
+      table.setAttribute('data-qily-dense-table', dense ? 'true' : 'false');
+      if (table.closest('.qily-table-scroll,.table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,.matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,.opl-table-wrap')) return;
+      var wrap = document.createElement('div');
+      wrap.className = 'qily-table-scroll';
+      wrap.setAttribute('data-qily-r8-table-wrap', 'true');
+      wrap.setAttribute('role', 'region');
+      wrap.setAttribute('aria-label', table.getAttribute('aria-label') || (table.querySelector('caption') || {}).textContent || '数据表横向浏览区');
+      table.parentNode.insertBefore(wrap, table);
+      wrap.appendChild(table);
+    });
+  });
+
+  // The source directory keeps its full card layout; its filter stays local.
+  var briefInput = document.getElementById('briefSearch');
+  var briefGrid = document.getElementById('briefCuratedGrid');
+  var briefStatus = document.getElementById('briefFilterStatus');
+  if (briefInput && briefGrid) {
+    var briefCards = Array.prototype.slice.call(briefGrid.querySelectorAll('.brief-index-card'));
+    var briefYear = new URLSearchParams(location.search).get('year') || '';
+    if (!/^\d{4}$/.test(briefYear)) briefYear = '';
+    function filterBriefs() {
+      var query = briefInput.value.normalize('NFKC').trim().toLocaleLowerCase('zh-CN');
+      var visible = 0;
+      briefCards.forEach(function (card) {
+        var matches = (!briefYear || (card.getAttribute('data-date') || '').indexOf(briefYear + '-') === 0) &&
+          (!query || (card.getAttribute('data-search') || card.textContent).normalize('NFKC').toLocaleLowerCase('zh-CN').includes(query));
+        card.hidden = !matches;
+        if (matches) { card.style.removeProperty('display'); visible += 1; }
+        else card.style.setProperty('display', 'none', 'important');
+      });
+      if (briefStatus) briefStatus.textContent = (briefYear ? briefYear + '年｜' : '') +
+        (query ? '找到 ' : '当前 ') + visible + ' 篇精选';
+      document.querySelectorAll('[data-year-filter]').forEach(function (link) {
+        var active = link.getAttribute('data-year-filter') === briefYear;
+        link.classList.toggle('active', active);
+        if (active) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    }
+    briefInput.addEventListener('input', filterBriefs);
+    filterBriefs();
+  }
 
   function insideContent(node) {
     return node && roots.some(function (root) { return root.contains(node); });

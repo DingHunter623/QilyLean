@@ -27,6 +27,42 @@ on:
       - 'scripts/cn-search-discovery.py'
       - 'scripts/test-cn-search-discovery.py'
 
+      - 'index.html'
+      - 'experience/**'
+      - 'capabilities/**'
+      - 'improvements/**'
+      - 'lean-production/**'
+      - 'projects/**'
+      - 'trust/**'
+      - 'moments/**'
+      - 'knowledge/**'
+      - 'global-knowledge/**'
+      - 'AI-Knowledge/**'
+      - 'certificates/**'
+      - 'tools/times26001/**'
+      - 'qilylean/**'
+      - 'assets/**'
+      - 'styles/**'
+      - 'fonts/**'
+      - '*.css'
+      - 'ai.html'
+      - 'gbt2828.html'
+      - 'papers.html'
+      - 'standards.html'
+      - 'knowledge.html'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.webp'
+      - '**/*.gif'
+      - '**/*.svg'
+      - '**/*.mp4'
+      - '**/*.webm'
+      - '**/*.pdf'
+      - '**/*.qly'
+      - '**/*.woff'
+      - '**/*.woff2'
+      - '**/*.ttf'
 permissions:
   contents: read
   actions: read
@@ -135,10 +171,38 @@ jobs:
           chmod +x cn-site/scripts/materialize-practice-assets.sh
           cn-site/scripts/materialize-practice-assets.sh
 
+      - name: Detect source-content clone contract
+        id: source-parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f cn-site/scripts/materialize-source-content-parity.py; then
+            test -s cn-site/archive/source-content-parity.json
+            grep -Fq 'data-cn-source-parity="v1"' cn-site/index.html
+            test -f cn-site/scripts/validate-source-content-parity.py
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Production structure gate
         shell: bash
         run: |
           set -euo pipefail
+          if test "${{ steps.source-parity.outputs.enabled }}" = true; then
+            # Content is checked against source/main/style/media fingerprints,
+            # while these deployment and China-owned shell inputs stay mandatory.
+            for file in index.html robots.txt sitemap.xml favicon.ico googleb7a991efbed3aa8a.html baidu_verify_codeva-Bp0VGliFcp.html b47ed759da519bd90586a7877122d7be.txt assets/site.css assets/portal.css assets/qilylean-vi-v2.css assets/mps-beian.png assets/cn-nav-rail-v1.js assets/cn-footer-actions-v1.css assets/cn-footer-actions-v1.js assets/cn-translate-baidu-v1.js assets/cn-translate-baidu-v1.css site-content-axis-v1.css site-public-footer-type-v1.css about/index.html archive/source-content-parity.json; do
+              test -s "cn-site/$file"
+            done
+            cmp site-content-axis-v1.css cn-site/site-content-axis-v1.css
+            cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
+            grep -Fq '20261018-nav-rail-v21-public-clone' cn-site/index.html
+            grep -Fq '20261017-cn-mainland-nmt-v2' cn-site/index.html
+            grep -Fq '<urlset' cn-site/sitemap.xml
+            node --check cn-site/assets/cn-nav-rail-v1.js
+            exit 0
+          fi
           test -f cn-site/index.html
           test -f cn-site/robots.txt
           test -f cn-site/sitemap.xml
@@ -218,17 +282,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          chmod +x cn-site/scripts/validate-personal-content.sh
-          cn-site/scripts/validate-personal-content.sh cn-site
+          if test "${{ steps.source-parity.outputs.enabled }}" = true; then
+            python3 cn-site/scripts/validate-source-content-parity.py
+          else
+            chmod +x cn-site/scripts/validate-personal-content.sh
+            cn-site/scripts/validate-personal-content.sh cn-site
+          fi
 
       - name: Build complete release archive
         shell: bash
         run: |
           set -euo pipefail
+          if test "${{ steps.source-parity.outputs.enabled }}" = true; then
+            python3 - <<'PYRELEASE'
+          import hashlib, json, os
+          from pathlib import Path
+          manifest=Path('cn-site/archive/source-content-parity.json')
+          output=Path('cn-site/meta/cn-content-release.json')
+          output.parent.mkdir(parents=True,exist_ok=True)
+          output.write_text(json.dumps({'sourceCommit':os.environ['GITHUB_SHA'],
+              'sourceContentManifestSha256':hashlib.sha256(manifest.read_bytes()).hexdigest()},indent=2)+'\n')
+          PYRELEASE
+          fi
           tar --exclude='scripts' --exclude='nginx' --exclude='*.md' --exclude='assets/qilylean-aircraft-hero-cn-20260918.png' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
           sha256sum /tmp/qilylean-cn-site.tar.gz
 
       - name: Require configured Youdao application before any production change
+        if: steps.source-parity.outputs.enabled != 'true'
         env:
           YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
           YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
@@ -300,10 +380,14 @@ jobs:
           for service_file in server.py protected-tokens.json qilylean-cn-translation.service install.sh verify-production.py; do
             copy_with_retry "services/cn-translation/$service_file" "/tmp/qilylean-cn-translation/$service_file"
           done
+          for asset in cn-translate-baidu-v1.js cn-translate-baidu-v1.css; do
+            copy_with_retry "cn-site/assets/$asset" "/tmp/qilylean-cn-translation/$asset"
+          done
 
           timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              REMOTE_SHA=\$(sha256sum /tmp/qilylean-cn-site.tar.gz | cut -d' ' -f1) &&              test \"\$REMOTE_SHA\" = \"$ARCHIVE_SHA\" &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
 
       - name: Bootstrap server when required
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -315,7 +399,7 @@ jobs:
             "if [ ! -f /etc/nginx/sites-available/qilylean-cn-preprod ]; then chmod +x /tmp/bootstrap-qilylean-cn.sh && /tmp/bootstrap-qilylean-cn.sh; else echo 'Server bootstrap already present'; fi"
 
       - name: Provision and verify direct mainland Youdao service
-        continue-on-error: true
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -330,7 +414,8 @@ jobs:
           python3 -c 'import os,json,sys; json.dump({key:os.environ[key] for key in ("YOUDAO_APP_KEY","YOUDAO_APP_SECRET")},sys.stdout)' | ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import json,sys,pathlib,os; data=json.load(sys.stdin); assert all(isinstance(data.get(k),str) and data[k].strip() for k in (\"YOUDAO_APP_KEY\",\"YOUDAO_APP_SECRET\")); path=pathlib.Path(\"/tmp/qilylean-cn-youdao\"); path.mkdir(mode=0o700,exist_ok=True); os.chmod(path,0o700); dest=path/\"youdao\"; dest.write_text(json.dumps(data)); os.chmod(dest,0o600)'"
           ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo bash /tmp/qilylean-cn-translation/install.sh'
 
-      - name: Deploy release on mainland server
+      - name: Verify retained Youdao service before static-content switch
+        if: steps.source-parity.outputs.enabled == 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -338,11 +423,122 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          RELEASE_ID="${GITHUB_SHA::12}"
-          ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-            "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"
+          # Reuse systemd LoadCredential on the host; do not reinstall the working
+          # service, replace credentials, or rewrite its Nginx /translate route.
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
+
+      - name: Deploy release on mainland server
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          SOURCE_PARITY: ${{ steps.source-parity.outputs.enabled }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn)
+          if test "$SOURCE_PARITY" != true; then
+            RELEASE_ID="${GITHUB_SHA::12}"
+            ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"
+            exit 0
+          fi
+          RELEASE_ID="${GITHUB_SHA::12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          STATE="/tmp/qily-cn-content-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$RELEASE_ID' '$STATE'" <<'REMOTE'
+          set -euo pipefail
+          RELEASE_ID="$1"
+          STATE="$2"
+          [[ "$RELEASE_ID" =~ ^[a-f0-9]{12}-[0-9]+-[0-9]+$ ]]
+          [[ "$STATE" =~ ^/tmp/qily-cn-content-[0-9]+-[0-9]+$ ]]
+          SITE_ROOT=/var/www/qilylean-cn
+          # The watchdog inherits this descriptor and holds the host lock across
+          # CI steps, including runner cancellation and subsequent queued runs.
+          exec 9>"$SITE_ROOT/.content-deploy.lock"
+          flock -w 1260 9
+          PREVIOUS="$(readlink -f "$SITE_ROOT/current")"
+          [[ "$PREVIOUS" =~ ^/var/www/qilylean-cn/releases/[A-Za-z0-9_-]+$ ]]
+          test -d "$PREVIOUS"
+          EXPECTED="$SITE_ROOT/releases/$RELEASE_ID"
+          mkdir -m 700 "$STATE"
+          printf '%s\n' "$PREVIOUS" > "$STATE/previous"
+          printf '%s\n' "$EXPECTED" > "$STATE/expected"
+          trap 'status=$?; trap - EXIT; touch "$STATE/deployer-finished"; if test "$status" -ne 0; then touch "$STATE/failed"; fi; exit "$status"' EXIT
+          trap 'touch "$STATE/failed"; exit 129' HUP
+          trap 'touch "$STATE/failed"; exit 130' INT
+          trap 'touch "$STATE/failed"; exit 143' TERM
+          cat > "$STATE/watchdog.sh" <<'WATCHDOG'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          STATE="$1"
+          PREVIOUS="$2"
+          EXPECTED="$3"
+          # Keep the previous static release until all public verification passes.
+          # An abandoned/terminated CI run cannot leave unaccepted content active.
+          for attempt in $(seq 1 600); do
+            if test -f "$STATE/committed"; then touch "$STATE/accepted"; exit 0; fi
+            if test -f "$STATE/failed"; then break; fi
+            sleep 2
+          done
+          touch "$STATE/failed"
+          # Stop a late switch after cancellation/timeout. If the deployer was
+          # already switching, let its atomic rename finish before restoration.
+          for attempt in $(seq 1 30); do
+            if test -f "$STATE/switched" || test -f "$STATE/deployer-finished"; then break; fi
+            sleep 1
+          done
+          rollback() {
+            local current
+            current="$(readlink -f /var/www/qilylean-cn/current)"
+            if test "$current" = "$EXPECTED"; then
+              test -d "$PREVIOUS" || return 1
+              local next="/var/www/qilylean-cn/.current-content-rollback-${EXPECTED##*/}"
+              ln -sfn "$PREVIOUS" "$next" || return 1
+              mv -Tf "$next" /var/www/qilylean-cn/current || return 1
+              sudo nginx -t || return 1
+            elif test "$current" != "$PREVIOUS"; then
+              echo 'A different release owns current; refusing to overwrite it.' >&2
+              return 1
+            fi
+            test "$(readlink -f /var/www/qilylean-cn/current)" = "$PREVIOUS" || return 1
+            test "$(curl --silent --show-error --connect-timeout 5 --max-time 20 --resolve qilylean.cn:443:127.0.0.1 -o /dev/null -w '%{http_code}' https://qilylean.cn/)" = 200
+          }
+          if rollback; then
+            touch "$STATE/rolled-back"
+            echo 'Previous static release restored; translation service was not changed.'
+          else
+            touch "$STATE/rollback-failed"
+            echo "Static rollback incomplete; recovery state retained at $STATE" >&2
+            exit 1
+          fi
+          WATCHDOG
+          chmod 700 "$STATE/watchdog.sh"
+          nohup bash "$STATE/watchdog.sh" "$STATE" "$PREVIOUS" "$EXPECTED" > "$STATE/watchdog.log" 2>&1 </dev/null &
+          # The legacy deployer prunes old releases before deep acceptance.
+          # Keep this transaction's prior release intact and switch static files
+          # atomically without replacing Nginx configuration or service state.
+          test ! -e "$EXPECTED"
+          mkdir -p "$EXPECTED"
+          tar --no-same-owner -xzf /tmp/qilylean-cn-site.tar.gz -C "$EXPECTED"
+          for required in index.html robots.txt sitemap.xml favicon.ico assets/site.css assets/portal.css archive/source-content-parity.json meta/cn-content-release.json; do
+            test -s "$EXPECTED/$required"
+          done
+          grep -Fq '湘ICP备2026041143号-1' "$EXPECTED/index.html"
+          grep -Fq '湘公网安备43020002000443号' "$EXPECTED/index.html"
+          grep -Fq '<urlset' "$EXPECTED/sitemap.xml"
+          sudo nginx -t
+          test ! -f "$STATE/failed"
+          test ! -f "$STATE/rolled-back"
+          NEXT="$SITE_ROOT/.current-content-$RELEASE_ID"
+          ln -s "$EXPECTED" "$NEXT"
+          mv -Tf "$NEXT" "$SITE_ROOT/current"
+          touch "$STATE/switched"
+          test "$(readlink -f "$SITE_ROOT/current")" = "$EXPECTED"
+          test "$(curl --silent --show-error --connect-timeout 5 --max-time 20 --resolve qilylean.cn:443:127.0.0.1 -o /dev/null -w '%{http_code}' https://qilylean.cn/)" = 200
+          echo 'Static content switched provisionally; independent rollback watchdog is active.'
+          REMOTE
 
       - name: Ensure public HTTP/HTTPS site remains active
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -354,6 +550,7 @@ jobs:
             "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
 
       - name: Verify full-quality CN media mirror byte integrity
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -417,23 +614,23 @@ jobs:
           REMOTE
 
       - name: Verify fresh Youdao translation through the production CN origin
-        continue-on-error: true
         run: |
           python3 - <<'PY'
           import json, urllib.request, uuid
-          source = '同源翻译验收 ' + uuid.uuid4().hex
-          payload = json.dumps({'source_language': 'zh-CN', 'target_language': 'en', 'texts': [source]}).encode()
-          request = urllib.request.Request('https://qilylean.cn/translate', data=payload, headers={'Content-Type': 'application/json'})
-          with urllib.request.urlopen(request, timeout=65) as response:
-              result = json.load(response)
-          translations = result.get('translations', [])
-          if result.get('ok') is not True or result.get('provider') != 'youdao' or result.get('cached') is not False or len(translations) != 1 or not translations[0].strip() or translations[0] == source:
-              raise SystemExit('Production same-origin translation did not complete a fresh Youdao call.')
-          print('PASS: qilylean.cn/translate returned a fresh Youdao translation.')
+          opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+          for target in ('en','zh-TW','ja'):
+              source='同源翻译验收：制造质量与现场改善 '+uuid.uuid4().hex
+              payload=json.dumps({'source_language':'zh-CN','target_language':target,'texts':[source]}).encode()
+              request=urllib.request.Request('https://qilylean.cn/translate',data=payload,headers={'Content-Type':'application/json'})
+              with opener.open(request,timeout=65) as response:
+                  result=json.load(response)
+              translations=result.get('translations',[])
+              if result.get('ok') is not True or result.get('provider')!='youdao' or result.get('cached') is not False or len(translations)!=1 or not isinstance(translations[0],str) or not translations[0].strip() or translations[0]==source:
+                  raise SystemExit('Fresh production Youdao translation failed: '+target)
+              print('PASS: production same-origin fresh Youdao translation: '+target)
           PY
 
       - name: Mainland production NMT comparison and secret audit
-        continue-on-error: true
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
           CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
@@ -442,7 +639,51 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
 
+      - name: Verify exact source-content clone on production
+        if: steps.source-parity.outputs.enabled == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          # This compares actual served main DOM, CSS and every declared media
+          # byte with the freshly generated manifest, not implementation tokens.
+          python3 cn-site/scripts/validate-source-content-parity.py --production --origin https://qilylean.cn
+          python3 - <<'PY'
+          import hashlib,json,os,re,urllib.request
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          origin='https://qilylean.cn'
+          opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
+          def fetch(path):
+              request=urllib.request.Request(origin+path,headers={'Cache-Control':'no-cache','Accept-Encoding':'identity'})
+              with opener.open(request,timeout=45) as response:
+                  assert response.status==200,(path,response.status)
+                  assert urlsplit(response.url).hostname=='qilylean.cn','Offsite production redirect: '+path
+                  return response.read()
+          expected=Path('cn-site/archive/source-content-parity.json').read_bytes()
+          release=json.loads(fetch('/meta/cn-content-release.json?release='+os.environ['GITHUB_SHA']))
+          assert release['sourceCommit']==os.environ['GITHUB_SHA'],'Unexpected deployed source commit'
+          assert release['sourceContentManifestSha256']==hashlib.sha256(expected).hexdigest(),'Wrong release manifest identity'
+          assert fetch('/archive/source-content-parity.json?release='+os.environ['GITHUB_SHA'])==expected,'Production manifest bytes differ'
+          for route in ('/','/archive/profile/experience/','/archive/profile/capabilities/','/archive/profile/tools/','/lean/','/notes/','/trust/','/knowledge/','/resources/','/briefs/','/about/'):
+              text=fetch(route+'?release='+os.environ['GITHUB_SHA']).decode('utf-8')
+              assert len(re.findall(r'<link\b[^>]*rel=[\x22\x27]canonical[\x22\x27]',text,re.I))==1,'Missing/duplicate canonical: '+route
+              assert '湘ICP备2026041143号-1' in text and '湘公网安备43020002000443号' in text,'Filings missing: '+route
+          print('PASS: exact content-release commit, source manifest and core China URLs.')
+          PY
+
+      - name: Save exact source-content production manifest
+        if: always() && steps.source-parity.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-source-content-release-${{ github.run_id }}
+          path: |
+            cn-site/archive/source-content-parity.json
+            cn-site/meta/cn-content-release.json
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Verify production brand and interaction closure
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           VERIFY_SHA: ${{ github.sha }}
@@ -650,7 +891,7 @@ jobs:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
           required_internal_nav = [
               'href="/archive/profile/experience/" data-qily-nav-key="experience">履历主线</a>',
@@ -816,6 +1057,7 @@ jobs:
           PY
 
       - name: Verify CN knowledge discovery closure
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           VERIFY_SHA: ${{ github.sha }}
@@ -888,6 +1130,7 @@ jobs:
           PY
 
       - name: Verify original brief visual parity on production
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -934,6 +1177,7 @@ jobs:
           PY
 
       - name: Verify non-brief mirrored visual fidelity on production
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         env:
           VERIFY_SHA: ${{ github.sha }}
@@ -978,6 +1222,7 @@ jobs:
           PY
 
       - name: Verify local practice award evidence is public
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -996,6 +1241,40 @@ jobs:
           print(f'PASS: local CN award evidence is public ({len(data)} bytes, JPEG).')
           PY
           rm -f "$tmp"
+
+      - name: Accept verified static-content release
+        if: steps.source-parity.outputs.enabled == 'true'
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          STATE="/tmp/qily-cn-content-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$STATE'" <<'REMOTE'
+          set -euo pipefail
+          STATE="$1"
+          [[ "$STATE" =~ ^/tmp/qily-cn-content-[0-9]+-[0-9]+$ ]]
+          test -d "$STATE"
+          test ! -f "$STATE/failed"
+          test ! -f "$STATE/rolled-back"
+          test ! -f "$STATE/rollback-failed"
+          test "$(readlink -f /var/www/qilylean-cn/current)" = "$(cat "$STATE/expected")"
+          touch "$STATE/committed"
+          for attempt in $(seq 1 20); do
+            if test -f "$STATE/accepted"; then
+              rm -rf "$STATE"
+              echo 'PASS: source-content release committed after complete public verification.'
+              exit 0
+            fi
+            test ! -f "$STATE/rolled-back"
+            test ! -f "$STATE/rollback-failed"
+            sleep 1
+          done
+          echo 'Static-content acceptance receipt was not confirmed.' >&2
+          exit 1
+          REMOTE
 
       - name: Publish CN production verification success
         if: success()
@@ -1027,6 +1306,39 @@ jobs:
           path: ${{ runner.temp }}/cn-search-discovery/
           if-no-files-found: warn
           retention-days: 30
+
+      - name: Restore previous static release after failed acceptance
+        if: (failure() || cancelled()) && steps.source-parity.outputs.enabled == 'true'
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          STATE="/tmp/qily-cn-content-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$STATE'" <<'REMOTE'
+          set -euo pipefail
+          STATE="$1"
+          [[ "$STATE" =~ ^/tmp/qily-cn-content-[0-9]+-[0-9]+$ ]]
+          if test ! -d "$STATE"; then echo 'No provisional content release remains.'; exit 0; fi
+          if test -f "$STATE/accepted"; then echo 'Content was already fully verified and accepted.'; exit 0; fi
+          touch "$STATE/failed"
+          for attempt in $(seq 1 90); do
+            if test -f "$STATE/rolled-back"; then
+              sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production
+              echo 'PASS: prior content restored and retained Youdao translation verified.'
+              exit 0
+            fi
+            if test -f "$STATE/rollback-failed"; then
+              cat "$STATE/watchdog.log" >&2
+              exit 1
+            fi
+            sleep 2
+          done
+          echo "Rollback confirmation timed out; protected recovery state remains at $STATE" >&2
+          exit 1
+          REMOTE
 
       - name: Publish CN production verification failure
         if: failure()

@@ -126,10 +126,17 @@ if (!briefs.includes("root.querySelectorAll('script,style,header,footer,nav,form
 const cn = fs.readFileSync(path.join(root, 'cn-site', 'index.html'), 'utf8');
 if (!cn.includes('https://qilylean.com/global-knowledge/')) fail('CN homepage no longer points to the isolated Global Knowledge bridge');
 if (/https:\/\/qilylean\.com\/(?!global-knowledge\/|links\/cn-public\/)/i.test(cn)) fail('CN homepage contains a non-isolated qilylean.com route');
-const deepDiveSection = (cn.match(/<section class="section alt"><div class="content"><div class="section-head"><small>DEEP DIVES｜专题文章<\/small>[\s\S]*?<\/div><\/div><\/section>/) || [])[0] || '';
-if (!deepDiveSection) fail('CN homepage deep-dive module is missing');
-if (/\d{4}-\d{2}-\d{2}｜/.test(deepDiveSection)) fail('CN deep-dive module must remain evergreen and must not mix brief dates into article titles');
-if (/最新精选知识/.test(deepDiveSection)) fail('CN deep-dive module must not masquerade as the latest-brief feed');
+if (cn.includes('data-cn-source-parity="v1"')) {
+  if (!cn.includes('data-cn-source-content="index.html"')) fail('CN homepage must use the international public source main');
+  if (!cn.includes('href="/knowledge/" data-qily-nav-key="knowledge"')) fail('CN cloned knowledge assets must remain a local primary module');
+  const briefIndex = fs.readFileSync(path.join(root, 'cn-site/briefs/index.html'), 'utf8');
+  if (!briefIndex.includes('data-cn-source-content="qilylean/daily-insights.html"') || !/href="\/briefs\/archive\/\d{4}-\d{2}-\d{2}\/"/.test(briefIndex)) fail('CN selected briefs must use the local source directory');
+} else {
+  const deepDiveSection = (cn.match(/<section class="section alt"><div class="content"><div class="section-head"><small>DEEP DIVES｜专题文章<\/small>[\s\S]*?<\/div><\/div><\/section>/) || [])[0] || '';
+  if (!deepDiveSection) fail('CN homepage deep-dive module is missing');
+  if (/\d{4}-\d{2}-\d{2}｜/.test(deepDiveSection)) fail('CN deep-dive module must remain evergreen and must not mix brief dates into article titles');
+  if (/最新精选知识/.test(deepDiveSection)) fail('CN deep-dive module must not masquerade as the latest-brief feed');
+}
 
 if (process.exitCode) process.exit(process.exitCode);
 console.log(`Global Knowledge isolation gate passed: ${htmlFiles.length} HTML pages checked.`);

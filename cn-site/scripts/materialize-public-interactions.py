@@ -253,7 +253,6 @@ def repair_archive_links() -> list[dict]:
         "/qilylean/execution-loop.html": "/archive/reference/execution-loop/",
         "/legal/qilylean-home/privacy/": "/legal/qilylean-cn-home/privacy/",
         "/legal/qilylean-home/terms/": "/legal/qilylean-cn-home/terms/",
-        "/trust/": "/standardization/",
     }
     changes = []
     for page in source.SOURCES:
@@ -284,14 +283,8 @@ def repair_archive_links() -> list[dict]:
             if not path and fragment == "qilylean-home-qr":
                 path, fragment = "/app-support/qilylean-cn-home/", ""
                 content = "中国站 App 使用说明"
-            if path == "/trust/" and fragment:
-                # Detailed international evidence/publication rules are not
-                # mirrored. Do not redirect them to an unrelated CN section.
-                path = ""
-                unavailable = True
-            else:
-                unavailable = False
-                path = aliases.get(path, path)
+            unavailable = False
+            path = aliases.get(path, path)
             if path.startswith("/") and not path.startswith("/mirror-media/"):
                 candidate = CN / unquote(path.lstrip("/"))
                 if path.endswith("/"):
