@@ -94,6 +94,10 @@ def verify_semantics(value, row):
     require(len(re.findall(r'<video\b', main, re.I)) == row['videos'], 'Video count differs: ' + url)
     require(parity.protected_dom(value) == row['protected'], 'Destination shell or translator references changed: ' + url)
     verify_navigation(value, url)
+    footer = re.search(r'<footer\b[\s\S]*?</footer>', value, re.I)
+    require(footer and 'class="footer-home"' not in footer.group(0), 'Retired China footer returned: ' + url)
+    actions = [attrs['data-action'] for tag, attrs in Nodes(footer.group(0)).nodes if tag == 'button' and 'data-action' in attrs]
+    require(actions == ['home', 'top', 'back', 'previous', 'search', 'current', 'contact'], 'Shared footer actions changed: ' + url)
     nodes = Nodes(value).nodes
     canonical = [attrs.get('href') for tag, attrs in nodes if tag == 'link' and attrs.get('rel') == 'canonical']
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)

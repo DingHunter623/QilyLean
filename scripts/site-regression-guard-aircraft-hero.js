@@ -12,10 +12,10 @@ const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8'
 const homeMaterializer=fs.readFileSync(path.join(root,'scripts','enforce-aircraft-home-hero.js'),'utf8');
 const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
 const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
-const pngPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
-const EXPECTED_CANONICAL_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4';
-const EXPECTED_CANONICAL_BYTES=2270808;
-const ASSET_VERSION='20260918-aircraft-ultraclear-v1';
+const aircraftAssets=require('./aircraft-assets.js');
+aircraftAssets.validate();
+const approvedAircraft=aircraftAssets.artwork('international');
+const pngPath=path.join(root,approvedAircraft.source);
 const HOME_VERSION='20261015-cn-parity-home-axis-v3';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
@@ -34,16 +34,17 @@ assert(block.includes('data-qily-home-aircraft-position="extended"'),'Aircraft m
 assert(block.includes('loading="lazy"'),'Aircraft extension image must be lazy-loaded');
 assert(block.includes('fetchpriority="low"'),'Aircraft extension image must not compete with first-screen project imagery');
 assert(!/<(?:img|source)\b[^>]+(?:c919-strategy-hero|qilylean-aircraft-hero-v1\.webp)/i.test(html),'Retired aircraft image source returned');
-assert(gitBlobSha(png)===EXPECTED_CANONICAL_BLOB,'Canonical aircraft PNG is no longer the exact user-approved SSOT');
-assert(png.length===EXPECTED_CANONICAL_BYTES,'Canonical aircraft PNG byte size changed unexpectedly');
+
+
 assert(png.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Canonical aircraft asset is not PNG');
 const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
 assert(width>=1200&&height>=675,`Canonical aircraft resolution too small: ${width}x${height}`);
 const declaredDims=block.match(/width="(\d+)"\s+height="(\d+)"/);
 if(declaredDims)assert(Number(declaredDims[1])===width&&Number(declaredDims[2])===height,'Aircraft intrinsic dimensions do not match the latest SSOT');
-assert(block.includes(`qilylean-aircraft-hero-approved-20260826.png?v=${ASSET_VERSION}`),'Latest canonical PNG fallback missing');
+assert(block.includes(aircraftAssets.pngUrl('international')),'Latest canonical PNG fallback missing');
+assert(block.includes(aircraftAssets.srcset('international')),'Responsive lossless aircraft delivery is missing');
 assert((block.match(/<picture\b/g)||[]).length===1,'Aircraft extension must contain exactly one picture wrapper');
-assert((block.match(/<source\b/g)||[]).length===0,'Aircraft extension must not reference the retired WebP source');
+assert((block.match(/<source\b/g)||[]).length===1,'Aircraft extension must use one current responsive WebP source');
 assert((block.match(/<img\b/g)||[]).length===1,'Aircraft extension must contain exactly one PNG fallback');
 
 /* First-screen contract: the HTML itself already owns the approved new Hero; runtime cannot be responsible for replacing an old first frame. */

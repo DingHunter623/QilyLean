@@ -46,10 +46,7 @@ SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequence
 CSS_GROUPS={"media","supports","container","layer"}
 # Brand imagery belongs to the destination site; authored engineering diagrams
 # continue to use their original local mirror assets.
-CN_BRAND_MEDIA={
-    "assets/qilylean-aircraft-hero-approved-20260826.png":
-        "/assets/qilylean-aircraft-hero-cn-v2-20260919.png",
-}
+CN_BRAND_MEDIA={'飞机模型国际站.png': '/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B%E4%B8%AD%E5%9B%BD%E7%AB%99.png', 'assets/aircraft/aircraft-international-20261019-912.webp': '/assets/aircraft/aircraft-china-20261019-912.webp', 'assets/aircraft/aircraft-international-20261019-1824.webp': '/assets/aircraft/aircraft-china-20261019-1824.webp', 'assets/aircraft/aircraft-international-20261019-2736.webp': '/assets/aircraft/aircraft-china-20261019-2736.webp'}
 
 def split_css(value:str, delimiters:str)->list[str]:
     """Split CSS only outside strings, functions and attribute selectors.

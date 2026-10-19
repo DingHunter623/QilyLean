@@ -613,11 +613,15 @@ def main():
     assert hashlib.sha256(main_markup(about.read_text()).encode()).hexdigest() == contact_sha, 'About/contact DOM changed'
     destination_assets = []
     about_html = about.read_text()
-    for basename in ('cn-translate-baidu-v1.js', 'cn-translate-baidu-v1.css', 'cn-footer-actions-v1.js', 'cn-footer-actions-v1.css', 'cn-nav-rail-v1.js', 'qilylean-vi-v2.css', 'mps-beian.png'):
+    for basename in ('cn-translate-baidu-v1.js', 'cn-translate-baidu-v1.css', 'cn-footer-actions-v1.js', 'cn-footer-actions-v1.css', 'cn-nav-rail-v1.js', 'qilylean-vi-v2.css', 'mps-beian.png', 'site-native-prefetch-v1.js'):
         asset = CN / 'assets' / basename
         match_asset = re.search(r'(?:src|href)=[\x22\x27](/assets/' + re.escape(basename) + r'[^\x22\x27]*)', about_html)
         if not asset.is_file() or not match_asset: raise RuntimeError('Protected destination asset missing: ' + basename)
         destination_assets.append({'source': 'cn-site/assets/' + basename, 'url': html.unescape(match_asset.group(1)), 'sha256': file_hash(asset), 'bytes': asset.stat().st_size})
+    for url_asset in sorted(set(visual.CN_BRAND_MEDIA.values())):
+        asset = CN / unquote(urlsplit(url_asset).path).lstrip('/')
+        if not asset.is_file(): raise RuntimeError('China aircraft asset missing: ' + url_asset)
+        destination_assets.append({'source': asset.relative_to(ROOT).as_posix(), 'url': url_asset, 'sha256': file_hash(asset), 'bytes': asset.stat().st_size})
     (CN / 'archive/source-content-parity.json').write_text(json.dumps({'version': VERSION, 'pages': records, 'styles': list(STYLE_RECORDS.values()), 'excluded_panels': EXCLUDED, 'media_files': media_records,
         'destination_assets': destination_assets, 'protected': {'about_main_sha256': contact_sha, 'about_shell': protected_dom(about_html)}, 'media': sorted(MEDIA)}, ensure_ascii=False, indent=2))
     print(f'Source content parity: {len(records)} pages; {len(MEDIA)} original media paths; {len(EXCLUDED)} commercial panels excluded')

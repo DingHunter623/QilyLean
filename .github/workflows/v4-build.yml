@@ -62,27 +62,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
-          test -f "$SOURCE"
-          ACTUAL_BLOB="$(git hash-object "$SOURCE")"
-          test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
-          node - <<'NODE'
-          const fs=require('fs');
-          const source=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
-          const signature=Buffer.from([137,80,78,71,13,10,26,10]);
-          if(!source.subarray(0,8).equals(signature)) throw new Error('Canonical homepage aircraft artwork is not PNG');
-          const width=source.readUInt32BE(16),height=source.readUInt32BE(20);
-          if(width<1200||height<675) throw new Error(`Canonical homepage aircraft resolution too small: ${width}x${height}`);
-          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; ${width}x${height}; single canonical path enforced.`);
-          NODE
+          node scripts/aircraft-assets.js
 
       - name: Materialize approved aircraft brand hero
         run: |
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1' index.html
+          grep -q 'aircraft-international-20261019-2736.webp' index.html
           node scripts/site-regression-guard-aircraft-hero.js
 
       - name: Guard sitewide floating dock gold identity

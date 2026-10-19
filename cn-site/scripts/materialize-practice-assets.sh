@@ -56,6 +56,8 @@ python3 "$CN_ROOT/scripts/build-content-discovery.py"
 # The current public-content contract owns complete source mains and layouts.
 # Legacy front-shelf wording/layout checks below apply only to legacy releases.
 if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
+  node "$REPO_ROOT/scripts/materialize-cn-footer-actions-v2.js"
+  python3 "$REPO_ROOT/scripts/materialize-cn-intent-prefetch.py"
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
   python3 "$CN_ROOT/scripts/validate-source-content-parity.py"

@@ -428,6 +428,7 @@ jobs:
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
 
       - name: Deploy release on mainland server
+        id: static-release
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -1308,7 +1309,7 @@ jobs:
           retention-days: 30
 
       - name: Restore previous static release after failed acceptance
-        if: (failure() || cancelled()) && steps.source-parity.outputs.enabled == 'true'
+        if: (failure() || cancelled()) && steps.static-release.outcome != 'skipped' && steps.source-parity.outputs.enabled == 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}

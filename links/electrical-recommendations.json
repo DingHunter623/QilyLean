@@ -1,0 +1,47 @@
+{
+  "checkedOn": "2026-10-19",
+  "companies": [
+    {
+      "id": "chint",
+      "name": "正泰电器",
+      "englishName": "CHINT",
+      "officialUrl": "https://www.chint.net/",
+      "overview": "专注低压配电、终端电器与工业控制，提供电气产品及行业应用解决方案。",
+      "officialSources": [
+        "https://www.chint.net/about/overview/about_us",
+        "https://www.chint.net/"
+      ]
+    },
+    {
+      "id": "delixi-electric",
+      "name": "德力西电气",
+      "englishName": "DELIXI ELECTRIC",
+      "officialUrl": "https://www.delixi-electric.com/",
+      "overview": "产品覆盖低压配电、工业控制与家居电气，可查阅断路器、电动机控制保护等产品资料。",
+      "officialSources": [
+        "https://www.delixi-electric.com/cpzx/index.htm",
+        "https://www.delixi-electric.com/gydlxdq/index.htm"
+      ]
+    },
+    {
+      "id": "people-electric",
+      "name": "人民电器集团",
+      "englishName": "PEOPLE ELECTRIC",
+      "officialUrl": "https://www.chinapeople.com/",
+      "overview": "产品涵盖高低压电器、成套设备、电力变压器与仪器仪表，提供产品资料及行业应用方案。",
+      "officialSources": [
+        "https://www.chinapeople.com/"
+      ]
+    },
+    {
+      "id": "tengen",
+      "name": "天正电气",
+      "englishName": "TENGEN",
+      "officialUrl": "https://www.tengen.com/",
+      "overview": "专注工业电气，产品涵盖低压配电、工控电器、智能仪表与电源电器，提供行业应用方案。",
+      "officialSources": [
+        "https://www.tengen.com/aboutus.html"
+      ]
+    }
+  ]
+}

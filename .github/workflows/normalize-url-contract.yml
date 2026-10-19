@@ -28,8 +28,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python3 scripts/test-normalize-url-contract.py
           python3 scripts/normalize-url-contract.py --apply
           python3 scripts/normalize-url-contract.py
+          node --check cn-site/assets/cn-nav-rail-v1.js
           git diff --check
 
       - name: Show normalization summary
