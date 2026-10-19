@@ -52,6 +52,15 @@ python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 # Synchronize non-commercial public directory from the international SSOT.
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
+
+# The current public-content contract owns complete source mains and layouts.
+# Legacy front-shelf wording/layout checks below apply only to legacy releases.
+if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
+  python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
+  python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
+  python3 "$CN_ROOT/scripts/validate-source-content-parity.py"
+  exit 0
+fi
 # New local international-knowledge mirror must be complete and link-safe.
 python3 - "$CN_ROOT" <<'PYKNOWLEDGE'
 import pathlib,re,sys,json

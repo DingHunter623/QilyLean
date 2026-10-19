@@ -19,6 +19,42 @@ on:
       - 'scripts/brief-international-corpus-visual.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
       - 'scripts/test-cn-translation-state.js'
+      - 'index.html'
+      - 'experience/**'
+      - 'capabilities/**'
+      - 'improvements/**'
+      - 'lean-production/**'
+      - 'projects/**'
+      - 'trust/**'
+      - 'moments/**'
+      - 'knowledge/**'
+      - 'global-knowledge/**'
+      - 'AI-Knowledge/**'
+      - 'certificates/**'
+      - 'tools/times26001/**'
+      - 'qilylean/**'
+      - 'assets/**'
+      - 'styles/**'
+      - 'fonts/**'
+      - '*.css'
+      - 'ai.html'
+      - 'gbt2828.html'
+      - 'papers.html'
+      - 'standards.html'
+      - 'knowledge.html'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.webp'
+      - '**/*.gif'
+      - '**/*.svg'
+      - '**/*.mp4'
+      - '**/*.webm'
+      - '**/*.pdf'
+      - '**/*.qly'
+      - '**/*.woff'
+      - '**/*.woff2'
+      - '**/*.ttf'
   push:
     branches:
       - main
@@ -39,6 +75,42 @@ on:
       - 'scripts/brief-international-corpus-visual.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
       - 'scripts/test-cn-translation-state.js'
+      - 'index.html'
+      - 'experience/**'
+      - 'capabilities/**'
+      - 'improvements/**'
+      - 'lean-production/**'
+      - 'projects/**'
+      - 'trust/**'
+      - 'moments/**'
+      - 'knowledge/**'
+      - 'global-knowledge/**'
+      - 'AI-Knowledge/**'
+      - 'certificates/**'
+      - 'tools/times26001/**'
+      - 'qilylean/**'
+      - 'assets/**'
+      - 'styles/**'
+      - 'fonts/**'
+      - '*.css'
+      - 'ai.html'
+      - 'gbt2828.html'
+      - 'papers.html'
+      - 'standards.html'
+      - 'knowledge.html'
+      - '**/*.png'
+      - '**/*.jpg'
+      - '**/*.jpeg'
+      - '**/*.webp'
+      - '**/*.gif'
+      - '**/*.svg'
+      - '**/*.mp4'
+      - '**/*.webm'
+      - '**/*.pdf'
+      - '**/*.qly'
+      - '**/*.woff'
+      - '**/*.woff2'
+      - '**/*.ttf'
   workflow_dispatch:
 
 permissions:
@@ -66,6 +138,20 @@ jobs:
           set -euo pipefail
           chmod +x cn-site/scripts/materialize-practice-assets.sh
           cn-site/scripts/materialize-practice-assets.sh
+
+      - name: Detect source-content clone contract
+        id: source-parity
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f cn-site/scripts/materialize-source-content-parity.py; then
+            test -s cn-site/archive/source-content-parity.json
+            grep -Fq 'data-cn-source-parity="v1"' cn-site/index.html
+            test -f cn-site/scripts/validate-source-content-parity.py
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'enabled=false' >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Validate China personal-site structure and compliance
         shell: bash
@@ -98,10 +184,15 @@ jobs:
           test -f cn-site/assets/practice/digital-factory.svg
           test -f cn-site/assets/practice/visual-management.svg
           test -s cn-site/assets/practice/award-6s-page-01.jpg
-          chmod +x cn-site/scripts/validate-personal-content.sh
-          cn-site/scripts/validate-personal-content.sh cn-site
+          if test "${{ steps.source-parity.outputs.enabled }}" = true; then
+            python3 cn-site/scripts/validate-source-content-parity.py
+          else
+            chmod +x cn-site/scripts/validate-personal-content.sh
+            cn-site/scripts/validate-personal-content.sh cn-site
+          fi
 
-      - name: Verify practice archive public-facing semantics
+      - name: Verify legacy practice archive public-facing semantics
+        if: steps.source-parity.outputs.enabled != 'true'
         shell: bash
         run: |
           set -euo pipefail
@@ -111,7 +202,7 @@ jobs:
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
           grep -Fq '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation' cn-site/index.html
-          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' cn-site/index.html
+          grep -Fq '/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V7' cn-site/assets/qilylean-vi-v2.css
@@ -168,6 +259,7 @@ jobs:
 
       - name: Syntax-check CN visual regression scripts
         run: |
+          node --check cn-site/assets/cn-nav-rail-v1.js
           node --check scripts/cn-public-interactions.spec.js
           node --check scripts/cn-typography-v23.spec.js
 
@@ -189,21 +281,135 @@ jobs:
           curl --fail --silent http://127.0.0.1:4175/qilylean/daily/2026-09-13.html >/dev/null
 
       - name: Browser-verified local public-content interactions
+        if: steps.source-parity.outputs.enabled != 'true'
         env:
           QILY_CN_BASE: http://127.0.0.1:4174
         run: npx playwright test scripts/cn-public-interactions.spec.js --reporter=line --workers=1
 
       - name: Browser-computed nonbrief knowledge hero contrast audit
+        if: steps.source-parity.outputs.enabled != 'true'
         env:
           QILY_CN_BASE: http://127.0.0.1:4174
         run: npx playwright test scripts/cn-nonbrief-hero-contrast.spec.js --reporter=line --workers=1
 
       - name: Browser-computed typography audit across all CN public pages
+        if: steps.source-parity.outputs.enabled != 'true'
         env:
           QILY_CN_BASE: http://127.0.0.1:4174
         run: |
           npx playwright test scripts/cn-typography-v23.spec.js --reporter=line --workers=1
           QILY_GLOBAL_BASE=http://127.0.0.1:4175 npx playwright test scripts/brief-international-corpus-visual.spec.js --reporter=line --workers=1
+
+      - name: Browser-verify source-content clone and preserved China controls
+        if: steps.source-parity.outputs.enabled == 'true'
+        timeout-minutes: 8
+        env:
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: |
+          node <<'NODE'
+          const assert=require('node:assert/strict');
+          const fs=require('node:fs');
+          const path=require('node:path');
+          const {chromium}=require('@playwright/test');
+          const base=process.env.QILY_CN_BASE,origin=new URL(base).origin;
+          const root=fs.realpathSync(process.cwd());
+          const evidence='visual-cn-source-content';
+          const mime={'.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.webp':'image/webp','.gif':'image/gif','.svg':'image/svg+xml','.qly':'application/octet-stream','.mp4':'video/mp4','.webm':'video/webm','.pdf':'application/pdf','.woff':'font/woff','.woff2':'font/woff2','.ttf':'font/ttf'};
+          (async()=>{
+            fs.mkdirSync(evidence,{recursive:true});
+            const browser=await chromium.launch({headless:true});
+            try{
+              for(const width of [1440,1024,820,390]){
+                const context=await browser.newContext({viewport:{width,height:900},serviceWorkers:'block',permissions:['clipboard-read','clipboard-write']});
+                const missing=[];
+                await context.route('**/*',async route=>{
+                  const url=new URL(route.request().url());
+                  if(url.origin!==origin)return route.abort('blockedbyclient');
+                  if(!url.pathname.startsWith('/mirror-media/'))return route.continue();
+                  try{
+                    const relative=decodeURIComponent(url.pathname.slice('/mirror-media/'.length));
+                    assert(relative&&!relative.split('/').includes('..')&&!relative.includes('\0'));
+                    const asset=fs.realpathSync(path.resolve(root,relative));
+                    assert(asset.startsWith(root+path.sep)&&fs.statSync(asset).isFile());
+                    await route.fulfill({status:200,contentType:mime[path.extname(asset).toLowerCase()]||'application/octet-stream',body:fs.readFileSync(asset)});
+                  }catch(error){missing.push(String(error));await route.abort('failed');}
+                });
+                const page=await context.newPage();
+                try{
+                  for(const route of ['/','/notes/','/trust/','/knowledge/','/briefs/','/briefs/archive/2026-10-18/','/archive/practice/mold-warehouse/','/archive/records/work/','/about/#contact']){
+                    console.log('Checking source clone:',width,route);
+                    const response=await page.goto(base+route,{waitUntil:'networkidle'});
+                    assert(response&&response.ok(),route+' must load');
+                    await page.locator('#qilyCnTranslateV3').waitFor({state:'visible'});
+                    assert(await page.locator('h1').first().isVisible(),route+' heading must be visible');
+                    assert.equal(await page.locator('[data-qily-header-utility="translation"]').count(),1);
+                    const nav=page.locator('header nav[aria-label="主导航"]');
+                    assert.equal(await nav.locator('a[data-qily-nav-key]').count(),10);
+                    assert.equal(await nav.locator('a[data-qily-nav-key="contact"]').getAttribute('href'),'/about/#contact');
+                    const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth+1,
+                      badImages:[...document.images].filter(img=>img.getBoundingClientRect().height&&img.loading!=='lazy'&&!img.naturalWidth).map(img=>img.getAttribute('src'))}));
+                    assert(!state.overflow,route+' overflows at '+width);
+                    assert.deepEqual(state.badImages,[],route+' visible media must load');
+                    const footer=page.locator('footer.footer');
+                    assert.equal(await footer.locator('a[href^="https://beian.miit.gov.cn/"]').count(),1);
+                    assert.equal(await footer.locator('a[href^="https://beian.mps.gov.cn/"]').count(),1);
+                    if(route.startsWith('/about/')){
+                      assert.deepEqual(await page.locator('a[href^="tel:"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')).sort()),['tel:13450014003','tel:15168120722','tel:17681788259']);
+                      assert.equal(await page.locator('[data-qily-copy="admin@qilylean.com"]').count(),1);
+                      assert.equal(await page.locator('[data-qily-copy="Qily259"]').count(),1);
+                      for(const value of ['admin@qilylean.com','Qily259']){
+                        await page.locator('[data-qily-copy="'+value+'"]').click();
+                        await page.waitForFunction(async value=>(await navigator.clipboard.readText())===value,value,{timeout:10000});
+                      }
+                    }else assert.equal(await page.locator('body[data-cn-source-parity="v1"] main[data-cn-source-content]').count(),1);
+                    if(route==='/briefs/'){
+                      await page.locator('#briefSearch').fill('SMED');
+                      assert(await page.locator('.brief-index-card:visible').count()>0);
+                      assert(await page.locator('.brief-index-card:visible').count()<await page.locator('.brief-index-card').count());
+                      await page.locator('#briefSearch').fill('');
+                    }
+                    if(route==='/archive/records/work/'){
+                      assert.equal(await page.locator('main img').count(),8);
+                      for(const image of await page.locator('main img').all()){
+                        await image.scrollIntoViewIfNeeded();
+                        await image.evaluate(img=>{
+                          if(img.complete){if(img.naturalWidth)return true;throw new Error('Photo failed: '+img.currentSrc);}
+                          return new Promise((resolve,reject)=>{
+                            const timer=setTimeout(()=>reject(new Error('Photo load timed out: '+img.currentSrc)),10000);
+                            img.onload=()=>{clearTimeout(timer);resolve(true);};
+                            img.onerror=()=>{clearTimeout(timer);reject(new Error('Photo failed: '+img.currentSrc));};
+                          });
+                        });
+                      }
+                    }
+                    if(route==='/archive/practice/mold-warehouse/'){
+                      const video=page.locator('main video');
+                      assert.equal(await video.count(),1);
+                      await video.scrollIntoViewIfNeeded();
+                      await video.evaluate(async el=>{el.muted=true;await Promise.race([el.play(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Project video did not start')),10000))]);});
+                      await page.waitForFunction(()=>{const v=document.querySelector('main video');return v.currentTime>0&&!v.paused;},null,{timeout:15000});
+                      await video.evaluate(el=>el.pause());
+                    }
+                    await page.screenshot({path:path.join(evidence,(route==='/'?'home':route.replace(/[^a-zA-Z0-9]+/g,'-'))+'-'+width+'.png')});
+                  }
+                  assert.deepEqual(missing,[],'All mirror media must exist');
+                }finally{await context.close();}
+              }
+            }finally{await browser.close();}
+            console.log('PASS: source-content browser parity, ten local navigation entries, translator, contact and filings across four viewports.');
+          })().catch(error=>{console.error(error);process.exitCode=1;});
+          NODE
+
+      - name: Upload source-content clone verification evidence
+        if: always() && steps.source-parity.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-source-content-parity-${{ github.run_id }}
+          path: |
+            cn-site/archive/source-content-parity.json
+            visual-cn-source-content
+          if-no-files-found: error
+          retention-days: 30
 
       - name: Upload CN nonbrief contrast screenshots
         if: always()

@@ -27,7 +27,7 @@ jobs:
           files = sorted(root.rglob('*.html'))
           css_version = '20261008-cn-vi-v50-cache-revalidation'
           base_version = '20260923-cn-typography-base-v7'
-          nav_script_version = '20260926-nav-rail-v20-cn-bridge'
+          nav_script_version = '20261018-nav-rail-v21-public-clone'
           translate_version = '20261017-cn-mainland-nmt-v2'
           translate_js_version = '20261017-cn-mainland-nmt-v2'
           footer_actions_version = '20260930-footer-domain-v15'
@@ -161,7 +161,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2')
               footer_count = text.count(footer_marker)

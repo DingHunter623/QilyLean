@@ -218,7 +218,7 @@ for(const rel of cnPages){
     ? '20261014-cn-contact-three-phones-v1'
     : '20261008-cn-vi-v50-cache-revalidation';
   assert(html.includes('/assets/qilylean-vi-v2.css?v='+cnViRevision), rel+' must use current CN VI resource version.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator runtime.');
   assert(!html.includes(cnFooterLegacyName), rel+' footer must not repeat the QilyLean brand prefix.');
@@ -274,13 +274,18 @@ assert(cnFooterJs.includes("top,share"), 'CN footer runtime must own the two-act
 const cnHome=read('cn-site/index.html');
 for(const marker of [
   '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
-  '"name":"精益制造经验分享"',
-  '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>',
-  '<h2>精益制造经验分享</h2>'
+  '"name":"精益制造经验分享"'
 ]) assert(cnHome.includes(marker),'CN home filed-name marker missing: '+marker);
+if(cnHome.includes('data-cn-source-parity="v1"')){
+  assert(cnHome.includes('data-cn-source-content="index.html"'),'CN cloned homepage must retain the source main.');
+  assert(cnHome.includes('href="/knowledge/" data-qily-nav-key="knowledge"'),'CN cloned knowledge navigation must remain local.');
+  assert(cnHome.includes('湘ICP备2026041143号-1')&&cnHome.includes('湘公网安备43020002000443号'),'CN cloned homepage must retain both filings.');
+}else{
+  for(const marker of ['<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>','<h2>精益制造经验分享</h2>']) assert(cnHome.includes(marker),'CN legacy home filed-name marker missing: '+marker);
+  assert(cnHome.includes('<a href="/knowledge/" title="中国站制造知识索引">进入知识索引 →</a>'),'CN knowledge network must link to the local professional index without international business routing.');
+}
 assert(!cnHome.includes('QILYLEAN CHINA｜'),'CN home must not prefix the filed site name with a retired alias.');
 assert(!cnHome.includes('个人制造业知识与实践分享'),'CN home retired site name returned.');
-assert(cnHome.includes('<a href="/knowledge/" title="中国站制造知识索引">进入知识索引 →</a>'),'CN knowledge network must link to the local professional index without international business routing.');
 
 const cnAbout=read('cn-site/about/index.html');
 assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');

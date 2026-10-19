@@ -16,6 +16,8 @@ const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
 const NAVIGATION_INPUT_REV='20261010-user-nav-v5';
+const MOMENTS_NAVIGATION_REV='20261018-trust-v1';
+const MOMENTS_PARENT_ROUTE='/trust/#journey';
 const ORDER=['home','top','back','previous','search','current','contact'];
 const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const DOCK_STYLE_ID='qilyDockUnifiedV58Style';
@@ -44,7 +46,22 @@ function isEligible(relative,source){
 function materialize(source,relative){
   if(!isEligible(relative,source))return source;
   let next=source;
-  next=next.replace(/\/site-navigation\.js\?[^"'\s<>]*/g,url=>url.replace(/&(?:firstpaint|input)=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV+'&input='+NAVIGATION_INPUT_REV);
+  const isMoments=relative.startsWith('moments/')||relative==='moments.html';
+  next=next.replace(/\/site-navigation\.js\?[^"'\s<>]*/g,url=>{
+    let base=url.replace(/&(?:firstpaint|input)=[^&"'\s<>]*/g,'');
+    if(isMoments)base=base.replace(/&journey=[^&"'\s<>]*/g,'')+'&journey='+MOMENTS_NAVIGATION_REV;
+    return base+'&firstpaint='+FIRST_PAINT_REV+'&input='+NAVIGATION_INPUT_REV;
+  });
+  if(isMoments){
+    // The canonical Dock and parent-navigation runtimes both honor rel=up.
+    // Keep the photo archive inside Trust Center even before navigation loads.
+    next=next.replace(/\n?<link\b[^>]*\brel=["']up["'][^>]*>\n?/gi,'\n');
+    next=next.replace(/<\/head\s*>/i,'<link rel="up" href="'+MOMENTS_PARENT_ROUTE+'">\n</head>');
+    next=next.replace(/<header\b[\s\S]*?<\/header>/gi,header=>header.replace(/<a\b[^>]*>/gi,tag=>{
+      tag=tag.replace(/\s(?:aria-current|data-qily-page-current|data-qily-primary-current)=["'][^"']*["']/gi,'');
+      return /\bhref=["']\/trust\/["']/i.test(tag)?tag.replace(/>$/,' aria-current="page" data-qily-page-current="true" data-qily-primary-current="true">'):tag;
+    }));
+  }
   next=next.replace(/\/site-(?:interaction-semantics-v1\.js|visual-authority-r8\.css)\?[^"'\s<>]*/g,url=>url.replace(/&rail=[^&"'\s<>]*/g,'')+'&rail='+NAV_RAIL_REV);
   next=next.replace(/\/site-interaction-semantics-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&input=[^&"'\s<>]*/g,'')+'&input='+NAVIGATION_INPUT_REV);
   next=next.replace(/\/site-brand-home-feedback-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
@@ -80,5 +97,5 @@ function main(){
   console.log(`${check?'CHECK':'APPLY'} PASS: shared international first-paint shell; eligible=${eligible}; changed=${changed}; directRuntimeAdded=${directAdded}; canonicalDockCssBytes=${Buffer.byteLength(criticalDockCss)}.`);
 }
 
-module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};
+module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};
 if(require.main===module)main();

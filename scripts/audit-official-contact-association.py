@@ -20,7 +20,7 @@ if 'admin@qilylean.com' not in app_support:
     errors.append('APP支持页缺官网邮箱')
 if '<h2>官方网址与官网邮箱</h2>' not in app_support:
     errors.append('APP支持页联系模块未统一为“官方网址与官网邮箱”')
-if '<strong>统一开发者支持：</strong>官方网址 <a href="https://qilylean.com">' not in app_support:
+if not re.search(r'<strong>统一开发者支持：</strong>官方网址 <a href="https://qilylean\.com/?">', app_support):
     errors.append('APP支持页统一开发者支持仍未使用“官方网址”')
 
 if '官网邮箱</th><td class=\"qtc-state-ok\">已启用' not in Path('site-trust-conversion-v2.js').read_text(encoding='utf-8'):

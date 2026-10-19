@@ -10,6 +10,7 @@ from __future__ import annotations
 import html
 import json
 import re
+import subprocess
 import sys
 from html.parser import HTMLParser
 from pathlib import Path
@@ -23,6 +24,7 @@ sys.path.insert(0,str(CN/"scripts"))
 sys.dont_write_bytecode=True
 import importlib
 source=importlib.import_module("materialize-public-content-mirror")
+TRACKED_MEDIA=set(subprocess.check_output(['git','ls-files'],cwd=ROOT,text=True).splitlines())
 
 CSS_SET = [
     "qilylean/daily-briefs.css",
@@ -246,9 +248,12 @@ def local_media(url:str)->str:
         if not (Path(rel).suffix.lower()==".qly" and rel.startswith("qilylean/reference/")):
             return ""
     f=ROOT/rel
-    if not f.is_file():return ""
+    # Sparse checkouts need not download every original raster/video before
+    # recording its public same-origin mirror URL. Admit only tracked assets.
+    if not f.is_file() and rel not in TRACKED_MEDIA:return ""
     if f.suffix.lower()==".svg":
-        svg=f.read_text(encoding="utf-8",errors="ignore")
+        svg=(f.read_text(encoding="utf-8",errors="ignore") if f.is_file() else
+             subprocess.check_output(['git','show','HEAD:'+rel],cwd=ROOT).decode('utf-8',errors='replace'))
         if SVG_RISK.search(svg):return ""
     encoded=quote(rel,safe="/")
     source.MIRROR_MEDIA.add(encoded)
@@ -487,7 +492,7 @@ def main():
             '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
             source.TRANSLATION_SCRIPT+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
-            '<script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge&anchors=20261013-v1"></script>'
+            '<script defer src="/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone&anchors=20261013-v1"></script>'
             '</body></html>'
         )
         src.out.write_text(top,encoding="utf-8")
