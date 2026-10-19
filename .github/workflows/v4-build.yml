@@ -42,12 +42,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
-          test -f "$SOURCE"
-          ACTUAL_BLOB="$(git hash-object "$SOURCE")"
-          test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
-          echo "Latest user-approved homepage airplane locked: $ACTUAL_BLOB"
+          declare -A EXPECTED_BLOBS=(
+            ['assets/aircraft/aircraft-international-20261019-912.webp']='d02a9bc9a76ec439fd63c30008802c773870cb4e'
+            ['assets/aircraft/aircraft-international-20261019-1824.webp']='1f65c74f1d2396a92fa802d69eebe8f6674b1583'
+            ['assets/aircraft/aircraft-international-20261019-2736.webp']='c2fc7abd86e3cc7a7176c4d1e831cd1b2d993b82'
+          )
+          for SOURCE in "${!EXPECTED_BLOBS[@]}"; do
+            test -f "$SOURCE"
+            ACTUAL_BLOB="$(git hash-object "$SOURCE")"
+            test "$ACTUAL_BLOB" = "${EXPECTED_BLOBS[$SOURCE]}"
+            echo "Homepage aircraft WebP locked: $SOURCE $ACTUAL_BLOB"
+          done
+          test ! -e 'assets/qilylean-aircraft-hero-approved-20260826.png'
 
 
       - name: Validate source before materialization
@@ -107,7 +113,7 @@ jobs:
         run: |
           set -euo pipefail
           paths=(
-            assets/qilylean-aircraft-hero-approved-20260826.png
+            assets/aircraft/manifest.json
             meta/build.json
             sitemap.xml
             sitemap-core.xml
@@ -117,7 +123,7 @@ jobs:
             qilylean/site-search-index.json
           )
           if git diff --quiet -- "${paths[@]}" \
-            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1; then
+            && git ls-files --error-unmatch assets/aircraft/aircraft-international-20261019-2736.webp >/dev/null 2>&1; then
             echo 'V4 production metadata and latest canonical aircraft hero already current.'
             exit 0
           fi

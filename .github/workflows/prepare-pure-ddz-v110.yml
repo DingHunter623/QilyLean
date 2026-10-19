@@ -5,7 +5,7 @@ on:
     paths:
       - '.github/workflows/prepare-pure-ddz-v110.yml'
       - 'tools/pure-ddz/game/js/card-theme.js'
-      - 'assets/qilylean-aircraft-hero-approved-20260826.png'
+      - 'assets/aircraft/**'
   workflow_dispatch:
 
 permissions:
@@ -30,15 +30,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          CANONICAL='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
+          CANONICAL='assets/aircraft/aircraft-international-20261019-912.webp'
+          EXPECTED_BLOB='d02a9bc9a76ec439fd63c30008802c773870cb4e'
 
           test -f "$CANONICAL"
           test "$(git hash-object "$CANONICAL")" = "$EXPECTED_BLOB"
-          test "$(xxd -p -l 8 "$CANONICAL")" = '89504e470d0a1a0a'
+          test "$(head -c 4 "$CANONICAL")" = 'RIFF'
+          test "$(dd if="$CANONICAL" bs=1 skip=8 count=4 2>/dev/null)" = 'WEBP'
+          test ! -e 'assets/qilylean-aircraft-hero-approved-20260826.png'
 
           node --check tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "siteAssetUrl('qilylean-aircraft-hero-approved-20260826.png')" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "siteAssetUrl('aircraft/aircraft-international-20261019-912.webp')" tools/pure-ddz/game/js/card-theme.js
 
           test ! -e tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
           test ! -e qilylean/c919-strategy-hero-v14.png
