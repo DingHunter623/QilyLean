@@ -50,6 +50,7 @@ COMMERCIAL_ROUTES = ('/cooperation/', '/contact/', '/projects/qilylean-commercia
 COMMERCIAL_COPY = re.compile(
     r'商务合作|业务承接|项目承接|咨询预约|预约咨询|立即咨询|服务套餐|代理加盟|资源撮合|'
     r'商业交付|咨询转化|销售线索|客户招揽|业务转化|商业签约|默认签约主体|'
+    r'独立核价|三大核心业务|签约主体|商业合作|费用、税费|'
     r'免费\s*60\s*分钟|预约.{0,12}(?:诊断|初筛)|正式.{0,20}(?:报价|付款|发票)|'
     r'(?:费用|税费|付款|收款|发票).{0,35}(?:合同|签约|账户)|'
     r'(?:以|按).{0,20}(?:正式合同|书面方案与合同|签约主体)'
@@ -154,7 +155,10 @@ def render(node, source):
         return ''
     # Remove conversion copy at its smallest authored prose block, retaining
     # surrounding project facts, original cards, diagrams, photos and layout.
-    if tag in {'p','li','figcaption','small'} and COMMERCIAL_COPY.search(node.text()):
+    prose = tag in {'p','li','figcaption','small','h2','h3','dd','dt'}
+    commercial_card = tag == 'article' and any(isinstance(child, Node) and child.tag == 'strong' and child.text().strip() in {'交易机制', '责任边界'} for child in node.children)
+    commercial_note = bool(classes & {'qily-asset-note', 'qily-ia-result'})
+    if (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
         EXCLUDED.append({'source': source, 'panel': identifier or tag, 'reason': 'commercial-copy'})
         return ''
     if tag == 'a':

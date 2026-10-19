@@ -121,6 +121,9 @@ def verify_semantics(value, row):
     if re.fullmatch(r'qilylean/daily/\d{4}-\d{2}-\d{2}\.html', row['source']):
         date = Path(row['source']).stem
         require(url == '/briefs/archive/' + date + '/', 'Brief is assigned outside the knowledge brief archive: ' + url)
+    if row['source'] == 'index.html':
+        plain = html.unescape(re.sub(r'<[^>]+>', ' ', main))
+        require(not parity.COMMERCIAL_COPY.search(plain), 'Commercial transaction copy remains in the cloned homepage')
 
 
 def fixture_checks():
