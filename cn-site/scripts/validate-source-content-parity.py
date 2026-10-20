@@ -13,6 +13,8 @@ from pathlib import Path
 import re
 import sys
 import urllib.request
+import urllib.error
+import http.client
 from urllib.parse import quote, unquote, urlsplit, urlunsplit
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -98,6 +100,7 @@ def verify_semantics(value, row):
     require(footer and 'class="footer-home"' not in footer.group(0), 'Retired China footer returned: ' + url)
     actions = [attrs['data-action'] for tag, attrs in Nodes(footer.group(0)).nodes if tag == 'button' and 'data-action' in attrs]
     require(actions == ['home', 'top', 'back', 'previous', 'search', 'current', 'contact'], 'Shared footer actions changed: ' + url)
+    require('/mirror-media/' not in main, 'Proxy-dependent content media returned: ' + url)
     nodes = Nodes(value).nodes
     canonical = [attrs.get('href') for tag, attrs in nodes if tag == 'link' and attrs.get('rel') == 'canonical']
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)
@@ -147,7 +150,7 @@ def fixture_checks():
     commercial = '<section id="contract"><p>付款与发票</p></section><a href="/cooperation/">商务合作</a>'
     require(not parity.render(parity.Tree(commercial).root, 'projects/index.html').strip(), 'Explicit commercial blocks/actions were not excluded')
     require('url("#diagram")' in parity.declarations('fill:url(#diagram)', 'index.html'), 'Inline SVG paint reference was lost')
-    require(parity.versioned_media_url('assets/example.svg', '0123456789abcdef0123456789abcdef') == '/mirror-media/assets/example.svg?v=0123456789abcdef', 'Mirrored media URLs must include a content-hash cache key')
+    require(parity.versioned_media_url('assets/example.svg', '0123456789abcdef0123456789abcdef') == '/assets/public-media/assets/example.svg?v=0123456789abcdef', 'Mirrored media URLs must include a content-hash cache key')
     require('<h1>工作现场</h1>' in parity.preserve_generated_page_heading('<section><h2>工作现场</h2></section>', '<main><section class="page-hero"><h1>工作现场</h1></section><section>内容</section></main>'), 'Source pages whose H1 is outside main must retain the generated page heading')
     styled = parity.render(parity.Tree('<p style="background:url(https://example.invalid/private.jpg)" onclick="run()">公开内容</p>').root, 'index.html')
     require('example.invalid' not in styled and 'onclick' not in styled and '公开内容' in styled, 'Unsafe source style/handler handling failed')
@@ -158,7 +161,9 @@ def verify_asset_local(row, kind):
     require(source.is_file(), 'Missing ' + kind + ' source: ' + row['source'])
     if 'source_sha256' in row:
         require(parity.file_hash(source) == row['source_sha256'], 'Source CSS changed after materialization: ' + row['source'])
-    path = source if kind == 'media' else local_path(row['url'])
+    path = local_path(row['url'])
+    if kind == 'media':
+        require(source.stat().st_size == row['bytes'] and parity.file_hash(source) == row['sha256'], 'Original source media changed: ' + row['source'])
     require(path.is_file(), 'Missing generated/protected asset: ' + row['url'])
     require(path.stat().st_size == row['bytes'] and parity.file_hash(path) == row['sha256'], 'Asset byte SHA mismatch: ' + row['url'])
 
@@ -171,7 +176,9 @@ def run_parallel(items, function, workers):
             try:
                 future.result()
             except Exception as error:
-                failures.append(str(error))
+                item = futures[future]
+                label = item.get('url', item.get('source', '')) if isinstance(item, dict) else str(item)
+                failures.append(label + ': ' + str(error))
     require(not failures, '\n'.join(failures[:30]) + (f'\n... {len(failures)} failures total' if len(failures) > 30 else ''))
 
 
@@ -212,17 +219,17 @@ def main():
     run_parallel(pages, verify_local_page, args.workers)
     for key, rows in [('style', styles), ('media', media), ('destination', destination)]:
         run_parallel(rows, lambda row: verify_asset_local(row, key), args.workers)
-    require({quote(unquote(urlsplit(row['url']).path).removeprefix('/mirror-media/'), safe='/') for row in media} == set(manifest['media']), 'Media inventory differs from its byte-hash ledger')
+    require({quote(unquote(urlsplit(row['url']).path).removeprefix('/assets/public-media/'), safe='/') for row in media} == set(manifest['media']), 'Media inventory differs from its byte-hash ledger')
     # Verify the reverse direction too: a retained viewer must not reference
     # unaccounted media merely because it bypasses the source HTML renderer.
     referenced_media = set()
     for row in pages:
         text = parity.main_markup(local_path(row['url']).read_text())
-        for encoded in re.findall(r'/mirror-media/([^\s\x22\x27<>)]*)', text):
+        for encoded in re.findall(r'/assets/public-media/([^\s\x22\x27<>)]*)', text):
             referenced_media.add(quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/'))
     for row in styles:
         text = local_path(row['url']).read_text()
-        for encoded in re.findall(r'/mirror-media/([^\s\x22\x27<>)]*)', text):
+        for encoded in re.findall(r'/assets/public-media/([^\s\x22\x27<>)]*)', text):
             referenced_media.add(quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/'))
     require(referenced_media <= set(manifest['media']), 'Actual content media missing from ledger: ' + ', '.join(sorted(referenced_media - set(manifest['media']))))
     about = (CN / 'about/index.html').read_text()
@@ -260,16 +267,30 @@ def main():
             verify_semantics(response.read(16 * 1024 * 1024).decode(), next(row for row in pages if row['url'] == '/'))
 
         def verify_remote_asset(row):
-            digest, size = hashlib.sha256(), 0
-            with open_url(row['url']) as response:
-                while True:
-                    block = response.read(1024 * 1024)
-                    if not block:
-                        break
-                    size += len(block)
-                    require(size <= row['bytes'], 'Production asset larger than approved source: ' + row['url'])
-                    digest.update(block)
-            require(size == row['bytes'] and digest.hexdigest() == row['sha256'], 'Production asset bytes differ: ' + row['url'])
+            for attempt in range(2):
+                digest, size = hashlib.sha256(), 0
+                try:
+                    with open_url(row['url']) as response:
+                        while True:
+                            block = response.read(1024 * 1024)
+                            if not block:
+                                break
+                            size += len(block)
+                            require(size <= row['bytes'], 'Production asset larger than approved source: ' + row['url'])
+                            digest.update(block)
+                except urllib.error.HTTPError as error:
+                    if attempt == 0 and error.code in {408, 429, 500, 502, 503, 504}:
+                        continue
+                    raise
+                except (urllib.error.URLError, TimeoutError, ConnectionError, http.client.IncompleteRead):
+                    if attempt == 0:
+                        continue
+                    raise
+                if size < row['bytes'] and attempt == 0:
+                    continue
+                require(size == row['bytes'] and digest.hexdigest() == row['sha256'],
+                        'Production asset bytes differ: ' + row['url'] + ' received=' + str(size) + ' expected=' + str(row['bytes']))
+                return
 
         run_parallel(styles + media + destination, verify_remote_asset, args.workers)
         remote_about = read_page('/about/').decode()

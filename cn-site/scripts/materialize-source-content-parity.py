@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import shutil
 import sys
 from urllib.parse import quote, unquote, urljoin, urlsplit, urlunsplit
 
@@ -71,8 +72,10 @@ def media_url(value, source):
     if parsed.scheme not in {'', 'http', 'https'} or (parsed.netloc and parsed.hostname not in {'qilylean.com', 'www.qilylean.com', 'qilylean.cn', 'www.qilylean.cn'}):
         return ''
     relative = unquote(parsed.path).lstrip('/')
-    if relative.startswith('mirror-media/'):
-        relative = relative[len('mirror-media/'):]
+    for prefix in ('mirror-media/', 'assets/public-media/'):
+        if relative.startswith(prefix):
+            relative = relative[len(prefix):]
+            break
     if relative not in TRACKED or '..' in Path(relative).parts:
         return ''
     if re.search(r'(?:^|[-_/])(?:qr|qrcode|wechat|weixin|contact)(?:[-_./]|$)', relative, re.I):
@@ -244,8 +247,19 @@ def media_digest(relative):
     return MEDIA_HASHES[relative]
 
 def versioned_media_url(encoded, digest):
-    """Use a content-hash query key so CDN caches cannot serve stale media bytes."""
-    return '/mirror-media/' + encoded + '?v=' + digest[:16]
+    """Serve the exact release-owned file from China with a content-hash cache key."""
+    return '/assets/public-media/' + encoded + '?v=' + digest[:16]
+
+def localize_media_references(value):
+    """Migrate retained viewer media from the live proxy to this static release."""
+    def local(match):
+        relative = unquote(urlsplit('/' + html.unescape(match.group(1))).path).lstrip('/')
+        if relative not in TRACKED or '..' in Path(relative).parts:
+            raise RuntimeError('Untracked retained media: ' + relative)
+        encoded = quote(relative, safe='/')
+        MEDIA.add(encoded)
+        return versioned_media_url(encoded, media_digest(relative))
+    return re.sub(r'/(?:mirror-media|assets/public-media)/([^\s\x22\x27<>)]*)', local, value)
 
 def main_markup(value):
     match = re.search(r'<main\b[^>]*>[\s\S]*?</main\s*>', value, re.I)
@@ -577,10 +591,11 @@ def main():
         if attrs.get('style'): attrs['style'] = declarations(attrs['style'], name)
         main_attrs = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key, value in attrs.items())
         replacement = '<main id="main" data-cn-source-content="' + html.escape(name, quote=True) + '"' + main_attrs + '>' + content + '</main>' if content is not None else main_markup(old)
+        replacement = localize_media_references(replacement)
         replacement = '\n'.join(line.rstrip() for line in replacement.split('\n'))
         # Audited interactive adapters retain their DOM, including image/PDF/Qly
         # references. Their actual media must enter the same strict byte ledger.
-        for encoded in re.findall(r'/mirror-media/([^\s\x22\x27<>)]*)', replacement):
+        for encoded in re.findall(r'/(?:mirror-media|assets/public-media)/([^\s\x22\x27<>)]*)', replacement):
             path = quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/')
             if path: MEDIA.add(path)
         updated = re.sub(r'<main\b[^>]*>[\s\S]*?</main\s*>', lambda _: replacement, old, count=1, flags=re.I)
@@ -631,6 +646,11 @@ def main():
         relative = unquote(encoded)
         original = ROOT / relative
         digest = media_digest(relative)
+        delivery = CN / 'assets/public-media' / relative
+        delivery.parent.mkdir(parents=True, exist_ok=True)
+        if not delivery.is_file() or delivery.stat().st_size != original.stat().st_size or file_hash(delivery) != digest:
+            shutil.copyfile(original, delivery)
+        assert file_hash(delivery) == digest, 'Static China media differs: ' + relative
         media_records.append({'source': relative, 'url': versioned_media_url(encoded, digest), 'sha256': digest, 'bytes': original.stat().st_size})
     assert hashlib.sha256(main_markup(about.read_text()).encode()).hexdigest() == contact_sha, 'About/contact DOM changed'
     destination_assets = []

@@ -14,7 +14,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const apply=process.argv.includes('--apply');
 const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
-const PATCH='20260924-footer-like-fixed-r1';
+const PATCH='20261020-public-footer-v4';
 const FULL=`${BASE}&patch=${PATCH}`;
 const changed=[];
 

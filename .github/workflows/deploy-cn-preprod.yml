@@ -492,7 +492,7 @@ jobs:
           EXPECTED="$3"
           # Keep the previous static release until all public verification passes.
           # An abandoned/terminated CI run cannot leave unaccepted content active.
-          for attempt in $(seq 1 600); do
+          for attempt in $(seq 1 1350); do
             if test -f "$STATE/committed"; then touch "$STATE/accepted"; exit 0; fi
             if test -f "$STATE/failed"; then break; fi
             sleep 2
@@ -658,6 +658,7 @@ jobs:
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
 
       - name: Verify exact source-content clone on production
+        timeout-minutes: 40
         if: steps.source-parity.outputs.enabled == 'true'
         shell: bash
         run: |

@@ -29,7 +29,7 @@ jobs:
           set -euo pipefail
           node --check scripts/materialize-ddz-public-ui-20260824.js
           node scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' tools/pure-ddz/index.html
       - name: Verify parent-friendly source contracts
         shell: bash
         run: |
