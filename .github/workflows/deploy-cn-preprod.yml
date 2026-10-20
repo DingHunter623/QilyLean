@@ -215,7 +215,7 @@ jobs:
             done
             cmp site-content-axis-v1.css cn-site/site-content-axis-v1.css
             cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
-            grep -Fq '20261018-nav-rail-v21-public-clone' cn-site/index.html
+            grep -Fq '20261021-nav-rail-v22-contact-preserved' cn-site/index.html
             grep -Fq '20261017-cn-mainland-nmt-v2' cn-site/index.html
             grep -Fq '<urlset' cn-site/sitemap.xml
             node --check cn-site/assets/cn-nav-rail-v1.js
@@ -989,7 +989,7 @@ jobs:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
           required_internal_nav = [
               'href="/archive/profile/experience/" data-qily-nav-key="experience">履历主线</a>',

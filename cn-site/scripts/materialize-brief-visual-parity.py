@@ -502,7 +502,7 @@ def main():
             '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
             source.TRANSLATION_SCRIPT+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
-            '<script defer src="/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone&anchors=20261013-v1"></script>'
+            '<script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved&anchors=20261013-v1"></script>'
             '</body></html>'
         )
         src.out.write_text(top,encoding="utf-8")
