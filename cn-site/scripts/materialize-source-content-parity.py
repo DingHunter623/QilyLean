@@ -22,7 +22,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261020-source-content-parity-v2-cache-bust'
+VERSION = '20261020-source-content-parity-v3-cache-bust-heading-fallback'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'experience'),
@@ -251,6 +251,14 @@ def main_markup(value):
     match = re.search(r'<main\b[^>]*>[\s\S]*?</main\s*>', value, re.I)
     if not match: raise RuntimeError('Page has no content main')
     return match.group(0)
+
+def preserve_generated_page_heading(content, existing):
+    """Keep the destination's public title when the source H1 lives outside <main>."""
+    if re.search(r'<h1\b', content, re.I):
+        return content
+    old_main = main_markup(existing)
+    hero = re.search(r'<section\b[^>]*class=[\x22\x27][^\x22\x27]*\bpage-hero\b[^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</section\s*>', old_main, re.I)
+    return hero.group(0) + content if hero else content
 
 def protected_dom(value):
     """Destination-owned shell remains byte-identical through this pass."""
@@ -529,6 +537,8 @@ def main():
         match = re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>', raw, re.I)
         fragment = match.group(2) if match else mirror.extract_fragment(raw, name)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
+        if content is not None:
+            content = preserve_generated_page_heading(content, old)
         style_tags = []
         head = re.search(r'<head\b[^>]*>([\s\S]*?)</head>', raw, re.I)
         for kind, style_attrs, css in SourceStyles(head.group(1) if head else '').items:
