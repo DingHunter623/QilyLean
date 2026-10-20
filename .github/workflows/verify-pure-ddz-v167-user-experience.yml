@@ -65,7 +65,12 @@ jobs:
           (async()=>{
             const browser=await chromium.launch({headless:true});
             const page=await browser.newPage({viewport:{width:1280,height:760}});
-            await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
+            // Test the real selection modules against their owned hand fixture,
+            // independently of the full game's welcome dialog and AI timers.
+            await page.setContent('<!doctype html><html><body><button id="hint">启力提示</button><button id="pass">不要</button><div id="hand"></div></body></html>');
+            for(const script of ['classic-voice-v170.js','parent-friendly-v171.js','free-choice-v176.js']){
+              await page.addScriptTag({url:'http://127.0.0.1:4173/tools/pure-ddz/game/js/'+script});
+            }
             await page.waitForFunction(()=>window.QilyLeanDdzClassicVoiceV170&&window.QilyLeanDdzParentFriendlyV171&&window.QilyLeanDdzFreeChoiceV176,{timeout:10000});
             const phrases=await page.evaluate(()=>({
               triplePair:window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'triple2',main:5},cards:[{rank:5},{rank:5},{rank:5},{rank:9},{rank:9}]}),
@@ -90,12 +95,10 @@ jobs:
               };
               window.__renderSelectionFixture();
             });
-            // This fixture owns a synthetic hand, not an active game turn.
-            // Capture its seeded hint through the current selection module;
-            // the real game's Hint control correctly remains disabled at idle.
-            await page.evaluate(()=>window.QilyLeanDdzFreeChoiceV176.captureHint());
+            await page.click('#hint');
             await page.waitForTimeout(30);
             await page.locator('#hand .card[data-id="2"]').click();
+            await page.waitForFunction(()=>JSON.stringify([...document.querySelectorAll('#hand .card[aria-pressed="true"]')].map(el=>el.dataset.id))==='["2"]');
             let selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].filter(el=>el.getAttribute('aria-pressed')==='true').map(el=>el.dataset.id));
             if(JSON.stringify(selected)!=='["2"]')throw new Error('manual choice did not replace hint selection after rerender: '+JSON.stringify(selected));
             await page.evaluate(()=>window.QilyLeanDdzParentFriendlyV171.clearSelectedHand());
