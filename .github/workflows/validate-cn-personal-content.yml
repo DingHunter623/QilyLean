@@ -333,7 +333,23 @@ jobs:
                     assert(relative&&!relative.split('/').includes('..')&&!relative.includes('\0'));
                     const asset=fs.realpathSync(path.resolve(root,relative));
                     assert(asset.startsWith(root+path.sep)&&fs.statSync(asset).isFile());
-                    await route.fulfill({status:200,contentType:mime[path.extname(asset).toLowerCase()]||'application/octet-stream',body:fs.readFileSync(asset)});
+                    const bytes=fs.readFileSync(asset);
+                    const contentType=mime[path.extname(asset).toLowerCase()]||'application/octet-stream';
+                    const range=route.request().headers().range;
+                    if(range&&contentType==='video/mp4'){
+                      const match=/^bytes=(\d*)-(\d*)$/i.exec(range);
+                      assert(match&&(match[1]||match[2]),'Invalid MP4 byte range: '+range);
+                      const start=match[1]?Number(match[1]):Math.max(0,bytes.length-Number(match[2]));
+                      const end=match[1]?(match[2]?Math.min(Number(match[2]),bytes.length-1):bytes.length-1):bytes.length-1;
+                      if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=bytes.length||end<start){
+                        await route.fulfill({status:416,headers:{'Content-Range':'bytes */'+bytes.length}});
+                        return;
+                      }
+                      const body=bytes.subarray(start,end+1);
+                      await route.fulfill({status:206,headers:{'Accept-Ranges':'bytes','Content-Range':'bytes '+start+'-'+end+'/'+bytes.length,'Content-Length':String(body.length),'Content-Type':contentType},body});
+                    }else{
+                      await route.fulfill({status:200,headers:{'Accept-Ranges':'bytes','Content-Length':String(bytes.length),'Content-Type':contentType},body:bytes});
+                    }
                   }catch(error){missing.push(String(error));await route.abort('failed');}
                 });
                 const page=await context.newPage();
@@ -385,12 +401,25 @@ jobs:
                       }
                     }
                     if(route==='/archive/practice/mold-warehouse/'){
+                      // Bundled headless Chromium may lack proprietary MP4 codecs. Validate the
+                      // cloned video wiring and local MP4 container here; exact media bytes are
+                      // separately checked by validate-source-content-parity.py and production.
                       const video=page.locator('main video');
                       assert.equal(await video.count(),1);
                       await video.scrollIntoViewIfNeeded();
-                      await video.evaluate(async el=>{el.muted=true;await Promise.race([el.play(),new Promise((_,reject)=>setTimeout(()=>reject(new Error('Project video did not start')),10000))]);});
-                      await page.waitForFunction(()=>{const v=document.querySelector('main video');return v.currentTime>0&&!v.paused;},null,{timeout:15000});
-                      await video.evaluate(el=>el.pause());
+                      const source=video.locator('source');
+                      const sourceUrl=await source.getAttribute('src');
+                      assert(sourceUrl,'project video source must be present');
+                      assert.equal(await source.getAttribute('type'),'video/mp4');
+                      const resolvedSource=new URL(sourceUrl,origin);
+                      assert.equal(resolvedSource.pathname,'/mirror-media/media/projects/mold-warehouse-540.mp4');
+                      assert.match(resolvedSource.search,/^\?v=[a-f0-9]{16}$/);
+                      const mediaPath=path.resolve(root,'media/projects/mold-warehouse-540.mp4');
+                      assert(fs.existsSync(mediaPath)&&fs.statSync(mediaPath).size>1024,'project MP4 source asset must exist');
+                      const header=fs.readFileSync(mediaPath).subarray(4,8).toString('ascii');
+                      assert.equal(header,'ftyp','project video must be an MP4 container');
+                      const poster=await video.getAttribute('poster');
+                      assert(poster&&new URL(poster,origin).pathname==='/mirror-media/media/projects/mold-after1.webp','project video poster must be mirrored');
                     }
                     await page.screenshot({path:path.join(evidence,(route==='/'?'home':route.replace(/[^a-zA-Z0-9]+/g,'-'))+'-'+width+'.png')});
                   }

@@ -22,7 +22,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261018-source-content-parity-v1'
+VERSION = '20261020-source-content-parity-v3-cache-bust-heading-fallback'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'experience'),
@@ -56,6 +56,7 @@ COMMERCIAL_COPY = re.compile(
     r'(?:以|按).{0,20}(?:正式合同|书面方案与合同|签约主体)'
 )
 MEDIA = set()
+MEDIA_HASHES = {}
 EXCLUDED = []
 STYLE_RECORDS = {}
 MEDIA_EXT = visual.MEDIA_EXT | {'.pdf', '.qly', '.woff', '.woff2', '.ttf', '.vtt'}
@@ -82,7 +83,7 @@ def media_url(value, source):
         return ''
     encoded = quote(relative, safe='/')
     MEDIA.add(encoded)
-    return '/mirror-media/' + encoded + (('?' + parsed.query) if parsed.query else '')
+    return versioned_media_url(encoded, media_digest(relative))
 
 def link_url(value, source):
     if value.startswith('#'):
@@ -237,10 +238,27 @@ def file_hash(path):
         for block in iter(lambda: stream.read(1024 * 1024), b''): digest.update(block)
     return digest.hexdigest()
 
+def media_digest(relative):
+    if relative not in MEDIA_HASHES:
+        MEDIA_HASHES[relative] = file_hash(ROOT / relative)
+    return MEDIA_HASHES[relative]
+
+def versioned_media_url(encoded, digest):
+    """Use a content-hash query key so CDN caches cannot serve stale media bytes."""
+    return '/mirror-media/' + encoded + '?v=' + digest[:16]
+
 def main_markup(value):
     match = re.search(r'<main\b[^>]*>[\s\S]*?</main\s*>', value, re.I)
     if not match: raise RuntimeError('Page has no content main')
     return match.group(0)
+
+def preserve_generated_page_heading(content, existing):
+    """Keep the destination's public title when the source H1 lives outside <main>."""
+    if re.search(r'<h1\b', content, re.I):
+        return content
+    old_main = main_markup(existing)
+    hero = re.search(r'<section\b[^>]*class=[\x22\x27][^\x22\x27]*\bpage-hero\b[^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</section\s*>', old_main, re.I)
+    return hero.group(0) + content if hero else content
 
 def protected_dom(value):
     """Destination-owned shell remains byte-identical through this pass."""
@@ -492,7 +510,7 @@ def copy_daily_knowledge_runtime():
     return url
 
 def main():
-    MEDIA.clear(); EXCLUDED.clear(); STYLE_CACHE.clear(); STYLE_RECORDS.clear(); KEYFRAMES.clear(); SHELL_STYLE_CACHE.clear()
+    MEDIA.clear(); MEDIA_HASHES.clear(); EXCLUDED.clear(); STYLE_CACHE.clear(); STYLE_RECORDS.clear(); KEYFRAMES.clear(); SHELL_STYLE_CACHE.clear()
     candidates = {item.path.as_posix(): (item.url, None) for item in mirror.SOURCES if item.out.is_file()}
     candidates.update(PRIMARY)
     candidates['moments/index.html'] = ('/archive/records/', 'trust')
@@ -519,6 +537,8 @@ def main():
         match = re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>', raw, re.I)
         fragment = match.group(2) if match else mirror.extract_fragment(raw, name)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
+        if content is not None:
+            content = preserve_generated_page_heading(content, old)
         style_tags = []
         head = re.search(r'<head\b[^>]*>([\s\S]*?)</head>', raw, re.I)
         for kind, style_attrs, css in SourceStyles(head.group(1) if head else '').items:
@@ -608,8 +628,10 @@ def main():
     missing = [encoded for encoded in sorted(MEDIA) if not (ROOT / unquote(encoded)).is_file()]
     if missing: raise RuntimeError('Missing original public assets (' + str(len(missing)) + '): ' + ', '.join(missing))
     for encoded in sorted(MEDIA):
-        original = ROOT / unquote(encoded)
-        media_records.append({'source': unquote(encoded), 'url': '/mirror-media/' + encoded, 'sha256': file_hash(original), 'bytes': original.stat().st_size})
+        relative = unquote(encoded)
+        original = ROOT / relative
+        digest = media_digest(relative)
+        media_records.append({'source': relative, 'url': versioned_media_url(encoded, digest), 'sha256': digest, 'bytes': original.stat().st_size})
     assert hashlib.sha256(main_markup(about.read_text()).encode()).hexdigest() == contact_sha, 'About/contact DOM changed'
     destination_assets = []
     about_html = about.read_text()
