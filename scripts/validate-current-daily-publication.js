@@ -192,8 +192,12 @@ if (cnCapacityBrief) {
   assert(!/<marker\b|marker-end=/.test(cnCapacityBrief), 'CN synchronized diagrams no longer use detached SVG marker arrowheads');
 }
 if (cnHome) {
-  includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the capacity deep-dive article');
-  includes(cnHome, '别再只用UPH排产：从订单到设备，建立可执行的产能数字主线', 'CN homepage keeps the capacity deep-dive title');
+  if(cnHome.includes('data-cn-source-content="index.html"')){
+    includes(cnHome, '/knowledge/', 'Cloned CN homepage exposes the shared knowledge hub');
+    assert(fs.existsSync(path.join(root,'cn-site/knowledge/capacity-digital-thread/index.html')), 'Original CN capacity deep-dive remains published');
+  }else includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the capacity deep-dive article');
+  const capacityTitleSource=cnHome.includes('data-cn-source-content="index.html"')?fs.readFileSync(path.join(root,'cn-site/knowledge/capacity-digital-thread/index.html'),'utf8'):cnHome;
+  includes(capacityTitleSource, '别再只用UPH排产：从订单到设备，建立可执行的产能数字主线', 'CN capacity deep-dive keeps its original title');
   assert(!cnHome.includes('2026-09-20｜别再只用UPH排产'), 'CN homepage deep-dive title no longer mixes brief chronology');
 }
 

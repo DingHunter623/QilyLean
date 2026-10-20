@@ -327,9 +327,9 @@ jobs:
                 await context.route('**/*',async route=>{
                   const url=new URL(route.request().url());
                   if(url.origin!==origin)return route.abort('blockedbyclient');
-                  if(!url.pathname.startsWith('/mirror-media/'))return route.continue();
+                  if(!url.pathname.startsWith('/assets/public-media/'))return route.continue();
                   try{
-                    const relative=decodeURIComponent(url.pathname.slice('/mirror-media/'.length));
+                    const relative=decodeURIComponent(url.pathname.slice('/assets/public-media/'.length));
                     assert(relative&&!relative.split('/').includes('..')&&!relative.includes('\0'));
                     const asset=fs.realpathSync(path.resolve(root,relative));
                     assert(asset.startsWith(root+path.sep)&&fs.statSync(asset).isFile());
@@ -412,14 +412,14 @@ jobs:
                       assert(sourceUrl,'project video source must be present');
                       assert.equal(await source.getAttribute('type'),'video/mp4');
                       const resolvedSource=new URL(sourceUrl,origin);
-                      assert.equal(resolvedSource.pathname,'/mirror-media/media/projects/mold-warehouse-540.mp4');
+                      assert.equal(resolvedSource.pathname,'/assets/public-media/media/projects/mold-warehouse-540.mp4');
                       assert.match(resolvedSource.search,/^\?v=[a-f0-9]{16}$/);
                       const mediaPath=path.resolve(root,'media/projects/mold-warehouse-540.mp4');
                       assert(fs.existsSync(mediaPath)&&fs.statSync(mediaPath).size>1024,'project MP4 source asset must exist');
                       const header=fs.readFileSync(mediaPath).subarray(4,8).toString('ascii');
                       assert.equal(header,'ftyp','project video must be an MP4 container');
                       const poster=await video.getAttribute('poster');
-                      assert(poster&&new URL(poster,origin).pathname==='/mirror-media/media/projects/mold-after1.webp','project video poster must be mirrored');
+                      assert(poster&&new URL(poster,origin).pathname==='/assets/public-media/media/projects/mold-after1.webp','project video poster must be mirrored');
                     }
                     await page.screenshot({path:path.join(evidence,(route==='/'?'home':route.replace(/[^a-zA-Z0-9]+/g,'-'))+'-'+width+'.png')});
                   }

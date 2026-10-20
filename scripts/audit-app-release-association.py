@@ -1,4 +1,5 @@
 from pathlib import Path
+from html.parser import HTMLParser
 import hashlib
 import json
 import re
@@ -7,7 +8,7 @@ import sys
 manifest = json.loads(Path('app-release-manifest.json').read_text(encoding='utf-8'))
 errors = []
 
-if manifest.get('officialWebsite') != 'https://qilylean.com':
+if manifest.get('officialWebsite') != 'https://qilylean.com/':
     errors.append('官方网址主数据错误')
 if manifest.get('supportEmail') != 'admin@qilylean.com':
     errors.append('官网邮箱主数据错误')
@@ -165,12 +166,73 @@ for p in Path('legal').rglob('index.html'):
     if '/legal/app-legal.css' in text and '/legal/app-legal.css?v=20260827-release-governance-v2' not in text:
         errors.append(f'法律页未同步共享样式版本: {p}')
 
-# Visible official email addresses on active HTML surfaces must be actionable mailto links.
+# International email addresses remain mailto links. The protected CN contact
+# page uses its existing copy control; CN legal/support pages retain informational
+# email fields and reach that control through the shared contact action.
+cn_information_pages = {
+    'cn-site/app-support/index.html',
+    'cn-site/app-support/qilylean-cn-home/index.html',
+    'cn-site/legal/times26001/privacy/index.html',
+    'cn-site/legal/times26001/terms/index.html',
+    'cn-site/legal/qilylean-cn-home/privacy/index.html',
+    'cn-site/legal/qilylean-cn-home/terms/index.html',
+}
+
+
+class OfficialEmailAudit(HTMLParser):
+    def __init__(self, allow_copy=False, allow_information=False):
+        super().__init__()
+        self.allow_copy = allow_copy
+        self.allow_information = allow_information
+        self.stack = []
+        self.unlinked = False
+
+    def handle_starttag(self, tag, attrs):
+        if tag not in {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'}:
+            self.stack.append((tag, dict(attrs)))
+
+    def handle_endtag(self, tag):
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                break
+
+    def handle_data(self, data):
+        if 'admin@qilylean.com' not in data or any(tag in {'script', 'style'} for tag, _ in self.stack):
+            return
+        mailto = any(tag == 'a' and attrs.get('href') == 'mailto:admin@qilylean.com' for tag, attrs in self.stack)
+        copy = self.allow_copy and any(
+            tag == 'button' and attrs.get('type') == 'button'
+            and attrs.get('data-qily-copy') == 'admin@qilylean.com'
+            and 'qily-about-action' in attrs.get('class', '').split()
+            for tag, attrs in self.stack
+        )
+        if not (mailto or copy or self.allow_information):
+            self.unlinked = True
+
+
+cn_contact = Path('cn-site/about/index.html').read_text(encoding='utf-8')
+cn_copy_handler = all(token in cn_contact for token in (
+    "document.querySelectorAll('.qily-about-action[data-qily-copy]')",
+    "getAttribute('data-qily-copy')",
+    'copyText(value)',
+    'navigator.clipboard.writeText(value)',
+))
+cn_footer_runtime = Path('cn-site/assets/cn-footer-actions-v1.js').read_text(encoding='utf-8')
+cn_contact_route = "location.href='/about/#contact'" in cn_footer_runtime
 for p in Path('.').rglob('*.html'):
     if '.git' in p.parts or 'node_modules' in p.parts:
         continue
     text = p.read_text(encoding='utf-8', errors='ignore')
-    if re.search(r'>\s*admin@qilylean\.com\s*<', text) and 'mailto:admin@qilylean.com' not in text:
+    allow_information = p.as_posix() in cn_information_pages and cn_copy_handler and cn_contact_route and all(token in text for token in (
+        'data-qily-site="cn"', 'data-qily-footer-action="contact"', '/assets/cn-footer-actions-v1.js?',
+    ))
+    email_audit = OfficialEmailAudit(
+        allow_copy=p.as_posix() == 'cn-site/about/index.html' and cn_copy_handler,
+        allow_information=allow_information,
+    )
+    email_audit.feed(text)
+    if email_audit.unlinked:
         errors.append(f'页面存在未链接的官网邮箱: {p}')
 
 # QilyLean Home keeps its own release cadence but remains protected by the same master manifest.
