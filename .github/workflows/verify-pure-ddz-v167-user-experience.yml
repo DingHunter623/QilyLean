@@ -66,7 +66,7 @@ jobs:
             const browser=await chromium.launch({headless:true});
             const page=await browser.newPage({viewport:{width:1280,height:760}});
             await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
-            await page.waitForFunction(()=>window.QilyLeanDdzClassicVoiceV170&&window.QilyLeanDdzParentFriendlyV171,{timeout:10000});
+            await page.waitForFunction(()=>window.QilyLeanDdzClassicVoiceV170&&window.QilyLeanDdzParentFriendlyV171&&window.QilyLeanDdzFreeChoiceV176,{timeout:10000});
             const phrases=await page.evaluate(()=>({
               triplePair:window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'triple2',main:5},cards:[{rank:5},{rank:5},{rank:5},{rank:9},{rank:9}]}),
               pairQ:window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'pair',main:12},cards:[{rank:12},{rank:12}]})
@@ -90,7 +90,10 @@ jobs:
               };
               window.__renderSelectionFixture();
             });
-            await page.click('#hint');
+            // This fixture owns a synthetic hand, not an active game turn.
+            // Capture its seeded hint through the current selection module;
+            // the real game's Hint control correctly remains disabled at idle.
+            await page.evaluate(()=>window.QilyLeanDdzFreeChoiceV176.captureHint());
             await page.waitForTimeout(30);
             await page.locator('#hand .card[data-id="2"]').click();
             let selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].filter(el=>el.getAttribute('aria-pressed')==='true').map(el=>el.dataset.id));

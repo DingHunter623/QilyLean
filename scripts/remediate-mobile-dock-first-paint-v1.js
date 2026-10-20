@@ -15,7 +15,7 @@ const cp=require('child_process');
 
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
-const DOCK_PATCH='20261020-public-footer-v4';
+const DOCK_PATCH='20261020-public-footer-v5';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
 // Canonical cache revision for the approved underline-free international header.

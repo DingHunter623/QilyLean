@@ -4,6 +4,11 @@ name: Deploy QilyLean CN knowledge site
 # QILY-CN-FRESH-BUNDLE-V1 | 2026-09-20 | Never reuse a stale /tmp release archive
 
 on:
+  pull_request:
+    paths:
+      - '.github/workflows/deploy-cn-preprod.yml'
+      - 'scripts/cn-release-transfer.py'
+      - 'scripts/test-cn-release-transfer.py'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -26,6 +31,8 @@ on:
       - '.github/workflows/deploy-cn-preprod.yml'
       - 'scripts/cn-search-discovery.py'
       - 'scripts/test-cn-search-discovery.py'
+      - 'scripts/cn-release-transfer.py'
+      - 'scripts/test-cn-release-transfer.py'
 
       - 'index.html'
       - 'experience/**'
@@ -69,11 +76,21 @@ permissions:
   statuses: write
 
 concurrency:
-  group: ${{ inputs.inspect_translation_only && 'qilylean-cn-translation-inspection' || 'qilylean-cn-production-v12' }}
+  group: ${{ github.event_name == 'pull_request' && format('qilylean-cn-transfer-pr-{0}', github.event.number) || inputs.inspect_translation_only && 'qilylean-cn-translation-inspection' || 'qilylean-cn-production-v12' }}
   # Production uploads and live verification must finish atomically; newer CN commits queue instead of cancelling an active release.
   cancel-in-progress: false
 
 jobs:
+  transfer-contract:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test private artifact transfer, deterministic archive and resumable integrity
+        run: python3 scripts/test-cn-release-transfer.py
+
   inspect-translation:
     if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only
     runs-on: ubuntu-latest
@@ -137,8 +154,9 @@ jobs:
           ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo env CREDENTIALS_DIRECTORY=$STAGE python3 $STAGE/verify-production.py"
 
   validate-and-deploy:
-    if: (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[translation-only]'))
-    timeout-minutes: 120
+    needs: transfer-contract
+    if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) && (github.event_name != 'push' || !contains(github.event.head_commit.message, '[translation-only]'))
+    timeout-minutes: 300
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -304,8 +322,25 @@ jobs:
               'sourceContentManifestSha256':hashlib.sha256(manifest.read_bytes()).hexdigest()},indent=2)+'\n')
           PYRELEASE
           fi
-          tar --exclude='scripts' --exclude='nginx' --exclude='*.md' --exclude='assets/qilylean-aircraft-hero-cn-20260918.png' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
+          # Identical content must produce identical bytes across a retried run;
+          # checkout/materialization timestamps cannot invalidate the resume cache.
+          tar --sort=name --mtime='@0' --owner=0 --group=0 --numeric-owner --format=gnu \
+            --exclude='scripts' --exclude='nginx' --exclude='*.md' \
+            --exclude='assets/qilylean-aircraft-hero-cn-20260918.png' \
+            -cf - -C cn-site . | gzip -n > /tmp/qilylean-cn-site.tar.gz
           sha256sum /tmp/qilylean-cn-site.tar.gz
+
+      - name: Preserve exact release archive for mainland HTTPS pull
+        id: release-artifact
+        continue-on-error: true
+        timeout-minutes: 10
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-release-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/qilylean-cn-site.tar.gz
+          compression-level: 0
+          retention-days: 1
+          if-no-files-found: error
 
       - name: Require configured Youdao application before any production change
         if: steps.source-parity.outputs.enabled != 'true'
@@ -334,28 +369,44 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
-        timeout-minutes: 75
+        timeout-minutes: 240
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
           CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ARTIFACT_ID: ${{ steps.release-artifact.outputs.artifact-id }}
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          CONTROL_PATH="$HOME/.ssh/qilylean-cn-%r@%h:%p"
-          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -o ControlMaster=auto -o ControlPersist=30m -o ControlPath="$CONTROL_PATH")
-          # One persistent SSH master avoids opening a separate overseas TCP
-          # connection for every chunk and allows bounded parallel transfers.
-          ssh -MNf "${SSH_OPTS[@]}" -o ControlMaster=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"
-          trap 'ssh "${SSH_OPTS[@]}" -O exit "$USER_NAME@$CN_PREPROD_HOST" >/dev/null 2>&1 || true' EXIT
+          CONTROL_DIR="$(mktemp -d "$HOME/.ssh/qily-cn-transfer.XXXXXX")"
+          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -o ControlMaster=auto -o ControlPersist=10m)
+          REMOTE_HELPER="/tmp/qily-cn-transfer-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.py"
+          REMOTE_MANIFEST="/tmp/qily-cn-transfer-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          LOCAL_PARTS="$(mktemp -d /tmp/qily-cn-parts.XXXXXX)"
+          cleanup() {
+            # Stop run-owned channels, retaining the checksum-addressed chunks.
+            timeout 15s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+              "$USER_NAME@$CN_PREPROD_HOST" "rm -f '$REMOTE_HELPER' '$REMOTE_MANIFEST'" >/dev/null 2>&1 || true
+            for lane in 0 1 2 3; do
+              ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -O exit \
+                "$USER_NAME@$CN_PREPROD_HOST" >/dev/null 2>&1 || true
+            done
+            rm -rf "$CONTROL_DIR" "$LOCAL_PARTS"
+          }
+          trap cleanup EXIT
+          ssh -MNf "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -o ControlMaster=yes \
+            -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"
 
           copy_with_retry() {
             local src="$1"
             local dest="$2"
+            local lane="${3:-0}"
             local attempt
-            for attempt in 1 2; do
-              echo "SCP ${src} -> ${dest} (attempt ${attempt}/2)"
-              if timeout 180s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
+            for attempt in 1 2 3; do
+              echo "SCP ${src} (lane ${lane}, attempt ${attempt}/3)"
+              if timeout 240s scp -q "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" \
+                -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
                 return 0
               fi
               sleep 3
@@ -363,33 +414,57 @@ jobs:
             return 1
           }
 
-          # The mainland route can stall on one long SCP stream. Upload the release
-          # archive in small independently retryable chunks, reconstruct it remotely,
-          # then verify SHA-256 before the atomic release switch.
           ARCHIVE_SHA="$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print $1}')"
-          rm -f /tmp/qilylean-cn-site.part.*
           ARCHIVE_BYTES="$(stat -c '%s' /tmp/qilylean-cn-site.tar.gz)"
           echo "Release archive size: ${ARCHIVE_BYTES} bytes"
-          split -b 512k -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
-
-          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz; mkdir -p /tmp/qilylean-cn-translation'
-
-          # Upload at most three independent 512 KiB streams at once; preserve
-          # the final full-archive SHA-256 check before switching any release.
-          batch=()
-          for part in /tmp/qilylean-cn-site.part.*; do
-            copy_with_retry "$part" "/tmp/$(basename "$part")" &
-            batch+=("$!")
-            if ((${#batch[@]} == 3)); then
-              failed=0
-              for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
-              test "$failed" -eq 0
-              batch=()
+          copy_with_retry scripts/cn-release-transfer.py "$REMOTE_HELPER"
+          pulled=false
+          if test -n "$RELEASE_ARTIFACT_ID"; then
+            # The GitHub bearer token stays on the runner. The one-time signed
+            # storage URL is never echoed, saved, placed in argv or sent to logs.
+            if python3 scripts/cn-release-transfer.py artifact-request \
+                 --repository "$GITHUB_REPOSITORY" --artifact-id "$RELEASE_ARTIFACT_ID" \
+                 | timeout 2760s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" \
+                   -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' pull"; then
+              pulled=true
             fi
-          done
-          failed=0
-          for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
-          test "$failed" -eq 0
+          fi
+          if test "$pulled" != true; then
+            echo 'Artifact pull unavailable; resuming independently verified SCP chunks.'
+            python3 scripts/cn-release-transfer.py split --directory "$LOCAL_PARTS" > "$LOCAL_PARTS/manifest.json"
+            copy_with_retry "$LOCAL_PARTS/manifest.json" "$REMOTE_MANIFEST"
+            timeout 120s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+              "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' missing --manifest '$REMOTE_MANIFEST'" > "$LOCAL_PARTS/missing.txt"
+            echo "Remaining chunks: $(wc -l < "$LOCAL_PARTS/missing.txt")"
+            for lane in 1 2 3; do
+              # Separate masters give four actual TCP paths, rather than four
+              # SFTP channels sharing the same stalled overseas connection.
+              ssh -MNf "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -o ControlMaster=yes \
+                -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"
+            done
+            batch=()
+            for lane in 0 1 2 3; do
+              (
+                while IFS= read -r index; do
+                  [[ "$index" =~ ^[0-9]{4,5}$ ]]
+                  if ((10#$index % 4 != lane)); then continue; fi
+                  part="$LOCAL_PARTS/part.$index"
+                  incoming="/tmp/qily-cn-release-cache/$ARCHIVE_SHA/.incoming-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-$index"
+                  copy_with_retry "$part" "$incoming" "$lane"
+                  timeout 90s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -i ~/.ssh/qilylean_cn \
+                    "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' accept --manifest '$REMOTE_MANIFEST' --index '$index' --incoming '$incoming'"
+                done < "$LOCAL_PARTS/missing.txt"
+              ) &
+              batch+=("$!")
+            done
+            failed=0
+            for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
+            test "$failed" -eq 0
+            timeout 180s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+              "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' assemble --manifest '$REMOTE_MANIFEST'"
+          fi
+          timeout 60s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+            "$USER_NAME@$CN_PREPROD_HOST" 'mkdir -p /tmp/qilylean-cn-translation'
           copy_with_retry cn-site/scripts/server-bootstrap.sh /tmp/bootstrap-qilylean-cn.sh
           copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
@@ -401,7 +476,11 @@ jobs:
             copy_with_retry "cn-site/assets/$asset" "/tmp/qilylean-cn-translation/$asset"
           done
 
-          timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              REMOTE_SHA=\$(sha256sum /tmp/qilylean-cn-site.tar.gz | cut -d' ' -f1) &&              test \"\$REMOTE_SHA\" = \"$ARCHIVE_SHA\" &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
+          timeout 90s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+            "$USER_NAME@$CN_PREPROD_HOST" \
+            "test \"\$(sha256sum /tmp/qilylean-cn-site.tar.gz | cut -d' ' -f1)\" = '$ARCHIVE_SHA' && \
+             test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf && \
+             echo 'Release bundle staged and checksum verified.'"
 
       - name: Bootstrap server when required
         if: steps.source-parity.outputs.enabled != 'true'

@@ -225,7 +225,7 @@ for p in Path('.').rglob('*.html'):
         continue
     text = p.read_text(encoding='utf-8', errors='ignore')
     allow_information = p.as_posix() in cn_information_pages and cn_copy_handler and cn_contact_route and all(token in text for token in (
-        'data-qily-site="cn"', 'data-qily-footer-action="contact"', '/assets/cn-footer-actions-v1.js?',
+        'href="https://qilylean.cn/', 'data-qily-footer-action="contact"', '/assets/cn-footer-actions-v1.js?',
     ))
     email_audit = OfficialEmailAudit(
         allow_copy=p.as_posix() == 'cn-site/about/index.html' and cn_copy_handler,
