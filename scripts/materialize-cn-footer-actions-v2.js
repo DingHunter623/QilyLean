@@ -22,6 +22,7 @@ const actionCss=vm.runInNewContext(cssArray[1],Object.create(null),{timeout:1000
 const START='/* QILY-CN-SHARED-SEVEN-ACTIONS-V2:START */';
 const END='/* QILY-CN-SHARED-SEVEN-ACTIONS-V2:END */';
 const regionCss=`
+html:root:root:root:root:root:root{scrollbar-gutter:stable!important}
 html:root:root:root:root:root:root body footer.footer{
   padding:0 0 env(safe-area-inset-bottom)!important;
   background:#0f4b5a!important;border-top:3px solid #c8a25a!important;
