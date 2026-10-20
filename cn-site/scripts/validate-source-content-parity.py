@@ -148,6 +148,7 @@ def fixture_checks():
     require(not parity.render(parity.Tree(commercial).root, 'projects/index.html').strip(), 'Explicit commercial blocks/actions were not excluded')
     require('url("#diagram")' in parity.declarations('fill:url(#diagram)', 'index.html'), 'Inline SVG paint reference was lost')
     require(parity.versioned_media_url('assets/example.svg', '0123456789abcdef0123456789abcdef') == '/mirror-media/assets/example.svg?v=0123456789abcdef', 'Mirrored media URLs must include a content-hash cache key')
+    require('<h1>工作现场</h1>' in parity.preserve_generated_page_heading('<section><h2>工作现场</h2></section>', '<main><section class="page-hero"><h1>工作现场</h1></section><section>内容</section></main>'), 'Source pages whose H1 is outside main must retain the generated page heading')
     styled = parity.render(parity.Tree('<p style="background:url(https://example.invalid/private.jpg)" onclick="run()">公开内容</p>').root, 'index.html')
     require('example.invalid' not in styled and 'onclick' not in styled and '公开内容' in styled, 'Unsafe source style/handler handling failed')
 
