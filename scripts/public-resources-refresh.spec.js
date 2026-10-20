@@ -24,6 +24,9 @@ for(const width of [1440,1024,820,760,390,320]){
    expect(measurement.overflow).toBe(false);
    expect(measurement.buttons.some(n=>n.overflow)).toBe(false);
    if(cn){
+    await expect(page.locator('#qilyCnPrimaryNavigation a')).toHaveCount(10);
+    await expect(page.locator('#qilyCnPrimaryNavigation a[href="/about/#contact"]')).toHaveText('联系我们');
+    await expect(page.locator('script[src*="/assets/cn-nav-rail-v1.js"]')).toHaveAttribute('src',/20261021-nav-rail-v22-contact-preserved/);
     await expect(page.locator('footer .footer-records>a')).toHaveCount(2);
     await expect(page.locator('.footer-home')).toHaveCount(0);
     await page.locator('#floatDock [data-action="search"]').click();

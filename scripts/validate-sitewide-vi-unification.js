@@ -218,7 +218,7 @@ for(const rel of cnPages){
     ? '20261014-cn-contact-three-phones-v1'
     : '20261008-cn-vi-v50-cache-revalidation';
   assert(html.includes('/assets/qilylean-vi-v2.css?v='+cnViRevision), rel+' must use current CN VI resource version.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20261018-nav-rail-v21-public-clone'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator runtime.');
   assert(!html.includes(cnFooterLegacyName), rel+' footer must not repeat the QilyLean brand prefix.');
