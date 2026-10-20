@@ -333,7 +333,23 @@ jobs:
                     assert(relative&&!relative.split('/').includes('..')&&!relative.includes('\0'));
                     const asset=fs.realpathSync(path.resolve(root,relative));
                     assert(asset.startsWith(root+path.sep)&&fs.statSync(asset).isFile());
-                    await route.fulfill({status:200,contentType:mime[path.extname(asset).toLowerCase()]||'application/octet-stream',body:fs.readFileSync(asset)});
+                    const bytes=fs.readFileSync(asset);
+                    const contentType=mime[path.extname(asset).toLowerCase()]||'application/octet-stream';
+                    const range=route.request().headers().range;
+                    if(range&&contentType==='video/mp4'){
+                      const match=/^bytes=(\\d*)-(\\d*)$/i.exec(range);
+                      assert(match&&(match[1]||match[2]),'Invalid MP4 byte range: '+range);
+                      const start=match[1]?Number(match[1]):Math.max(0,bytes.length-Number(match[2]));
+                      const end=match[1]?(match[2]?Math.min(Number(match[2]),bytes.length-1):bytes.length-1):bytes.length-1;
+                      if(!Number.isSafeInteger(start)||!Number.isSafeInteger(end)||start<0||start>=bytes.length||end<start){
+                        await route.fulfill({status:416,headers:{'Content-Range':'bytes */'+bytes.length}});
+                        return;
+                      }
+                      const body=bytes.subarray(start,end+1);
+                      await route.fulfill({status:206,headers:{'Accept-Ranges':'bytes','Content-Range:' : 'bytes '+start+'-'+end+'/'+bytes.length,'Content-Length':String(body.length),'Content-Type':contentType},body});
+                    }else{
+                      await route.fulfill({status:200,headers:{'Accept-Ranges':'bytes','Content-Length':String(bytes.length),'Content-Type':contentType},body:bytes});
+                    }
                   }catch(error){missing.push(String(error));await route.abort('failed');}
                 });
                 const page=await context.newPage();
