@@ -229,6 +229,7 @@ def main():
             referenced_media.add(quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/'))
     for row in styles:
         text = local_path(row['url']).read_text()
+        require('/mirror-media/' not in text, 'Proxy-dependent source stylesheet returned: ' + row['url'])
         for encoded in re.findall(r'/assets/public-media/([^\s\x22\x27<>)]*)', text):
             referenced_media.add(quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/'))
     require(referenced_media <= set(manifest['media']), 'Actual content media missing from ledger: ' + ', '.join(sorted(referenced_media - set(manifest['media']))))

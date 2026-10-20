@@ -525,6 +525,18 @@ def copy_daily_knowledge_runtime():
 
 def main():
     MEDIA.clear(); MEDIA_HASHES.clear(); EXCLUDED.clear(); STYLE_CACHE.clear(); STYLE_RECORDS.clear(); KEYFRAMES.clear(); SHELL_STYLE_CACHE.clear()
+    localized_adapters = {}
+    for basename in ('public-terminology-interactions.css', 'public-terminology-interactions.js'):
+        asset = CN / 'assets' / basename
+        if not asset.is_file(): continue
+        original = asset.read_text()
+        localized = localize_media_references(original)
+        if localized == original: continue
+        asset.write_text(localized)
+        href = '/assets/' + basename + '?v=' + file_hash(asset)[:12]
+        localized_adapters[basename] = href
+        STYLE_RECORDS['cn-site/assets/' + basename] = {'source': 'cn-site/assets/' + basename,
+            'url': href, 'source_sha256': file_hash(asset), 'sha256': file_hash(asset), 'bytes': asset.stat().st_size}
     candidates = {item.path.as_posix(): (item.url, None) for item in mirror.SOURCES if item.out.is_file()}
     candidates.update(PRIMARY)
     candidates['moments/index.html'] = ('/archive/records/', 'trust')
@@ -542,6 +554,8 @@ def main():
         target = CN / url.lstrip('/') / 'index.html' if url.endswith('/') else CN / url.lstrip('/')
         if not source_path.is_file() or not target.is_file(): continue
         old = target.read_text()
+        for basename, href in localized_adapters.items():
+            old = re.sub(r'/assets/' + re.escape(basename) + r'(?:\?[^\s\x22\x27<>]*)?', href, old)
         # These source-backed interactive viewers have explicit audited adapters;
         # keep their working DOM/runtime rather than flattening them to HTML.
         adapter = re.search(r'data-cn-public-kind="([^"]+)"', old)
