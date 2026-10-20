@@ -346,7 +346,7 @@ jobs:
                         return;
                       }
                       const body=bytes.subarray(start,end+1);
-                      await route.fulfill({status:206,headers:{'Accept-Ranges':'bytes','Content-Range:' : 'bytes '+start+'-'+end+'/'+bytes.length,'Content-Length':String(body.length),'Content-Type':contentType},body});
+                      await route.fulfill({status:206,headers:{'Accept-Ranges':'bytes','Content-Range':'bytes '+start+'-'+end+'/'+bytes.length,'Content-Length':String(body.length),'Content-Type':contentType},body});
                     }else{
                       await route.fulfill({status:200,headers:{'Accept-Ranges':'bytes','Content-Length':String(bytes.length),'Content-Type':contentType},body:bytes});
                     }
