@@ -41,7 +41,7 @@ html:root:root:root:root:root:root body footer.footer .footer-records{
   display:flex!important;flex-direction:row!important;align-items:center!important;
   justify-content:center!important;flex:0 0 auto!important;gap:8px!important;
   width:min(var(--qily-cn-axis,1180px),calc(100% - 32px))!important;
-  min-height:55px!important;margin:0 auto!important;padding:6px 0!important;
+  min-height:var(--qily-footer-record-h,55px)!important;margin:0 auto!important;padding:6px 0!important;
 }
 html:root:root:root:root:root:root body footer.footer .footer-records>a{
   flex:0 0 auto!important;width:auto!important;
@@ -51,7 +51,7 @@ html:root:root:root:root:root:root body footer.footer .footer-records>a{
 }
 @media(max-width:760px){
   html:root:root:root:root:root:root body footer.footer .footer-records{
-    flex-direction:column!important;gap:5px!important;min-height:85px!important;
+    flex-direction:column!important;gap:5px!important;min-height:var(--qily-footer-record-h,85px)!important;
     width:calc(100% - 16px)!important;
   }
 }
