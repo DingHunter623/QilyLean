@@ -1,0 +1,61 @@
+name: QilyLean Dual-Site Footer VI Closure
+on:
+  push:
+    branches:
+      - fix/dual-site-footer-vi-about-us-20261021
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: qily-footer-vi-closure-20261021
+  cancel-in-progress: false
+jobs:
+  materialize-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/dual-site-footer-vi-about-us-20261021
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Normalize only footer/VI asset references and CN About entry
+        run: |
+          node --check scripts/apply-dual-site-footer-vi-20261021.js
+          node scripts/apply-dual-site-footer-vi-20261021.js
+      - name: Regenerate canonical first-paint Dock and CN footer
+        run: |
+          node scripts/materialize-public-shell-first-paint-v1.js
+          node scripts/materialize-cn-footer-actions-v2.js
+          node scripts/apply-dual-site-footer-vi-20261021.js
+      - name: Contract checks
+        run: |
+          set -euo pipefail
+          node scripts/apply-dual-site-footer-vi-20261021.js --check
+          node scripts/materialize-public-shell-first-paint-v1.js --check
+          node scripts/materialize-cn-footer-actions-v2.js --check
+          node scripts/validate-dock-flow-navigation-v56.js
+          node scripts/validate-sitewide-vi-unification.js
+          node --check site-dock-share-runtime-v1.js
+          node --check cn-site/assets/cn-nav-rail-v1.js
+          git diff --check
+      - name: Save fully materialized source to this review branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html' 'cn-site/assets/cn-footer-actions-v1.css' 'cn-site/assets/cn-footer-actions-v1.js' 'cn-site/scripts/*.py' 'cn-site/scripts/*.sh' 'scripts/*.js'
+          if ! git diff --cached --quiet; then
+            git commit -m 'build(vi): materialize all dual-site footer and About revisions [skip ci]'
+            git push origin HEAD:fix/dual-site-footer-vi-about-us-20261021
+          fi
+      - name: Closure evidence
+        run: |
+          test -s cn-site/about/index.html
+          grep -Fq 'data-qily-nav-key="contact">关于我们</a>' cn-site/index.html
+          grep -Fq '湘ICP备2026041143号-1' cn-site/index.html
+          grep -Fq '湘公网安备43020002000443号' cn-site/index.html
+          ! grep -Fq 'Public footer shared background includes the China record-row geometry' site-dock-share-runtime-v1.js
+          echo 'Done: pending PR review + production deploy confirmation'
