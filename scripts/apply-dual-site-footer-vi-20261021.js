@@ -34,14 +34,14 @@ function patch(rel){
  const old=fs.readFileSync(file,'utf8');
  let next=old;
  // Replace scoped asset query revisions only, never editorial content.
- next=next.replace(/(\\/(?:site-dock-share-runtime-v1\\.js|assets\\/cn-footer-actions-v1\\.(?:js|css))\\?[^"'\\s<>]*)/g,u=>u.replaceAll(OLD_DOCK,DOCK));
- next=next.replace(/(\\/site-public-footer-type-v1\\.css\\?[^"'\\s<>]*)/g,u=>u.replaceAll(OLD_TYPE,TYPE));
- next=next.replace(/(\\/assets\\/cn-nav-rail-v1\\.js\\?[^"'\\s<>]*)/g,u=>u.replaceAll(OLD_NAV,NAV));
+ next=next.replace(/(\/(?:site-dock-share-runtime-v1\.js|assets\/cn-footer-actions-v1\.(?:js|css))\?[^"'\s<>]*)/g,u=>u.replaceAll(OLD_DOCK,DOCK));
+ next=next.replace(/(\/site-public-footer-type-v1\.css\?[^"'\s<>]*)/g,u=>u.replaceAll(OLD_TYPE,TYPE));
+ next=next.replace(/(\/assets\/cn-nav-rail-v1\.js\?[^"'\s<>]*)/g,u=>u.replaceAll(OLD_NAV,NAV));
  if(rel.startsWith('cn-site/')&&rel.endsWith('.html')){
   // Static first paint must match the run-time owner: label & destination.
-  next=next.replace(/<a\\b[^>]*\\bdata-qily-nav-key="contact"[^>]*>\\s*联系我们\\s*<\\/a>/g,tag=>tag.replace('href="/about/#contact"','href="/about/"').replace('>联系我们</a>','>关于我们</a>'));
+  next=next.replace(/<a\b[^>]*\bdata-qily-nav-key="contact"[^>]*>\s*联系我们\s*<\/a>/g,tag=>tag.replace('href="/about/#contact"','href="/about/"').replace('>联系我们</a>','>关于我们</a>'));
   // Generated page families can have alternate attribute order.
-  next=next.replace(/<a\\b[^>]*\\bhref="\\/about\\/#contact"[^>]*\\bdata-qily-nav-key="contact"[^>]*>\\s*联系我们\\s*<\\/a>/g,tag=>tag.replace('href="/about/#contact"','href="/about/"').replace('>联系我们</a>','>关于我们</a>'));
+  next=next.replace(/<a\b[^>]*\bhref="\/about\/#contact"[^>]*\bdata-qily-nav-key="contact"[^>]*>\s*联系我们\s*<\/a>/g,tag=>tag.replace('href="/about/#contact"','href="/about/"').replace('>联系我们</a>','>关于我们</a>'));
  }
  if(rel==='cn-site/scripts/materialize-public-content-mirror.py'){
    next=next.replace('["contact","/about/#contact","联系我们"]','["contact","/about/","关于我们"]');
@@ -54,7 +54,7 @@ function patch(rel){
   changed.push(rel);
  }
  if(rel.startsWith('cn-site/')&&rel.endsWith('.html')){
-   if(/data-qily-nav-key="contact"[^>]*>关于我们<\\/a>/.test(next))navCount++;
+   if(/data-qily-nav-key="contact"[^>]*>关于我们<\/a>/.test(next))navCount++;
    if(next.includes('/assets/cn-footer-actions-v1.css?v='+DOCK))dockCount++;
    if(next.includes('/site-public-footer-type-v1.css?v='+TYPE))typeCount++;
  }
