@@ -10,7 +10,7 @@ const cases=[
   ['daily-desktop','/qilylean/daily/2026-09-04.html',{width:1440,height:1000},false],
   ['daily-mobile','/qilylean/daily/2026-09-04.html',{width:390,height:844},true]
 ];
-const expected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
+const expected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前'];
 const out=path.join(process.cwd(),'dock-v58-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
@@ -59,8 +59,8 @@ for(const [name,url,viewport,mobile] of cases){
 
     expect(result.position).toBe('fixed');
     expect(result.labels).toEqual(expected);
-    expect(result.actions).toEqual(['home','top','back','previous','search','current','contact']);
-    expect(result.buttons).toHaveLength(7);
+    expect(result.actions).toEqual(['home','top','back','previous','search','current']);
+    expect(result.buttons).toHaveLength(6);
     expect(result.bottomGap,'footer must touch viewport bottom').toBeLessThanOrEqual(1);
     expect(result.dockWidth/result.viewportWidth,'footer must span the layout viewport').toBeGreaterThanOrEqual(.995);
     expect(result.dockLeft,'footer must start at viewport left').toBeGreaterThanOrEqual(-1);
@@ -101,7 +101,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.buttons[6].right,'second row should be centered rather than right-packed').toBeLessThan(result.viewportWidth-20);
     }else{
       expect(result.display).toBe('grid');
-      expect(result.gridColumns.split(' ').length).toBe(7);
+      expect(result.gridColumns.split(' ').length).toBe(6);
       expect(result.layout).toBe('fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(Math.abs(result.spacerHeight-result.dockHeight),'desktop clearance must equal measured compact footer height').toBeLessThanOrEqual(2);

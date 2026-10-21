@@ -26,7 +26,6 @@ const GOV_TAG = `<link id="qilyVisualGovernanceV1" rel="stylesheet" href="${GOV_
 
 const ROUTES = [
   ['首页', '/'],
-  ['履历主线', '/experience/'],
   ['能力体系', '/capabilities/'],
   ['改善工具', '/improvements/'],
   ['精益生产', '/lean-production/'],
