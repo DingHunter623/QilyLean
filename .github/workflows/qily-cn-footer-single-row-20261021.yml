@@ -1,7 +1,7 @@
 name: QilyLean CN Compact Footer Acceptance
 on:
   push:
-    branches: [fix/cn-footer-single-row-closure-20261021]
+    branches: [fix/cn-footer-responsive-final-20261021]
   workflow_dispatch:
 permissions:
   contents: write
@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/cn-footer-single-row-closure-20261021
+          ref: fix/cn-footer-responsive-final-20261021
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -52,5 +52,5 @@ jobs:
           git add -- cn-site
           if ! git diff --cached --quiet; then
             git commit -m 'build(cn): materialize five-action footer and one-row filings [skip ci]'
-            git push origin HEAD:fix/cn-footer-single-row-closure-20261021
+            git push origin HEAD:fix/cn-footer-responsive-final-20261021
           fi
