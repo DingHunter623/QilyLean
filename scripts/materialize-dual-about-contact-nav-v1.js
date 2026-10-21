@@ -16,16 +16,16 @@ function patch(rel){
   const file=path.join(root,rel);if(!fs.existsSync(file))return;
   let html=fs.readFileSync(file,'utf8'),next=html;
   if(rel.startsWith('cn-site/')){
-    next=next.replace(/(\\/assets\\/cn-footer-actions-v1\\.(?:js|css)\\?v=)20261021-footer-vi-v6/g,'$1'+newContact);
+    next=next.replace(/(\/assets\/cn-footer-actions-v1\.(?:js|css)\?v=)20261021-footer-vi-v6/g,'$1'+newContact);
     if(rel.endsWith('/about/index.html')&&!next.includes('湘ICP备2026041143号-1'))throw Error('China About lost ICP record');
     if(next!==html)cn++;
   } else if(!rel.startsWith('global-knowledge/')&&rel!=='links/cn-public/index.html'){
-    next=next.replace(/(\\/site-dock-share-runtime-v1\\.js\\?v=[^"'\\s<>]*?&patch=)20261021-footer-vi-v6/g,'$1'+newContact);
-    next=next.replace(/(\\/site-navigation\\.js\\?[^"'\\s<>]*)/g,url=>url.includes('aboutmenu='+navRev)?url:url+'&aboutmenu='+navRev);
-    next=next.replace(/<header\\b[^>]*>[\\s\\S]*?<\\/header>/gi,header=>header.replace(/<nav\\b[^>]*class="[^"]*(?:qily-global-nav|site-nav)[^"]*"[^>]*>[\\s\\S]*?<\\/nav>/gi,nav=>{
-      if(!/href=["']\\/links\\/["']/.test(nav)||/href=["']\\/about\\/["']/.test(nav))return nav;
+    next=next.replace(/(\/site-dock-share-runtime-v1\.js\?v=[^"'\s<>]*?&patch=)20261021-footer-vi-v6/g,'$1'+newContact);
+    next=next.replace(/(\/site-navigation\.js\?[^"'\s<>]*)/g,url=>url.includes('aboutmenu='+navRev)?url:url+'&aboutmenu='+navRev);
+    next=next.replace(/<header\b[^>]*>[\s\S]*?<\/header>/gi,header=>header.replace(/<nav\b[^>]*class="[^"]*(?:qily-global-nav|site-nav)[^"]*"[^>]*>[\s\S]*?<\/nav>/gi,nav=>{
+      if(!/href=["']\/links\/["']/.test(nav)||/href=["']\/about\/["']/.test(nav))return nav;
       const active=rel==='about/index.html'?' aria-current="page"':'';
-      return nav.replace(/<\\/nav>$/i,'<a href="/about/"'+active+'>关于我们</a></nav>');
+      return nav.replace(/<\/nav>$/i,'<a href="/about/"'+active+'>关于我们</a></nav>');
     }));
     if(next!==html)intl++;
   }
