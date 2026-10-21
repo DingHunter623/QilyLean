@@ -44,6 +44,16 @@ jobs:
           git add -- '*.html' 'cn-site/assets/cn-footer-actions-v1.css' 'cn-site/assets/cn-footer-actions-v1.js'
           if ! git diff --cached --quiet; then
             git commit -m 'build(about): apply career hierarchy and footer to all pages [skip ci]'
-            git pull --rebase origin main
-            git push origin HEAD:main
+            # Parallel site workers may update main between fetch and push.
+            pushed=0
+            for attempt in 1 2 3 4 5 6 7; do
+              git fetch origin main
+              git rebase origin/main
+              if git push origin HEAD:main; then
+                pushed=1
+                break
+              fi
+              sleep 3
+            done
+            test "$pushed" -eq 1
           fi
