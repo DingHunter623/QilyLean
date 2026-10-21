@@ -59,7 +59,7 @@ must('background:#ffe39b!important','gold hover/focus fill');
 must('color:#0f4b5a!important','deep teal hover/focus text');
 must('box-shadow:inset 0 0 0 2px rgba(255,227,155,.24)!important','internal focus feedback');
 must('background:#073c47!important','pressed deep teal state');
-must("bottom:calc(var(--qily-dock-footer-h,58px) + 14px + env(safe-area-inset-bottom))",'toast above footer');
+must("bottom:calc(var(--qily-dock-footer-h,50px) + 14px + env(safe-area-inset-bottom))",'toast above footer');
 
 forbid('mobile-fixed-bottom-compact-navigation','retired one-row compact mobile layout');
 forbid('mobile-fixed-bottom-swipe-navigation','retired swipe layout');
