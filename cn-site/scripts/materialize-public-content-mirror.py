@@ -384,7 +384,7 @@ def footer() -> str:
 
 def header(current: str = "knowledge") -> str:
     current = {"briefs": "knowledge", "about": "contact"}.get(current, current)
-    items = [["home","/","首页"],["experience","/archive/profile/experience/","履历主线"],["capabilities","/archive/profile/capabilities/","能力体系"],["tools","/archive/profile/tools/","改善工具"],["lean","/lean/","精益生产"],["projects","/notes/","代表项目"],["trust","/trust/","信任中心"],["knowledge","/knowledge/","知识资产"],["resources","/resources/","资源协同"],["contact","/about/","关于我们"]]
+    items = [["home","/","首页"],["capabilities","/archive/profile/capabilities/","能力体系"],["tools","/archive/profile/tools/","改善工具"],["lean","/lean/","精益生产"],["projects","/notes/","代表项目"],["trust","/trust/","信任中心"],["knowledge","/knowledge/","知识资产"],["resources","/resources/","资源协同"],["contact","/about/","关于我们"]]
     links = []
     for key, href, label in items:
         current_attr = ' aria-current="page"' if key == current else ""

@@ -26,7 +26,7 @@ TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cw
 VERSION = '20261020-source-content-parity-v3-cache-bust-heading-fallback'
 PRIMARY = {
     'index.html': ('/', 'home'),
-    'experience/index.html': ('/archive/profile/experience/', 'experience'),
+    'experience/index.html': ('/archive/profile/experience/', 'contact'),
     'capabilities/index.html': ('/archive/profile/capabilities/', 'capabilities'),
     'improvements/index.html': ('/archive/profile/tools/', 'tools'),
     'lean-production/index.html': ('/lean/', 'lean'),
