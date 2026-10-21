@@ -68,7 +68,7 @@ function openMainlandSearch(){
   (d.body||d.documentElement).appendChild(mainlandSearch);
   mainlandSearch.querySelector('[data-cn-search-close]').addEventListener('click',function(){mainlandSearch.close();});
   mainlandSearch.addEventListener('close',function(){if(mainlandSearchFocus&&mainlandSearchFocus.focus)mainlandSearchFocus.focus();});
-  mainlandSearch.querySelector('input').addEventListener('input',renderMainlandSearch);
+  mainlandSearch.querySelector('input').addEventListener('input',function(){renderMainlandSearch();});
  }
  mainlandSearchFocus=d.activeElement;if(!mainlandSearch.open)mainlandSearch.showModal();mainlandSearch.querySelector('input').focus();
  if(!mainlandIndex){

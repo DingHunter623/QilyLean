@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4175';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
 const blocks=['qilyChinaKnowledgeBridge','electricalRecommendations','navigationPartnerLinks'];
-const INTL_ORDER=['home','top','back','previous','search','current'];
+const INTL_ORDER=['top','back','previous','search','current'];
 const CN_ORDER=['top','back','previous','search','current'];
 for(const width of [1440,1024,820,760,390,320]){
  test(`shared public resources, dual-site footer and About navigation at ${width}px`,async({browser})=>{

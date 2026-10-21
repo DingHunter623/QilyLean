@@ -32,6 +32,10 @@ for path in sorted(CN.rglob("*.html")):
     if header and 'aria-label="主导航"' not in header.group(0):
         text = text[:header.start()] + CANONICAL_HEADER + text[header.end():]
 
+    # Legal/support emails remain directly actionable after removing footer contact.
+    text = re.sub(r'<span\b([^>]*)>admin@qilylean\.com</span>',
+                  r'<a\1 href="mailto:admin@qilylean.com">admin@qilylean.com</a>', text)
+
     # These international shell owners are not published at China-domain paths.
     # CN owns its navigation, footer and measured header through local assets.
     text = INTERNATIONAL_SHELL_IMPORT.sub("", text)

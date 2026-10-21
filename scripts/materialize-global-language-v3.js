@@ -32,7 +32,7 @@ const CN_RESOURCE_BRIDGE='links/cn-public/index.html';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260924-r7-navigation-v49&patch=20260924-primary-nav-render-parity-v4&nav=20261010-no-pseudo-underline-v2';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
-const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261021-footer-about-v1';
+const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261021-five-actions-v1';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
 const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2';
 const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8';
@@ -105,12 +105,33 @@ function neutralizeFirstPaint(source){
 function isDdzFastRoute(relative,source){
   return relative===DDZ_FAST_PATH&&source.includes("20260903-ddz-fast-knowledge-v155")&&source.includes('data-qily-ddz-fast-shell="v155"');
 }
+function alignDockCache(source){
+  return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,url=>{
+    const before=new URL(url,'https://qilylean.com'),canonical=new URL(DOCK_SHARE,'https://qilylean.com');
+    for(const [key,value] of before.searchParams)if(!canonical.searchParams.has(key))canonical.searchParams.append(key,value);
+    return canonical.pathname+'?'+canonical.searchParams.toString();
+  });
+}
 function materialize(source,relative){
   /* Independently governed surfaces must never be rematerialized with the primary international baseline. */
   if(relative.startsWith(GLOBAL_KNOWLEDGE_PREFIX)||relative.startsWith(CN_SITE_PREFIX)||relative===CN_RESOURCE_BRIDGE)return source;
 
   /* DDZ V155 is intentionally isolated from the heavyweight sitewide shell. Keep only the canonical Dock cache aligned. */
-  if(isDdzFastRoute(relative,source))return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
+  if(isDdzFastRoute(relative,source))return alignDockCache(source);
+
+  // Current pages already own an approved resource order and navigation query
+  // parameters. Adopt that shell in place; footer updates must not reorder its
+  // stylesheets or erase About/navigation revisions. Older assets still enter
+  // the complete baseline upgrade below.
+  const currentAssets=[HEADER_AXIS,
+    INTERACTION_CONTRAST_CSS,INTERACTION_CONTRAST_JS,CONTENT_CONTRAST_CSS,CONTENT_CONTRAST_JS,
+    UNIFIED_VISUAL_CSS,REGRESSION_CLOSURE_CSS,STABILITY_RECOVERY_CSS,PUBLIC_REDLINE_CSS,
+    PUBLIC_REDLINE_V2_CSS,PUBLIC_REDLINE_V2_JS,INTERACTION_SEMANTICS_CSS,INTERACTION_SEMANTICS_JS,
+    CONTACT_ROUTE_JS,VISUAL_SYSTEM_V2,RESPONSIVE_CONTAINMENT_CSS,FINAL_INTEGRITY_CSS,
+    VISUAL_COMPONENTS_CSS,TRANSLATION_PUBLIC_CSS,TRANSLATION_SAFE_JS,BRAND_HOME_FEEDBACK_JS];
+  if(currentAssets.every(asset=>source.includes(asset))&&(!source.includes('/site-navigation.js?')||source.includes(NAVIGATION))){
+    return materializeFirstPaint(alignDockCache(source),relative);
+  }
 
   let next=neutralizeFirstPaint(source);
   next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,CONSISTENCY);

@@ -567,6 +567,14 @@ def main():
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
+            if name == 'projects/index.html':
+                # Preserve existing China project bookmarks on the shared cards.
+                project_ids = iter(('automotive-lean', 'smed-300t', 'mold-warehouse',
+                                    'fuse-improvement', 'factory-layout', 'digital-factory',
+                                    'visual-management', 'evidence'))
+                content = re.sub(r'<article class="module-card project-list-card',
+                                 lambda _: '<article id="practice-' + next(project_ids) + '" class="module-card project-list-card',
+                                 content)
         style_tags = []
         head = re.search(r'<head\b[^>]*>([\s\S]*?)</head>', raw, re.I)
         for kind, style_attrs, css in SourceStyles(head.group(1) if head else '').items:
