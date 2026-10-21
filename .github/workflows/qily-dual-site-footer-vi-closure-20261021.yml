@@ -2,7 +2,12 @@ name: QilyLean Dual-Site Footer VI Closure
 on:
   push:
     branches:
-      - fix/dual-site-footer-vi-about-us-20261021
+      - main
+    paths:
+      - '.github/workflows/qily-dual-site-footer-vi-closure-20261021.yml'
+      - 'site-dock-share-runtime-v1.js'
+      - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/apply-dual-site-footer-vi-20261021.js'
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: fix/dual-site-footer-vi-about-us-20261021
+          ref: main
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
@@ -49,7 +54,8 @@ jobs:
           git add -- '*.html' 'cn-site/assets/cn-footer-actions-v1.css' 'cn-site/assets/cn-footer-actions-v1.js' 'cn-site/scripts/*.py' 'cn-site/scripts/*.sh' 'scripts/*.js'
           if ! git diff --cached --quiet; then
             git commit -m 'build(vi): materialize all dual-site footer and About revisions [skip ci]'
-            git push origin HEAD:fix/dual-site-footer-vi-about-us-20261021
+            git pull --rebase origin main
+            git push origin HEAD:main
           fi
       - name: Closure evidence
         run: |
