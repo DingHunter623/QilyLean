@@ -11,10 +11,11 @@
 <link rel="stylesheet" href="/assets/knowledge-visual-v1.css?v=20260921-visual-brief-v3">
 <link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2">
   <link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation">
-  <link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261021-cn-single-row-v1">
-<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4">
+  <link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261021-five-actions-v1">
+<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4"><link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10">
+<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="/assets/cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2">
 </head>
-<body>
+<body data-qily-site="cn">
 <a class="skip" href="#main">跳到主要内容</a>
 <header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><nav class="nav" aria-label="主导航" data-qily-cn-nav-contract="20260926-v7-bridge"><a href="/" data-qily-nav-key="home">首页</a><a href="/archive/profile/capabilities/" data-qily-nav-key="capabilities">能力体系</a><a href="/archive/profile/tools/" data-qily-nav-key="tools">改善工具</a><a href="/lean/" data-qily-nav-key="lean">精益生产</a><a href="/notes/" data-qily-nav-key="projects">代表项目</a><a href="/trust/" data-qily-nav-key="trust">信任中心</a><a href="/knowledge/" data-qily-nav-key="knowledge" aria-current="page">知识资产</a><a href="/resources/" data-qily-nav-key="resources">资源协同</a><a href="/about/" data-qily-nav-key="contact">关于我们</a></nav></div></header>
 <main id="main">
@@ -23,7 +24,6 @@
 <p>多品种制造真正需要的，不是一列固定产能，而是把订单需求、标准周期、工装模具、设备资格、有效工时、换型与实绩反馈连成一条可计算、可执行、可校准的数据链。</p>
 <div class="article-meta"><span>2026-09-20</span><span>工业工程 / 产能排程</span><span>精选知识</span></div>
 </div></section>
-
 <section class="section"><div class="content article-shell">
 <article class="article-body">
 <div class="brief-key-grid">
@@ -31,11 +31,9 @@
 <div><strong>先判定资格</strong><p>设备有空不等于能做；必须先确认产品、模具/工装与设备的适配关系。</p></div>
 <div><strong>用实绩校准</strong><p>计划与实际CT、停机、换型和良率偏差，要反过来修订主数据。</p></div>
 </div>
-
 <figure class="knowledge-visual">
 <svg viewBox="0 0 1160 280" role="img" aria-labelledby="cnThreadTitle cnThreadDesc">
 <title id="cnThreadTitle">产能数字主线</title><desc id="cnThreadDesc">订单需求经过产品工艺、标准时间、工装模具、设备资格和有效工时形成负荷排程，实绩反馈用于校准标准。</desc>
-
 <g fill="#f1f8f6" stroke="#8fb9b2" stroke-width="1.5">
 <rect x="22" y="55" width="128" height="76" rx="14"/><rect x="168" y="55" width="128" height="76" rx="14"/><rect x="314" y="55" width="128" height="76" rx="14"/><rect x="460" y="55" width="128" height="76" rx="14"/><rect x="606" y="55" width="128" height="76" rx="14"/><rect x="752" y="55" width="128" height="76" rx="14"/><rect x="898" y="55" width="128" height="76" rx="14"/><rect x="1044" y="55" width="94" height="76" rx="14"/>
 </g>
@@ -50,7 +48,6 @@
 </svg>
 <figcaption>图1｜排产的核心不是“某设备一天能做多少件”，而是“每张订单占用哪类合格资源多少时间”。</figcaption>
 </figure>
-
 <h2 id="uph">一、UPH有用，但不能单独承担多品种排产</h2>
 <p>UPH适合描述某一产品在明确工艺条件下的小时产出。多品种共用设备时，产品CT、模具穴数、换型、设备资格、计划停机和物料齐套都不同，单一UPH无法直接相加。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>指标</th><th>主要用途</th><th>单独使用时的盲区</th></tr></thead><tbody>
@@ -59,13 +56,11 @@
 <tr><td>客户节拍</td><td>判断需求要求系统以多快速度产出</td><td>不等于设备实际CT</td></tr>
 <tr><td>负荷率</td><td>比较需求工时与有效资源工时</td><td>仍需叠加齐套、换型和交期顺序</td></tr>
 </tbody></table></div>
-
 <h2 id="formula">二、把“件”换成“设备小时”，才能建立共同口径</h2>
 <div class="formula">订单负荷小时 = Σ[需求数量 × 标准CT ÷ (3600 × 穴数)] + 换型时间</div>
 <div class="formula">有效能力小时 = 计划设备小时 × 计划可用系数</div>
 <div class="formula">负荷率 = 需求负荷小时 ÷ 有效能力小时 × 100%</div>
 <p>计划可用系数不能拍脑袋设定，应来自企业自己的停机、维护和运行数据。若标准CT、良率或OEE已经包含某类损失，也要避免在公式中重复扣减。</p>
-
 <h2 id="qualification">三、先做设备资格矩阵，再算产能池</h2>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>产品/工序</th><th>关键资源</th><th>1号机</th><th>2号机</th><th>3号机</th><th>放行依据</th></tr></thead><tbody>
 <tr><td>SKU-A / 成型</td><td>1号模具</td><td>合格</td><td>合格</td><td>待验证</td><td>参数窗口＋首件＋能力验证</td></tr>
@@ -73,7 +68,6 @@
 <tr><td>SKU-C / 成型</td><td>2号模具</td><td>不适用</td><td>合格</td><td>待验证</td><td>设备能力＋质量基线＋批准记录</td></tr>
 </tbody></table></div>
 <p>资格字段应随工艺变化。例如注塑要核对锁模力、射胶量、模厚和温控接口；冲压要核对吨位、台面、行程与送料接口；SMT则可能关注板尺寸、轨宽、程序版本和炉温能力。</p>
-
 <h2 id="example">四、一个混流负荷示例：平均有余量，不代表没有瓶颈</h2>
 <p><strong>以下为计算口径演示数据，不代表任何企业真实产能。</strong>假设每月22个生产日、每台设备计划20小时/日；1号机计划可用系数85%，2号机82%。</p>
 <div class="table-wrap"><table class="data-table"><thead><tr><th>SKU</th><th>需求量</th><th>标准CT</th><th>穴数</th><th>分配</th><th>设备负荷</th></tr></thead><tbody>
@@ -81,7 +75,6 @@
 <tr><td>B</td><td>30,000</td><td>42秒/周期</td><td>2</td><td>两台各15,000</td><td>各87.5小时</td></tr>
 <tr><td>C</td><td>12,000</td><td>60秒/周期</td><td>1</td><td>2号机</td><td>200.0小时</td></tr>
 </tbody></table></div>
-
 <figure class="knowledge-visual">
 <svg viewBox="0 0 1160 315" role="img" aria-labelledby="cnLoadTitle cnLoadDesc">
 <title id="cnLoadTitle">双设备月度负荷演示</title><desc id="cnLoadDesc">1号机负荷率90.8%，2号机负荷率84.1%，总体约87.5%。</desc>
@@ -92,13 +85,11 @@
 </svg>
 <figcaption>图2｜总产能池约87.5%，但1号机已接近示例管理线；平均值不能遮住局部资源风险。</figcaption>
 </figure>
-
 <div class="brief-result-grid">
 <div><strong>1号机</strong><b>339.5 / 374小时</b><p>约90.8%，应优先评估换型、插单、维护和过程波动风险。</p></div>
 <div><strong>2号机</strong><b>303.5 / 360.8小时</b><p>约84.1%，仍要关注SKU-C只有单一合格资源的约束。</p></div>
 <div><strong>产能池合计</strong><b>643 / 734.8小时</b><p>总体约87.5%，但排程必须继续按设备级和资格级拆分。</p></div>
 </div>
-
 <h2 id="schedule">五、从月负荷到日排程，还要叠加四类约束</h2>
 <ul>
 <li><strong>物料齐套：</strong>没有齐套时间，设备空档只是纸面产能。</li>
@@ -106,12 +97,10 @@
 <li><strong>维护与人力：</strong>保养窗口、技能矩阵、夜班配置和共享辅助资源要占用真实日历。</li>
 <li><strong>交期与风险：</strong>冻结窗口、客户优先级、质量隔离和异常恢复决定订单顺序，不应只按负荷最小排序。</li>
 </ul>
-
 <h2 id="loop">六、计划与实绩必须形成参数闭环</h2>
 <figure class="knowledge-visual">
 <svg viewBox="0 0 1160 290" role="img" aria-labelledby="cnLoopTitle cnLoopDesc">
 <title id="cnLoopTitle">产能参数闭环</title><desc id="cnLoopDesc">冻结计划、现场执行、偏差分解、原因确认和更新改善形成循环。</desc>
-
 <g fill="#f1f8f6" stroke="#8fb9b2" stroke-width="1.5"><rect x="45" y="62" width="170" height="82" rx="15"/><rect x="270" y="62" width="170" height="82" rx="15"/><rect x="495" y="62" width="170" height="82" rx="15"/><rect x="720" y="62" width="170" height="82" rx="15"/><rect x="945" y="62" width="170" height="82" rx="15"/></g>
 <g fill="#0f4b5a" font-weight="800" text-anchor="middle"><text x="130" y="109">冻结计划</text><text x="355" y="109">现场执行</text><text x="580" y="109">偏差分解</text><text x="805" y="109">原因确认</text><text x="1030" y="109">更新/改善</text></g>
 <g fill="#0f4b5a" stroke="none" data-qily-flow-vi="v4"><path data-qily-unified-arrow="v4" d="M229 99 H252 V93 L264 103 L252 113 V107 H229 Z"/><path data-qily-unified-arrow="v4" d="M454 99 H477 V93 L489 103 L477 113 V107 H454 Z"/><path data-qily-unified-arrow="v4" d="M679 99 H702 V93 L714 103 L702 113 V107 H679 Z"/><path data-qily-unified-arrow="v4" d="M904 99 H927 V93 L939 103 L927 113 V107 H904 Z"/></g>
@@ -122,7 +111,6 @@
 </svg>
 <figcaption>图3｜计划准确率不是靠反复催促，而是靠不断缩小模型与现场事实之间的偏差。</figcaption>
 </figure>
-
 <h2 id="check">七、落地前的十项检查</h2>
 <div class="brief-checks">
 <div><b>01</b><span>产品编码、BOM、工艺路线是否唯一并具备版本？</span></div><div><b>02</b><span>标准CT是否明确单位、方法与适用条件？</span></div>
@@ -133,12 +121,11 @@
 </div>
 <div class="brief-note"><strong>结论：</strong>数智化排产的起点不是算法，而是可信的制造事实。先建立可计算、可执行、可校准的产能主数据，再让ERP、MES或APS把这套能力放大。</div>
 </article>
-
-
 </div></section>
 </main>
 <footer class="footer"><div class="footer-inner"><nav id="floatDock" class="footer-actions qily-float-dock qily-page-action-nav" aria-label="精益制造经验分享页面快捷导航" data-qily-footer-contract="top,back,previous,search,current" data-qily-standalone-dock="v5.8" data-qily-dock-layout="fixed-bottom-footer-navigation"><button type="button" class="qily-float-btn qily-float-top" data-action="top" data-qily-footer-action="top" aria-label="回到顶部" title="回到顶部" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>回到顶部</span></span></button><button type="button" class="qily-float-btn qily-float-back" data-action="back" data-qily-footer-action="back" aria-label="上一层级" title="上一层级" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>上一层级</span></span></button><button type="button" class="qily-float-btn qily-float-previous" data-action="previous" data-qily-footer-action="previous" aria-label="上一网页" title="上一网页" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>上一网页</span></span></button><button type="button" class="qily-float-btn qily-float-search" data-action="search" data-qily-footer-action="search" aria-label="本站搜索" title="本站搜索" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>本站搜索</span></span></button><button type="button" class="qily-float-btn qily-float-current" data-action="current" data-qily-footer-action="current" aria-label="分享当前" title="分享当前" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>分享当前</span></span></button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>
 <script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script>
-<script defer src="/assets/cn-footer-actions-v1.js?v=20261021-cn-single-row-v1"></script>
+<script defer src="/assets/cn-footer-actions-v1.js?v=20261021-five-actions-v1"></script>
 <script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about&anchors=20261013-v1&aboutcareer=20261021-about-contact-career-v1"></script>
+<script defer data-cn-native-prefetch="v2" src="/assets/site-native-prefetch-v1.js?v=b0feaac1aee8"></script>
 </body></html>

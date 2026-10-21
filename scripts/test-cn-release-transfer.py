@@ -3,12 +3,14 @@
 import hashlib
 import importlib.util
 import io
+import json
 import os
 from pathlib import Path
 import re
 import shlex
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import Mock
@@ -85,6 +87,36 @@ class TransferTests(unittest.TestCase):
             transfer.pull(self.request, self.destination, run=Mock(return_value=Mock(returncode=28)))
         self.assertEqual(self.destination.read_bytes(), b'previous verified archive')
 
+    def test_failure_diagnostics_never_include_private_exception_data(self):
+        secret = 'https://private.example/archive?sig=secret-token'
+        cases = (
+            (transfer.TransferError(secret), 'validation'),
+            (ValueError(secret), 'unexpected_error'),
+            (PermissionError(13, secret, '/private/secret-key'), 'filesystem errno=13'),
+            (urllib.error.URLError(secret), 'network'),
+            (subprocess.TimeoutExpired(secret, 1), 'timeout'),
+            (transfer.TransferError('Chunk checksum differs'), 'chunk_checksum'),
+            (transfer.TransferError('Artifact download failed or fell below speed threshold',
+                                    exit_code=28), 'artifact_download curl_exit=28'),
+        )
+        for error, reason in cases:
+            with self.subTest(reason=reason):
+                message = transfer.failure_diagnostic(error, 'accept')
+                self.assertIn('stage=accept', message)
+                self.assertIn('reason=' + reason, message)
+                self.assertNotIn(secret, message)
+                self.assertNotIn('/private/secret-key', message)
+        self.assertIn('stage=startup', transfer.failure_diagnostic(ValueError(secret), secret))
+
+    def test_cli_failure_reports_stage_without_echoing_private_input(self):
+        result = subprocess.run([sys.executable, transfer.__file__, 'pull'],
+                                input='{"url":"https://private.example/?sig=secret-token",',
+                                text=True, capture_output=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertEqual(result.stdout, '')
+        self.assertIn('stage=pull reason=invalid_json', result.stderr)
+        self.assertNotIn('secret-token', result.stderr)
+
     def test_zip_extra_member_traversal_and_wrong_hash_never_replace_archive(self):
         path = self.root / 'artifact.zip'
         for options in ({'extra': True}, {'name': '../' + transfer.ARCHIVE_NAME},
@@ -119,6 +151,30 @@ class TransferTests(unittest.TestCase):
         transfer.assemble(manifest, self.destination, self.cache)
         self.assertEqual(self.destination.read_bytes(), self.archive.read_bytes())
         self.assertEqual(transfer.missing_chunks(manifest, self.cache), [])
+
+    def test_four_parallel_cli_accepts_preserve_resumable_integrity(self):
+        self.archive.write_bytes(b'A' * transfer.CHUNK_BYTES * 4 + b'last')
+        self.parts, self.cache = self.root / 'parts', self.root / 'cache'
+        manifest = transfer.make_manifest(self.archive, self.parts)
+        manifest_path = self.root / 'manifest.json'
+        manifest_path.write_text(json.dumps(manifest))
+        staging = transfer.cache_directory(manifest, self.cache)
+        processes = []
+        for index in range(4):
+            incoming = staging / f'.incoming-run-1-{index:04d}'
+            incoming.write_bytes((self.parts / f'part.{index:04d}').read_bytes())
+            processes.append(subprocess.Popen(
+                [sys.executable, transfer.__file__, 'accept', '--manifest', str(manifest_path),
+                 '--cache-root', str(self.cache), '--index', f'{index:04d}',
+                 '--incoming', str(incoming)], stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+        for process in processes:
+            stdout, stderr = process.communicate(timeout=10)
+            self.assertEqual(process.returncode, 0, stderr.decode())
+            self.assertEqual(stdout, b'')
+        self.assertEqual(transfer.missing_chunks(manifest, self.cache), [4])
+        self.accept(manifest, 4)
+        transfer.assemble(manifest, self.destination, self.cache)
+        self.assertEqual(self.destination.read_bytes(), self.archive.read_bytes())
 
     def test_corrupt_chunk_is_missing_and_cannot_be_accepted(self):
         manifest = self.chunks()

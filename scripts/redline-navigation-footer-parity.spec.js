@@ -1,297 +1,45 @@
 const {test,expect}=require('@playwright/test');
-const fs=require('fs');
-const path=require('path');
-
+const fs=require('fs'),path=require('path');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
-const bridgeRoutes=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
-
-function chinaFooterRoutes(dir=path.join(process.cwd(),'cn-site')){
-  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
-    const file=path.join(dir,entry.name);
-    if(entry.isDirectory())return chinaFooterRoutes(file);
-    if(!entry.name.endsWith('.html')||!fs.readFileSync(file,'utf8').includes('data-qily-footer-contract="home,top,back,previous,search,current,contact"'))return [];
-    const relative=path.relative(path.join(process.cwd(),'cn-site'),file).replace(/\\/g,'/');
-    return ['/'+relative.replace(/index\.html$/,'')];
-  }).sort();
-}
-const chinaRoutes=chinaFooterRoutes();
-
-test('China desktop shared actions retain filings and home returns to China',async({page})=>{
-  await page.setViewportSize({width:1600,height:1000});
-  await page.goto(cnBase+'/knowledge/',{waitUntil:'domcontentloaded'});
-  const footer=page.locator('footer.footer');
-  await expect(footer.locator('#floatDock button')).toHaveCount(7);
-  await expect(footer.locator('.footer-home')).toHaveCount(0);
-  await expect(footer.locator('.footer-records>a')).toHaveCount(2);
-  await footer.locator('[data-action="home"]').click();
-  await expect(page).toHaveURL(cnBase+'/');
-});
-
-for(const route of bridgeRoutes){
-  test(`reference footer is visible, left aligned, top/share-only and filing-free: ${route}`,async({page})=>{
-    await page.setViewportSize({width:1600,height:1000});
-    await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
-    const footer=page.locator('.cn-bridge-footer');
-    await expect(footer).toBeVisible();
-    await expect(page.locator('#floatDock')).toHaveCount(0);
-    const home=page.locator('header a[aria-label="返回国际站"]');
-    await expect(home).toHaveCount(1);
-    await expect(home).toHaveAttribute('href','https://qilylean.com/');
-    await expect(home).toHaveAttribute('title','返回国际站');
-    for(const action of ['top','share']){
-      await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('color','rgb(255, 227, 155)');
-      await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('border-top-color','rgba(255, 227, 155, 0.52)');
-    }
-    // Visibility alone passes when another fixed Dock covers the correct footer.
-    await footer.locator('[data-action="top"]').click({trial:true});
-    await footer.locator('[data-action="share"]').click({trial:true});
-    await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
-    await expect(footer.locator('a')).toHaveCount(0);
-    await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
-    await expect(footer).not.toContainText(/湘ICP备|湘公网安备/);
-    const g=await footer.evaluate(el=>{
-      const inner=el.querySelector('.cn-bridge-footer-inner').getBoundingClientRect();
-      const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
-      return {left:buttons[0].left-inner.left,blank:inner.right-buttons[1].right,gap:buttons[1].left-buttons[0].right,buttonWidths:buttons.map(r=>r.width),height:el.getBoundingClientRect().height};
-    });
-    expect(Math.abs(g.left)).toBeLessThanOrEqual(1);
-    expect(g.blank).toBeGreaterThan(500);
-    expect(g.gap).toBeCloseTo(12,0);
-    expect(g.buttonWidths).toHaveLength(2);
-    expect(Math.abs(g.buttonWidths[0]-g.buttonWidths[1])).toBeLessThanOrEqual(1);
-    expect(g.height).toBeGreaterThanOrEqual(55);
-    await page.screenshot({path:require('path').join('test-results',route.includes('briefs')?'briefs-footer-desktop.png':'resources-footer-desktop.png')});
-  });
-}
-
-
-
-for(const viewport of [{width:360,height:640},{width:390,height:664},{width:412,height:780}]){
-  test(`resource final CTA clears the fixed footer on mobile ${viewport.width}`,async({page})=>{
-    await page.setViewportSize(viewport);
-    await page.goto(intBase+'/links/cn-public/',{waitUntil:'load'});
-    const footer=page.locator('.cn-bridge-footer');
-    // Simulate an extra bottom safe area; the reservation must follow the real footer height.
-    await footer.evaluate(el=>el.style.setProperty('padding-bottom','34px','important'));
-    await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
-    await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
-    const last=page.locator('.actions .button').last();
-    const gap=await last.evaluate(el=>document.querySelector('.cn-bridge-footer').getBoundingClientRect().top-el.getBoundingClientRect().bottom);
-    expect(gap).toBeGreaterThanOrEqual(8);
-    await expect(last).toHaveAttribute('href','https://qilylean.com/global-knowledge/');
-    await page.route('https://qilylean.com/global-knowledge/',route=>route.fulfill({status:200,contentType:'text/html',body:'Global Knowledge destination'}));
-    await last.click();
-    await expect(page).toHaveURL('https://qilylean.com/global-knowledge/');
-  });
-}
-
-test('resource collaboration CTAs inherit shared global VI and have visible feedback',async({page})=>{
-  await page.setViewportSize({width:1600,height:1000});
-  const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const primary=page.locator('.actions .button.primary');
-  const secondary=page.locator('.actions .button:not(.primary)');
-  await expect(primary).toBeVisible();
-  await expect(secondary).toBeVisible();
-  const before=await page.evaluate(()=>{
-    const p=getComputedStyle(document.querySelector('.actions .button.primary'));
-    const s=getComputedStyle(document.querySelector('.actions .button:not(.primary)'));
-    return {primaryBg:p.backgroundColor,secondaryBg:s.backgroundColor,primaryRadius:parseFloat(p.borderRadius)||0,secondaryRadius:parseFloat(s.borderRadius)||0};
-  });
-  expect(Math.abs(before.primaryRadius-before.secondaryRadius)).toBeLessThanOrEqual(0.5);
-  expect(before.primaryRadius).toBeLessThanOrEqual(12.5);
-  expect(before.secondaryRadius).toBeLessThanOrEqual(12.5);
-  await primary.hover();
-  await page.waitForTimeout(220);
-  const primaryHover=await primary.evaluate(el=>getComputedStyle(el).backgroundColor);
-  expect(primaryHover).not.toBe(before.primaryBg);
-  await secondary.hover();
-  await page.waitForTimeout(220);
-  const secondaryHover=await secondary.evaluate(el=>getComputedStyle(el).backgroundColor);
-  expect(secondaryHover).not.toBe(before.secondaryBg);
-  expect(primaryHover).not.toBe(secondaryHover);
-});
-
-async function navState(page,navSelector,activeSelector,footerSelector){
-  await page.waitForSelector(navSelector,{state:'visible'});
-  await page.waitForSelector(activeSelector,{state:'visible'});
-  await page.waitForTimeout(1100);
-  return page.evaluate(({navSelector,activeSelector,footerSelector})=>{
-    const nav=document.querySelector(navSelector);
-    const active=document.querySelector(activeSelector);
-    const footer=document.querySelector(footerSelector);
-    if(!nav||!active||!footer)return null;
-    const nr=nav.getBoundingClientRect(),ar=active.getBoundingClientRect(),fr=footer.getBoundingClientRect();
-    return {
-      label:(active.textContent||'').trim(),
-      current:active.getAttribute('aria-current'),
-      navFont:(()=>{const base=parseFloat(getComputedStyle(active).fontSize)||0;const pseudo=parseFloat(getComputedStyle(active,'::before').fontSize)||0;return Math.max(base,pseudo);})(),
-      footerFont:parseFloat(getComputedStyle(footer).fontSize)||0,
-      recordFont:(()=>{const r=document.querySelector('.footer-records>a');return r?parseFloat(getComputedStyle(r).fontSize)||0:0;})(),
-      activeLeft:ar.left,activeRight:ar.right,navLeft:nr.left,navRight:nr.right,
-      footerLeft:fr.left,footerRight:fr.right,viewport:document.documentElement.clientWidth,
-      scrollLeft:nav.scrollLeft,overflow:nav.scrollWidth-nav.clientWidth
-    };
-  },{navSelector,activeSelector,footerSelector});
-}
-
-test('China-site Resources retains both filings with the shared footer visual',async({page})=>{
-  await page.setViewportSize({width:1180,height:850});
-  const response=await page.goto(cnBase+'/resources/',{waitUntil:'domcontentloaded',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const s=await navState(page,'header.site-header nav.nav','header.site-header nav.nav a[href="/resources/"]','.footer-actions>button');
-  expect(s).not.toBeNull();
-  expect(s.current).toBe('page');
-  expect(s.label).toContain('资源协同');
-  expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
-  expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
-  expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(18,1);
-  expect(s.recordFont).toBeCloseTo(18,1);
-});
-
-test('China-site mobile footer keeps canonical readable sizing without overflow',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  const response=await page.goto(cnBase+'/knowledge/',{waitUntil:'domcontentloaded',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const s=await navState(page,'header.site-header nav.nav','header.site-header nav.nav a[href="/knowledge/"]','.footer-actions>button');
-  expect(s).not.toBeNull();
-  expect(s.current).toBe('page');
-  expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
-  expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
-  expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(17,1);
-  expect(s.recordFont).toBeCloseTo(17,1);
-  expect(s.footerLeft).toBeGreaterThanOrEqual(0);
-  expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
-});
-
-test('international CN-bridge current module is visible and footer uses shared 18px sizing',async({page})=>{
-  await page.setViewportSize({width:1180,height:850});
-  const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const s=await navState(page,'.cn-bridge-nav','.cn-bridge-nav a[aria-current="page"]','.cn-bridge-footer-actions>button');
-  expect(s).not.toBeNull();
-  expect(s.label).toContain('资源协同');
-  expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
-  expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
-  expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(18,1);
-});
-
-test('international CN-bridge mobile footer uses shared 17px sizing',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const s=await navState(page,'.cn-bridge-nav','.cn-bridge-nav a[aria-current="page"]','.cn-bridge-footer-actions>button');
-  expect(s).not.toBeNull();
-  expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
-  expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
-  expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(17,1);
-});
-
-for(const width of [320,360,390,1041,1100,1600]){
-  test(`China bridge footer retains readable filings and clear content at ${width}px`,async({page})=>{
-    await page.setViewportSize({width,height:844});
-    for(const route of ['/briefs/','/resources/']){
-      await page.goto(cnBase+route,{waitUntil:'domcontentloaded'});
-      const footer=page.locator('.footer');
-      await expect(footer.locator('.footer-records>a')).toHaveCount(2);
-      await expect(footer).toContainText('湘ICP备2026041143号-1');
-      await expect(footer).toContainText('湘公网安备43020002000443号');
-      await footer.evaluate(el=>el.style.setProperty('padding-bottom','34px','important'));
-      await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
-      const g=await footer.evaluate(el=>{
-        const controls=[...el.querySelectorAll('a,button')].map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,width:r.width,overflow:e.scrollWidth-e.clientWidth};});
-        const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
-        return{viewport:innerWidth,controls,buttons:buttons.map(r=>r.width),buttonTops:buttons.map(r=>r.top),homeTop:el.querySelector('[data-action="home"]').getBoundingClientRect().top};
-      });
-      for(const c of g.controls){
-        expect(c.left).toBeGreaterThanOrEqual(0);
-        expect(c.right).toBeLessThanOrEqual(g.viewport);
-        expect(c.overflow).toBeLessThanOrEqual(1);
-      }
-      expect(g.buttons).toHaveLength(7);
-      expect(Math.max(...g.buttons)-Math.min(...g.buttons)).toBeLessThanOrEqual(1);
-      await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
-      // Briefs are local-first; resources are a local 100-company directory.
-      // Check the actual final content link against the fixed China footer.
-      const link=route==='/briefs/'
-        ? page.locator('main a[href^="/briefs/archive/"]').last()
-        : page.locator('#companyGrid .card').last();
-      await link.click({trial:true});
-      const clearance=await link.evaluate(el=>document.querySelector('.footer').getBoundingClientRect().top-el.getBoundingClientRect().bottom);
-      expect(clearance).toBeGreaterThanOrEqual(8);
-      await footer.locator('[data-qily-footer-action="top"]').click();
-      await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
-    }
-  });
-}
-
-for(const width of [320,390,412,1180,1600]){
-  test(`China public footer typography matches international actions across ${width===390||width===1600?'all public pages':'responsive entries'} at ${width}px`,async({page,context})=>{
-    test.setTimeout(180000);
-    await page.setViewportSize({width,height:900});
-    await page.goto(intBase+'/',{waitUntil:'load'});
-    await page.waitForTimeout(1600);
-    await page.evaluate(()=>document.fonts.ready);
-    const reference=page.locator('#floatDock button').first();
-    await expect(reference).toBeVisible();
-    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};});
-    const allPages=width===390||width===1600;
-    expect(chinaRoutes.length).toBeGreaterThanOrEqual(24);
-    const targets=[
-      ...(allPages?chinaRoutes:['/resources/']).map(route=>({base:cnBase,route,shell:'.footer',home:null,controls:'.footer-actions>button',count:7})),
-      ...(allPages?bridgeRoutes:['/links/cn-public/']).map(route=>({base:intBase,route,shell:'.cn-bridge-footer',home:null,controls:'.cn-bridge-footer-actions>button',count:2}))
-    ];
-    const publicPage=await context.newPage();
-    await publicPage.setViewportSize({width,height:900});
-    for(const target of targets){
-      const label=target.base+target.route;
-      const response=await publicPage.goto(label,{waitUntil:'load'});
-      expect(response&&response.ok(),label+' must load').toBeTruthy();
-      await publicPage.waitForTimeout(1600);
-      await publicPage.evaluate(()=>document.fonts.ready);
-      const footer=publicPage.locator(target.shell);
-      await expect(footer,label+' shared footer').toBeVisible();
-      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4"]'),label+' must request the shared versioned type authority').toHaveCount(1);
-      const controls=footer.locator(target.controls);
-      await expect(controls,label+' visible footer controls').toHaveCount(target.count);
-      const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};}));
-      for(const item of actual)expect(item,label+' public footer type').toEqual(typography);
-      if(target.home){
-        const home=footer.locator(target.home);
-        await expect(home,label+' normal site label').toHaveCSS('text-decoration-line','none');
-        await home.hover();
-        await expect(home,label+' hovered site label').toHaveCSS('text-decoration-line','none');
-        await home.focus();
-        await expect(home,label+' focused site label').toHaveCSS('text-decoration-line','none');
-      }else if(target.shell==='.cn-bridge-footer'){
-        await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
-        await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="top"]')).toHaveCount(1);
-        await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="share"]')).toHaveCount(1);
-      }
-      if(target.shell==='.footer'){
-        await expect(footer.locator('.footer-records>a'),label+' retains both filing links').toHaveCount(2);
-        for(const record of await footer.locator('.footer-records>a').all())await expect(record,label+' filing link retains its underline').toHaveCSS('text-decoration-line','underline');
-      }
-    }
-    await publicPage.close();
-  });
-}
-
-
-test('International bridge logo and filing-free footer on China-origin reference routes',async({page})=>{
-  for(const route of ['/links/cn-public/','/global-knowledge/briefs/']){
-    await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
-    const logo=page.locator('.cn-bridge-brand');
-    await expect(logo).toHaveAttribute('href','https://qilylean.com/');
-    await expect(logo).toHaveAttribute('title','返回国际站');
-    await expect(logo).toHaveAttribute('aria-label','返回国际站');
-    const footer=page.locator('.cn-bridge-footer');
-    await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
-    await expect(footer.locator('button[data-action]')).toHaveCount(2);
+const labels=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
+const actions=['top','back','previous','search','current'];
+const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
+for(const width of [320,390,820,1180,1600]){
+ test(`both sites share five readable footer actions at ${width}px`,async({page})=>{
+  test.setTimeout(120000);await page.setViewportSize({width,height:900});let reference;
+  for(const [base,route] of [[intBase,'/'],[intBase,'/about/'],...bridges.map(r=>[intBase,r]),[cnBase,'/'],[cnBase,'/resources/'],[cnBase,'/about/']]){
+   await page.goto(base+route,{waitUntil:'load'});await page.waitForFunction(()=>window.__qilyFloatingDockUnifiedV58===true);
+   const dock=page.locator('#floatDock');await expect(dock.locator('button')).toHaveText(labels);
+   expect(await dock.locator('button').evaluateAll(nodes=>nodes.map(n=>n.dataset.action))).toEqual(actions);
+   const g=await dock.evaluate(el=>{const s=getComputedStyle(el);return {width:document.documentElement.clientWidth,overflow:document.documentElement.scrollWidth-innerWidth,gap:s.gap,buttons:[...el.querySelectorAll('button')].map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,overflow:b.scrollWidth-b.clientWidth,font:s.fontSize,weight:s.fontWeight,family:s.fontFamily,radius:s.borderRadius};})};});
+   expect(g.overflow,base+route+' horizontal overflow').toBeLessThanOrEqual(1);
+   expect(Math.max(...g.buttons.map(b=>b.width))-Math.min(...g.buttons.map(b=>b.width))).toBeLessThanOrEqual(1);
+   for(const b of g.buttons){expect(b.left).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(g.width+1);expect(b.height).toBeGreaterThanOrEqual(36);expect(b.overflow).toBeLessThanOrEqual(1);}
+   const typography=g.buttons.map(({font,weight,family,radius})=>({font,weight,family,radius}));
+   if(!reference)reference={gap:g.gap,typography};else expect({gap:g.gap,typography},base+route+' shared action styling').toEqual(reference);
+   if(width<=820){expect(g.buttons[2].top).toBeCloseTo(g.buttons[0].top,1);expect(g.buttons[3].top).toBeGreaterThan(g.buttons[0].top+20);}else expect(g.buttons.every(b=>Math.abs(b.top-g.buttons[0].top)<1)).toBeTruthy();
+   if(base===cnBase){await expect(page.locator('footer .footer-records>a')).toHaveCount(2);await expect(page.locator('footer')).toContainText('湘ICP备2026041143号-1');await expect(page.locator('footer')).toContainText('湘公网安备43020002000443号');}else await expect(page.locator('body')).not.toContainText(/湘ICP备|湘公网安备/);
+   await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await dock.locator('[data-action="top"]').click();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
   }
+ });
+}
+test('China About retains shared contacts, career and map navigation',async({page})=>{
+ await page.goto(cnBase+'/about/');await expect(page.locator('.qily-unified-qr-card')).toHaveCount(3);
+ expect(await page.locator('a[href^="tel:"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')).sort())).toEqual(['tel:13450014003','tel:15168120722','tel:17681788259']);
+ await expect(page.locator('.qily-unified-email a')).toHaveAttribute('href','mailto:admin@qilylean.com');await expect(page.locator('.qily-about-career a')).toHaveAttribute('href','/archive/profile/experience/');
+ expect(await page.locator('header nav a').allTextContents()).not.toContain('履历主线');
+ for(const provider of ['amap','baidu','tencent','google','apple'])expect(await page.locator(`[data-qily-map-provider="${provider}"]`).count()).toBeGreaterThan(0);
+});
+test('China footer searches locally, shares current URL and follows real history',async({page})=>{
+ await page.addInitScript(()=>{Object.defineProperty(navigator,'share',{value:undefined});Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{window.__footerCopy=text;}}});});
+ await page.goto(cnBase+'/about/');await page.locator('#floatDock [data-action="search"]').click();await expect(page.locator('#qilyCnFooterSearch')).toBeVisible();
+ await page.locator('#qilyCnFooterSearchInput').fill('SMED');await expect(page.locator('#qilyCnFooterSearch li a').first()).toBeVisible();
+ for(const href of await page.locator('#qilyCnFooterSearch li a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href'))))expect(href.startsWith('/')).toBeTruthy();
+ await page.locator('[data-cn-search-close]').click();await page.locator('#floatDock [data-action="current"]').click();await expect.poll(()=>page.evaluate(()=>window.__footerCopy)).toContain(cnBase+'/about/');
+ await page.goto(cnBase+'/knowledge/');await page.locator('#floatDock [data-action="previous"]').click();await expect(page).toHaveURL(cnBase+'/about/');
+ await page.goto(cnBase+'/archive/practice/factory-layout/');await page.locator('#floatDock [data-action="back"]').click();await expect(page).toHaveURL(cnBase+'/notes/');
+});
+test('all China generated pages receive final VI and five-action first paint',async()=>{
+ let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,back,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
 });

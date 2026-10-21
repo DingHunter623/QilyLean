@@ -14,7 +14,7 @@ if(!bridgeCss.includes('QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6')||!bridgeCs
 
 for(const rel of pages){
   const html=fs.readFileSync(rel,'utf8');
-  const banned=['湘ICP备','湘公网安备','beian.miit.gov.cn','beian.mps.gov.cn','cn-bridge-footer-records','site-contact-route-v1.js','site-dock-share-runtime-v1.js'];
+  const banned=['湘ICP备','湘公网安备','beian.miit.gov.cn','beian.mps.gov.cn','cn-bridge-footer-records','site-contact-route-v1.js'];
   for(const marker of banned){
     if(html.includes(marker)){console.error('ERROR: '+rel+' must not include China filing records or international Dock loaders: '+marker);failed=true;}
   }
@@ -22,10 +22,10 @@ for(const rel of pages){
   if(!html.includes(logo)){console.error('ERROR: '+rel+' bridge logo must return to the international site with exact tooltip.');failed=true;}
   if(html.includes('class="cn-bridge-brand" href="https://qilylean.cn/"')){console.error('ERROR: '+rel+' logo must not route back to China site.');failed=true;}
   if(!html.includes('class="bridge-hero-eyebrow"')&&!html.includes('bridge-hero-eyebrow')){console.error('ERROR: '+rel+' hero eyebrow must use the shared gold VI class.');failed=true;}
-  for(const marker of ['data-action="top"','data-action="share"']){
+  for(const marker of ['data-action="top"','data-action="back"','data-action="previous"','data-action="search"','data-action="current"']){
     if(!html.includes(marker)){console.error('ERROR: '+rel+' missing China-parity footer action '+marker);failed=true;}
   }
-  if(html.includes('data-action="previous"')||html.includes('>上一网页</button>')){console.error('ERROR: '+rel+' must not restore the retired previous-page footer action.');failed=true;}
+  if(!html.includes('data-qily-stable-order="top,back,previous,search,current"')){console.error('ERROR: '+rel+' five-action footer missing.');failed=true;}
   if(/data-action="home"|>首页<\/button>/.test(html)){console.error('ERROR: '+rel+' footer must not expose an international-home button.');failed=true;}
   if(!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity')){console.error('ERROR: '+rel+' must load bridge shell V2.');failed=true;}
   if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7')){console.error('ERROR: '+rel+' must load international-home bridge shell V4.');failed=true;}
@@ -60,4 +60,4 @@ try{
   fs.rmSync(fixture,{recursive:true,force:true});
 }
 if(failed)process.exit(1);
-console.log('International bridge boundary gate passed: international-home logo, gold eyebrow, identical top/share-only footer, and no China filing record on qilylean.com.');
+console.log('International bridge boundary gate passed: international-home logo, gold eyebrow, identical five-action footer, and no China filing record on qilylean.com.');
