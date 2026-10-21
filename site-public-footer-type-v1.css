@@ -1,10 +1,10 @@
 /* QilyLean public footer typography: authoritative source for both site shells.
  * cn-site/site-public-footer-type-v1.css is the deployment copy; verify byte parity.
- * Scale matches the international page-action Dock: 20 / 18 / 17px.
+ * Scale matches the international page-action Dock: 18 / 16 / 15px.
  */
 html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,span){
   font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  font-size:20px!important;
+  font-size:18px!important;
   font-weight:850!important;
   line-height:1!important;
   letter-spacing:0!important;
@@ -17,8 +17,8 @@ html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(.footer-ho
   text-decoration-line:none!important;
 }
 @media(max-width:1439px){
-  html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,span){font-size:18px!important}
+  html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,span){font-size:16px!important}
 }
 @media(max-width:390px){
-  html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,span){font-size:17px!important}
+  html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,span){font-size:15px!important}
 }

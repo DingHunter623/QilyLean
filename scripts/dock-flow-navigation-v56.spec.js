@@ -71,7 +71,7 @@ for(const [name,url,viewport,mobile] of cases){
     expect(result.scrollWidth,'footer must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
     expect(result.lineCounts).toEqual([1,1,1,1,1,1,1]);
 
-    const expectedFont=viewport.width<=390?17:viewport.width<1440?18:20;
+    const expectedFont=viewport.width<=390?15:viewport.width<1440?16:18;
     for(const item of result.buttons){
       expect(item.fontSize,'footer action text must match the primary-navigation scale').toBeCloseTo(expectedFont,1);
       expect(item.radius,'controls must remain compact rectangles').toBeLessThanOrEqual(10);
@@ -88,7 +88,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(result.spacerHeight,'mobile fixed footer must reserve two-row clearance').toBeGreaterThanOrEqual(90);
       for(const item of result.buttons){
-        expect(item.h,'mobile tap target height').toBeGreaterThanOrEqual(38);
+        expect(item.h,'mobile tap target height').toBeGreaterThanOrEqual(36);
         expect(item.w,'mobile control remains tappable').toBeGreaterThanOrEqual(80);
         expect(item.left,'mobile button must not clip left').toBeGreaterThanOrEqual(0);
         expect(item.right,'mobile button must not clip right').toBeLessThanOrEqual(result.viewportWidth+1);
@@ -105,7 +105,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(result.spacerHeight,'desktop fixed footer must reserve clearance').toBeGreaterThanOrEqual(56);
       for(const item of result.buttons){
-        expect(item.h,'desktop compact control height').toBeGreaterThanOrEqual(40);
+        expect(item.h,'desktop compact control height').toBeGreaterThanOrEqual(36);
         expect(item.w,'desktop module should be much wider than tall').toBeGreaterThan(item.h*2);
       }
     }

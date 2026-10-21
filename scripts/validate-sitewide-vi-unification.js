@@ -185,6 +185,7 @@ for(const [key,href,label] of [['experience','/archive/profile/experience/','履
 }
 assert(!cnRail.includes("key:'briefs',href:'/briefs/'"), 'CN brief archive belongs inside knowledge assets, not as a competing primary menu.');
 assert(cnRail.includes("data-qily-cn-nav-contract','20260926-v7-bridge'"), 'CN bridge navigation contract runtime is missing.');
+assert(cnRail.includes("{key:'contact',href:'/about/',label:'关于我们'}"), 'CN About navigation must use its true page entry.');
 assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
 assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerEvent drag.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
@@ -218,7 +219,7 @@ for(const rel of cnPages){
     ? '20261014-cn-contact-three-phones-v1'
     : '20261008-cn-vi-v50-cache-revalidation';
   assert(html.includes('/assets/qilylean-vi-v2.css?v='+cnViRevision), rel+' must use current CN VI resource version.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2'), rel+' must load exactly one CN translator runtime.');
   assert(!html.includes(cnFooterLegacyName), rel+' footer must not repeat the QilyLean brand prefix.');
@@ -326,7 +327,7 @@ const publicFooterType=read('site-public-footer-type-v1.css');
 assert(publicFooterType===read('cn-site/site-public-footer-type-v1.css'), 'CN public footer deployment copy must equal the canonical stylesheet.');
 assert(publicFooterType.includes('-webkit-font-smoothing:antialiased!important'), 'Public footer must use international menu antialiasing.');
 assert(publicFooterType.includes('text-rendering:auto!important'), 'Public footer must use international menu text rendering.');
-const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v3';
+const publicFooterLink='/site-public-footer-type-v1.css?v=20261021-footer-type-v4';
 function checkPublicFooterLinks(dir){
   for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     const rel=path.join(dir,entry.name);

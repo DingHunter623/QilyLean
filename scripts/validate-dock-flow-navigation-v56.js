@@ -42,16 +42,16 @@ must("setImportant(dock,'justify-content','center')",'mobile second-row centerin
 must("setImportant(button,'flex','0 0 calc((100% - 12px)/4)')",'mobile four-column control width');
 must('qilyDockBottomSpacerV58','bottom content clearance spacer');
 
-must('font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important','desktop primary-nav font parity');
-must("navFont=w.innerWidth<=390?'17px':w.innerWidth<1440?'18px':'20px'",'responsive primary-nav font scale');
+must('font:850 18px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important','desktop primary-nav font parity');
+must("navFont=w.innerWidth<=390?'15px':w.innerWidth<1440?'16px':'18px'",'responsive primary-nav font scale');
 must("setImportant(button,'font-size',navFont)",'inline typography ownership');
 mustVisual('QILY-DOCK-NAV-FONT-PARITY-V1','fallback typography parity marker');
-mustVisual('font-size:20px!important','wide desktop 20px navigation parity');
-mustVisual('font-size:18px!important','compact/tablet/mobile 18px navigation parity');
-mustVisual('font-size:17px!important','narrow mobile 17px navigation parity');
+mustVisual('font-size:18px!important','wide desktop 20px navigation parity');
+mustVisual('font-size:16px!important','compact/tablet/mobile 16px footer labels');
+mustVisual('font-size:15px!important','narrow mobile 17px navigation parity');
 
-must('min-height:40px!important','desktop compact control height');
-must('min-height:38px!important','mobile compact control height');
+must('min-height:36px!important','desktop compact control height');
+must('min-height:36px!important','mobile compact control height');
 must('border-radius:8px!important','compact rectangular controls');
 must('color:#ffe39b!important','gold normal text');
 must('background:rgba(255,255,255,.055)!important','subtle normal control fill');

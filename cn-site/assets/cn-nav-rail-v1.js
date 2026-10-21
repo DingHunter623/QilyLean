@@ -19,7 +19,7 @@ var CANONICAL_NAV_ITEMS=[
   {key:'trust',href:'/trust/',label:'信任中心'},
   {key:'knowledge',href:'/knowledge/',label:'知识资产'},
   {key:'resources',href:'/resources/',label:'资源协同'},
-  {key:'contact',href:'/about/#contact',label:'联系我们'}
+  {key:'contact',href:'/about/',label:'关于我们'}
 ];
 
 function ensureCanonicalNavigation(nav){
