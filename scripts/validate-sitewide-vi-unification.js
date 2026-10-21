@@ -268,6 +268,10 @@ assert(cnFooterCss.includes('width:calc(4em + 24px)!important'), 'CN top/share c
 assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
 assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer stylesheet missing.');
 assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-ONE-ROW-V1'), 'CN compact single-row footer VI missing.');
+assert(cnFooterJs.includes("var CN_ORDER=['top','back','previous','search','current'];"), 'CN footer must expose exactly five actions.');
+assert(cnFooterJs.includes("['回到顶部']"), 'CN top action must be labelled 回到顶部.');
+assert(cnFooterJs.includes('activeOrder()'), 'CN runtime must not restore removed actions.');
 assert(cnFooterJs.includes("'https://qilylean.com/contact/'"), 'China footer Contact must open international full contact experience.');
 
 const cnHome=read('cn-site/index.html');
