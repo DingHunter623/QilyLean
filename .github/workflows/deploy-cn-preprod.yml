@@ -215,7 +215,7 @@ jobs:
             done
             cmp site-content-axis-v1.css cn-site/site-content-axis-v1.css
             cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
-            grep -Fq '20261021-nav-rail-v22-contact-preserved' cn-site/index.html
+            grep -Fq '20261021-nav-rail-v23-about' cn-site/index.html
             grep -Fq '20261017-cn-mainland-nmt-v2' cn-site/index.html
             grep -Fq '<urlset' cn-site/sitemap.xml
             node --check cn-site/assets/cn-nav-rail-v1.js
@@ -239,7 +239,7 @@ jobs:
           cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
           test -f cn-site/assets/cn-footer-actions-v1.css
           test -f cn-site/assets/cn-footer-actions-v1.js
-          grep -Fq 'QilyLean CN Footer Actions V6' cn-site/assets/cn-footer-actions-v1.js
+          grep -Fq 'QilyLean Floating Dock Authoritative Runtime V5.8' cn-site/assets/cn-footer-actions-v1.js
           grep -Fq 'data-qily-footer-action' cn-site/index.html
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
@@ -862,11 +862,11 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   ('/assets/qilylean-vi-v2.css?v=20261014-cn-contact-three-phones-v1' if route == '/about/' else '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation'),
-                  '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16',
-                  '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
-                  '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
+                  '/assets/cn-footer-actions-v1.css?v=20261021-footer-vi-v6',
+                  '/site-public-footer-type-v1.css?v=20261021-footer-type-v4',
+                  '/assets/cn-footer-actions-v1.js?v=20261021-footer-vi-v6',
                   'data-qily-footer-action="top"',
-                  'data-qily-footer-action="share"',
+                  'data-qily-footer-action="current"',
               ]:
                   if marker not in doc:
                       raise SystemExit(f'Production {route} missing V23 typography asset: {marker}')
@@ -875,51 +875,41 @@ jobs:
               if not footer_match:
                   raise SystemExit(f'Production {route} missing shared footer component.')
               footer_block = footer_match.group(0)
-              if '<a class="footer-home" href="/"' not in footer_block:
-                  raise SystemExit(f'Production {route} footer home link is missing.')
+              if 'data-qily-footer-action="home"' not in footer_block:
+                  raise SystemExit(f'Production {route} footer home action is missing.')
               if 'data-qily-footer-filing="none"' in footer_block or footer_block.count('beian.miit.gov.cn') != 1 or footer_block.count('beian.mps.gov.cn') != 1:
                   raise SystemExit(f'Production {route} on qilylean.cn must contain exactly both filing links.')
 
+          # Seven-action footer is shared with the international site's Dock runtime.
+          # On the mainland domain it sits above two genuine filing links.
           footer_actions_contract = [
-              (footer_actions_css, 'QilyLean CN Footer Actions V10', 'content-fit public footer stylesheet marker'),
-              (footer_actions_css, 'QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END', 'content-fit footer authority'),
-              (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
-              (footer_actions_css, 'display:inline-flex!important', 'intrinsic footer module layout'),
-              (footer_actions_css, 'width:auto!important', 'content-fit footer module width'),
-              (footer_actions_css, 'justify-content:space-between!important', 'distributed desktop controls'),
-              (footer_actions_css, 'QILY-CN-FOOTER-REDLINE-V12', 'annotated footer alignment'),
-              (footer_actions_css, 'QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13', 'equal-width top/share actions'),
-              (footer_actions_css, 'min-height:40px!important', 'canonical button height'),
-              (footer_actions_css, 'border-radius:8px!important', 'canonical button radius'),
-              (footer_actions_css, 'background:#073c47!important', 'share feedback background'),
-              (footer_actions_runtime, 'QilyLean CN Footer Actions V6', 'canonical two-action footer runtime marker'),
-              (footer_actions_runtime, "var ORDER=[['top','顶部'],['share','分享当前']]", 'canonical China footer actions'),
-              (footer_actions_runtime, "data-qily-footer-contract','top,share'", 'two-action runtime contract'),
-              (footer_actions_runtime, 'navigator.share', 'system share behavior'),
-              (footer_actions_runtime, "behavior:reduce?'auto':'smooth'", 'top smooth-scroll behavior'),
-              (footer_actions_runtime, '标题与网址已复制，正在打开系统分享', 'copy-before-share feedback'),
-              (footer_actions_runtime, '已复制，可直接粘贴分享', 'cancelled-share copied feedback'),
-              (footer_actions_runtime, '已复制，可粘贴到微信、微博等应用', 'share fallback feedback'),
-              (footer_actions_runtime, "group.addEventListener('click'", 'single-click delegated binding'),
-              (footer_actions_runtime, "node.id='qilyDockShareCopyToastV2'", 'international toast DOM id'),
+              (footer_actions_css, 'QilyLean CN Footer Actions V10', 'CN canonical footer base'),
+              (footer_actions_css, 'QILY-CN-SHARED-SEVEN-ACTIONS-V2:START', 'seven-action shared styles'),
+              (footer_actions_css, 'QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END', 'legacy geometry compatibility'),
+              (footer_actions_css, 'border-radius:8px!important', 'rectangular control styling'),
+              (footer_actions_css, 'background:#0f4b5a!important', 'shared deep-teal color'),
+              (footer_actions_runtime, 'QilyLean Floating Dock Authoritative Runtime V5.8', 'single authoritative Dock'),
+              (footer_actions_runtime, "var ORDER=['home','top','back','previous','search','current','contact'];", 'seven-action order'),
+              (footer_actions_runtime, "dock.setAttribute('data-qily-footer-contract',ORDER.join(','))", 'CN action contract'),
+              (footer_actions_runtime, 'function goPreviousPage()', 'browser previous-page function'),
+              (footer_actions_runtime, 'function openContactPage()', 'functional CN contact route'),
+              (footer_actions_runtime, 'function openMainlandSearch()', 'functional CN local search'),
+              (footer_actions_runtime, 'navigator.share', 'native share with clipboard fallback'),
+              (footer_actions_runtime, "w.scrollTo({top:0,left:0,behavior:'smooth'})", 'scroll to top'),
+              (footer_actions_runtime, '网页标题及网址已复制', 'clipboard fallback confirmation'),
+              (footer_actions_runtime, "d.addEventListener('click'", 'single delegated Dock interaction'),
           ]
           for source, marker, label in footer_actions_contract:
               if marker not in source:
                   raise SystemExit(f'Production footer action contract missing {label}: {marker}')
-
-          if "['previous','上一网页']" in footer_actions_runtime:
-              raise SystemExit('Production China footer runtime restored the retired 上一网页 action.')
-
-          for retired in ["['home','首页']", "['parent','上一层级']", "['knowledge','知识索引']", "['about','关于我们']"]:
+          if "previous:['上一网页']" not in footer_actions_runtime:
+              raise SystemExit('Production China footer lost the required 上一网页 action.')
+          if "contact:['联系我们']" not in footer_actions_runtime:
+              raise SystemExit('Production China footer lost the required 联系我们 action.')
+          for retired in ["['parent','上一层级']", "['knowledge','知识索引']"]:
               if retired in footer_actions_runtime:
                   raise SystemExit(f'Production China footer introduced an unauthorized menu action: {retired}')
 
-          copy_marker = 'copyText(text).then(function(){'
-          share_marker = 'navigator.share({title:title,text:title,url:url})'
-          copy_at = footer_actions_runtime.find(copy_marker)
-          share_at = footer_actions_runtime.find(share_marker)
-          if copy_at < 0 or share_at < 0 or copy_at > share_at:
-              raise SystemExit('Production share parity failed: title + URL must be copied before system share opens.')
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
               (vi, 'QILY-CN-ALL-SMALL-COPY-FLOOR-V46', 'small-type and gold-label parity authority'),
@@ -989,7 +979,7 @@ jobs:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
           required_internal_nav = [
               'href="/archive/profile/experience/" data-qily-nav-key="experience">履历主线</a>',
@@ -1024,11 +1014,11 @@ jobs:
                   raise SystemExit(f'Production CN {label} must retain both China-domain filing records.')
           if '<a href="/knowledge/" title="中国站制造知识索引">进入知识索引 →</a>' not in home:
               raise SystemExit('Production China knowledge network must point to the local knowledge index.')
-          if '/site-public-footer-type-v1.css?v=20261005-public-footer-v3' not in home:
+          if '/site-public-footer-type-v1.css?v=20261021-footer-type-v4' not in home:
               raise SystemExit('Production China home missing shared public footer typography.')
-          if '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20261021-footer-vi-v6' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20261021-footer-vi-v6' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
