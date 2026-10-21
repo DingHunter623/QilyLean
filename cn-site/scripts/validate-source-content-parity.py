@@ -25,7 +25,6 @@ parity = importlib.import_module('materialize-source-content-parity')
 MANIFEST = CN / 'archive/source-content-parity.json'
 NAV = [
     ('home', '/', '首页'),
-    ('experience', '/archive/profile/experience/', '履历主线'),
     ('capabilities', '/archive/profile/capabilities/', '能力体系'),
     ('tools', '/archive/profile/tools/', '改善工具'),
     ('lean', '/lean/', '精益生产'),

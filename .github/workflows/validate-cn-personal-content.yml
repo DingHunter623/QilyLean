@@ -362,8 +362,8 @@ jobs:
                     assert(await page.locator('h1').first().isVisible(),route+' heading must be visible');
                     assert.equal(await page.locator('[data-qily-header-utility="translation"]').count(),1);
                     const nav=page.locator('header nav[aria-label="主导航"]');
-                    assert.equal(await nav.locator('a[data-qily-nav-key]').count(),10);
-                    assert.equal(await nav.locator('a[data-qily-nav-key="contact"]').getAttribute('href'),'/about/#contact');
+                    assert.equal(await nav.locator('a[data-qily-nav-key]').count(),9);
+                    assert.equal(await nav.locator('a[data-qily-nav-key="contact"]').getAttribute('href'),'/about/');
                     const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth>innerWidth+1,
                       badImages:[...document.images].filter(img=>img.getBoundingClientRect().height&&img.loading!=='lazy'&&!img.naturalWidth).map(img=>img.getAttribute('src'))}));
                     assert(!state.overflow,route+' overflows at '+width);
