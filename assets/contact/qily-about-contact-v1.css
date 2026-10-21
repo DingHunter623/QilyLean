@@ -1,0 +1,24 @@
+/* Shared QilyLean contact VI — same markup and layout on COM and CN */
+.qily-unified-about-contact{margin:18px 0 30px;max-width:100%;color:#0f4b5a}
+.qily-unified-about-contact *{box-sizing:border-box}
+.qily-unified-about-contact>h3{font-size:clamp(19px,1.5vw,23px)!important;font-weight:800!important;color:#0f4b5a!important;line-height:1.3!important;margin:26px 0 15px!important}
+.qily-unified-qr-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.qily-unified-qr-card{min-width:0;display:flex;align-items:center;flex-direction:column;text-align:center;gap:12px;padding:22px 14px 24px;border:1px solid #cee0dd;border-top:4px solid #caa15f;border-radius:14px;background:#fff;box-shadow:0 6px 22px rgba(7,60,71,.06)}
+.qily-unified-qr-card>h4{margin:0!important;font-size:clamp(17px,1.2vw,20px)!important;color:#0f4b5a!important;font-weight:800!important}
+.qily-unified-about-contact .qily-unified-qr-art{display:flex!important;align-items:center;justify-content:center;width:min(100%,240px)!important;min-width:0!important;aspect-ratio:1!important;padding:8px!important;border:8px solid #0f4b5a!important;border-radius:12px!important;background:#fff!important;cursor:pointer}
+.qily-unified-qr-art img{display:block!important;width:100%!important;height:100%!important;max-width:100%!important;object-fit:contain!important;background:#fff!important}
+.qily-unified-about-contact .qily-unified-qr-value{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;max-width:100%;min-height:40px;padding:8px 14px!important;border:1px solid #0f4b5a!important;border-radius:24px!important;background:#0f4b5a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font:750 17px/1.3 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-decoration:none!important;white-space:nowrap;cursor:pointer}
+.qily-unified-about-contact .qily-about-copy-feedback:not(.is-visible){display:none}
+.qily-unified-about-contact .qily-about-copy-feedback.is-visible{font-size:13px;color:#b18746}
+.qily-unified-phone-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.qily-unified-phone,.qily-unified-email{display:grid;gap:7px;min-width:0;padding:16px 20px;background:#fff;border:1px solid #cfe0dd;border-left:4px solid #caa15f;border-radius:11px}
+.qily-unified-phone strong{font-size:17px!important;font-weight:800!important;color:#0f4b5a!important}
+.qily-unified-phone a,.qily-unified-email a{font-size:clamp(16px,1.3vw,19px)!important;font-weight:750!important;line-height:1.5!important;color:#0f4b5a!important;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.qily-unified-about-contact :is(a,button):focus-visible{outline:3px solid #caa15f!important;outline-offset:3px}
+.qily-unified-about-contact .qily-unified-qr-value:hover{background:#167d8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important}
+.qily-about-career{margin:20px 0 27px;padding:20px 24px;border:1px solid #cfe0dd;border-left:4px solid #caa15f;border-radius:12px;background:#f7fbfa}
+.qily-about-career h3{font-size:21px!important;margin:0 0 9px!important;color:#0f4b5a!important}
+.qily-about-career p{margin:0 0 14px!important;font-size:17px!important;line-height:1.7!important;color:#3b6264!important}
+.qily-about-career a{display:inline-flex;padding:8px 15px;background:#0f4b5a;border:1px solid #caa15f;border-radius:8px;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;text-decoration:none!important;font-size:16px;font-weight:750}
+@media(max-width:900px){.qily-unified-qr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.qily-unified-qr-card:nth-child(3){grid-column:1/-1;justify-self:center;width:min(100%,390px)}}
+@media(max-width:680px){.qily-unified-qr-grid,.qily-unified-phone-grid{grid-template-columns:1fr}.qily-unified-qr-card:nth-child(3){grid-column:auto;width:100%}.qily-unified-qr-card{padding:18px 14px}.qily-unified-qr-art{width:min(100%,245px)!important}.qily-unified-email{padding:14px 16px}}
