@@ -307,7 +307,7 @@ function normalize(path){
 function routeKey(path){
   path=normalize(path);
   if(path==='/')return 'home';
-  if(/^\/archive\/profile\/experience(?:\/|$)/.test(path))return 'experience';
+  if(/^\/archive\/profile\/experience(?:\/|$)/.test(path))return 'contact';
   if(/^\/archive\/profile\/capabilities(?:\/|$)/.test(path))return 'capabilities';
   if(/^\/(?:archive\/profile\/tools|archive\/improvements)(?:\/|$)/.test(path))return 'tools';
   if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
