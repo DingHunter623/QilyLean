@@ -241,7 +241,7 @@ for(const rel of cnPages){
   assert(footerBlock, rel+' must keep the shared China footer component.');
   assert(!footerBlock.includes('class="footer-home"'), rel+' retired footer site label must be removed.');
   const footerActions=[...footerBlock.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
-  assert(JSON.stringify(footerActions)===JSON.stringify(['home','top','back','previous','search','current','contact']), rel+' China footer must use the shared seven actions.');
+  assert(JSON.stringify(footerActions)===JSON.stringify(['top','back','previous','search','current']), rel+' China footer must retain exactly five approved buttons.');
   const filingLinks=[...footerBlock.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
   assert(!footerBlock.includes('data-qily-footer-filing="none"'), rel+' China-domain pages must not use a filing-free footer.');
   assert(filingLinks.length===2, rel+' must retain exactly two official filing links in the footer.');
@@ -255,18 +255,12 @@ for(const rel of cnPages){
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Actions V10'), 'CN content-fit public footer stylesheet marker is missing.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END'), 'CN content-fit footer authority marker is missing.');
-assert(cnFooterCss.includes('display:inline-flex!important'), 'CN footer modules must use intrinsic inline-flex sizing.');
-assert(cnFooterCss.includes('width:auto!important'), 'CN footer modules must size to content instead of filing-width columns.');
-assert(!cnFooterCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'CN footer actions must not be forced into equal-width grid columns.');
-assert(!cnFooterCss.includes('grid-template-columns:minmax(160px,.72fr) minmax(250px,1.18fr) minmax(520px,2.10fr)!important'), 'CN footer must not restore filing-driven desktop column widths.');
-assert(cnFooterCss.includes('justify-content:space-between!important'), 'CN desktop footer must distribute intrinsic-width controls across the content axis.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-REDLINE-V12'), 'CN annotated footer alignment authority is missing.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13'), 'CN top/share equal-width authority is missing.');
-assert(cnFooterCss.includes('width:calc(4em + 24px)!important'), 'CN top/share controls must share one canonical width.');
-assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
-assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer stylesheet missing.');
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V10'), 'CN base footer stylesheet missing.');
+assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer visual owner missing.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-ONE-ROW-V1'), 'CN one-row seven-cell geometry missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1.75fr)'), 'Five controls plus two filing cells not aligned.');
+assert(cnFooterCss.includes('font:500 13px/1.2'), 'CN filing font must be smaller than controls.');
+assert(cnFooterCss.includes('@media(max-width:760px)'), 'CN responsive footer not declared.');
 assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
 assert(cnFooterCss.includes('QILY-CN-FOOTER-ONE-ROW-V1'), 'CN compact single-row footer VI missing.');
 assert(cnFooterJs.includes("var CN_ORDER=['top','back','previous','search','current'];"), 'CN footer must expose exactly five actions.');
