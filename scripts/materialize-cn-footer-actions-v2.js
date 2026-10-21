@@ -194,6 +194,22 @@ html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(
   line-height:1.15!important;
  }
 }
+
+/* QILY-CN-FOOTER-320-ACTION-FIT-V1: maintain legible 4-character controls at narrow phone widths. */
+@media(max-width:390px){
+ html:root:root:root:root:root:root:root body footer.footer .footer-inner{
+   grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ }
+ html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+   display:grid!important;grid-column:1 / -1!important;grid-row:1!important;
+   grid-template-columns:repeat(3,minmax(64px,1fr))!important;
+   width:100%!important;min-width:0!important;max-width:none!important;gap:4px!important;
+ }
+ html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
+   box-sizing:border-box!important;width:100%!important;min-width:64px!important;
+   max-width:none!important;padding:4px 0!important;font-size:14px!important;
+ }
+}
 `;
 
 function filings(footer){
