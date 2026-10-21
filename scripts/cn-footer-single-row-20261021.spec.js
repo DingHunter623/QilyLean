@@ -30,7 +30,7 @@ test('China desktop footer: exactly five actions plus two filing links, evenly s
  expect(x.boxes[0].font).toBeLessThanOrEqual(16);
  expect(x.boxes[5].font).toBeLessThanOrEqual(13);
  expect(x.footer.height).toBeLessThanOrEqual(62);
- expect(x.overflow).toBeFalsy();
+ expect(x.overflow,JSON.stringify({width:x.viewport,actions:x.actions,boxes:x.boxes,footer:x.footer,filings:x.filings})).toBeFalsy();
  await page.close();
 });
 test('China tablet and mobile footer: no clipped controls or lost filing links',async({browser})=>{
@@ -40,7 +40,7 @@ test('China tablet and mobile footer: no clipped controls or lost filing links',
   const x=await measure(page);
   expect(x.actions).toEqual(['top','back','previous','search','current']);
   expect(x.boxes).toHaveLength(7);
-  expect(x.overflow).toBeFalsy();
+  expect(x.overflow,JSON.stringify({width:x.viewport,actions:x.actions,boxes:x.boxes,footer:x.footer,filings:x.filings})).toBeFalsy();
   for(const b of x.boxes){expect(b.x).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(width+2);expect(b.height).toBeGreaterThanOrEqual(34);}
   expect(x.filings).toHaveLength(2);
   expect(x.footer.bottom).toBeLessThanOrEqual(852);
