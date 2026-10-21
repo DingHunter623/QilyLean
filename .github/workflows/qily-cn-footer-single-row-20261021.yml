@@ -1,0 +1,56 @@
+name: QilyLean CN Compact Footer Acceptance
+on:
+  push:
+    branches: [fix/cn-footer-single-row-20261021]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cn-single-row-footer-20261021
+  cancel-in-progress: true
+jobs:
+  verify-and-materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/cn-footer-single-row-20261021
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Materialize the China footer from the single source of truth
+        run: |
+          node --check site-dock-share-runtime-v1.js
+          node --check scripts/materialize-cn-footer-actions-v2.js
+          node scripts/materialize-cn-footer-actions-v2.js
+      - name: Check independent static and runtime contracts
+        run: |
+          set -euo pipefail
+          node scripts/materialize-cn-footer-actions-v2.js --check
+          node scripts/validate-dock-flow-navigation-v56.js
+          node scripts/validate-sitewide-vi-unification.js
+          git diff --check
+      - name: Install browser testing dependencies
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start both sites locally
+        run: |
+          python3 -m http.server 4173 --directory . >/tmp/qily-intl-http.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-http.log 2>&1 &
+          sleep 3
+          curl -fsS http://127.0.0.1:4173/ >/dev/null
+          curl -fsS http://127.0.0.1:4174/about/ >/dev/null
+      - name: Verify desktop single-row geometry, mobile and international isolation
+        run: npx playwright test scripts/cn-footer-single-row-20261021.spec.js --reporter=line --workers=1
+      - name: Commit generated China footer artifacts and pages
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- cn-site
+          if ! git diff --cached --quiet; then
+            git commit -m 'build(cn): materialize five-action footer and one-row filings [skip ci]'
+            git push origin HEAD:fix/cn-footer-single-row-20261021
+          fi

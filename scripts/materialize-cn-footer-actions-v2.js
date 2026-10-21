@@ -10,9 +10,9 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261021-contact-about-v1';
-const ACTIONS=['home','top','back','previous','search','current','contact'];
-const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
+const VERSION='20261021-cn-single-row-v1';
+const ACTIONS=['top','back','previous','search','current'];
+const LABELS=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
 const JS_SRC='/assets/cn-footer-actions-v1.js?v='+VERSION;
 const runtime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
@@ -75,6 +75,113 @@ html:root:root:root:root:root:root body #qilyCnFooterSearch input{display:block!
 #qilyCnFooterSearch a{display:block;padding:12px 4px;color:#0f4b5a;text-underline-offset:3px}
 #qilyCnFooterSearch :is(a,button,input):focus-visible{outline:3px solid #caa15f;outline-offset:2px}
 @media print{html:root:root:root:root:root:root body footer.footer #floatDock{display:none!important}}
+
+/* QILY-CN-FOOTER-ONE-ROW-V1 | Five functional buttons + two actual filings, one desktop row.
+ * Seven visually equidistant cells, no duplicate Home or Contact buttons.
+ * Tablet/phone wrap safely so full filing identifiers remain accessible. */
+html:root:root:root:root:root:root:root body footer.footer{
+  box-sizing:border-box!important;
+  padding:0 0 env(safe-area-inset-bottom)!important;
+  background:#0f4b5a!important;
+  border-top:3px solid #c8a25a!important;
+}
+html:root:root:root:root:root:root:root body footer.footer .footer-inner{
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1.75fr)!important;
+  align-items:center!important;align-content:center!important;
+  gap:6px!important;
+  box-sizing:border-box!important;
+  width:min(1200px,calc(100% - 32px))!important;
+  max-width:1200px!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:5px 0!important;
+}
+html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+  position:static!important;
+  grid-column:1 / span 5!important;
+  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  align-items:center!important;gap:6px!important;
+  min-width:0!important;width:100%!important;
+  padding:0!important;margin:0!important;border:0!important;
+}
+html:root:root:root:root:root:root:root body footer.footer .footer-records{
+  grid-column:6 / span 2!important;grid-row:1!important;
+  display:grid!important;grid-template-columns:minmax(0,1.5fr) minmax(0,1.75fr)!important;
+  gap:6px!important;align-items:center!important;
+  min-width:0!important;width:100%!important;max-width:none!important;
+  min-height:0!important;margin:0!important;padding:0!important;
+}
+html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
+  min-width:0!important;min-height:36px!important;width:100%!important;
+  padding:4px 5px!important;
+  font:750 16px/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  white-space:nowrap!important;text-align:center!important;
+  border:1px solid rgba(255,227,155,.52)!important;
+  border-radius:7px!important;
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+  background:rgba(255,255,255,.055)!important;
+}
+html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;min-width:0!important;width:100%!important;
+  min-height:36px!important;max-width:none!important;max-height:none!important;
+  padding:4px 5px!important;margin:0!important;
+  border:1px solid rgba(255,227,155,.52)!important;border-radius:7px!important;
+  background:rgba(255,255,255,.055)!important;
+  font:500 13px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  white-space:nowrap!important;text-align:center!important;
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+  text-decoration:none!important;
+}
+html:root:root:root:root:root:root:root body footer.footer .footer-records .police-record img{
+  width:15px!important;height:17px!important;flex:0 0 15px!important;
+}
+html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(:hover,:focus-visible){
+  background:#ffe39b!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  border-color:#ffe39b!important;
+}
+@media(max-width:1190px){
+  html:root:root:root:root:root:root:root body footer.footer .footer-inner{
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    width:calc(100% - 28px)!important;padding:5px 0!important;gap:5px!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+    grid-column:1 / -1!important;grid-row:1!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:5px!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer .footer-records{
+    grid-column:1 / -1!important;grid-row:2!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;
+  }
+}
+@media(max-width:760px){
+  html:root:root:root:root:root:root:root body footer.footer .footer-inner{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    width:calc(100% - 16px)!important;
+    gap:4px!important;padding:4px 0!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:4px!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer .footer-records{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:4px!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
+    font-size:14px!important;min-height:36px!important;padding:4px 2px!important;
+  }
+  html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+    white-space:normal!important;overflow-wrap:anywhere!important;
+    min-height:46px!important;font-size:12px!important;
+    padding:4px!important;line-height:1.15!important;
+  }
+}
+@media print{
+  html:root:root:root:root:root:root:root body footer.footer #floatDock{display:none!important}
+}
 `;
 
 function filings(footer){
