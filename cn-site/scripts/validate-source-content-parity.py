@@ -99,7 +99,7 @@ def verify_semantics(value, row):
     footer = re.search(r'<footer\b[\s\S]*?</footer>', value, re.I)
     require(footer and 'class="footer-home"' not in footer.group(0), 'Retired China footer returned: ' + url)
     actions = [attrs['data-action'] for tag, attrs in Nodes(footer.group(0)).nodes if tag == 'button' and 'data-action' in attrs]
-    require(actions == ['home', 'top', 'back', 'previous', 'search', 'current', 'contact'], 'Shared footer actions changed: ' + url)
+    require(actions == ['top', 'back', 'previous', 'search', 'current'], 'Five-action China footer contract changed: ' + url)
     require('/mirror-media/' not in main, 'Proxy-dependent content media returned: ' + url)
     nodes = Nodes(value).nodes
     canonical = [attrs.get('href') for tag, attrs in nodes if tag == 'link' and attrs.get('rel') == 'canonical']
