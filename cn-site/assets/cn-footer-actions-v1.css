@@ -531,7 +531,6 @@ html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(
  }
 }
 
-
 /* QILY-CN-FOOTER-320-ACTION-FIT-V1: maintain legible 4-character controls at narrow phone widths. */
 @media(max-width:390px){
  html:root:root:root:root:root:root:root body footer.footer .footer-inner{
@@ -547,4 +546,5 @@ html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(
    max-width:none!important;padding:4px 0!important;font-size:14px!important;
  }
 }
+
 /* QILY-CN-SHARED-SEVEN-ACTIONS-V2:END */
