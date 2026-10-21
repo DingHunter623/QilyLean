@@ -61,7 +61,7 @@ if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
   # Apply the authorized About navigation hierarchy to generated, untracked CN mirror pages.
-  node "$REPO_ROOT/scripts/materialize-about-nav-footer-v1.js"
+  node "$REPO_ROOT/scripts/materialize-about-nav-footer-v1.js" --cn-only
   python3 "$CN_ROOT/scripts/validate-source-content-parity.py"
   exit 0
 fi
