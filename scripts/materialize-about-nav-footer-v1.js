@@ -31,6 +31,8 @@ for(const rel of files){
    after=version(after,/\/site-navigation\.js\?[^"'\s<>]*/g);
    after=version(after,/\/site-dock-share-runtime-v1\.js\?[^"'\s<>]*/g);
  }
+ // Existing first-paint generator emits whitespace-only blank lines; normalize them before the check.
+ after=after.replace(/^[ \t]+$/gm,'');
  if(after!==before){if(!check)fs.writeFileSync(f,after);changed++;if(china)cn++;else intl++;}
 }
 if(check&&changed)throw Error('About menu/footer snapshots stale: '+changed);
