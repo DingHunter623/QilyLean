@@ -180,7 +180,7 @@ assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell m
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
 assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
-for(const [key,href,label] of [['experience','/archive/profile/experience/','履历主线'],['capabilities','/archive/profile/capabilities/','能力体系'],['tools','/archive/profile/tools/','改善工具'],['lean','/lean/','精益生产'],['projects','/notes/','代表项目'],['trust','/trust/','信任中心'],['knowledge','/knowledge/','知识资产'],['resources','/resources/','资源协同']]){
+for(const [key,href,label] of [['capabilities','/archive/profile/capabilities/','能力体系'],['tools','/archive/profile/tools/','改善工具'],['lean','/lean/','精益生产'],['projects','/notes/','代表项目'],['trust','/trust/','信任中心'],['knowledge','/knowledge/','知识资产'],['resources','/resources/','资源协同']]){
   assert(cnRail.includes("key:'"+key+"',href:'"+href+"',label:'"+label+"'"), 'CN navigation must expose noncommercial global module '+label);
 }
 assert(!cnRail.includes("key:'briefs',href:'/briefs/'"), 'CN brief archive belongs inside knowledge assets, not as a competing primary menu.');
@@ -229,7 +229,7 @@ for(const rel of cnPages){
     assert(html.includes('data-qily-cn-nav-contract="20260926-v7-bridge"'), rel+' must use the current CN navigation contract.');
     assert(/<a href="\/trust\/" data-qily-nav-key="trust"[^>]*>信任中心<\/a>/.test(html), rel+' CN trust center must be in the primary navigation.');
     assert(/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识资产<\/a>/.test(html), rel+' CN primary knowledge asset label must match the global site.');
-    assert(/<a href="\/archive\/profile\/experience\/" data-qily-nav-key="experience"[^>]*>履历主线<\/a>/.test(html), rel+' CN experience must have a local entry.');
+    assert(!/data-qily-nav-key="experience"/.test(html), rel+' career history belongs inside About instead of primary navigation.');
     assert(/<a href="\/archive\/profile\/capabilities\/" data-qily-nav-key="capabilities"[^>]*>能力体系<\/a>/.test(html), rel+' CN capabilities must have a local entry.');
     assert(!/data-qily-nav-key="briefs"/.test(html), rel+' CN briefs must remain a secondary knowledge entry.');
     assert(/<a href="\/resources\/" data-qily-nav-key="resources"[^>]*>资源协同<\/a>/.test(html), rel+' CN resource entry must use the internal bridge route.');
@@ -342,3 +342,10 @@ function checkPublicFooterLinks(dir){
 checkPublicFooterLinks('cn-site');
 checkPublicFooterLinks('global-knowledge');
 checkPublicFooterLinks('links/cn-public');
+
+// Dual-site contact authority and career section live inside About.
+for(const [p,target] of [['about/index.html','/experience/'],['cn-site/about/index.html','/archive/profile/experience/']]){
+ const html=read(p);
+ for(const v of ['data-qily-contact-parity="dual-v1"','qilylean-com-qr.svg','qilylean-cn-qr.svg','qilylean-wechat-qr.png','admin@qilylean.com','id="experience"','href="'+target+'"'])
+  assert(html.includes(v),p+' missing About authority '+v);
+}

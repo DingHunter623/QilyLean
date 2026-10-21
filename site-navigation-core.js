@@ -13,7 +13,6 @@
   var CONTACT_EMAIL = 'admin@qilylean.com';
   var routes = [
     ['首页', '/'],
-    ['履历主线', '/experience/'],
     ['能力体系', '/capabilities/'],
     ['改善工具', '/improvements/'],
     ['精益生产', '/lean-production/'],
@@ -38,7 +37,7 @@
     if (/\/ai\.html$/.test(path)) return '/ai.html';
     if (path.indexOf('/capabilities/') === 0) return '/capabilities/';
     if (path.indexOf('/projects/') === 0) return '/projects/';
-    if (path.indexOf('/experience/') === 0) return '/experience/';
+    if (path.indexOf('/experience/') === 0) return '/about/';
     if (path.indexOf('/improvements/') === 0 || /\/(?:execution|papers)\.html$/.test(path) || /\/qilylean\/papers\.html$/.test(path)) return '/improvements/';
     if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path) || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
     if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) return '/trust/';

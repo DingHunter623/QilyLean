@@ -11,7 +11,6 @@ var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]'
 
 var CANONICAL_NAV_ITEMS=[
   {key:'home',href:'/',label:'首页'},
-  {key:'experience',href:'/archive/profile/experience/',label:'履历主线'},
   {key:'capabilities',href:'/archive/profile/capabilities/',label:'能力体系'},
   {key:'tools',href:'/archive/profile/tools/',label:'改善工具'},
   {key:'lean',href:'/lean/',label:'精益生产'},

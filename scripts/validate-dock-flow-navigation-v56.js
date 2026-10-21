@@ -2,7 +2,7 @@
 'use strict';
 
 /* Dock V5.8 footer-style contract gate | 2026-09-24
- * International quick actions retain all seven functions while sharing the China-site
+ * International quick actions retain all six functions while sharing the China-site
  * fixed-footer visual language: deep teal bar, gold rule/text and compact controls.
  */
 const fs=require('fs');
@@ -17,7 +17,7 @@ const forbid=(token,label)=>{if(source.includes(token))throw new Error(`Dock V5.
 must('Floating Dock Authoritative Runtime V5.8','runtime version');
 must('__qilyFloatingDockUnifiedV58','single-owner guard');
 must('__qilyFloatingDockUnifiedV57','backward-compatibility guard');
-must("ORDER=['home','top','back','previous','search','current','contact']",'seven-action order');
+must("ORDER=['home','top','back','previous','search','current']",'six-action order');
 for(const label of ['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'])must(label,`approved label ${label}`);
 must("MOBILE_LABELS={home:['首页'],top:['顶部'],back:['上一层级'],previous:['上一网页'],search:['本站搜索'],current:['分享当前'],contact:['联系我们']}",'single-line mobile labels');
 must("if(action==='previous'){goPreviousPage();return;}",'previous-page action');
@@ -27,7 +27,7 @@ must('position:fixed!important','fixed footer navigation');
 must('left:0!important;right:0!important','full-width footer anchoring');
 must('bottom:0!important','viewport-bottom pin');
 must('width:100%!important','full viewport width');
-must('grid-template-columns:repeat(7,minmax(0,1fr))!important','desktop seven-column modules');
+must('grid-template-columns:repeat(6,minmax(0,1fr))!important','desktop six-column modules');
 must('border-top:3px solid #c8a25a!important','China-style gold top rule');
 must('background:#0f4b5a!important','China-style deep teal footer');
 must('overflow-x:visible!important','no horizontal scrolling');
@@ -67,4 +67,4 @@ forbid('border-radius:50%!important','circular buttons');
 forbid('--qily-dock-shell:rgba(255,255,255,.98)','retired white shell');
 if(/new\s+MutationObserver\s*\(/.test(source))throw new Error('Dock V5.8 footer-style: MutationObserver rebuilding is forbidden');
 
-console.log('PASS: Dock V5.8 keeps all seven actions, China-style footer geometry, 4+3 mobile wrapping, and primary-navigation font parity (20/18/17px).');
+console.log('PASS: Dock V5.8 keeps six actions, China-style footer geometry, 4+3 mobile wrapping, and primary-navigation font parity (20/18/17px).');
