@@ -496,13 +496,13 @@ def main():
             '<link rel="stylesheet" href="/assets/brief-visual-parity.css?v=20261015-role-type-parity-v14">'
             +inline_css+
             '<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16">'
-            '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3">'
+            '<link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4">'
             '</head><body class="'+html.escape(" ".join(classes),quote=True)+'" data-qily-daily-layout="'+layout_val+'" data-qily-brief-parity="v1">'
             '<a class="skip" href="#main">跳到主要内容</a>'+source.header("briefs")+
             '<main id="main" data-qily-brief-content="v2"'+main_class+main_data+'>'+safe+'</main>'+source.footer()+
             source.TRANSLATION_SCRIPT+
             '<script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>'
-            '<script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v22-contact-preserved&anchors=20261013-v1"></script>'
+            '<script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about&anchors=20261013-v1"></script>'
             '</body></html>'
         )
         src.out.write_text(top,encoding="utf-8")

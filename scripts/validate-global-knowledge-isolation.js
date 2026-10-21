@@ -6,7 +6,7 @@ const dir = path.join(root, 'global-knowledge');
 const publicStylesheets = new Set([
   '/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure',
   '/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure&rail=20261008-nav-gap-v1',
-  '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
+  '/site-public-footer-type-v1.css?v=20261021-footer-type-v4',
 ]);
 const forbiddenSchemes = /^(?:mailto:|tel:|weixin:|whatsapp:)/i;
 const forbiddenRoutes = /\/(?:cooperation|links|projects|contact|trust|capabilities|experience|improvements|lean-production)(?:\/|$)/i;
