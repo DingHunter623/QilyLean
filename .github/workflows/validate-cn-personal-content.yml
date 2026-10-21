@@ -373,12 +373,13 @@ jobs:
                     assert.equal(await footer.locator('a[href^="https://beian.mps.gov.cn/"]').count(),1);
                     if(route.startsWith('/about/')){
                       assert.deepEqual(await page.locator('a[href^="tel:"]').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')).sort()),['tel:13450014003','tel:15168120722','tel:17681788259']);
-                      assert.equal(await page.locator('[data-qily-copy="admin@qilylean.com"]').count(),1);
-                      assert.equal(await page.locator('[data-qily-copy="Qily259"]').count(),1);
-                      for(const value of ['admin@qilylean.com','Qily259']){
-                        await page.locator('[data-qily-copy="'+value+'"]').click();
-                        await page.waitForFunction(async value=>(await navigator.clipboard.readText())===value,value,{timeout:10000});
-                      }
+                      assert.equal(await page.locator('.qily-unified-email a[href="mailto:admin@qilylean.com"]').count(),1);
+                      assert.equal(await page.locator('.qily-unified-qr-card:has(img[alt*="微信"]) [data-qily-copy="Qily259"]').count(),2);
+                      assert.equal(await page.locator('.qily-unified-qr-card a[href="https://qilylean.com/"]').count(),2);
+                      assert.equal(await page.locator('.qily-unified-qr-card a[href="https://qilylean.cn/"]').count(),2);
+                      assert.equal(await page.locator('.qily-unified-qr-grid img').count(),3);
+                      await page.locator('.qily-unified-qr-card [data-qily-copy="Qily259"]').last().click();
+                      await page.waitForFunction(async ()=>(await navigator.clipboard.readText())==='Qily259',null,{timeout:10000});
                     }else assert.equal(await page.locator('body[data-cn-source-parity="v1"] main[data-cn-source-content]').count(),1);
                     if(route==='/briefs/'){
                       await page.locator('#briefSearch').fill('SMED');
