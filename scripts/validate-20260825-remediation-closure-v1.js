@@ -8,7 +8,7 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)}
 const htmlFiles=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html',CN='cn-site/index.html',CN_PREFIX='cn-site/',CN_BRIDGE='links/cn-public/index.html';
-const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261020-public-footer-v5';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261021-footer-vi-v6';
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 
