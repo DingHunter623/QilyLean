@@ -862,9 +862,9 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   ('/assets/qilylean-vi-v2.css?v=20261014-cn-contact-three-phones-v1' if route == '/about/' else '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation'),
-                  '/assets/cn-footer-actions-v1.css?v=20261021-footer-vi-v6',
+                  '/assets/cn-footer-actions-v1.css?v=20261021-contact-about-v1',
                   '/site-public-footer-type-v1.css?v=20261021-footer-type-v4',
-                  '/assets/cn-footer-actions-v1.js?v=20261021-footer-vi-v6',
+                  '/assets/cn-footer-actions-v1.js?v=20261021-contact-about-v1',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="current"',
               ]:
@@ -1016,9 +1016,9 @@ jobs:
               raise SystemExit('Production China knowledge network must point to the local knowledge index.')
           if '/site-public-footer-type-v1.css?v=20261021-footer-type-v4' not in home:
               raise SystemExit('Production China home missing shared public footer typography.')
-          if '/assets/cn-footer-actions-v1.css?v=20261021-footer-vi-v6' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20261021-contact-about-v1' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20261021-footer-vi-v6' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20261021-contact-about-v1' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
