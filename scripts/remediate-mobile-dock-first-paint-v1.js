@@ -25,7 +25,7 @@ const LEGACY_VERSION='20260927-pricing-type-floor-v25';
 const CANONICAL_ROUTES=[
   ['首页','/'],['履历主线','/experience/'],['能力体系','/capabilities/'],['改善工具','/improvements/'],
   ['精益生产','/lean-production/'],['代表项目','/projects/'],['信任中心','/trust/'],['项目合作','/cooperation/'],
-  ['知识资产','/knowledge/'],['资源协同','/links/']
+  ['知识资产','/knowledge/'],['资源协同','/links/'],['关于我们','/about/']
 ];
 
 function abs(rel){return path.join(ROOT,rel);}

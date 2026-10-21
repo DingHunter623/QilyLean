@@ -1,0 +1,52 @@
+name: Check dual-site About and Contact nav
+on:
+  push:
+    branches:
+      - fix/cn-contact-intl-about-20261021
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: dual-site-about-contact-20261021
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: fix/cn-contact-intl-about-20261021
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Materialize only navigation and Dock revisions
+        run: |
+          node --check scripts/materialize-dual-about-contact-nav-v1.js
+          node scripts/materialize-dual-about-contact-nav-v1.js
+          node scripts/materialize-public-shell-first-paint-v1.js
+          node scripts/materialize-cn-footer-actions-v2.js
+          node scripts/materialize-dual-about-contact-nav-v1.js
+      - name: Regression checks
+        run: |
+          set -euo pipefail
+          node scripts/materialize-dual-about-contact-nav-v1.js --check
+          node scripts/materialize-public-shell-first-paint-v1.js --check
+          node scripts/materialize-cn-footer-actions-v2.js --check
+          node scripts/validate-dual-site-about-contact-v1.js
+          node scripts/validate-dock-flow-navigation-v56.js
+          node scripts/validate-sitewide-vi-unification.js
+          node --check site-navigation-core.js
+          node --check site-dock-share-runtime-v1.js
+          git diff --check
+      - name: Commit materialized HTML to review branch
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html' 'cn-site/assets/cn-footer-actions-v1.css'
+          if ! git diff --cached --quiet; then
+            git commit -m 'build: materialize international About and China Contact navigation [skip ci]'
+            git push origin HEAD:fix/cn-contact-intl-about-20261021
+          fi

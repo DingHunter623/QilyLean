@@ -21,7 +21,8 @@
     ['信任中心', '/trust/'],
     ['项目合作', '/cooperation/'],
     ['知识资产', '/knowledge/'],
-    ['资源协同', '/links/']
+    ['资源协同', '/links/'],
+    ['关于我们', '/about/']
   ];
 
   function normalizedPath(path) {
@@ -42,6 +43,7 @@
     if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path) || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
     if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) return '/trust/';
     if (path.indexOf('/links/') === 0) return '/links/';
+    if (path.indexOf('/about/') === 0) return '/about/';
     if (path.indexOf('/cooperation/') === 0) return '/cooperation/';
     if (path.indexOf('/trust/') === 0 || path.indexOf('/certificates/') === 0 || path.indexOf('/legal/') === 0) return '/trust/';
     return '';
