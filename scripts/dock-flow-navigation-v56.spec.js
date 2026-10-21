@@ -48,6 +48,7 @@ for(const [name,url,viewport,mobile] of cases){
         lineCounts:buttons.map(b=>b.querySelectorAll('.qily-dock-label>span').length),
         actions:buttons.map(b=>b.getAttribute('data-action')),
         spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
+        dockHeight:dr.height,
         buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {
           action:b.getAttribute('data-action'),w:r.width,h:r.height,left:r.left,right:r.right,top:r.top,
           borderLeft:parseFloat(s.borderLeftWidth)||0,borderRight:parseFloat(s.borderRightWidth)||0,
@@ -86,7 +87,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.justifyContent).toBe('center');
       expect(result.layout).toBe('mobile-fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
-      expect(result.spacerHeight,'mobile fixed footer must reserve two-row clearance').toBeGreaterThanOrEqual(90);
+      expect(Math.abs(result.spacerHeight-result.dockHeight),'mobile clearance must equal measured compact footer height').toBeLessThanOrEqual(2);
       for(const item of result.buttons){
         expect(item.h,'mobile tap target height').toBeGreaterThanOrEqual(36);
         expect(item.w,'mobile control remains tappable').toBeGreaterThanOrEqual(80);
@@ -103,7 +104,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.gridColumns.split(' ').length).toBe(7);
       expect(result.layout).toBe('fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
-      expect(result.spacerHeight,'desktop fixed footer must reserve clearance').toBeGreaterThanOrEqual(56);
+      expect(Math.abs(result.spacerHeight-result.dockHeight),'desktop clearance must equal measured compact footer height').toBeLessThanOrEqual(2);
       for(const item of result.buttons){
         expect(item.h,'desktop compact control height').toBeGreaterThanOrEqual(36);
         expect(item.w,'desktop module should be much wider than tall').toBeGreaterThan(item.h*2);
