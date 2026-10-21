@@ -21,10 +21,10 @@ for(const width of [1440,1024,820,760,390,320]){
    const layout=await page.evaluate(cn=>{
     const dock=document.querySelector('#floatDock'),shell=cn?document.querySelector('footer.footer'):dock;
     return {width:document.documentElement.scrollWidth,viewport:innerWidth,
-      bg:getComputedStyle(shell).backgroundColor,buttons:[...dock.querySelectorAll('button')].map(el=>({clipped:el.scrollWidth>el.clientWidth+1}))};
+      bg:getComputedStyle(shell).backgroundColor,buttons:[...dock.querySelectorAll('button')].map(el=>({action:el.dataset.action,text:el.textContent.trim(),clipped:el.scrollWidth>el.clientWidth+1,scroll:el.scrollWidth,client:el.clientWidth,font:getComputedStyle(el).fontSize}))};
    },cn);
    expect(layout.width).toBeLessThanOrEqual(layout.viewport+1);
-   expect(layout.buttons.some(n=>n.clipped)).toBe(false);
+   expect(layout.buttons.filter(n=>n.clipped),JSON.stringify({cn,width,layout})).toEqual([]);
    if(cn){
     await expect(page.locator('header nav[aria-label="主导航"] a[data-qily-nav-key]')).toHaveCount(9);
     await expect(page.locator('header nav a[data-qily-nav-key="experience"]')).toHaveCount(0);
