@@ -3,7 +3,16 @@
 /* Materialize QilyLean About: root menu, experience child section, footer actions and asset revisions. */
 const fs=require('fs'),path=require('path'),cp=require('child_process');
 const root=path.resolve(__dirname,'..'),check=process.argv.includes('--check');
-const files=cp.execFileSync('git',['ls-files','-z','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split('\0').filter(Boolean);
+const tracked=cp.execFileSync('git',['ls-files','-z','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split('\0').filter(Boolean);
+function walk(dir){
+ if(!fs.existsSync(dir))return [];
+ return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
+  const target=path.join(dir,entry.name);
+  if(entry.isDirectory())return walk(target);
+  return entry.isFile()&&entry.name.endsWith('.html')?[path.relative(root,target).replaceAll('\\','/')]:[];
+ });
+}
+const files=Array.from(new Set(tracked.concat(walk(path.join(root,'cn-site'))))).sort();
 const rev='20261021-about-contact-career-v1';
 let changed=0,intl=0,cn=0,removedMenu=0,removedFooter=0;
 function version(str,pattern){
