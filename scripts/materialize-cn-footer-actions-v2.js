@@ -10,7 +10,7 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261020-public-footer-v5';
+const VERSION='20261021-footer-vi-v6';
 const ACTIONS=['home','top','back','previous','search','current','contact'];
 const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
@@ -22,6 +22,8 @@ const actionCss=vm.runInNewContext(cssArray[1],Object.create(null),{timeout:1000
 const START='/* QILY-CN-SHARED-SEVEN-ACTIONS-V2:START */';
 const END='/* QILY-CN-SHARED-SEVEN-ACTIONS-V2:END */';
 const regionCss=`
+:root{--qily-footer-record-h:46px}
+@media(max-width:760px){:root{--qily-footer-record-h:84px}}
 html:root:root:root:root:root:root{scrollbar-gutter:stable!important}
 html:root:root:root:root:root:root body footer.footer{
   padding:0 0 env(safe-area-inset-bottom)!important;
@@ -41,7 +43,7 @@ html:root:root:root:root:root:root body footer.footer .footer-records{
   display:flex!important;flex-direction:row!important;align-items:center!important;
   justify-content:center!important;flex:0 0 auto!important;gap:8px!important;
   width:min(var(--qily-cn-axis,1180px),calc(100% - 32px))!important;
-  min-height:var(--qily-footer-record-h,55px)!important;margin:0 auto!important;padding:6px 0!important;
+  min-height:var(--qily-footer-record-h,46px)!important;margin:0 auto!important;padding:4px 0!important;
 }
 html:root:root:root:root:root:root body footer.footer .footer-records>a{
   flex:0 0 auto!important;width:auto!important;
@@ -51,7 +53,7 @@ html:root:root:root:root:root:root body footer.footer .footer-records>a{
 }
 @media(max-width:760px){
   html:root:root:root:root:root:root body footer.footer .footer-records{
-    flex-direction:column!important;gap:5px!important;min-height:var(--qily-footer-record-h,85px)!important;
+    flex-direction:column!important;gap:5px!important;min-height:var(--qily-footer-record-h,84px)!important;
     width:calc(100% - 16px)!important;
   }
 }
