@@ -182,6 +182,18 @@ html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(
 @media print{
   html:root:root:root:root:root:root:root body footer.footer #floatDock{display:none!important}
 }
+
+/* QILY-CN-FOOTER-MOBILE-RECORD-WRAP-V2 | Never clip an approved filing identifier. */
+@media(max-width:760px){
+ html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+  white-space:normal!important;word-break:break-all!important;overflow-wrap:anywhere!important;
+ }
+ html:root:root:root:root:root:root:root body footer.footer .footer-records>a span{
+  display:inline-block!important;min-width:0!important;max-width:100%!important;
+  white-space:normal!important;word-break:break-all!important;overflow-wrap:anywhere!important;
+  line-height:1.15!important;
+ }
+}
 `;
 
 function filings(footer){

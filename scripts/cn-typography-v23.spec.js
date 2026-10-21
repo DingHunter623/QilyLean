@@ -243,30 +243,34 @@ async function auditPage(page, route, limits, label){
   if(label==='desktop' && data.footer){
     expect(data.footer.position, route+' China footer fixed visual parity').toBe('fixed');
     expect(Math.abs(data.footer.bottom), route+' footer bottom alignment').toBeLessThanOrEqual(1);
-    expect(data.footer.siteText, route+' footer filed-site label').toBe('精益制造经验分享');
-    expect(data.footer.siteFont, route+' footer site-label type').toBeGreaterThanOrEqual(19.5);
-    expect(data.footer.siteFont, route+' footer site-label type').toBeLessThanOrEqual(20.5);
-    expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','share']);
-    expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','分享当前']);
+    expect(data.footer.siteText, route+' no duplicate China site footer label').toBe('');
+    expect(data.footer.actions.map(x=>x.action), route+' five-action footer contract').toEqual(['top','back','previous','search','current']);
+    expect(data.footer.actions.map(x=>x.text), route+' footer labels').toEqual(['回到顶部','上一层级','上一网页','本站搜索','分享当前']);
     for(const action of data.footer.actions){
-      expect(action.height, route+' footer button '+action.text).toBeGreaterThanOrEqual(39);
-      expect(action.height, route+' footer button '+action.text).toBeLessThanOrEqual(41);
-      expect(action.font, route+' footer button '+action.text+' type').toBeGreaterThanOrEqual(19.5);
-      expect(action.font, route+' footer button '+action.text+' type').toBeLessThanOrEqual(20.5);
+      expect(action.height, route+' compact action tap target').toBeGreaterThanOrEqual(34);
+      expect(action.font, route+' compact action type floor').toBeGreaterThanOrEqual(13.5);
+      expect(action.font, route+' compact action type ceiling').toBeLessThanOrEqual(16.5);
     }
-    expect(data.footer.filingState, route+' footer filing state').toBe('standard');
-    expect(data.footer.records.length, route+' footer filing record count').toBe(2);
+    expect(data.footer.records.length, route+' official filing links').toBe(2);
+    expect(data.footer.records[0].text).toContain('湘ICP备2026041143号-1');
+    expect(data.footer.records[1].text).toContain('湘公网安备43020002000443号');
     for(const record of data.footer.records){
-      expect(record.font, route+' footer filing type '+record.text).toBeGreaterThanOrEqual(19.5);
-      expect(record.font, route+' footer filing type '+record.text).toBeLessThanOrEqual(20.5);
+      expect(record.font, route+' compact filing type floor').toBeGreaterThanOrEqual(11.5);
+      expect(record.font, route+' compact filing type ceiling').toBeLessThanOrEqual(13.5);
     }
+    expect(data.footer.groups.length,route+' five actions plus two filings').toBe(7);
     expect(data.footer.documentWidth, route+' must not create horizontal page overflow').toBeLessThanOrEqual(data.footer.viewport+1);
-    const gaps=[];
-    for(let i=1;i<data.footer.groups.length;i++) gaps.push(data.footer.groups[i].left-data.footer.groups[i-1].right);
-    expect(Math.abs(data.footer.actions[0].width-data.footer.actions[1].width), route+' top/share must use the same width').toBeLessThanOrEqual(1);
-    expect(Math.min(...gaps), route+' distributed footer gap lower bound').toBeGreaterThan(8);
-    expect(Math.max(...gaps)-Math.min(...gaps), route+' five footer modules must be evenly distributed').toBeLessThanOrEqual(1);
-    expect(Math.max(...data.footer.actions.map(x=>x.width)), route+' action buttons stay compact').toBeLessThan(Math.min(...data.footer.records.map(x=>x.width)));
+    if(label==='desktop'){
+      const boxes=data.footer.groups;
+      for(const item of boxes)expect(Math.abs(item.top-boxes[0].top),route+' shared footer baseline').toBeLessThanOrEqual(2);
+      const gaps=boxes.slice(1).map((item,i)=>item.left-boxes[i].right);
+      for(const gap of gaps)expect(Math.abs(gap-6),route+' even visual gaps').toBeLessThanOrEqual(3);
+    } else {
+      for(const item of data.footer.groups){
+        expect(item.left,route+' phone footer horizontal boundary').toBeGreaterThanOrEqual(0);
+        expect(item.right,route+' phone footer clipping boundary').toBeLessThanOrEqual(data.footer.viewport+1);
+      }
+    }
   }
   if(reps.has(route)){
     fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
