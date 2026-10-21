@@ -32,13 +32,14 @@ for(const rel of files){
    after=version(after,/\/assets\/cn-nav-rail-v1\.js\?[^"'\s<>]*/g);
  }else{
    after=after.replace(/<nav\b(?=[^>]*\bid=["']floatDock["'])[^>]*>[\s\S]*?<\/nav>/gi,menu=>{
-     const next=menu.replace(/<button\b(?=[^>]*data-action=["']contact["'])[^>]*>[\s\S]*?<\/button>/gi,'');
+     const next=menu.replace(/<button\b(?=[^>]*data-action=["'](?:home|contact)["'])[^>]*>[\s\S]*?<\/button>/gi,'');
      if(next!==menu)removedFooter++;
      return next;
    });
-   if(after.includes('qily-page-action-nav'))after=after.replaceAll('grid-template-columns:repeat(7,minmax(0,1fr))','grid-template-columns:repeat(6,minmax(0,1fr))');
+   if(after.includes('qily-page-action-nav'))after=after.replaceAll('grid-template-columns:repeat(7,minmax(0,1fr))','grid-template-columns:repeat(5,minmax(0,1fr))');
    after=version(after,/\/site-navigation\.js\?[^"'\s<>]*/g);
-   after=version(after,/\/site-dock-share-runtime-v1\.js\?[^"'\s<>]*/g);
+   // The canonical footer materializer owns its runtime revision. Do not add
+   // About-only cache parameters that make the shared first paint drift.
  }
  // Existing first-paint generator emits whitespace-only blank lines; normalize them before the check.
  after=after.replace(/^[ \t]+$/gm,'');

@@ -57,7 +57,8 @@ jobs:
           grep -Fq 'https://qilylean.cn/notes/#practice-digital-factory' projects/digital-factory/index.html
           grep -Fq 'https://qilylean.cn/notes/#practice-visual-management' projects/visual-management/index.html
           grep -Fq 'https://qilylean.cn/notes/#practice-evidence' projects/lean-improvement-evidence/index.html
-          grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html
+          grep -Fq '代表项目清单' cn-site/notes/index.html
+          test "$(grep -Fo 'id="practice-' cn-site/notes/index.html | wc -l | tr -d ' ')" -eq 8
 
       - name: Verify localized CN representative visuals
         shell: bash

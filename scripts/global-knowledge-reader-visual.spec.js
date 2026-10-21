@@ -241,14 +241,14 @@ for(const route of ['/global-knowledge/','/global-knowledge/terminology/','/glob
     await page.goto(base+route,{waitUntil:'load'});
     const footer=page.locator('.cn-bridge-footer');
     await expect(footer.locator('a,.cn-bridge-footer-brand')).toHaveCount(0);
-    await expect(footer.locator('.cn-bridge-footer-actions')).toHaveAttribute('data-qily-cn-bridge-footer-contract','top,share,no-filing');
-    await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
-    await expect(page.locator('#floatDock,.cn-bridge-footer-records')).toHaveCount(0);
-    await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
+    await expect(footer.locator('#floatDock')).toHaveAttribute('data-qily-stable-order','top,back,previous,search,current');
+    await expect(footer.locator('button')).toHaveText(['回到顶部','上一层级','上一网页','本站搜索','分享当前']);
+    await expect(page.locator('.cn-bridge-footer-records')).toHaveCount(0);
+    await expect.poll(()=>page.locator('#qilyDockBottomSpacerV58').evaluate(el=>el.getBoundingClientRect().height-document.querySelector('#floatDock').getBoundingClientRect().height)).toBeGreaterThanOrEqual(-1);
     await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
     await footer.locator('[data-action="top"]').click();
     await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
-    await footer.locator('[data-action="share"]').click();
+    await footer.locator('[data-action="current"]').click();
     await expect.poll(()=>page.evaluate(()=>window.__footerCopy)).toBe((await page.title())+'\n'+base+route);
   });
 }

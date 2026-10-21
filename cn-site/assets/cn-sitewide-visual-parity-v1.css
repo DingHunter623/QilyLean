@@ -1,0 +1,51 @@
+/* QILY-CN-SITEWIDE-VISUAL-PARITY-V1 | 2026-10-21
+ * Destination-only final corrections; original public content retains its
+ * international styles. The China shell, translator and filings remain local.
+ */
+html:root:root:root body[data-qily-site="cn"] main > :is(
+ .hero,.page-hero,.module-hero,.project-hero,.projects-hero,.capability-hero,
+ .experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,.document-hero,
+ .section,.module-section,.qily-system-axis,.qily-ia-section
+) > :is(.hero-inner,.content,.inner,.module-inner,.section-inner,.qily-system-axis__inner,.qily-ia-inner){
+ width:min(1180px,100%)!important;max-width:1180px!important;min-width:0!important;
+ margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important;
+}
+
+/* The personal site omits the commercial cooperation step. Fill the same
+ * content frame with its five retained steps rather than leaving a sixth cell.
+ */
+html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{
+ grid-template-columns:repeat(5,minmax(0,1fr))!important;
+}
+@media(max-width:920px){
+ html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:620px){
+ html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+
+/* A generic China caption rule must not darken text on a dark photo overlay. */
+html:root:root:root body[data-qily-site="cn"] main .qily-home-project-visual figcaption{
+ color:#fff!important;-webkit-text-fill-color:#fff!important;
+ background:rgba(7,60,71,.96)!important;border:1px solid #d8b66e!important;
+ border-radius:8px!important;padding:9px 11px!important;
+ font-size:16px!important;font-weight:900!important;line-height:1.5!important;
+ text-shadow:0 1px 1px rgba(0,0,0,.28)!important;box-shadow:0 5px 14px rgba(0,0,0,.18)!important;
+ backdrop-filter:none!important;
+}
+
+/* Keep public card rows and their media within the existing reading frame. */
+html:root:root:root body[data-qily-site="cn"] main :is(
+ .qily-system-axis__steps,.module-grid,.project-grid,.qily-ia-grid,.qily-six-grid,.resource-grid
+) > *{min-width:0!important;box-sizing:border-box!important}
+html:root:root:root body[data-qily-site="cn"] main :is(img,video,svg){max-width:100%}
+
+/* Preserve lesson content while allowing wide formula/table cards to shrink
+ * inside the phone reading frame. Tables retain local horizontal scrolling. */
+html:root:root:root body[data-qily-site="cn"] main .opl-grid>.opl-card{
+ min-width:0!important;max-width:100%!important;overflow-x:auto!important;
+ overflow-wrap:anywhere!important;box-sizing:border-box!important;
+}
+@media(max-width:760px){
+ html:root:root:root body[data-qily-site="cn"] main .opl-grid{grid-template-columns:minmax(0,1fr)!important}
+}

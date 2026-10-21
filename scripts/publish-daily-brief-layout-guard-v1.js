@@ -32,7 +32,11 @@ function install(html,rel){
   out=out.replace(/\s*<style\b[^>]*id=["']qilyDailyBriefSequenceOffV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');
   out=out.replace(/(<div\b[^>]*class=["'][^"']*\bsection-title\b[^"']*["'][^>]*>)\s*<span\b[^>]*class=["'][^"']*\bno\b[^"']*["'][^>]*>\s*\d{1,3}\s*<\/span>/gi,'$1');
   if(!/<\/head>/i.test(out))throw new Error(`${rel}: missing </head>`);
-  out=out.replace(/<\/head>/i,`${TAG}\n${SEQUENCE_OFF_STYLE}\n</head>`);
+  // Preserve the approved cascade: R8 remains after the daily guard. Moving
+  // this block to the end of head would change non-footer production visuals.
+  const anchor=/<link\b[^>]*id=["']qilyVisualAuthorityR8["'][^>]*>/i;
+  if(anchor.test(out))out=out.replace(anchor,match=>`${TAG}\n${SEQUENCE_OFF_STYLE}\n${match}`);
+  else out=out.replace(/<\/head>/i,`${TAG}\n${SEQUENCE_OFF_STYLE}\n</head>`);
   return firstPaint.materialize(out,rel);
 }
 

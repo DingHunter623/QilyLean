@@ -280,17 +280,20 @@ def main() -> None:
     write(RUNTIME, rendered_js); write(STYLE, rendered_css); write(PAGE, page)
     # Both public directories use the exact same scoped layer. Service modules
     # are excluded by every selector and never copied into the China document.
-    write(PUBLIC_STYLE, rendered_css)
+    if '--cn-only' not in sys.argv:
+        write(PUBLIC_STYLE, rendered_css)
     international = re.sub(r'<main\b[^>]*>', '<main id="qilyResourcePublicDirectory" data-qily-public-tech-directory="v2">', original, count=1)
     international = re.sub(r'<link id="qilyPublicTechDirectoryStyles"[^>]*>\s*', "", international)
     international = international.replace("</head>", '<link id="qilyPublicTechDirectoryStyles" rel="stylesheet" href="/site-public-tech-directory-v1.css?v=' + version + '">\n</head>', 1)
     international = international.replace(empty_display, protected_display)
-    write(SOURCE, international)
+    if '--cn-only' not in sys.argv:
+        write(SOURCE, international)
     # Keep the existing public header/Dock first-paint owner's exact ordering.
-    subprocess.run(["node", "-e",
-        "const fs=require('fs'),m=require('./scripts/materialize-public-shell-first-paint-v1.js');"
-        "const p='links/index.html';fs.writeFileSync(p,m.materialize(fs.readFileSync(p,'utf8'),p));"],
-        cwd=ROOT, check=True)
+    if '--cn-only' not in sys.argv:
+        subprocess.run(["node", "-e",
+            "const fs=require('fs'),m=require('./scripts/materialize-public-shell-first-paint-v1.js');"
+            "const p='links/index.html';fs.writeFileSync(p,m.materialize(fs.readFileSync(p,'utf8'),p));"],
+            cwd=ROOT, check=True)
     print(f"CN directory cloned: 100 enterprises / 5 categories + 4 unranked electrical references; markup + styles + search; public bridge only; rev={version}")
 
 if __name__ == "__main__": main()

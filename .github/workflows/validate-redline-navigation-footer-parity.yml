@@ -55,6 +55,8 @@ jobs:
           node --check global-knowledge/cn-bridge-shell-v1.js
           node --check scripts/redline-navigation-footer-parity.spec.js
           git diff --check
+      - name: Materialize China production bundle
+        run: bash cn-site/scripts/materialize-practice-assets.sh
       - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.55.0

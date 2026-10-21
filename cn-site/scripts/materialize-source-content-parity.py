@@ -452,7 +452,7 @@ def destination_shell_styles(value, preserve_adapter=False):
     if preserve_adapter: return value
     def link(match):
         tag = match.group(0)
-        if 'data-cn-source-css' in tag or 'cn-translate-baidu-v1.css' in tag: return tag
+        if 'data-cn-source-css' in tag or 'cn-translate-baidu-v1.css' in tag or 'cn-sitewide-visual-parity-v1.css' in tag: return tag
         if not re.search(r'\brel=[\x22\x27]stylesheet', tag, re.I): return tag
         saved = re.search(r'\bdata-cn-destination-origin=[\x22\x27]([^\x22\x27]+)', tag)
         href = re.search(r'\bhref=[\x22\x27]([^\x22\x27]+)', tag)
@@ -567,6 +567,14 @@ def main():
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
+            if name == 'projects/index.html':
+                # Preserve existing China project bookmarks on the shared cards.
+                project_ids = iter(('automotive-lean', 'smed-300t', 'mold-warehouse',
+                                    'fuse-improvement', 'factory-layout', 'digital-factory',
+                                    'visual-management', 'evidence'))
+                content = re.sub(r'<article class="module-card project-list-card',
+                                 lambda _: '<article id="practice-' + next(project_ids) + '" class="module-card project-list-card',
+                                 content)
         style_tags = []
         head = re.search(r'<head\b[^>]*>([\s\S]*?)</head>', raw, re.I)
         for kind, style_attrs, css in SourceStyles(head.group(1) if head else '').items:
@@ -594,6 +602,8 @@ def main():
         attrs = {key: value for key, value in attrs.items() if key != 'id' and not key.lower().startswith('on')}
         original_body = re.search(r'<body\b([^>]*)>', raw)
         source_body = Tree('<body' + (original_body.group(1) if original_body else '') + '></body>').root.children[0].attrs
+        if name == 'index.html' and 'qily-home-conversion-hero' in fragment:
+            source_body['data-qily-home-conversion'] = 'v1'
         attrs['data-cn-source-body-class'] = source_body.get('class', '')
         if 'qilyViV4Formal' in raw:
             attrs['data-cn-source-body-data-qily-vi-shell'] = 'v4-formal'
@@ -669,7 +679,7 @@ def main():
     assert hashlib.sha256(main_markup(about.read_text()).encode()).hexdigest() == contact_sha, 'About/contact DOM changed'
     destination_assets = []
     about_html = about.read_text()
-    for basename in ('cn-translate-baidu-v1.js', 'cn-translate-baidu-v1.css', 'cn-footer-actions-v1.js', 'cn-footer-actions-v1.css', 'cn-nav-rail-v1.js', 'qilylean-vi-v2.css', 'mps-beian.png', 'site-native-prefetch-v1.js'):
+    for basename in ('cn-translate-baidu-v1.js', 'cn-translate-baidu-v1.css', 'cn-footer-actions-v1.js', 'cn-footer-actions-v1.css', 'cn-nav-rail-v1.js', 'qilylean-vi-v2.css', 'cn-sitewide-visual-parity-v1.css', 'mps-beian.png', 'site-native-prefetch-v1.js'):
         asset = CN / 'assets' / basename
         match_asset = re.search(r'(?:src|href)=[\x22\x27](/assets/' + re.escape(basename) + r'[^\x22\x27]*)', about_html)
         if not asset.is_file() or not match_asset: raise RuntimeError('Protected destination asset missing: ' + basename)

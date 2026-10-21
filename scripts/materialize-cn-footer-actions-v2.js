@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* China footer: the canonical international seven actions above original filings.
+/* China footer: the canonical shared five actions above original filings.
  * Run after CN page generators and before the final source-content parity pass.
  */
 const fs=require('fs');
@@ -10,7 +10,7 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261021-cn-single-row-v1';
+const VERSION='20261021-five-actions-v1';
 const ACTIONS=['top','back','previous','search','current'];
 const LABELS=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
@@ -76,139 +76,40 @@ html:root:root:root:root:root:root body #qilyCnFooterSearch input{display:block!
 #qilyCnFooterSearch :is(a,button,input):focus-visible{outline:3px solid #caa15f;outline-offset:2px}
 @media print{html:root:root:root:root:root:root body footer.footer #floatDock{display:none!important}}
 
-/* QILY-CN-FOOTER-ONE-ROW-V1 | Five functional buttons + two actual filings, one desktop row.
- * Seven visually equidistant cells, no duplicate Home or Contact buttons.
- * Tablet/phone wrap safely so full filing identifiers remain accessible. */
-html:root:root:root:root:root:root:root body footer.footer{
-  box-sizing:border-box!important;
-  padding:0 0 env(safe-area-inset-bottom)!important;
-  background:#0f4b5a!important;
-  border-top:3px solid #c8a25a!important;
+/* QILY-CN-FIVE-ACTIONS-PARITY-V1: shared action row, destination filings below. */
+html:root:root:root:root:root:root:root:root body footer.footer .footer-inner{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ width:100%!important;max-width:none!important;margin:0!important;padding:0!important;gap:0!important;
 }
-html:root:root:root:root:root:root:root body footer.footer .footer-inner{
-  display:grid!important;
-  grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1.75fr)!important;
-  align-items:center!important;align-content:center!important;
-  gap:6px!important;
-  box-sizing:border-box!important;
-  width:min(1200px,calc(100% - 32px))!important;
-  max-width:1200px!important;
-  min-height:0!important;
-  margin:0 auto!important;
-  padding:5px 0!important;
+html:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+ position:static!important;width:100%!important;max-width:none!important;
+ padding:5px max(22px,calc((100vw - var(--qily-dock-axis,1180px))/2))!important;
+ border:0!important;box-shadow:none!important;
 }
-html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
-  position:static!important;
-  grid-column:1 / span 5!important;
-  display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;
-  align-items:center!important;gap:6px!important;
-  min-width:0!important;width:100%!important;
-  padding:0!important;margin:0!important;border:0!important;
+html:root:root:root:root:root:root:root:root body footer.footer .footer-records{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ flex-direction:row!important;flex-wrap:wrap!important;gap:5px!important;
+ box-sizing:border-box!important;min-height:0!important;width:min(1180px,calc(100% - 44px))!important;
+ margin:0 auto!important;padding:0 0 5px!important;
 }
-html:root:root:root:root:root:root:root body footer.footer .footer-records{
-  grid-column:6 / span 2!important;grid-row:1!important;
-  display:grid!important;grid-template-columns:minmax(0,1.5fr) minmax(0,1.75fr)!important;
-  gap:6px!important;align-items:center!important;
-  min-width:0!important;width:100%!important;max-width:none!important;
-  min-height:0!important;margin:0!important;padding:0!important;
+html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:auto!important;max-width:100%!important;min-width:0!important;min-height:36px!important;
+ padding:5px 9px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
+ color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+ background:rgba(255,255,255,.055)!important;font:500 14px/1.3 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+ white-space:nowrap!important;text-decoration:none!important;
 }
-html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
-  min-width:0!important;min-height:36px!important;width:100%!important;
-  padding:4px 5px!important;
-  font:750 16px/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  white-space:nowrap!important;text-align:center!important;
-  border:1px solid rgba(255,227,155,.52)!important;
-  border-radius:7px!important;
-  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  background:rgba(255,255,255,.055)!important;
+html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(:hover,:focus-visible){
+ background:#ffe39b!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
 }
-html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  box-sizing:border-box!important;min-width:0!important;width:100%!important;
-  min-height:36px!important;max-width:none!important;max-height:none!important;
-  padding:4px 5px!important;margin:0!important;
-  border:1px solid rgba(255,227,155,.52)!important;border-radius:7px!important;
-  background:rgba(255,255,255,.055)!important;
-  font:500 13px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  white-space:nowrap!important;text-align:center!important;
-  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  text-decoration:none!important;
+@media(max-width:820px){
+ html:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{padding:4px 6px!important}
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records{width:calc(100% - 12px)!important}
 }
-html:root:root:root:root:root:root:root body footer.footer .footer-records .police-record img{
-  width:15px!important;height:17px!important;flex:0 0 15px!important;
-}
-html:root:root:root:root:root:root:root body footer.footer .footer-records>a:is(:hover,:focus-visible){
-  background:#ffe39b!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
-  border-color:#ffe39b!important;
-}
-@media(max-width:1190px){
-  html:root:root:root:root:root:root:root body footer.footer .footer-inner{
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    width:calc(100% - 28px)!important;padding:5px 0!important;gap:5px!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
-    grid-column:1 / -1!important;grid-row:1!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
-    gap:5px!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer .footer-records{
-    grid-column:1 / -1!important;grid-row:2!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;
-  }
-}
-@media(max-width:760px){
-  html:root:root:root:root:root:root:root body footer.footer .footer-inner{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    width:calc(100% - 16px)!important;
-    gap:4px!important;padding:4px 0!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
-    grid-template-columns:repeat(3,minmax(0,1fr))!important;
-    gap:4px!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer .footer-records{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-    gap:4px!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
-    font-size:14px!important;min-height:36px!important;padding:4px 2px!important;
-  }
-  html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
-    white-space:normal!important;overflow-wrap:anywhere!important;
-    min-height:46px!important;font-size:12px!important;
-    padding:4px!important;line-height:1.15!important;
-  }
-}
-@media print{
-  html:root:root:root:root:root:root:root body footer.footer #floatDock{display:none!important}
-}
-
-/* QILY-CN-FOOTER-MOBILE-RECORD-WRAP-V2 | Never clip an approved filing identifier. */
-@media(max-width:760px){
- html:root:root:root:root:root:root:root body footer.footer .footer-records>a{
-  white-space:normal!important;word-break:break-all!important;overflow-wrap:anywhere!important;
- }
- html:root:root:root:root:root:root:root body footer.footer .footer-records>a span{
-  display:inline-block!important;min-width:0!important;max-width:100%!important;
-  white-space:normal!important;word-break:break-all!important;overflow-wrap:anywhere!important;
-  line-height:1.15!important;
- }
-}
-
-/* QILY-CN-FOOTER-320-ACTION-FIT-V1: maintain legible 4-character controls at narrow phone widths. */
-@media(max-width:390px){
- html:root:root:root:root:root:root:root body footer.footer .footer-inner{
-   grid-template-columns:repeat(3,minmax(0,1fr))!important;
- }
- html:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
-   display:grid!important;grid-column:1 / -1!important;grid-row:1!important;
-   grid-template-columns:repeat(3,minmax(64px,1fr))!important;
-   width:100%!important;min-width:0!important;max-width:none!important;gap:4px!important;
- }
- html:root:root:root:root:root:root:root body footer.footer #floatDock .qily-float-btn{
-   box-sizing:border-box!important;width:100%!important;min-width:64px!important;
-   max-width:none!important;padding:4px 0!important;font-size:14px!important;
- }
+@media(max-width:620px){
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records{flex-direction:column!important;align-items:center!important}
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{width:fit-content!important;max-width:100%!important;box-sizing:border-box!important;font-size:13px!important;white-space:normal!important;overflow-wrap:anywhere!important}
 }
 `;
 
@@ -228,8 +129,8 @@ function materialize(source){
   const records=filings(match[0]);
   if(!records.includes('湘ICP备2026041143号-1')||!records.includes('湘公网安备43020002000443号'))throw new Error('Expected China filing records missing.');
   let next=source.slice(0,match.index)+'<footer class="footer"><div class="footer-inner">'+nav()+records+'</div></footer>'+source.slice(match.index+match[0].length);
-  next=next.replace(/\/assets\/cn-footer-actions-v1\.css(?:\?[^"'\s<>]*)?/g,CSS_HREF);
-  next=next.replace(/\/assets\/cn-footer-actions-v1\.js(?:\?[^"'\s<>]*)?/g,JS_SRC);
+  next=next.replace(/(?<![\w/-])\/assets\/cn-footer-actions-v1\.css(?:\?[^"'\s<>]*)?/g,CSS_HREF);
+  next=next.replace(/(?<![\w/-])\/assets\/cn-footer-actions-v1\.js(?:\?[^"'\s<>]*)?/g,JS_SRC);
   if(filings(next.match(/<footer\b[^>]*\bclass=["']footer["'][^>]*>[\s\S]*?<\/footer>/i)[0])!==records)throw new Error('Filing DOM changed.');
   return next;
 }
@@ -246,8 +147,8 @@ function main(){
     const source=fs.readFileSync(file,'utf8'),next=materialize(source);if(next===source)continue;
     count++;changed++;if(!check)fs.writeFileSync(file,next);
   }
-  if(check&&changed)throw new Error('Public seven-action footer stale: '+changed+' assets/pages.');
-  console.log((check?'CHECK':'APPLY')+' PASS: CN canonical seven-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
+  if(check&&changed)throw new Error('Public five-action footer stale: '+changed+' assets/pages.');
+  console.log((check?'CHECK':'APPLY')+' PASS: CN canonical five-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
 }
 module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,actionCss,regionCss,filings,nav,materialize};
 if(require.main===module)main();

@@ -12,14 +12,14 @@ const vm=require('vm');
 const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
-const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261021-footer-about-v1';
+const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261021-five-actions-v1';
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
 const NAVIGATION_INPUT_REV='20261010-user-nav-v5';
 const MOMENTS_NAVIGATION_REV='20261018-trust-v1';
 const MOMENTS_PARENT_ROUTE='/trust/#journey';
-const ORDER=['home','top','back','previous','search','current','contact'];
-const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
+const ORDER=['top','back','previous','search','current'];
+const LABELS=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
 const DOCK_STYLE_ID='qilyDockUnifiedV58Style';
 const DOCK_SPACER_ID='qilyDockBottomSpacerV58';
 const runtime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
@@ -66,6 +66,7 @@ function materialize(source,relative){
   next=next.replace(/\/site-interaction-semantics-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&input=[^&"'\s<>]*/g,'')+'&input='+NAVIGATION_INPUT_REV);
   next=next.replace(/\/site-brand-home-feedback-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   next=next.replace(/\/site-contact-route-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
+  next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?[^\"'\s<>]*)?/g,DOCK_RUNTIME_SRC);
   // Replace only the nodes owned by this shared first-paint contract.
   next=next.replace(/\n?<link\b[^>]*id=["']qilyViV4Formal["'][^>]*>\n?/gi,'\n');
   next=next.replace(/\n?<style\b[^>]*id=["']qilyDockUnifiedV58Style["'][^>]*>[\s\S]*?<\/style>\n?/gi,'\n');
@@ -88,13 +89,31 @@ function main(){
   let eligible=0,changed=0,directAdded=0;
   for(const relative of files){
     const file=path.join(ROOT,relative);if(!fs.existsSync(file))continue;
-    const source=fs.readFileSync(file,'utf8');if(!isEligible(relative,source))continue;
+    const source=fs.readFileSync(file,'utf8');
+    const bridge=!relative.startsWith('cn-site/')&&source.includes('<footer class="cn-bridge-footer">');
+    if(!isEligible(relative,source)&&!bridge)continue;
     eligible++;
-    const next=materialize(source,relative);
+    const next=bridge?materializeBridge(source):materialize(source,relative);
     if(next!==source){changed++;if(!/site-dock-share-runtime-v1\.js/.test(source))directAdded++;if(!check)fs.writeFileSync(file,next);}
   }
   if(check&&changed)throw new Error('Shared international first-paint shell is stale on '+changed+'/'+eligible+' eligible HTML pages.');
   console.log(`${check?'CHECK':'APPLY'} PASS: shared international first-paint shell; eligible=${eligible}; changed=${changed}; directRuntimeAdded=${directAdded}; canonicalDockCssBytes=${Buffer.byteLength(criticalDockCss)}.`);
+}
+
+function materializeBridge(source){
+  // The isolated knowledge pages keep their own header/content/translation.
+  // Only the public footer adopts the canonical five-action owner.
+  let next=source.replace(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/,
+    '<footer class="cn-bridge-footer">'+dockTag+'</footer>');
+  next=next.replace(/\n?<style\b[^>]*id=["']qilyDockUnifiedV58Style["'][^>]*>[\s\S]*?<\/style>\n?/gi,'\n');
+  next=next.replace(/\n?<style\b[^>]*id=["']qilyBridgeFooterOwnerV1["'][^>]*>[\s\S]*?<\/style>\n?/gi,'\n');
+  next=next.replace(/\n?<div\b[^>]*id=["']qilyDockBottomSpacerV58["'][^>]*>\s*<\/div>\n?/gi,'\n');
+  next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
+  next=next.replace(/<\/head\s*>/i,runtimeTag+'\n'+styleTag+'\n'+
+    '<style id="qilyBridgeFooterOwnerV1">html:root:root:root body .cn-bridge-footer{position:static!important;padding:0!important;margin:0!important;border:0!important;min-height:0!important}html:root:root:root body:has(.cn-bridge-footer #floatDock){padding-bottom:0!important}</style>\n</head>');
+  next=next.replace(/(\/global-knowledge\/cn-bridge-shell-v1\.js\?[^"'\s<>]*)/g,url=>url.replace(/&footer=[^&"'\s<>]*/g,'')+'&footer=20261021-five-actions-v1');
+  next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
+  return next;
 }
 
 module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};

@@ -87,7 +87,7 @@ for(const rel of gkPages){
     assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7'), rel+' must load the China-parity footer runtime.');
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
     assert(!html.includes('cn-bridge-footer-brand'), rel+' international bridge footer must not show the CN filing-name button.');
-    assert(!html.includes('data-action="previous"'), rel+' bridge footer must not restore the previous-page action.');
+    assert(html.includes('data-qily-stable-order="top,back,previous,search,current"'), rel+' bridge footer must share five approved actions.');
     assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">[\s\S]*?<\/a>/.test(html), rel+' bridge logo must return to the international homepage.');
     for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(html.includes('href="'+route+'"'), rel+' bridge navigation missing '+route);
   }else{
@@ -257,12 +257,12 @@ const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
 assert(cnFooterCss.includes('QilyLean CN Footer Actions V10'), 'CN base footer stylesheet missing.');
 assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer visual owner missing.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-ONE-ROW-V1'), 'CN one-row seven-cell geometry missing.');
-assert(cnFooterCss.includes('grid-template-columns:repeat(5,minmax(0,1fr)) minmax(0,1.5fr) minmax(0,1.75fr)'), 'Five controls plus two filing cells not aligned.');
-assert(cnFooterCss.includes('font:500 13px/1.2'), 'CN filing font must be smaller than controls.');
+assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared five-action geometry missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(5,minmax(0,1fr))'), 'Five shared controls must fill the content axis.');
+assert(cnFooterCss.includes('font:500 14px/1.3'), 'CN filing font must remain readable below the controls.');
 assert(cnFooterCss.includes('@media(max-width:760px)'), 'CN responsive footer not declared.');
 assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-ONE-ROW-V1'), 'CN compact single-row footer VI missing.');
+assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared five-action footer VI missing.');
 assert(cnFooterJs.includes("var CN_ORDER=['top','back','previous','search','current'];"), 'CN footer must expose exactly five actions.');
 assert(cnFooterJs.includes("['回到顶部']"), 'CN top action must be labelled 回到顶部.');
 assert(cnFooterJs.includes('activeOrder()'), 'CN runtime must not restore removed actions.');
@@ -301,11 +301,11 @@ assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource col
 assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity'), 'Resource collaboration public entry must load the China-parity bridge shell.');
 assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7'), 'Resource collaboration public entry must load the China-parity footer runtime.');
 assert(!resourcePublic.includes('cn-bridge-footer-brand'), 'Resource collaboration public footer must not show China filing name.');
-assert(!resourcePublic.includes('data-action="previous"'), 'Resource collaboration footer must not restore the previous-page action.');
+assert(resourcePublic.includes('data-qily-stable-order="top,back,previous,search,current"'), 'Resource collaboration must share the five-action footer.');
 assert(!resourcePublic.includes('class="cn-bridge-brand" href="https://qilylean.cn/"'), 'Resource collaboration logo must not jump to China site.');
 assert(!resourcePublic.includes('data-action="home"'), 'Resource collaboration footer must not restore an international Home dock action.');
 assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the international homepage.');
-assert(!resourcePublic.includes('/site-dock-share-runtime-v1.js'), 'Resource collaboration retired international seven-action Dock returned.');
+assert(resourcePublic.includes('/site-dock-share-runtime-v1.js'), 'Resource collaboration must use the canonical five-action runtime.');
 for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(resourcePublic.includes('href="'+route+'"'), 'Resource collaboration China-parity navigation missing '+route);
 
 const linksPage=read('links/index.html');

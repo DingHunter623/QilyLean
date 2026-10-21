@@ -450,9 +450,19 @@ jobs:
                   if ((10#$index % 4 != lane)); then continue; fi
                   part="$LOCAL_PARTS/part.$index"
                   incoming="/tmp/qily-cn-release-cache/$ARCHIVE_SHA/.incoming-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-$index"
-                  copy_with_retry "$part" "$incoming" "$lane"
-                  timeout 90s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -i ~/.ssh/qilylean_cn \
-                    "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' accept --manifest '$REMOTE_MANIFEST' --index '$index' --incoming '$incoming'"
+                  accepted=false
+                  for attempt in 1 2 3; do
+                    echo "Upload and verify chunk $index (lane $lane, attempt $attempt/3)"
+                    if timeout 240s scp -q "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" \
+                         -i ~/.ssh/qilylean_cn "$part" "$USER_NAME@$CN_PREPROD_HOST:$incoming" && \
+                       timeout 90s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -i ~/.ssh/qilylean_cn \
+                         "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' accept --manifest '$REMOTE_MANIFEST' --index '$index' --incoming '$incoming'"; then
+                      accepted=true
+                      break
+                    fi
+                    if test "$attempt" -lt 3; then sleep 3; fi
+                  done
+                  test "$accepted" = true
                 done < "$LOCAL_PARTS/missing.txt"
               ) &
               batch+=("$!")

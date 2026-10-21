@@ -32,9 +32,57 @@ DEFAULT_CACHE = Path('/tmp/qily-cn-release-cache')
 DEFAULT_ARCHIVE = Path('/tmp') / ARCHIVE_NAME
 
 
+class TransferError(ValueError):
+    """Internal validation failure with a fixed, non-sensitive diagnostic code."""
+    CODES = {
+        'Artifact redirect unavailable': 'artifact_redirect',
+        'Artifact download failed or fell below speed threshold': 'artifact_download',
+        'Artifact checksum differs': 'artifact_checksum',
+        'Invalid cache directory': 'cache_directory',
+        'Invalid staging directory': 'staging_directory',
+        'Invalid chunk number': 'chunk_number',
+        'Invalid incoming chunk path': 'chunk_path',
+        'Chunk checksum differs': 'chunk_checksum',
+        'Missing or corrupt release chunk': 'missing_chunk',
+        'Assembled archive checksum differs': 'archive_checksum',
+    }
+
+    def __init__(self, message, exit_code=None):
+        super().__init__(message)
+        self.code = self.CODES.get(message, 'validation')
+        self.exit_code = exit_code if type(exit_code) is int else None
+
+
+def failure_diagnostic(error, command):
+    """Do not include exception text, URLs, filesystem paths or request data."""
+    stages = {'artifact-request', 'pull', 'split', 'missing', 'accept', 'assemble'}
+    stage = command if command in stages else 'startup'
+    if isinstance(error, TransferError):
+        reason = error.code
+        if error.exit_code is not None:
+            reason += f' curl_exit={error.exit_code}'
+    elif isinstance(error, (subprocess.TimeoutExpired, TimeoutError)):
+        reason = 'timeout'
+    elif isinstance(error, (InterruptedError, KeyboardInterrupt)):
+        reason = 'interrupted'
+    elif isinstance(error, urllib.error.HTTPError):
+        reason = f'http_status={error.code}' if type(error.code) is int else 'http_error'
+    elif isinstance(error, urllib.error.URLError):
+        reason = 'network'
+    elif isinstance(error, OSError):
+        reason = 'filesystem'
+        if type(error.errno) is int:
+            reason += f' errno={error.errno}'
+    elif isinstance(error, json.JSONDecodeError):
+        reason = 'invalid_json'
+    else:
+        reason = 'unexpected_error'
+    return f'Release transfer failed: stage={stage} reason={reason}; private details withheld.'
+
+
 def require(condition, message):
     if not condition:
-        raise ValueError(message)
+        raise TransferError(message)
 
 
 def digest(path):
@@ -140,7 +188,9 @@ def pull(request, destination=DEFAULT_ARCHIVE, run=subprocess.run):
                    '--output', str(zip_path)]
         result = run(command, input=config, text=True, stdout=subprocess.DEVNULL,
                      stderr=subprocess.DEVNULL, timeout=2715, check=False)
-        require(result.returncode == 0, 'Artifact download failed or fell below speed threshold')
+        if result.returncode != 0:
+            raise TransferError('Artifact download failed or fell below speed threshold',
+                                exit_code=result.returncode)
         extract_verified(zip_path, request, destination)
 
 
@@ -293,8 +343,9 @@ if __name__ == '__main__':
     signal.signal(signal.SIGTERM, interrupted)
     try:
         main()
-    except (Exception, KeyboardInterrupt):
+    except (Exception, KeyboardInterrupt) as error:
         # In particular, never stringify urllib/curl exceptions or the request:
         # exception messages may contain a signed URL or runner credentials.
-        print('Release transfer failed; private download details withheld.', file=sys.stderr)
+        print(failure_diagnostic(error, sys.argv[1] if len(sys.argv) > 1 else ''),
+              file=sys.stderr)
         sys.exit(1)

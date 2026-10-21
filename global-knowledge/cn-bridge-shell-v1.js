@@ -15,9 +15,9 @@ function enforceChinaParityShell(){
     brand.setAttribute('aria-label','返回国际站');
     brand.setAttribute('title','返回国际站');
   }
-  d.querySelectorAll('.cn-bridge-footer-brand,.cn-bridge-footer-records,[data-action="home"],[data-action="previous"]').forEach(function(node){node.remove();});
+  d.querySelectorAll('.cn-bridge-footer-brand,.cn-bridge-footer-records,[data-action="home"]').forEach(function(node){node.remove();});
   var g=d.querySelector('.cn-bridge-footer-actions');
-  if(g){
+  if(g&&g.id!=='floatDock'){
     var expected=[['top','顶部'],['share','分享当前']];
     var buttons=Array.prototype.slice.call(g.querySelectorAll('button[data-action]'));
     var same=buttons.length===2&&buttons.every(function(b,i){return b.getAttribute('data-action')===expected[i][0]&&b.textContent.trim()===expected[i][1];});

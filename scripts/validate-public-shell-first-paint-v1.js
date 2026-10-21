@@ -18,7 +18,7 @@ let eligible=0,cacheCovered=0;
 for(const relative of files){
   const source=read(relative);
   if(!isEligible(relative,source)){
-    assert(!source.includes('data-qily-first-paint-dock="v1"'),`${relative}: independent shell received international menu`);
+    if(source.includes('<footer class="cn-bridge-footer">')){assert(source.includes('data-qily-stable-order="top,back,previous,search,current"'),`${relative}: shared five-action footer missing`);}else assert(!source.includes('data-qily-first-paint-dock="v1"'),`${relative}: independent shell received international menu`);
     continue;
   }
   eligible++;
@@ -37,7 +37,7 @@ for(const relative of files){
   const dock=body[1].match(/^\s*(<nav\b[^>]*\bid=["']floatDock["'][^>]*>[\s\S]*?<\/nav>)/i);
   assert(dock,`${relative}: menu must parse before page content`);
   const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi)];
-  assert(actions.length===7&&actions.map(match=>match[1]).join(',')===ORDER.join(','),`${relative}: canonical seven menu actions required`);
+  assert(actions.length===ORDER.length&&actions.map(match=>match[1]).join(',')===ORDER.join(','),`${relative}: canonical five menu actions required`);
   for(const match of actions){
     const text=match[2].replace(/<[^>]*>/g,'').replace(/\s+/g,'').trim();
     const label=LABELS[ORDER.indexOf(match[1])];
@@ -68,4 +68,4 @@ assert(semanticContract&&!/html\[data-qily-vi-version|body\[data-qily-vi-shell/.
 for(const token of ['var(--qily-vi-gold-light)!important','font-weight:400!important','border:0!important','border-radius:0!important','padding:0!important','background:transparent!important']){
   assert(semanticContract.includes(token),`semantic label first-paint contract missing ${token}`);
 }
-console.log(`PASS: ${eligible} international pages have blocking formal VI, canonical menu CSS, seven static actions before content, one bottom reserve and one deferred runtime; navigation cache references=${cacheCovered}; labels paint without JavaScript markers.`);
+console.log(`PASS: ${eligible} international pages have blocking formal VI, canonical menu CSS, five static actions before content, one bottom reserve and one deferred runtime; navigation cache references=${cacheCovered}; labels paint without JavaScript markers.`);

@@ -39,8 +39,9 @@ for (const file of htmlFiles) {
   if (html.includes('cn-bridge-footer-brand')) fail(`${rel} international bridge footer must not display mainland filing site name`);
 
   if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7')) fail(`${rel} shared footer actions are missing`);
-  if (/knowledge-dock-v1\.js|site-dock-share-runtime-v1\.js|site-contact-route-v1\.js|湘ICP备|湘公网安备/.test(html)) fail(`${rel} must not restore old Dock actions or China filing records`);
+  if (/knowledge-dock-v1\.js|site-contact-route-v1\.js|湘ICP备|湘公网安备/.test(html)) fail(`${rel} must not restore old Dock actions or China filing records`);
   if (rel!=='global-knowledge/briefs/index.html'&&!html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20261007-two-actions-no-filing-v4')) fail(`${rel} shared reference footer stylesheet missing`);
+  if (!html.includes('data-qily-stable-order="top,back,previous,search,current"')) fail(`${rel} canonical five-action footer missing`);
   const hrefs = [...html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)].map((m) => m[1]);
 
   for (const href of hrefs) {
