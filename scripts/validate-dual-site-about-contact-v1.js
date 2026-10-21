@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+'use strict';
+const assert=require('node:assert/strict'),fs=require('fs');
+const read=p=>fs.readFileSync(p,'utf8');
+const dock=read('site-dock-share-runtime-v1.js');
+const cnDock=read('cn-site/assets/cn-footer-actions-v1.js');
+const cn=read('cn-site/about/index.html');
+const about=read('about/index.html');
+const homepage=read('index.html');
+const core=read('site-navigation-core.js');
+assert(dock.includes("var url=mainlandFooter()?'https://qilylean.com/contact/':'/contact/'"),'CN footer Contact must open the canonical international full contact experience');
+assert.equal(dock,cnDock,'CN footer must use the exact same Dock runtime as international');
+assert(core.includes("['关于我们', '/about/']"),'INTL About missing from primary navigation');
+assert(core.includes("if (path.indexOf('/about/') === 0) return '/about/';"),'About page must set active nav state');
+assert(homepage.includes('href="/about/"'),'INTL home static nav must contain About');
+assert(about.includes('<h1>关于 QilyLean｜启力精益</h1>'),'INTL About heading missing');
+for(const token of ['id="position"','id="boundary"','id="quality"','id="contact"','id="record"','qily-about-address-grid','QilyLean｜启力精益','PQCD'])assert(about.includes(token),'INTL About missed source-layout component: '+token);
+assert(!about.includes('湘ICP备')&&!about.includes('湘公网安备'),'INTL About must not clone CN filing info');
+assert(cn.includes('href="/about/" data-qily-nav-key="contact"'),'CN About top nav must remain untouched');
+assert(cn.includes('湘ICP备2026041143号-1')&&cn.includes('湘公网安备43020002000443号'),'CN filing info missing');
+for(const route of ['https://qilylean.com/contact/','/about/'])assert(dock.includes(route)||core.includes(route),'Contact/About route missing '+route);
+for(const code of ['site-dock-share-runtime-v1.js','site-navigation-core.js','site-navigation.js','cn-site/assets/cn-footer-actions-v1.js'])assert(fs.statSync(code).size>1000,code+' missing');
+console.log('PASS: CN footer opens canonical full contact page; international About clones CN layout with international content; filing boundary retained.');
