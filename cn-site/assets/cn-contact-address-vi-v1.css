@@ -1,0 +1,20 @@
+/* QilyLean two-address map-navigation VI parity; same public addresses and destinations as COM; CN personal sharing context. */
+html body .qily-about-addresses{margin:26px 0 30px}
+html body .qily-about-addresses>h3{margin:0 0 9px;color:#0f4b5a;font-size:clamp(19px,1.4vw,22px);font-weight:800}
+html body .qily-about-address-help{margin:0 0 16px;color:#496565;font-size:16px;line-height:1.6}
+html body .qily-about-address-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:1180px}
+html body .qily-about-address-card{min-width:0;overflow:hidden;border:1px solid #cfe0dd;border-left:4px solid #caa15f;border-radius:12px;background:#fff;box-shadow:0 8px 22px rgba(15,75,90,.075)}
+html body .qily-about-address-copy{padding:16px 18px 12px}
+html body .qily-about-address-copy>strong{display:block;color:#0f4b5a;font-size:19px;font-weight:800;line-height:1.45}
+html body .qily-about-address-copy>span{display:block;margin-top:5px;color:#315f64;font-size:17px;line-height:1.5;overflow-wrap:anywhere}
+html body .qily-about-address-copy .qily-about-nav-point{color:#8a6331;font-size:15px}
+html body .qily-about-map-nav-panel{padding:14px 18px 18px;border-top:1px solid #d5e4e3;background:#f7fbfa}
+html body .qily-about-map-nav-copy{display:grid;gap:5px;margin-bottom:12px}
+html body .qily-about-map-nav-copy>strong{color:#0f4b5a;font-size:17px;font-weight:800}
+html body .qily-about-map-nav-copy>span{color:#496565;font-size:14px;line-height:1.55}
+html body .qily-about-map-nav-actions{display:flex;flex-wrap:wrap;gap:8px}
+html body .qily-about-map-nav-action{display:inline-flex;align-items:center;justify-content:center;min-height:36px;min-width:0;padding:7px 11px;border:1px solid #bc9a5c;border-radius:8px;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff;font-size:15px;font-weight:750;line-height:1.25;text-decoration:none;white-space:nowrap}
+html body .qily-about-map-nav-action.primary{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;background:#0f4b5a;border-color:#0f4b5a}
+html body .qily-about-map-nav-action:is(:hover,:focus-visible){color:#fff!important;-webkit-text-fill-color:#fff!important;background:#178b94;border-color:#178b94;outline:2px solid #caa15f;outline-offset:2px}
+@media(max-width:820px){html body .qily-about-address-grid{grid-template-columns:1fr;gap:12px}html body .qily-about-map-nav-action{min-height:42px}}
+@media(max-width:390px){html body .qily-about-map-nav-actions{gap:6px}html body .qily-about-map-nav-action{padding:8px 9px;font-size:14px}}
