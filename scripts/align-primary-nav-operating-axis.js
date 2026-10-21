@@ -34,7 +34,8 @@ const ROUTES = [
   ['信任中心', '/trust/'],
   ['项目合作', '/cooperation/'],
   ['知识资产', '/knowledge/'],
-  ['资源协同', '/links/']
+  ['资源协同', '/links/'],
+  ['关于我们', '/about/']
 ];
 const LABELS = ROUTES.map(([label]) => label);
 const EXPECTED = LABELS.join(' > ');

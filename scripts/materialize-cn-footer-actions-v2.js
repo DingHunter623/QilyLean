@@ -10,7 +10,7 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261021-footer-vi-v6';
+const VERSION='20261021-contact-about-v1';
 const ACTIONS=['home','top','back','previous','search','current','contact'];
 const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
