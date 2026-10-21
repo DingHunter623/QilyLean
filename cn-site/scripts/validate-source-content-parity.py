@@ -33,7 +33,7 @@ NAV = [
     ('trust', '/trust/', '信任中心'),
     ('knowledge', '/knowledge/', '知识资产'),
     ('resources', '/resources/', '资源协同'),
-    ('contact', '/about/#contact', '联系我们'),
+    ('contact', '/about/', '关于我们'),
 ]
 
 
@@ -84,7 +84,7 @@ def verify_navigation(value, url):
             visit(child)
 
     visit(header)
-    require(links == NAV, 'Expected nine public navigation entries plus preserved Contact: ' + url + ' ' + str(links))
+    require(links == NAV, 'Expected nine public navigation entries plus About page: ' + url + ' ' + str(links))
 
 
 def verify_semantics(value, row):
