@@ -88,7 +88,7 @@ def verify_navigation(value, url):
 
 def operating_axis_steps(value):
     """Read visible labels from the canonical six-step manufacturing operating axis."""
-    root = parity.Tree(parity.main_markup(value)).root
+    root = parity.Tree(value).root
 
     def find_axis(node):
         if not isinstance(node, parity.Node):
