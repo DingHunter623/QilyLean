@@ -136,3 +136,55 @@ test('China desktop footer actions and both filings remain inside one aligned ax
     }
   }
 });
+
+test('China dock matches international first-button axis and shared action VI across pages',async({page})=>{
+ test.setTimeout(240000);
+ const pairs=[['/','/'],['/capabilities/','/archive/profile/capabilities/'],['/about/','/about/']];
+ async function capture(base,route){
+   await page.goto(base+route,{waitUntil:'domcontentloaded',timeout:45000});
+   await expect(page.locator('#floatDock button[data-action="top"]')).toBeVisible({timeout:15000});
+   return page.evaluate(()=>{
+      const dock=document.querySelector('#floatDock');
+      const buttons=[...dock.querySelectorAll('button[data-action]')];
+      const css=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();
+         return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,fontSize:s.fontSize,fontWeight:s.fontWeight,fontFamily:s.fontFamily,color:s.color,borderColor:s.borderTopColor};};
+      const filings=[...document.querySelectorAll('footer.footer .footer-records>a')];
+      const inner=document.querySelector('footer.footer .footer-inner');
+      return {actions:buttons.map(b=>b.dataset.action),buttons:buttons.map(css),filings:filings.map(css),
+        content:inner?{left:inner.getBoundingClientRect().left,right:inner.getBoundingClientRect().right}:null};
+   });
+ }
+ for(const width of [1180,1600,1920]){
+  await page.setViewportSize({width,height:1000});
+  let previousCnLeft=null;
+  for(const [intlRoute,cnRoute] of pairs){
+    const intl=await capture(intBase,intlRoute);
+    const cn=await capture(cnBase,cnRoute);
+    expect(intl.actions).toEqual(['top','previous','search','current']);
+    expect(cn.actions).toEqual(intl.actions);
+    expect(cn.filings).toHaveLength(2);
+    expect(Math.abs(cn.buttons[0].left-intl.buttons[0].left),
+      'China dock start must align with international dock: '+JSON.stringify({width,intlRoute,cnRoute,intl,cn})).toBeLessThanOrEqual(3);
+    for(let i=0;i<4;i++){
+      for(const key of ['fontSize','fontWeight','fontFamily','color','borderColor'])
+        expect(cn.buttons[i][key],'dock VI divergence '+key+' on '+cnRoute).toBe(intl.buttons[i][key]);
+      expect(Math.abs(cn.buttons[i].width-intl.buttons[i].width),'button width '+i).toBeLessThanOrEqual(3);
+      if(i){
+       const intlGap=intl.buttons[i].left-intl.buttons[i-1].right;
+       const cnGap=cn.buttons[i].left-cn.buttons[i-1].right;
+       expect(Math.abs(cnGap-intlGap),'dock spacing must match international').toBeLessThanOrEqual(2);
+      }
+    }
+    const elements=[...cn.buttons,...cn.filings];
+    for(let i=0;i<elements.length;i++){
+      expect(elements[i].left,cnRoute+' left escape').toBeGreaterThanOrEqual(cn.content.left-2);
+      expect(elements[i].right,cnRoute+' right escape').toBeLessThanOrEqual(cn.content.right+2);
+      expect(Math.abs(elements[i].top-elements[0].top),cnRoute+' not one row').toBeLessThanOrEqual(5);
+      if(i)expect(elements[i].left-elements[i-1].right,cnRoute+' overlap').toBeGreaterThanOrEqual(3);
+    }
+    expect(cn.filings[0].left-cn.buttons[3].right,cnRoute+' misplaced filing gap').toBeLessThanOrEqual(16);
+    if(previousCnLeft!==null)expect(Math.abs(previousCnLeft-cn.buttons[0].left),'CN page-to-page axis must match').toBeLessThanOrEqual(2);
+    previousCnLeft=cn.buttons[0].left;
+  }
+ }
+});
