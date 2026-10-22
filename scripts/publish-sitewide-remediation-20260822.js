@@ -10,7 +10,8 @@ const checkOnly = process.argv.includes('--check');
 /*
  * Ownership note (2026-09-27): navigation / UI consistency / Dock and visual-governance
  * cache keys are owned by their current materializers/runtimes. This legacy publisher
- * only preserves first-paint and content-axis contracts; it must not normalize VI cache keys.
+ * only preserves the international first-paint/content-axis contracts; it must not normalize VI cache keys.
+ * China production owns its separate shell and 1180px axis through cn-site materializers.
  */
 const versions = {
   firstPaintBuild: '20260824-readable-floor-plus2-v4',
@@ -22,7 +23,7 @@ function trackedHtml() {
     cwd: root,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024
-  }).split(/\r?\n/).filter(Boolean);
+  }).split(/\r?\n/).filter(Boolean).filter(relative => !relative.startsWith('cn-site/'));
 }
 
 function publish(source) {
