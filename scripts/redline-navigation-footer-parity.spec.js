@@ -28,7 +28,7 @@ for(const width of [320,390,820,1180,1600]){
     expect(geometry.scroll,'both filings must fit within the phone width without lateral scrolling').toBeLessThanOrEqual(geometry.client+1);
    }
    if(base===cnBase){await expect(page.locator('footer .footer-records>a')).toHaveCount(2);await expect(page.locator('footer')).toContainText('湘ICP备2026041143号-1');await expect(page.locator('footer')).toContainText('湘公网安备43020002000443号');}else await expect(page.locator('body')).not.toContainText(/湘ICP备|湘公网安备/);
-   await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await dock.locator('[data-action="top"]').click();await expect.poll(()=>page.evaluate(()=>scrollY),{timeout:10000}).toBeLessThanOrEqual(10);
+   await page.evaluate(()=>window.scrollTo({top:document.documentElement.scrollHeight,left:0,behavior:'instant'}));await dock.locator('[data-action="top"]').click();await expect.poll(()=>page.evaluate(()=>scrollY),{timeout:10000}).toBeLessThanOrEqual(10);
   }
  });
 }
