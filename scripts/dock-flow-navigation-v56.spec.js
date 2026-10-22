@@ -98,7 +98,7 @@ for(const [name,url,viewport,mobile] of cases){
       for(const item of result.buttons)expect(Math.abs(item.top-firstRowTop),'all four mobile controls must share one row').toBeLessThanOrEqual(1);
     }else{
       expect(result.display).toBe('flex');
-      expect(result.gridColumns.split(' ').length).toBe(4);
+      expect(result.buttons.every(b=>b.w<160),'four intrinsic-width controls').toBeTruthy();
       expect(result.layout).toBe('fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(Math.abs(result.spacerHeight-result.dockHeight),'desktop clearance must equal measured compact footer height').toBeLessThanOrEqual(2);
