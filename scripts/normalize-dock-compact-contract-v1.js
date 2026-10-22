@@ -14,7 +14,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const apply=process.argv.includes('--apply');
 const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
-const PATCH='20261021-footer-vi-v6';
+const PATCH='20261021-five-actions-v1';
 const FULL=`${BASE}&patch=${PATCH}`;
 const changed=[];
 
@@ -55,7 +55,7 @@ for(const token of [
   'mobile-fixed-bottom-footer-navigation',
   'v5.8-fixed-bottom-footer-navigation',
   "setImportant(dock,'flex-wrap','wrap')",
-  "setImportant(button,'flex','0 0 calc((100% - 12px)/4)')"
+  "setImportant(button,'flex','0 0 calc((100% - 8px)/3)')"
 ])assert(runtime.includes(token),`footer-style runtime missing ${token}`);
 assert(!runtime.includes('mobile-fixed-bottom-compact-navigation'),'retired compact one-row runtime marker returned');
 assert(!runtime.includes('mobile-fixed-bottom-swipe-navigation'),'retired swipe runtime marker returned');
