@@ -72,7 +72,8 @@ jobs:
           node scripts/validate-contact-readability-ddz-20260824.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
           node scripts/validate-home-hero-dock-snapback-v1.js
-          grep -q "home:\['首页'\],top:\['顶部'\]" site-dock-share-runtime-v1.js
+          grep -q "var ORDER=['top','back','previous','search','current']" site-dock-share-runtime-v1.js
+          grep -q "top:\['回到顶部'\]" site-dock-share-runtime-v1.js
           grep -q "mobile-fixed-bottom-footer-navigation" site-dock-share-runtime-v1.js
           ! grep -q "mobile-fixed-bottom-compact-navigation" site-dock-share-runtime-v1.js
           ! grep -q "mobile-fixed-bottom-swipe-navigation" site-dock-share-runtime-v1.js
