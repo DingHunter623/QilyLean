@@ -470,6 +470,45 @@ jobs:
             failed=0
             for pid in "${batch[@]}"; do wait "$pid" || failed=1; done
             test "$failed" -eq 0
+
+            # A successful SCP/accept command is not enough: verify the complete
+            # remote cache again and repair any chunk that is still absent/corrupt.
+            for repair_round in 1 2 3; do
+              timeout 120s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+                "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' missing --manifest '$REMOTE_MANIFEST'" \
+                > "$LOCAL_PARTS/post-upload-missing.txt"
+              remaining="$(wc -l < "$LOCAL_PARTS/post-upload-missing.txt")"
+              echo "Post-upload chunk integrity check ${repair_round}/3: ${remaining} missing."
+              if test "$remaining" -eq 0; then break; fi
+
+              while IFS= read -r index; do
+                [[ "$index" =~ ^[0-9]{4,5}$ ]]
+                part="$LOCAL_PARTS/part.$index"
+                incoming="/tmp/qily-cn-release-cache/$ARCHIVE_SHA/.incoming-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-repair-$index"
+                accepted=false
+                for attempt in 1 2 3; do
+                  echo "Repair missing chunk $index (round ${repair_round}/3, attempt ${attempt}/3)"
+                  if timeout 240s scp -q "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" \
+                       -i ~/.ssh/qilylean_cn "$part" "$USER_NAME@$CN_PREPROD_HOST:$incoming" </dev/null && \
+                     timeout 90s ssh -n "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+                       "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' accept --manifest '$REMOTE_MANIFEST' --index '$index' --incoming '$incoming'"; then
+                    accepted=true
+                    break
+                  fi
+                  if test "$attempt" -lt 3; then sleep 3; fi
+                done
+                test "$accepted" = true
+              done < "$LOCAL_PARTS/post-upload-missing.txt"
+            done
+
+            timeout 120s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
+              "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' missing --manifest '$REMOTE_MANIFEST'" \
+              > "$LOCAL_PARTS/final-missing.txt"
+            if test -s "$LOCAL_PARTS/final-missing.txt"; then
+              echo 'Release integrity gate failed; remaining chunk indexes:' >&2
+              cat "$LOCAL_PARTS/final-missing.txt" >&2
+              exit 1
+            fi
             timeout 180s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" -i ~/.ssh/qilylean_cn \
               "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' assemble --manifest '$REMOTE_MANIFEST'"
           fi
