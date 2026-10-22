@@ -54,3 +54,16 @@ html:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-
  box-sizing:border-box!important;border:8px solid #0f4b5a!important;
  border-width:8px!important;border-style:solid!important;border-color:#0f4b5a!important;
 }
+
+/* QILY-QR-PHONE-ONE-COLUMN-20261022: all QR cards own the same phone width. */
+@media(max-width:680px){
+ html:root:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:14px!important;
+ }
+ html:root:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid>.qily-unified-qr-card{
+  width:100%!important;max-width:100%!important;grid-column:auto!important;justify-self:stretch!important;
+ }
+ html:root:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid>.qily-unified-qr-card :is(a,button).qily-unified-qr-art{
+  width:min(240px,100%)!important;height:auto!important;aspect-ratio:1!important;max-width:240px!important;
+ }
+}
