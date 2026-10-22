@@ -1,0 +1,29 @@
+name: Audit QilyLean live footer and loading
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit-qily-live-footer-performance.cjs'
+      - '.github/workflows/audit-qily-live-footer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  forensic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false @playwright/test@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Capture live production footer and cold loading
+        run: node scripts/audit-qily-live-footer-performance.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: qily-production-footer-loading-${{ github.run_id }}
+          path: audit-qily-live
+          if-no-files-found: warn
+          retention-days: 14
