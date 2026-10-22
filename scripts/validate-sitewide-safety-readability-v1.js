@@ -58,7 +58,7 @@ must(components,'::-moz-range-thumb','Gecko range thumb');
 const dock=read('site-dock-share-runtime-v1.js');
 must(dock,'Floating Dock Authoritative Runtime V5.8','Dock V5.8');
 must(dock,'__qilyFloatingDockUnifiedV58','Dock V58 guard');
-must(dock,"ORDER=['top','back','previous','search','current']",'Dock order');
+must(dock,"ORDER=['top','previous','search','current']",'Dock four-action order');
 must(dock,'setOwnedLabel','Dock label owner');
 must(dock,'function openContactPage()','Full contact action');
 must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
