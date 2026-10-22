@@ -234,6 +234,19 @@ class TransferTests(unittest.TestCase):
         self.assertIn('"$USER_NAME@$CN_PREPROD_HOST:$incoming" </dev/null &&', workflow)
         self.assertIn('timeout 90s ssh -n "${SSH_OPTS[@]}"', workflow)
 
+    def test_parallel_chunk_upload_is_reverified_and_repaired_before_assembly(self):
+        workflow = (Path(__file__).resolve().parents[1] /
+                    '.github/workflows/deploy-cn-preprod.yml').read_text()
+        verify = workflow.index('Post-upload chunk integrity check')
+        final_gate = workflow.index('test -s "$LOCAL_PARTS/final-missing.txt"', verify)
+        assemble = workflow.index(
+            "python3 '$REMOTE_HELPER' assemble --manifest '$REMOTE_MANIFEST'", final_gate)
+        self.assertLess(verify, final_gate)
+        self.assertLess(final_gate, assemble)
+        self.assertIn('for repair_round in 1 2 3; do', workflow)
+        self.assertIn('done < "$LOCAL_PARTS/post-upload-missing.txt"', workflow)
+        self.assertIn('Release integrity gate failed', workflow)
+
     def test_workflow_archive_is_deterministic_across_checkout_mtimes(self):
         tar = shutil.which('gtar') or shutil.which('tar')
         if not tar or 'GNU tar' not in subprocess.check_output([tar, '--version'], text=True):
