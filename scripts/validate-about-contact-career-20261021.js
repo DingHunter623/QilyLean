@@ -13,7 +13,7 @@ for(const p of ['assets/contact/qilylean-com-qr.svg','assets/contact/qilylean-cn
 assert.equal(read('assets/contact/qily-about-contact-v1.css'),read('cn-site/assets/contact/qily-about-contact-v1.css'),'dual VI mismatch');
 assert(read('site-navigation-core.js').includes("if (path.indexOf('/experience/') === 0) return '/about/';"));
 assert(!read('cn-site/assets/cn-nav-rail-v1.js').includes("key:'experience',href:"));
-assert(read('site-dock-share-runtime-v1.js').includes("var ORDER=['top','back','previous','search','current'];"));
+assert(read('site-dock-share-runtime-v1.js').includes("var ORDER=['top','previous','search','current'];"),'international footer must have exactly four approved actions');
 for(const p of ['index.html','about/index.html','cn-site/index.html','cn-site/about/index.html']){
  const s=read(p),nav=[...s.matchAll(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi)].map(x=>x[0]).filter(t=>/aria-label=["'](?:主导航|QilyLean核心导视)["']|qily-global-nav/.test(t));
  for(const n of nav)assert(!/<a\b[^>]*href=["']\/(?:archive\/profile\/)?experience\/["'][^>]*>\s*履历主线\s*<\/a>/i.test(n),p+' top-level career remains');
