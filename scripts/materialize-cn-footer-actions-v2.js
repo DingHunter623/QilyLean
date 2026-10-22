@@ -170,6 +170,51 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
   width:11px!important;height:13px!important;flex:0 0 11px!important;
  }
 }
+/* QILY-CN-DESKTOP-FOOTER-GEOMETRY-20261022
+ * A single content-axis owns BOTH footer actions and statutory filings.
+ * Desktop group alignment is explicit; a stale space-between inherited from
+ * an earlier footer rule must never push the filings outside the content axis.
+ * The mobile contract and all approved type sizes/labels remain unchanged.
+ */
+@media(min-width:1101px){
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  justify-content:center!important;align-items:center!important;
+  box-sizing:border-box!important;
+  width:min(1180px,calc(100% - 32px))!important;max-width:1180px!important;
+  min-width:0!important;gap:12px!important;margin:0 auto!important;padding:0!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>#floatDock.qily-page-action-nav{
+  display:flex!important;position:static!important;inset:auto!important;
+  flex:0 0 auto!important;flex-wrap:nowrap!important;
+  justify-content:center!important;align-items:center!important;
+  box-sizing:border-box!important;width:max-content!important;max-width:100%!important;
+  min-width:0!important;gap:5px!important;margin:0!important;padding:5px 0!important;
+  border:0!important;box-shadow:none!important;transform:none!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{
+  display:flex!important;position:static!important;inset:auto!important;
+  flex:0 0 auto!important;flex-flow:row nowrap!important;
+  align-items:center!important;justify-content:center!important;
+  box-sizing:border-box!important;width:max-content!important;max-width:100%!important;
+  min-width:0!important;gap:5px!important;margin:0!important;padding:0!important;
+ }
+}
+@media(min-width:821px) and (max-width:1100px){
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner{
+  display:flex!important;flex-flow:row wrap!important;justify-content:center!important;
+  align-items:center!important;width:calc(100% - 24px)!important;max-width:100%!important;
+  margin:0 auto!important;padding:4px 0!important;gap:4px 10px!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>#floatDock.qily-page-action-nav,
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{
+  position:static!important;inset:auto!important;display:flex!important;
+  justify-content:center!important;align-items:center!important;
+  flex:0 1 auto!important;max-width:100%!important;width:max-content!important;
+  margin:0!important;
+ }
+}
+
 `;
 
 function filings(footer){
