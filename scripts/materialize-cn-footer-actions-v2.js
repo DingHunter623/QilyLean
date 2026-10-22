@@ -159,12 +159,15 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
 @media(max-width:359px){
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records{
   flex-direction:row!important;flex-wrap:nowrap!important;
-  justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;
-  padding:0 6px 4px!important;scrollbar-width:thin;
-  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+  justify-content:center!important;overflow-x:hidden!important;overflow-y:hidden!important;
+  padding:0 2px 4px!important;scrollbar-width:none!important;
  }
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
-  flex:0 0 auto!important;white-space:nowrap!important;
+  flex:0 1 auto!important;min-width:0!important;white-space:nowrap!important;
+  padding:2px!important;font-size:10px!important;
+ }
+ html:root:root:root:root:root:root:root:root body footer.footer .police-record img{
+  width:11px!important;height:13px!important;flex:0 0 11px!important;
  }
 }
 `;
@@ -203,8 +206,8 @@ function main(){
     const source=fs.readFileSync(file,'utf8'),next=materialize(source);if(next===source)continue;
     count++;changed++;if(!check)fs.writeFileSync(file,next);
   }
-  if(check&&changed)throw new Error('Public five-action footer stale: '+changed+' assets/pages.');
-  console.log((check?'CHECK':'APPLY')+' PASS: CN canonical five-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
+  if(check&&changed)throw new Error('Public four-action footer stale: '+changed+' assets/pages.');
+  console.log((check?'CHECK':'APPLY')+' PASS: CN canonical four-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
 }
 module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,actionCss,regionCss,filings,nav,materialize};
 if(require.main===module)main();

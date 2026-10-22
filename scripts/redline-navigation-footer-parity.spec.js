@@ -25,7 +25,7 @@ for(const width of [320,390,820,1180,1600]){
     expect(geometry.items).toHaveLength(2);
     for(const item of geometry.items){expect(item.nowrap).toBe('nowrap');expect(item.overflow).toBeLessThanOrEqual(1);}
     expect(Math.abs(geometry.items[0].top-geometry.items[1].top),'both filing links must share one row').toBeLessThanOrEqual(1);
-    if(width<360)expect(geometry.scroll,'narrow screens may scroll filings horizontally without shrinking text').toBeGreaterThanOrEqual(geometry.client);
+    expect(geometry.scroll,'both filings must fit within the phone width without lateral scrolling').toBeLessThanOrEqual(geometry.client+1);
    }
    if(base===cnBase){await expect(page.locator('footer .footer-records>a')).toHaveCount(2);await expect(page.locator('footer')).toContainText('湘ICP备2026041143号-1');await expect(page.locator('footer')).toContainText('湘公网安备43020002000443号');}else await expect(page.locator('body')).not.toContainText(/湘ICP备|湘公网安备/);
    await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await dock.locator('[data-action="top"]').click();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
@@ -46,10 +46,10 @@ test('China footer searches locally, shares current URL and follows real history
  for(const href of await page.locator('#qilyCnFooterSearch li a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href'))))expect(href.startsWith('/')).toBeTruthy();
  await page.locator('[data-cn-search-close]').click();await page.locator('#floatDock [data-action="current"]').click();await expect.poll(()=>page.evaluate(()=>window.__footerCopy)).toContain(cnBase+'/about/');
  await page.goto(cnBase+'/knowledge/');await page.locator('#floatDock [data-action="previous"]').click();await expect(page).toHaveURL(cnBase+'/about/');
- await page.goto(cnBase+'/archive/practice/factory-layout/');await page.locator('#floatDock [data-action="back"]').click();await expect(page).toHaveURL(cnBase+'/notes/');
+ await page.goto(cnBase+'/archive/practice/factory-layout/');await expect(page.locator('#floatDock [data-action="back"]')).toHaveCount(0);
 });
 test('all China generated pages receive final VI and four-action first paint',async()=>{
- let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,back,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
+ let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
 });
 
 

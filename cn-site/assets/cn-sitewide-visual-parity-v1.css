@@ -71,10 +71,17 @@ html:root:root body[data-qily-site="cn"] #knowledge-stats .knowledge-stat-card{
  min-width:0!important;min-height:205px!important;
 }
 html:root:root body[data-qily-site="cn"] main #qily-core-services .qily-ia-heading h2{
- font-size:clamp(28px,2.4vw,38px)!important;line-height:1.22!important;
+ font-size:clamp(26px,2.35vw,36px)!important;line-height:1.25!important;
 }
 @media(max-width:620px){
  html:root:root body[data-qily-site="cn"] #knowledge-stats .module-grid.four.knowledge-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
  html:root:root body[data-qily-site="cn"] #knowledge-stats .knowledge-stat-card{padding:12px!important;min-height:0!important}
  html:root:root body[data-qily-site="cn"] #knowledge-stats .knowledge-stat-card :is(h3,p,small,.knowledge-stat-jump){overflow-wrap:anywhere!important}
+}
+
+/* QILY-CN-KNOWLEDGE-AXIS-20261022 */
+html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="knowledge/index.html"] #knowledge-stats .module-inner,
+html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="knowledge/index.html"] .module-section>.module-inner{
+ width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;min-width:0!important;margin-inline:auto!important;
+ transform:none!important;zoom:1!important;
 }

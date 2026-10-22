@@ -41,7 +41,7 @@
  border-color:#0f4b5a!important;
 }
 .qily-unified-about-contact .qily-unified-qr-card:nth-child(3) .qily-unified-qr-art img{
- width:83%!important;height:83%!important;
+ width:100%!important;height:100%!important;
 }
 @media(max-width:680px){
  .qily-unified-about-contact :is(a,button).qily-unified-qr-art{
