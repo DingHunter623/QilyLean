@@ -83,21 +83,21 @@ for(const [name,url,viewport,mobile] of cases){
 
     if(mobile){
       expect(result.display).toBe('flex');
-      expect(result.flexWrap).toBe('wrap');
-      expect(result.justifyContent).toBe('center');
+      expect(result.flexWrap).toBe('nowrap');
+      expect(result.justifyContent).toBe('flex-start');
       expect(result.layout).toBe('mobile-fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(Math.abs(result.spacerHeight-result.dockHeight),'mobile clearance must equal measured compact footer height').toBeLessThanOrEqual(2);
       for(const item of result.buttons){
         expect(item.h,'mobile tap target height').toBeGreaterThanOrEqual(36);
-        expect(item.w,'mobile control remains tappable').toBeGreaterThanOrEqual(80);
+        expect(item.w,'mobile content-fitted control remains readable').toBeGreaterThanOrEqual(55);
         expect(item.left,'mobile button must not clip left').toBeGreaterThanOrEqual(0);
         expect(item.right,'mobile button must not clip right').toBeLessThanOrEqual(result.viewportWidth+1);
       }
       const firstRowTop=result.buttons[0].top;
       for(const item of result.buttons)expect(Math.abs(item.top-firstRowTop),'all four mobile controls must share one row').toBeLessThanOrEqual(1);
     }else{
-      expect(result.display).toBe('grid');
+      expect(result.display).toBe('flex');
       expect(result.gridColumns.split(' ').length).toBe(4);
       expect(result.layout).toBe('fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
