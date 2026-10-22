@@ -195,3 +195,36 @@ test('China dock matches international first-button axis and shared action VI ac
   }
  }
 });
+
+test('China 1588px footer stays consistent across public modules',async({page})=>{
+  test.setTimeout(240000);
+  const width=1588;
+  await page.setViewportSize({width,height:1000});
+  const routes=['/','/archive/profile/capabilities/','/resources/','/about/','/knowledge/'];
+  const intl=await (async()=>{
+    await page.goto(intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await expect(page.locator('#floatDock button')).toHaveCount(4);
+    return page.locator('#floatDock button').first().boundingBox();
+  })();
+  for(const route of routes){
+    await page.goto(cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
+    await expect(page.locator('#floatDock button')).toHaveCount(4);
+    await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
+    const geom=await page.evaluate(()=>{
+      const pick=el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+        return {left:r.left,right:r.right,top:r.top,border:s.borderTopWidth,background:s.backgroundColor};};
+      const inner=document.querySelector('footer.footer .footer-inner'),dock=document.querySelector('#floatDock');
+      const filings=document.querySelectorAll('footer.footer .footer-records>a');
+      return {inner:pick(inner),first:pick(dock.querySelector('button')),last:pick(filings[1]),
+        filings:[...filings].map(pick),docWidth:document.documentElement.scrollWidth,viewport:innerWidth};
+    });
+    expect(Math.abs(geom.first.left-intl.x),route+' shared menu left baseline').toBeLessThanOrEqual(3);
+    expect(Math.abs(geom.inner.left-geom.first.left),route+' menu should start on content-axis left').toBeLessThanOrEqual(2);
+    expect(Math.abs(geom.last.right-geom.inner.right),route+' filing must end at content-axis right').toBeLessThanOrEqual(2);
+    expect(geom.docWidth,route+' horizontal overflow').toBeLessThanOrEqual(geom.viewport+1);
+    for(const filing of geom.filings){
+      expect(filing.border,route+' filings must be borderless').toBe('0px');
+      expect(filing.background,route+' filings must be transparent').toBe('rgba(0, 0, 0, 0)');
+    }
+  }
+});
