@@ -38,7 +38,7 @@ must('fixed-bottom-footer-navigation','desktop footer layout marker');
 must('v5.8-fixed-bottom-footer-navigation','unified footer module marker');
 must("setImportant(dock,'display','flex')",'mobile flex layout');
 must("setImportant(dock,'flex-wrap','nowrap')",'mobile single-row actions');
-must("setImportant(dock,'justify-content','center')",'mobile second-row centering');
+must("setImportant(dock,'justify-content','flex-start')",'mobile content-axis left alignment');
 must("setImportant(button,'flex','0 0 auto')",'four buttons size to text content');
 must('qilyDockBottomSpacerV58','bottom content clearance spacer');
 
