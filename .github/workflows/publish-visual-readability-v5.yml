@@ -17,7 +17,8 @@ permissions:
 # keep its own queue without racing V4 on visual-only publication changes.
 concurrency:
   group: publish-visual-readability-v5
-  cancel-in-progress: true
+  # Queue another publisher run instead of cancelling an active materialization/push.
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -70,5 +71,21 @@ jobs:
             exit 0
           fi
           git commit -m 'style: materialize small-type and gold-label parity sitewide [skip ci]'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          # Another authorized main writer may advance the branch between rebase and push.
+          # Retry only with a fresh fetch/rebase; never force-update main.
+          for attempt in 1 2 3 4 5; do
+            echo "R8 publisher safe-push attempt ${attempt}/5"
+            git fetch origin main
+            if ! git rebase origin/main; then
+              echo 'R8 publisher rebase conflict; aborting without overwriting main.' >&2
+              git rebase --abort || true
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo "R8 visual hierarchy published safely on attempt ${attempt}."
+              exit 0
+            fi
+            if test "${attempt}" -lt 5; then sleep $((attempt * 2)); fi
+          done
+          echo 'R8 publisher could not update main after five safe attempts; no force push was used.' >&2
+          exit 1
