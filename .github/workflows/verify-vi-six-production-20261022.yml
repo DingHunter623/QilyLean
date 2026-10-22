@@ -1,21 +1,10 @@
 name: Verify six VI items on real QilyLean production
 
 on:
-  push:
+  workflow_run:
+    workflows: ["Deploy QilyLean CN knowledge site"]
+    types: [completed]
     branches: [main]
-    paths:
-      - '.github/workflows/verify-vi-six-production-20261022.yml'
-      - 'site-dock-share-runtime-v1.js'
-      - 'scripts/materialize-cn-footer-actions-v2.js'
-      - 'cn-site/assets/cn-footer-actions-v1.css'
-      - 'cn-site/assets/cn-sitewide-visual-parity-v1.css'
-      - 'site-navigation.js'
-      - 'lean-production/index.html'
-      - 'knowledge/index.html'
-      - 'cn-site/knowledge/index.html'
-      - 'cn-site/about/index.html'
-      - 'index.html'
-      - 'cn-site/index.html'
   workflow_dispatch:
 
 permissions:
@@ -27,45 +16,51 @@ concurrency:
 
 jobs:
   production:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 75
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           fetch-depth: 0
       - name: Check mainland server current release source commit
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
           CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
           CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+          TARGET_SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         shell: bash
         run: |
           set -euo pipefail
           test -n "$CN_PREPROD_HOST" && test -n "$CN_PREPROD_SSH_KEY"
+          target_sha="$TARGET_SHA"
+          [[ "$target_sha" =~ ^[a-f0-9]{40}$ ]] || { echo 'Invalid target commit SHA.' >&2; exit 1; }
           install -m 700 -d ~/.ssh
           printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qily-cn-vi-proof
           chmod 600 ~/.ssh/qily-cn-vi-proof
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
           ready=false
-          for attempt in $(seq 1 15); do
-            echo "Mainland release verification ${attempt}/15"
+          for attempt in $(seq 1 5); do
+            echo "Mainland release verification ${attempt}/5 for ${target_sha}"
             if json="$(timeout 45s ssh -o ConnectTimeout=15 -o BatchMode=yes -i ~/.ssh/qily-cn-vi-proof "${CN_PREPROD_USER:-ubuntu}@$CN_PREPROD_HOST" 'cat /var/www/qilylean-cn/current/meta/cn-content-release.json' 2>/dev/null)"; then
               release_sha="$(printf '%s' "$json" | python3 -c 'import json,sys;print(json.load(sys.stdin).get("sourceCommit",""))')" || release_sha=''
               if [[ "$release_sha" =~ ^[a-f0-9]{40}$ ]]; then
                 git fetch -q origin main
-                if git cat-file -e "$release_sha^{commit}" 2>/dev/null && git merge-base --is-ancestor d8f4028015fb9ee7b519f037b2c60922a002673c "$release_sha"; then
-                  echo "Verified China release SHA: $release_sha"
+                if git cat-file -e "$release_sha^{commit}" 2>/dev/null && git cat-file -e "$target_sha^{commit}" 2>/dev/null && git merge-base --is-ancestor "$target_sha" "$release_sha"; then
+                  echo "Verified China release SHA: $release_sha includes target commit $target_sha"
                   mkdir -p vi-six-production-evidence
                   printf '%s\n' "$release_sha" > vi-six-production-evidence/china-release-source-sha.txt
+                  printf '%s\n' "$target_sha" > vi-six-production-evidence/expected-target-sha.txt
                   ready=true
                   break
                 fi
               fi
             fi
-            if test "$attempt" -lt 15; then sleep 120; fi
+            if test "$attempt" -lt 5; then sleep 10; fi
           done
           if test "$ready" != true; then
-            echo 'BLOCKED: China current release has not been proven to include the repair merge.' >&2
+            echo "BLOCKED: China current release has not been proven to include target commit $target_sha." >&2
             exit 1
           fi
       - name: Prepare source contracts and Chromium
