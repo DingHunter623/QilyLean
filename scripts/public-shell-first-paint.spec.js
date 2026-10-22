@@ -28,16 +28,16 @@ async function observeStaticMenu(context){
     const actions=node=>[...node.querySelectorAll('[data-action]')].map(button=>button.getAttribute('data-action'));
     const inspect=records=>{
       const current=document.getElementById('floatDock');
-      if(!probe.initial&&current&&current.getAttribute('data-qily-first-paint-dock')==='v1'&&actions(current).length===5)probe.initial=current;
+      if(!probe.initial&&current&&current.getAttribute('data-qily-first-paint-dock')==='v1'&&actions(current).length===4)probe.initial=current;
       if(!probe.initial)return;
       if(current!==probe.initial)probe.replaced=true;
-      if(current&&actions(current).length!==5)probe.invalidMenus.push(actions(current));
+      if(current&&actions(current).length!==4)probe.invalidMenus.push(actions(current));
       for(const record of records){
         for(const node of record.addedNodes){
           if(node.nodeType!==1)continue;
           const menus=node.id==='floatDock'?[node]:[...node.querySelectorAll('#floatDock')];
           for(const menu of menus){
-            if(menu!==probe.initial&&actions(menu).length!==5)probe.invalidMenus.push(actions(menu));
+            if(menu!==probe.initial&&actions(menu).length!==4)probe.invalidMenus.push(actions(menu));
           }
         }
       }
@@ -131,7 +131,7 @@ function expectPaint(state,name){
   expect(state.docks).toBe(1);
   expect(state.styles).toBe(1);
   expect(state.spacers).toBe(1);
-  expect(state.actions).toEqual(['top','back','previous','search','current']);
+  expect(state.actions).toEqual(['top','previous','search','current']);
   expect(state.dock.visible).toBeTruthy();
   expect(state.dock.position).toBe('fixed');
   expect(state.dock.color).toBe('rgb(15, 75, 90)');
@@ -184,7 +184,7 @@ for(const [name,url,labelSelector] of pages){
           // A visitor may use the rail before a slow core finishes loading.
           // Subsequent active-link reveal timers must retain that choice.
           await expectNavigationRail(page);
-          const focusedAction=page.locator('#floatDock [data-action="home"]');
+          const focusedAction=page.locator('#floatDock [data-action="top"]');
           await focusedAction.focus();
           releaseCore();
           await page.waitForFunction(()=>window.__qilyStaticMenuProbe&&window.__qilyStaticMenuProbe.coreReady===true);
