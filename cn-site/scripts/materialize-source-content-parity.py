@@ -510,7 +510,7 @@ def remove_duplicate_source_css_links(styles):
     seen = set()
     result = []
     for tag in reversed(styles):
-        matched = re.search(r'<link\\b[^>]*href=[\\x22\\x27]([^\\x22\\x27]+)', tag, re.I)
+        matched = re.search(r'<link\b[^>]*href=[\x22\x27]([^\x22\x27]+)', tag, re.I)
         if matched and 'data-cn-source-css' in tag:
             href = matched.group(1)
             if href in seen:
@@ -684,7 +684,7 @@ def main():
         # avoids a render-blocking network failure without changing pixel styles.
         # The international site retains its own V5 stylesheet unchanged.
         if name == 'index.html' and not (CN / 'site-visual-readability-v5.css').is_file():
-            updated = re.sub(r'<link\\b(?=[^>]*\\bid=[\\x22\\x27]qilyVisualReadabilityV5Stylesheet[\\x22\\x27])[^>]*>', '', updated, flags=re.I)
+            updated = re.sub(r'<link\b(?=[^>]*\bid=[\x22\x27]qilyVisualReadabilityV5Stylesheet[\x22\x27])[^>]*>', '', updated, flags=re.I)
         # Preserve the destination's audited preview/print/share implementation,
         # refreshing its digest after the generator has materialized the runtime.
         runtime_tags = []
