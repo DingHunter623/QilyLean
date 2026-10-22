@@ -86,6 +86,72 @@ def verify_navigation(value, url):
     require(links == NAV, 'Expected nine public navigation entries plus About page: ' + url + ' ' + str(links))
 
 
+def operating_axis_steps(value):
+    """Read visible labels from the canonical six-step manufacturing operating axis."""
+    root = parity.Tree(parity.main_markup(value)).root
+
+    def find_axis(node):
+        if not isinstance(node, parity.Node):
+            return None
+        if node.tag == 'section' and node.attrs.get('data-qily-operating-axis') == 'static-v1':
+            return node
+        for child in node.children:
+            found = find_axis(child)
+            if found is not None:
+                return found
+        return None
+
+    def first_descendant(node, tag):
+        if not isinstance(node, parity.Node):
+            return None
+        for child in node.children:
+            if not isinstance(child, parity.Node):
+                continue
+            if child.tag == tag:
+                return child
+            found = first_descendant(child, tag)
+            if found is not None:
+                return found
+        return None
+
+    def normalized(node):
+        return re.sub(r'\s+', ' ', node.text()).strip() if node else ''
+
+    axis = find_axis(root)
+    if axis is None:
+        return None
+    steps = []
+
+    def collect(node):
+        if not isinstance(node, parity.Node):
+            return
+        if node.tag in {'a', 'div'} and 'qily-system-axis__step' in node.attrs.get('class', '').split():
+            heading = first_descendant(node, 'strong')
+            detail = first_descendant(node, 'span')
+            if heading and detail:
+                steps.append((normalized(heading), normalized(detail)))
+            return
+        for child in node.children:
+            collect(child)
+
+    collect(axis)
+    return steps
+
+
+def verify_operating_axis(source_value, target_value, url):
+    source_steps = operating_axis_steps(source_value)
+    if source_steps is None:
+        return
+    target_steps = operating_axis_steps(target_value)
+    require(source_steps, 'Source operating axis has no steps: ' + url)
+    require(any(label.startswith('05｜数智固化') and all(token in detail for token in ('ERP', 'MES', 'APS', '看板'))
+                for label, detail in source_steps),
+            'Source operating axis missing noncommercial step 05: ' + url)
+    require(target_steps == source_steps,
+            'Noncommercial operating-axis content was dropped or changed: ' + url
+            + ' source=' + repr(source_steps) + ' target=' + repr(target_steps))
+
+
 def verify_semantics(value, row):
     url = row['url']
     main = parity.main_markup(value)
@@ -148,6 +214,13 @@ def fixture_checks():
     require('施工合同签订' in rendered and '信息合同' in rendered, 'Public project facts were filtered by a generic commercial keyword')
     commercial = '<section id="contract"><p>付款与发票</p></section><a href="/cooperation/">商务合作</a>'
     require(not parity.render(parity.Tree(commercial).root, 'projects/index.html').strip(), 'Explicit commercial blocks/actions were not excluded')
+    operating_axis = '<section data-qily-operating-axis="static-v1"><a class="qily-system-axis__step" href="/cooperation/"><strong>05｜数智固化</strong><span>ERP／MES／APS／看板</span></a></section>'
+    localized_axis = parity.render(parity.Tree(operating_axis).root, 'knowledge/index.html')
+    require('href="/archive/profile/capabilities/#digital"' in localized_axis
+            and '05｜数智固化' in localized_axis and 'ERP／MES／APS／看板' in localized_axis,
+            'Noncommercial operating-axis step must map to the local digital capability section')
+    commercial_cta = parity.render(parity.Tree('<a href="/cooperation/">进入项目合作</a>').root, 'knowledge/index.html')
+    require(not commercial_cta.strip(), 'Explicit project-cooperation CTA must remain excluded')
     require('url("#diagram")' in parity.declarations('fill:url(#diagram)', 'index.html'), 'Inline SVG paint reference was lost')
     require(parity.versioned_media_url('assets/example.svg', '0123456789abcdef0123456789abcdef') == '/assets/public-media/assets/example.svg?v=0123456789abcdef', 'Mirrored media URLs must include a content-hash cache key')
     require('<h1>工作现场</h1>' in parity.preserve_generated_page_heading('<section><h2>工作现场</h2></section>', '<main><section class="page-hero"><h1>工作现场</h1></section><section>内容</section></main>'), 'Source pages whose H1 is outside main must retain the generated page heading')
@@ -195,7 +268,14 @@ def main():
     require(manifest.get('version') == parity.VERSION, 'Unexpected source parity version')
     pages, styles, media = (manifest.get(key, []) for key in ('pages', 'styles', 'media_files'))
     destination = manifest.get('destination_assets', [])
+    link_adaptations = manifest.get('link_adaptations', [])
     require(pages and styles and media and destination, 'Empty source content/CSS/media/protected-assets inventory')
+    require(any(row.get('source') == 'knowledge/index.html'
+                    and row.get('action') == 'localized-noncommercial-topic'
+                    and row.get('to') == '/archive/profile/capabilities/#digital'
+                    and '05｜数智固化' in row.get('label', '')
+                for row in link_adaptations),
+            'Missing audit record for the localized noncommercial operating-axis step')
     urls = [row['url'] for row in pages]
     require(len(set(urls)) == len(urls), 'Duplicate target routes in clone manifest')
     require({'/', '/notes/', '/trust/', '/knowledge/', '/briefs/', '/resources/'} <= set(urls), 'A primary clone/discovery route is missing')
@@ -214,7 +294,9 @@ def main():
     def verify_local_page(row):
         source = ROOT / row['source']
         require(source.is_file() and parity.file_hash(source) == row['source_html_sha256'], 'Source HTML changed after materialization: ' + row['source'])
-        verify_semantics(local_path(row['url']).read_text(), row)
+        local_value = local_path(row['url']).read_text()
+        verify_semantics(local_value, row)
+        verify_operating_axis(source.read_text(), local_value, row['url'])
     run_parallel(pages, verify_local_page, args.workers)
     for key, rows in [('style', styles), ('media', media), ('destination', destination)]:
         run_parallel(rows, lambda row: verify_asset_local(row, key), args.workers)
@@ -261,10 +343,18 @@ def main():
                 return response.read(16 * 1024 * 1024)
 
         require(read_page('/archive/source-content-parity.json') == raw_manifest, 'Production manifest bytes differ from this release')
-        run_parallel(pages, lambda row: verify_semantics(read_page(row['url']).decode(), row), args.workers)
+        def verify_remote_page(row):
+            remote_value = read_page(row['url']).decode()
+            verify_semantics(remote_value, row)
+            verify_operating_axis((ROOT / row['source']).read_text(), remote_value, row['url'])
+
+        run_parallel(pages, verify_remote_page, args.workers)
         # Also check the canonical homepage URL without a cache-busting parameter.
         with open_url('/') as response:
-            verify_semantics(response.read(16 * 1024 * 1024).decode(), next(row for row in pages if row['url'] == '/'))
+            home_value = response.read(16 * 1024 * 1024).decode()
+        home_row = next(row for row in pages if row['url'] == '/')
+        verify_semantics(home_value, home_row)
+        verify_operating_axis((ROOT / 'index.html').read_text(), home_value, '/')
 
         def verify_remote_asset(row):
             for attempt in range(2):
