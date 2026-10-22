@@ -85,7 +85,10 @@ permissions:
 concurrency:
   group: ${{ github.event_name == 'pull_request' && format('qilylean-cn-transfer-pr-{0}', github.event.number) || inputs.inspect_translation_only && 'qilylean-cn-translation-inspection' || 'qilylean-cn-production-v12' }}
   # Production uploads and live verification must finish atomically; newer CN commits queue instead of cancelling an active release.
-  cancel-in-progress: false
+  # One-time stale-run recovery: the merge commit bearing the exact marker
+  # replaces pending/stalled old releases with the already-validated current
+  # main revision. All other pushes remain strictly serialized.
+  cancel-in-progress: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, 'supersede-stale-cn-production-once') }}
 
 jobs:
   transfer-contract:
