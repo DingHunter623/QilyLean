@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Materialize the current China public mirror before validation
+        run: bash cn-site/scripts/materialize-practice-assets.sh
       - name: Verify international/CN/Global Knowledge VI authority
         run: node scripts/validate-sitewide-vi-unification.js
       - name: Keep public-copy governance intact
