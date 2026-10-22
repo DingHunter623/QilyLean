@@ -3,8 +3,8 @@
 
 /* QilyLean mobile Dock + primary-navigation closure｜2026-09-06 R2
  * Goals:
- * 1) Seven fixed-bottom actions use concise approved names: 首页 / 顶部 / 上一层级 / 上一网页 / 本站搜索 / 分享当前 / 联系我们.
- * 2) Phone layout keeps all seven actions visible; four-character labels render as two rows of two characters.
+ * 1) The shared fixed-bottom Dock exposes exactly five approved actions: 回到顶部 / 上一层级 / 上一网页 / 本站搜索 / 分享当前.
+ * 2) Desktop/tablet controls share one visual row; phones use the approved 3+2 arrangement.
  * 3) The first and last button borders remain fully visible in normal, hover, focus and active states.
  * 4) Mobile Dock owns the real viewport width and is not reduced by legacy visual-system 50/52px rules.
  * 5) Primary navigation remains authoritative at first paint: 精益生产 and 资源协同 are static source labels.
@@ -15,7 +15,7 @@ const cp=require('child_process');
 
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
-const DOCK_PATCH='20261021-footer-vi-v6';
+const DOCK_PATCH='20261021-five-actions-v1';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
 // Canonical cache revision for the approved underline-free international header.
@@ -101,13 +101,15 @@ function validatePrimaryNavigation(){
 function validateDock(){
   const dock=read('site-dock-share-runtime-v1.js');
   for(const token of [
-    "home:['首页']","top:['顶部']","back:['上一层级']","previous:['上一网页']","search:['本站搜索']","current:['分享当前']","contact:['联系我们']",
+    "var ORDER=['top','back','previous','search','current'];",
+    "var CN_ORDER=['top','back','previous','search','current'];",
+    "top:['回到顶部']","back:['上一层级']","previous:['上一网页']","search:['本站搜索']","current:['分享当前']",
     'border-top:3px solid #c8a25a!important','background:#0f4b5a!important',
     'mobile-fixed-bottom-footer-navigation','v5.8-fixed-bottom-footer-navigation',
     "setImportant(dock,'display','flex')","setImportant(dock,'flex-wrap','wrap')",
-    "setImportant(button,'flex','0 0 calc((100% - 12px)/4)'",
+    "setImportant(button,'flex','0 0 calc((100% - 8px)/3)'",
     'box-shadow:inset 0 0 0 2px rgba(255,227,155,.24)!important'
-  ])assert(dock.includes(token),'Dock footer R1 missing '+token);
+  ])assert(dock.includes(token),'Dock V5.8 five-action footer contract missing '+token);
   assert(!dock.includes('mobile-fixed-bottom-compact-navigation'),'retired compact mobile Dock returned');
   assert(!dock.includes('mobile-fixed-bottom-swipe-navigation'),'retired swipe Dock returned');
   const visual=read('site-visual-system-v2.css');
