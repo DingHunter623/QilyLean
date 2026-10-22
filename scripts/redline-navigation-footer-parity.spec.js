@@ -51,3 +51,45 @@ test('China footer searches locally, shares current URL and follows real history
 test('all China generated pages receive final VI and four-action first paint',async()=>{
  let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,back,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
 });
+
+
+test('paired knowledge summaries use readable two-by-two modules at desktop width',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  for(const [base,route] of [[intBase,'/knowledge/'],[cnBase,'/knowledge/']]){
+    await page.goto(base+route,{waitUntil:'load'});
+    const cards=page.locator('#knowledge-stats .knowledge-stat-card');
+    await expect(cards).toHaveCount(4);
+    const rects=await cards.evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect(),s=getComputedStyle(n);return {x:r.left,y:r.top,width:r.width,height:r.height,font:parseFloat(s.fontSize)||0};}));
+    expect(rects[0].width).toBeGreaterThan(180);
+    expect(Math.abs(rects[0].y-rects[1].y),base+' first row misaligned').toBeLessThanOrEqual(1);
+    expect(Math.abs(rects[2].y-rects[3].y),base+' second row misaligned').toBeLessThanOrEqual(1);
+    expect(rects[2].y,base+' second row missing').toBeGreaterThan(rects[0].y+30);
+    expect(Math.abs(rects[0].x-rects[2].x),base+' first column misaligned').toBeLessThanOrEqual(1);
+    expect(Math.abs(rects[1].x-rects[3].x),base+' second column misaligned').toBeLessThanOrEqual(1);
+  }
+});
+
+test('paired About pages keep all three QR frames at equal size and readable on phones',async({page})=>{
+  for(const width of [390,1440]){
+    await page.setViewportSize({width,height:900});
+    for(const base of [intBase,cnBase]){
+      await page.goto(base+'/about/',{waitUntil:'load'});
+      const frames=page.locator('.qily-unified-qr-card .qily-unified-qr-art');
+      await expect(frames).toHaveCount(3);
+      const g=await frames.evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect(),s=getComputedStyle(n);return {width:r.width,height:r.height,border:parseFloat(s.borderTopWidth)||0,child:n.querySelector('img')?.getBoundingClientRect().width||0};}));
+      for(const rect of g){expect(rect.width).toBeGreaterThan(160);expect(Math.abs(rect.width-rect.height),base+' QR frame not square').toBeLessThanOrEqual(1);expect(rect.border).toBeGreaterThanOrEqual(4);}
+      expect(Math.max(...g.map(r=>r.width))-Math.min(...g.map(r=>r.width)),base+' QR frame widths differ').toBeLessThanOrEqual(1);
+      expect(Math.max(...g.map(r=>r.border))-Math.min(...g.map(r=>r.border)),base+' QR frame borders differ').toBeLessThanOrEqual(1);
+    }
+  }
+});
+
+test('international home secondary heading remains smaller than its H1',async({page})=>{
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto(intBase+'/',{waitUntil:'load'});
+  const h1=page.locator('.qily-home-conversion-hero h1');
+  const h2=page.locator('#qily-core-services .qily-ia-heading h2');
+  await expect(h1).toBeVisible();await expect(h2).toBeVisible();
+  const sizes=await Promise.all([h1,h2].map(el=>el.evaluate(n=>parseFloat(getComputedStyle(n).fontSize)||0)));
+  expect(sizes[1],'secondary delivery heading must not exceed the main hero').toBeLessThan(sizes[0]);
+});
