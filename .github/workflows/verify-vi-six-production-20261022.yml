@@ -1,0 +1,97 @@
+name: Verify six VI items on real QilyLean production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-vi-six-production-20261022.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vi-six-real-production-20261022
+  cancel-in-progress: false
+
+jobs:
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check mainland server current release source commit
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST" && test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qily-cn-vi-proof
+          chmod 600 ~/.ssh/qily-cn-vi-proof
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+          ready=false
+          for attempt in $(seq 1 15); do
+            echo "Mainland release verification ${attempt}/15"
+            if json="$(timeout 45s ssh -o ConnectTimeout=15 -o BatchMode=yes -i ~/.ssh/qily-cn-vi-proof "${CN_PREPROD_USER:-ubuntu}@$CN_PREPROD_HOST" 'cat /var/www/qilylean-cn/current/meta/cn-content-release.json' 2>/dev/null)"; then
+              release_sha="$(printf '%s' "$json" | python3 -c 'import json,sys;print(json.load(sys.stdin).get("sourceCommit",""))')" || release_sha=''
+              if [[ "$release_sha" =~ ^[a-f0-9]{40}$ ]]; then
+                git fetch -q origin main
+                if git cat-file -e "$release_sha^{commit}" 2>/dev/null && git merge-base --is-ancestor d8f4028015fb9ee7b519f037b2c60922a002673c "$release_sha"; then
+                  echo "Verified China release SHA: $release_sha"
+                  mkdir -p vi-six-production-evidence
+                  printf '%s\n' "$release_sha" > vi-six-production-evidence/china-release-source-sha.txt
+                  ready=true
+                  break
+                fi
+              fi
+            fi
+            if test "$attempt" -lt 15; then sleep 120; fi
+          done
+          if test "$ready" != true; then
+            echo 'BLOCKED: China current release has not been proven to include the repair merge.' >&2
+            exit 1
+          fi
+      - name: Prepare source contracts and Chromium
+        run: |
+          bash cn-site/scripts/materialize-practice-assets.sh
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Validate six VI items directly against both real domains
+        env:
+          QILY_INT_BASE: https://qilylean.com
+          QILY_CN_BASE: https://qilylean.cn
+        run: |
+          set -euo pipefail
+          mkdir -p vi-six-production-evidence
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js --reporter=line --workers=1 --trace=on 2>&1 | tee vi-six-production-evidence/live-playwright.log
+      - name: Prove approved lean navigation is actually served internationally
+        run: |
+          set -euo pipefail
+          curl -fsSL --connect-timeout 20 --max-time 80 'https://qilylean.com/lean-production/' > vi-six-production-evidence/international-lean-response.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('vi-six-production-evidence/international-lean-response.html').read_text()
+          nav=re.search(r'<header\b[^>]*>[\s\S]*?<nav\b[^>]*>([\s\S]*?)</nav>',text,re.I)
+          assert nav, 'Live international primary navigation missing'
+          urls=re.findall(r'<a\b[^>]*href=["\']([^"\']+)["\']',nav.group(1),re.I)
+          expected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/']
+          assert urls == expected, f'Live international nav does not contain approved routes: {urls}'
+          print('Live international lean navigation: 10 approved routes')
+          PY
+      - name: Save production browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vi-six-real-production-20261022-${{ github.run_id }}
+          path: |
+            vi-six-production-evidence
+            test-results
+          if-no-files-found: warn
+          retention-days: 30
