@@ -649,7 +649,7 @@ html:root:root:root body > :is(
 
 /* QILY-SIX-REDLINES-20261022: shared heading hierarchy and 2x2 knowledge cards. */
 html:root:root:root body main #qily-core-services .qily-ia-heading h2{
- font-size:clamp(26px,2.35vw,36px)!important;line-height:1.25!important;
+ font-size:clamp(24px,2.1vw,30px)!important;line-height:1.25!important;
 }
 html:root:root:root body main #knowledge-stats .module-grid.four.knowledge-stat-grid{
  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;

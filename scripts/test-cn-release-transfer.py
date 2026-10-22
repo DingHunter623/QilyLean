@@ -226,6 +226,14 @@ class TransferTests(unittest.TestCase):
         self.assertFalse(old.exists())
         self.assertTrue(unrelated.exists())
 
+    def test_chunk_upload_does_not_consume_the_manifest_stdin(self):
+        """SSH spawned inside the while-read loop must not drain its input file."""
+        workflow = (Path(__file__).resolve().parents[1] /
+                    '.github/workflows/deploy-cn-preprod.yml').read_text()
+        self.assertIn('done < "$LOCAL_PARTS/missing.txt"', workflow)
+        self.assertIn('"$USER_NAME@$CN_PREPROD_HOST:$incoming" </dev/null &&', workflow)
+        self.assertIn('timeout 90s ssh -n "${SSH_OPTS[@]}"', workflow)
+
     def test_workflow_archive_is_deterministic_across_checkout_mtimes(self):
         tar = shutil.which('gtar') or shutil.which('tar')
         if not tar or 'GNU tar' not in subprocess.check_output([tar, '--version'], text=True):

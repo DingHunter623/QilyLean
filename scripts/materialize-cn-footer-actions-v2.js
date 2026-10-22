@@ -164,7 +164,7 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
  }
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
   flex:0 1 auto!important;min-width:0!important;white-space:nowrap!important;
-  padding:2px!important;font-size:10px!important;
+  padding:1px!important;font-size:9px!important;
  }
  html:root:root:root:root:root:root:root:root body footer.footer .police-record img{
   width:11px!important;height:13px!important;flex:0 0 11px!important;
