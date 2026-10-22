@@ -122,6 +122,7 @@ test('China desktop footer actions and both filings remain inside one aligned ax
     expect(g.dockPosition,'dock must participate in footer flex layout').toBe('static');
     expect(g.recordsPosition,'filings must participate in footer flex layout').toBe('static');
     expect(g.items).toHaveLength(6);
+    expect(Math.abs(g.items[5].right-g.inner.right),'last filing must align with content-right boundary: '+JSON.stringify(g)).toBeLessThanOrEqual(2);
     const y=g.items[0].top;
     for(const box of g.items){
       expect(box.left,JSON.stringify(g)).toBeGreaterThanOrEqual(g.inner.left-2);
@@ -147,7 +148,7 @@ test('China dock matches international first-button axis and shared action VI ac
       const dock=document.querySelector('#floatDock');
       const buttons=[...dock.querySelectorAll('button[data-action]')];
       const css=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();
-         return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,fontSize:s.fontSize,fontWeight:s.fontWeight,fontFamily:s.fontFamily,color:s.color,borderColor:s.borderTopColor};};
+         return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,fontSize:s.fontSize,fontWeight:s.fontWeight,fontFamily:s.fontFamily,color:s.color,borderColor:s.borderTopColor,borderWidth:s.borderTopWidth,background:s.backgroundColor};};
       const filings=[...document.querySelectorAll('footer.footer .footer-records>a')];
       const inner=document.querySelector('footer.footer .footer-inner');
       return {actions:buttons.map(b=>b.dataset.action),buttons:buttons.map(css),filings:filings.map(css),
@@ -163,6 +164,10 @@ test('China dock matches international first-button axis and shared action VI ac
     expect(intl.actions).toEqual(['top','previous','search','current']);
     expect(cn.actions).toEqual(intl.actions);
     expect(cn.filings).toHaveLength(2);
+    for(const filing of cn.filings){
+      expect(filing.borderWidth,cnRoute+' filing should be a plain link without button border').toBe('0px');
+      expect(filing.background,cnRoute+' filing should have transparent background').toBe('rgba(0, 0, 0, 0)');
+    }
     expect(Math.abs(cn.buttons[0].left-intl.buttons[0].left),
       'China dock start must align with international dock: '+JSON.stringify({width,intlRoute,cnRoute,intl,cn})).toBeLessThanOrEqual(3);
     for(let i=0;i<4;i++){
@@ -182,7 +187,9 @@ test('China dock matches international first-button axis and shared action VI ac
       expect(Math.abs(elements[i].top-elements[0].top),cnRoute+' not one row').toBeLessThanOrEqual(5);
       if(i)expect(elements[i].left-elements[i-1].right,cnRoute+' overlap').toBeGreaterThanOrEqual(3);
     }
-    expect(cn.filings[0].left-cn.buttons[3].right,cnRoute+' misplaced filing gap').toBeLessThanOrEqual(16);
+    expect(cn.filings[0].left-cn.buttons[3].right,cnRoute+' filings overlap fourth action').toBeGreaterThanOrEqual(3);
+    expect(Math.abs(cn.filings[1].right-cn.content.right),cnRoute+' last filing should align to content right').toBeLessThanOrEqual(2);
+    if(width>=1600)expect(cn.filings[0].left-cn.buttons[3].right,cnRoute+' needs clear center whitespace').toBeGreaterThanOrEqual(40);
     if(previousCnLeft!==null)expect(Math.abs(previousCnLeft-cn.buttons[0].left),'CN page-to-page axis must match').toBeLessThanOrEqual(2);
     previousCnLeft=cn.buttons[0].left;
   }

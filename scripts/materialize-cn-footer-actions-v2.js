@@ -175,13 +175,15 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
  * The four actions are generated from the SAME canonical dock runtime as
  * qilylean.com: no China-specific redesign of action text, type, spacing or
  * interaction. The left edge of action 1 follows the international 1180px
- * dock axis; only the two statutory filing links continue to its right.
+ * dock axis. The two statutory filing links form a separate right-aligned
+ * group at the SAME 1180px content-axis right boundary, not attached to
+ * the buttons. The filings display as text links without button borders.
  * The mobile contract and all approved type sizes/labels remain unchanged.
  */
 @media(min-width:1101px){
  html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner{
   display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
-  justify-content:flex-start!important;align-items:center!important;
+  justify-content:space-between!important;align-items:center!important;
   box-sizing:border-box!important;
   width:min(var(--qily-dock-axis,1180px),calc(100% - 44px))!important;
   max-width:var(--qily-dock-axis,1180px)!important;
@@ -198,9 +200,20 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
  html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{
   display:flex!important;position:static!important;inset:auto!important;
   flex:0 0 auto!important;flex-flow:row nowrap!important;
-  align-items:center!important;justify-content:flex-start!important;
+  align-items:center!important;justify-content:flex-end!important;
   box-sizing:border-box!important;width:max-content!important;max-width:100%!important;
-  min-width:0!important;gap:5px!important;margin:0!important;padding:0!important;
+  min-width:0!important;gap:8px!important;margin:0 0 0 auto!important;padding:0!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a{
+  border:0!important;border-radius:0!important;box-shadow:none!important;
+  background:transparent!important;background-image:none!important;
+  min-height:36px!important;padding:0!important;
+  text-decoration:none!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a:is(:hover,:focus-visible){
+  background:transparent!important;background-color:transparent!important;
+  border:0!important;box-shadow:none!important;
+  text-decoration:underline!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
  }
 }
 @media(min-width:821px) and (max-width:1100px){
