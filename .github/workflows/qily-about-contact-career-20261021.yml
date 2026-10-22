@@ -4,6 +4,9 @@ on:
     branches: [main]
     paths:
       - 'scripts/materialize-about-nav-footer-v1.js'
+      - 'assets/contact/qily-about-contact-v1.css'
+      - 'cn-site/assets/contact/qily-about-contact-v1.css'
+      - 'site-dock-share-runtime-v1.js'
       - '.github/workflows/qily-about-contact-career-20261021.yml'
   workflow_dispatch:
 permissions:
