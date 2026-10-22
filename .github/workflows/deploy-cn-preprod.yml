@@ -890,16 +890,16 @@ jobs:
               if 'data-qily-footer-filing="none"' in footer_block or footer_block.count('beian.miit.gov.cn') != 1 or footer_block.count('beian.mps.gov.cn') != 1:
                   raise SystemExit(f'Production {route} on qilylean.cn must contain exactly both filing links.')
 
-          # Seven-action footer is shared with the international site's Dock runtime.
+          # Four-action footer is shared with the international site's Dock runtime.
           # On the mainland domain it sits above two genuine filing links.
           footer_actions_contract = [
               (footer_actions_css, 'QilyLean CN Footer Actions V10', 'CN canonical footer base'),
-              (footer_actions_css, 'QILY-CN-SHARED-SEVEN-ACTIONS-V2:START', 'seven-action shared styles'),
+              (footer_actions_css, 'QILY-CN-SHARED-SEVEN-ACTIONS-V2:START', 'four-action shared styles (legacy region marker)'),
               (footer_actions_css, 'QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END', 'legacy geometry compatibility'),
               (footer_actions_css, 'border-radius:8px!important', 'rectangular control styling'),
               (footer_actions_css, 'background:#0f4b5a!important', 'shared deep-teal color'),
               (footer_actions_runtime, 'QilyLean Floating Dock Authoritative Runtime V5.8', 'single authoritative Dock'),
-              (footer_actions_runtime, "var CN_ORDER=['top','back','previous','search','current'];", 'CN five-action order'),
+              (footer_actions_runtime, "var CN_ORDER=['top','previous','search','current'];", 'CN four-action order'),
               (footer_actions_runtime, "dock.setAttribute('data-qily-footer-contract',actions.join(','))", 'CN action contract'),
               (footer_actions_runtime, 'function goPreviousPage()', 'browser previous-page function'),
               (footer_actions_runtime, 'function openContactPage()', 'functional CN contact route'),
