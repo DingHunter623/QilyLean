@@ -108,7 +108,7 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records{width:calc(100% - 12px)!important}
 }
 @media(max-width:620px){
- html:root:root:root:root:root:root:root:root body footer.footer .footer-records{flex-direction:column!important;align-items:center!important}
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records{flex-direction:column!important;align-items:center!important;position:relative!important;left:calc(50vw - 50%)!important}
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{width:fit-content!important;max-width:100%!important;box-sizing:border-box!important;font-size:13px!important;white-space:normal!important;overflow-wrap:anywhere!important}
 }
 `;
