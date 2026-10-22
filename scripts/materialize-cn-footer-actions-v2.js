@@ -119,8 +119,8 @@ html:root:root:root:root:root:root:root:root:root body footer.footer .footer-inn
  margin-inline:auto!important;gap:6px!important;align-items:center!important;
 }
 html:root:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
- flex:1 1 auto!important;min-width:0!important;width:auto!important;
- display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ flex:0 0 auto!important;min-width:0!important;width:auto!important;
+ display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;
  padding:5px 0!important;gap:5px!important;position:static!important;
 }
 html:root:root:root:root:root:root:root:root:root body footer.footer .footer-records{
@@ -138,8 +138,8 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
   flex-direction:column!important;gap:2px!important;width:100%!important;
  }
  html:root:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
-  width:100%!important;flex:0 0 auto!important;display:grid!important;
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  width:100%!important;flex:0 0 auto!important;display:flex!important;
+  flex-wrap:nowrap!important;justify-content:flex-start!important;
   gap:4px!important;padding:4px 6px!important;
  }
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records{

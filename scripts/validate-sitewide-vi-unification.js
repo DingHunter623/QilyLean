@@ -258,7 +258,7 @@ const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
 assert(cnFooterCss.includes('QilyLean CN Footer Actions V10'), 'CN base footer stylesheet missing.');
 assert(cnFooterCss.includes('QILY-CN-SHARED-SEVEN-ACTIONS-V2:START'), 'Shared footer visual owner missing.');
 assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared four-action geometry missing.');
-assert(cnFooterCss.includes('grid-template-columns:repeat(4,minmax(0,1fr))'), 'Four shared controls must fill the content axis.');
+assert(cnFooterCss.includes('display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;'), 'Four shared controls must use left-aligned intrinsic widths.');
 assert(cnFooterCss.includes('font:500 14px/1.3'), 'CN filing font must remain readable below the controls.');
 assert(cnFooterCss.includes('@media(max-width:760px)'), 'CN responsive footer not declared.');
 assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
