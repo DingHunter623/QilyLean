@@ -10,7 +10,7 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261022-four-actions-v1';
+const VERSION='20261022-contentfit-four-actions-v2';
 const ACTIONS=['top','previous','search','current'];
 const LABELS=['回到顶部','上一网页','本站搜索','分享当前'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
