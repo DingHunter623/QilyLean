@@ -23,7 +23,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261020-source-content-parity-v3-cache-bust-heading-fallback'
+VERSION = '20261022-source-content-parity-v4-preserve-noncommercial-axis'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -56,9 +56,16 @@ COMMERCIAL_COPY = re.compile(
     r'(?:费用|税费|付款|收款|发票).{0,35}(?:合同|签约|账户)|'
     r'(?:以|按).{0,20}(?:正式合同|书面方案与合同|签约主体)'
 )
+COMMERCIAL_LINK_COPY = re.compile(
+    r'项目合作|商务合作|业务合作|商业合作|合作洽谈|合作申请|申请合作|项目承接|业务承接|'
+    r'立即咨询|咨询预约|预约咨询|获取方案|服务套餐|报价|签约|付款|收费|招商|代理加盟|'
+    r'资源撮合|销售线索|客户招揽|提交需求|分层能力|交付边界|服务范围|服务能力|'
+    r'联系我们|联系方式|联系我|联系顾问|联系销售|联系团队|扫码|微信|电话|邮箱'
+)
 MEDIA = set()
 MEDIA_HASHES = {}
 EXCLUDED = []
+LINK_ADAPTATIONS = []
 STYLE_RECORDS = {}
 MEDIA_EXT = visual.MEDIA_EXT | {'.pdf', '.qly', '.woff', '.woff2', '.ttf', '.vtt'}
 VOID = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
@@ -113,6 +120,14 @@ def link_url(value, source):
         return ''
     return urlunsplit(('', '', target, parsed.query, parsed.fragment))
 
+def noncommercial_link_fallback(path, label):
+    """Map the public operating-axis topic away from its retired commercial route."""
+    normalized = re.sub(r'\s+', '', label)
+    if path.startswith('/cooperation/') and re.search(r'数智固化', normalized) and re.search(r'(?:ERP|MES|APS|看板)', normalized, re.I):
+        return '/archive/profile/capabilities/#digital'
+    return ''
+
+
 class Node:
     def __init__(self, tag='', attrs=()):
         self.tag, self.attrs, self.children = tag, dict(attrs), []
@@ -155,7 +170,7 @@ def render(node, source):
     elif classes & hero_classes and 'qily-aircraft-brand-hero' not in classes:
         attrs['data-qily-vi-v4-hero'] = '118deg'
     if identifier in BLOCK_IDS or classes & BLOCK_CLASSES:
-        EXCLUDED.append({'source': source, 'panel': identifier or 'contact-panel'})
+        EXCLUDED.append({'source': source, 'panel': identifier or 'contact-panel', 'reason': 'explicit-blocklist'})
         return ''
     # Remove conversion copy at its smallest authored prose block, retaining
     # surrounding project facts, original cards, diagrams, photos and layout.
@@ -168,19 +183,39 @@ def render(node, source):
     if tag == 'a':
         original_href = attrs.get('href', '')
         original_url = urlsplit(urljoin('/' + source, original_href))
-        if original_url.path.startswith(COMMERCIAL_ROUTES) or original_url.fragment in BLOCK_IDS or original_url.scheme in {'tel', 'mailto', 'weixin', 'whatsapp'}:
+        commercial_destination = original_url.path.startswith(COMMERCIAL_ROUTES) or original_url.fragment in BLOCK_IDS
+        if commercial_destination:
+            label = re.sub(r'\s+', ' ', node.text()).strip()
+            fallback = noncommercial_link_fallback(original_url.path, label)
+            if fallback and original_url.fragment not in BLOCK_IDS:
+                attrs['href'] = fallback
+                attrs.pop('target', None); attrs.pop('rel', None)
+                LINK_ADAPTATIONS.append({'source': source, 'label': label, 'from': original_href,
+                    'to': fallback, 'action': 'localized-noncommercial-topic'})
+            elif original_url.fragment in BLOCK_IDS or COMMERCIAL_LINK_COPY.search(label):
+                EXCLUDED.append({'source': source, 'panel': identifier or 'a', 'reason': 'commercial-link'})
+                return ''
+            else:
+                # The target is commercial, but the visible label is public engineering content.
+                # Keep the original layout and content while removing the commercial destination.
+                attrs.pop('href', None); attrs.pop('target', None); attrs.pop('rel', None)
+                attrs['data-cn-link-sanitized'] = 'commercial-destination'
+                LINK_ADAPTATIONS.append({'source': source, 'label': label, 'from': original_href,
+                    'to': None, 'action': 'preserved-unlinked-content'})
+        elif original_url.scheme in {'tel', 'mailto', 'weixin', 'whatsapp'}:
             EXCLUDED.append({'source': source, 'panel': identifier or 'a', 'reason': 'commercial-link'})
             return ''
-        href = link_url(original_href, source)
-        if not href:
-            # An unavailable destination must not erase its public image/text.
-            return ''.join(render(child, source) for child in node.children)
-        attrs['href'] = href
-        attrs.pop('target', None); attrs.pop('rel', None)
-        if href.startswith(('http:', 'https:')):
-            attrs.update(target='_blank', rel='noopener noreferrer')
+        else:
+            href = link_url(original_href, source)
+            if not href:
+                # An unavailable destination must not erase its public image/text.
+                return ''.join(render(child, source) for child in node.children)
+            attrs['href'] = href
+            attrs.pop('target', None); attrs.pop('rel', None)
+            if href.startswith(('http:', 'https:')):
+                attrs.update(target='_blank', rel='noopener noreferrer')
         if attrs.get('href', '').startswith('/notes/#practice-'):
-            return ''  # old reciprocal CN link duplicates the cloned project link
+            return ''
     if tag == 'button':
         if re.fullmatch(r'(?:window\.)?print\(\);?', attrs.get('onclick', '').strip()):
             attrs['data-public-print'] = ''
@@ -524,7 +559,7 @@ def copy_daily_knowledge_runtime():
     return url
 
 def main():
-    MEDIA.clear(); MEDIA_HASHES.clear(); EXCLUDED.clear(); STYLE_CACHE.clear(); STYLE_RECORDS.clear(); KEYFRAMES.clear(); SHELL_STYLE_CACHE.clear()
+    MEDIA.clear(); MEDIA_HASHES.clear(); EXCLUDED.clear(); LINK_ADAPTATIONS.clear(); STYLE_CACHE.clear(); STYLE_RECORDS.clear(); KEYFRAMES.clear(); SHELL_STYLE_CACHE.clear()
     localized_adapters = {}
     for basename in ('public-terminology-interactions.css', 'public-terminology-interactions.js'):
         asset = CN / 'assets' / basename
@@ -688,8 +723,8 @@ def main():
         asset = CN / unquote(urlsplit(url_asset).path).lstrip('/')
         if not asset.is_file(): raise RuntimeError('China aircraft asset missing: ' + url_asset)
         destination_assets.append({'source': asset.relative_to(ROOT).as_posix(), 'url': url_asset, 'sha256': file_hash(asset), 'bytes': asset.stat().st_size})
-    (CN / 'archive/source-content-parity.json').write_text(json.dumps({'version': VERSION, 'pages': records, 'styles': list(STYLE_RECORDS.values()), 'excluded_panels': EXCLUDED, 'media_files': media_records,
+    (CN / 'archive/source-content-parity.json').write_text(json.dumps({'version': VERSION, 'pages': records, 'styles': list(STYLE_RECORDS.values()), 'excluded_panels': EXCLUDED, 'link_adaptations': LINK_ADAPTATIONS, 'media_files': media_records,
         'destination_assets': destination_assets, 'protected': {'about_main_sha256': contact_sha, 'about_shell': protected_dom(about_html)}, 'media': sorted(MEDIA)}, ensure_ascii=False, indent=2))
-    print(f'Source content parity: {len(records)} pages; {len(MEDIA)} original media paths; {len(EXCLUDED)} commercial panels excluded')
+    print(f'Source content parity: {len(records)} pages; {len(MEDIA)} original media paths; {len(EXCLUDED)} commercial panels excluded; {len(LINK_ADAPTATIONS)} commercial-target links safely localized or preserved as non-clickable content')
 
 if __name__ == '__main__': main()
