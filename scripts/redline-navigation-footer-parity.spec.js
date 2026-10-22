@@ -122,7 +122,7 @@ test('China desktop footer actions and both filings remain inside one aligned ax
     expect(g.dockPosition,'dock must participate in footer flex layout').toBe('static');
     expect(g.recordsPosition,'filings must participate in footer flex layout').toBe('static');
     expect(g.items).toHaveLength(6);
-    expect(Math.abs(g.filings[1].right-g.inner.right),'last filing must align with content-right boundary: '+JSON.stringify(g)).toBeLessThanOrEqual(2);
+    expect(Math.abs(g.items[5].right-g.inner.right),'last filing must align with content-right boundary: '+JSON.stringify(g)).toBeLessThanOrEqual(2);
     const y=g.items[0].top;
     for(const box of g.items){
       expect(box.left,JSON.stringify(g)).toBeGreaterThanOrEqual(g.inner.left-2);
