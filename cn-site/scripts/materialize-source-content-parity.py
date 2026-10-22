@@ -192,7 +192,7 @@ def render(node, source):
                 attrs.pop('target', None); attrs.pop('rel', None)
                 LINK_ADAPTATIONS.append({'source': source, 'label': label, 'from': original_href,
                     'to': fallback, 'action': 'localized-noncommercial-topic'})
-            elif original_url.fragment in BLOCK_IDS or COMMERCIAL_LINK_COPY.search(label):
+            elif original_url.fragment in BLOCK_IDS or COMMERCIAL_COPY.search(label) or COMMERCIAL_LINK_COPY.search(label):
                 EXCLUDED.append({'source': source, 'panel': identifier or 'a', 'reason': 'commercial-link'})
                 return ''
             else:
