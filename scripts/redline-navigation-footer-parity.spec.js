@@ -20,8 +20,12 @@ for(const width of [320,390,820,1180,1600]){
    if(!reference)reference={gap:g.gap,typography};else expect({gap:g.gap,typography},base+route+' shared action styling').toEqual(reference);
    expect(g.buttons.every(b=>Math.abs(b.top-g.buttons[0].top)<=1),JSON.stringify({base,route,g})).toBeTruthy();
    if(base===cnBase&&width<=620){
-    const records=await page.locator('footer .footer-records>a').evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(el);const c=range.getBoundingClientRect(),s=getComputedStyle(el),a=getComputedStyle(el,'::after');const spacing=[s.paddingLeft,s.paddingRight,s.borderLeftWidth,s.borderRightWidth,s.columnGap,a.width,a.marginLeft,a.marginRight].reduce((sum,n)=>sum+(parseFloat(n)||0),0);return {width:r.width,content:c.width,spacing,center:r.x+r.width/2,viewport:document.documentElement.clientWidth,overflow:el.scrollWidth-el.clientWidth};}));
-    for(const r of records){expect(Math.abs(r.center-r.viewport/2),`Filing link not viewport-centered: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);expect(Math.abs(r.width-r.content-r.spacing),`Filing border width does not match content: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);expect(r.overflow,`Filing link overflows: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);}
+    const recordRow=page.locator('footer .footer-records');
+    const geometry=await recordRow.evaluate(el=>({client:el.clientWidth,scroll:el.scrollWidth,items:[...el.querySelectorAll('a')].map(a=>{const r=a.getBoundingClientRect(),s=getComputedStyle(a);return {top:r.top,height:r.height,width:r.width,nowrap:s.whiteSpace,overflow:a.scrollWidth-a.clientWidth};})}));
+    expect(geometry.items).toHaveLength(2);
+    for(const item of geometry.items){expect(item.nowrap).toBe('nowrap');expect(item.overflow).toBeLessThanOrEqual(1);}
+    expect(Math.abs(geometry.items[0].top-geometry.items[1].top),'both filing links must share one row').toBeLessThanOrEqual(1);
+    if(width<360)expect(geometry.scroll,'narrow screens may scroll filings horizontally without shrinking text').toBeGreaterThanOrEqual(geometry.client);
    }
    if(base===cnBase){await expect(page.locator('footer .footer-records>a')).toHaveCount(2);await expect(page.locator('footer')).toContainText('湘ICP备2026041143号-1');await expect(page.locator('footer')).toContainText('湘公网安备43020002000443号');}else await expect(page.locator('body')).not.toContainText(/湘ICP备|湘公网安备/);
    await page.evaluate(()=>scrollTo(0,document.documentElement.scrollHeight));await dock.locator('[data-action="top"]').click();await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
