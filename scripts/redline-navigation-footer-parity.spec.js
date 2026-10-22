@@ -93,3 +93,46 @@ test('international home secondary heading remains smaller than its H1',async({p
   const sizes=await Promise.all([h1,h2].map(el=>el.evaluate(n=>parseFloat(getComputedStyle(n).fontSize)||0)));
   expect(sizes[1],'secondary delivery heading must not exceed the main hero').toBeLessThan(sizes[0]);
 });
+
+test('China desktop footer actions and both filings remain inside one aligned axis',async({page})=>{
+  test.setTimeout(180000);
+  for(const width of [1180,1440,1600,1920]){
+    await page.setViewportSize({width,height:1000});
+    await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await expect(page.locator('#floatDock button[data-action]')).toHaveCount(4);
+    await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
+    await page.waitForFunction(()=>window.__qilyDockV58CaptureBound===true);
+    const g=await page.evaluate(()=>{
+      const footer=document.querySelector('footer.footer');
+      const inner=footer.querySelector('.footer-inner');
+      const dock=inner.querySelector('#floatDock');
+      const records=inner.querySelector('.footer-records');
+      const items=[...dock.querySelectorAll('button[data-action]'),...records.querySelectorAll(':scope > a')];
+      const box=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+      return {viewport:innerWidth,footer:box(footer),inner:box(inner),dock:box(dock),records:box(records),
+        dockPosition:getComputedStyle(dock).position,recordsPosition:getComputedStyle(records).position,
+        actions:[...dock.querySelectorAll('button[data-action]')].map(el=>el.dataset.action),
+        filings:[...records.querySelectorAll(':scope > a')].map(el=>el.textContent.trim()),
+        items:items.map(box)};
+    });
+    expect(g.actions).toEqual(['top','previous','search','current']);
+    expect(g.filings[0]).toContain('湘ICP备2026041143号-1');
+    expect(g.filings[1]).toContain('湘公网安备43020002000443号');
+    expect(g.inner.width,JSON.stringify(g)).toBeLessThanOrEqual(1182);
+    expect(g.dockPosition,'dock must participate in footer flex layout').toBe('static');
+    expect(g.recordsPosition,'filings must participate in footer flex layout').toBe('static');
+    expect(g.items).toHaveLength(6);
+    const y=g.items[0].top;
+    for(const box of g.items){
+      expect(box.left,JSON.stringify(g)).toBeGreaterThanOrEqual(g.inner.left-2);
+      expect(box.right,JSON.stringify(g)).toBeLessThanOrEqual(g.inner.right+2);
+      expect(box.left,JSON.stringify(g)).toBeGreaterThanOrEqual(-1);
+      expect(box.right,JSON.stringify(g)).toBeLessThanOrEqual(width+1);
+      expect(Math.abs(box.top-y),'all desktop footer controls and filings must share one row').toBeLessThanOrEqual(5);
+    }
+    for(let i=1;i<g.items.length;i++){
+      expect(g.items[i].left-g.items[i-1].right,
+        'footer buttons/filings must have a visible gap, not collide: '+JSON.stringify(g)).toBeGreaterThanOrEqual(3);
+    }
+  }
+});
