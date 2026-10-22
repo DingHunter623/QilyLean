@@ -48,3 +48,9 @@
   width:min(100%,240px)!important;height:auto!important;aspect-ratio:1!important
  }
 }
+
+/* QILY-QR-BORDER-REGRESSION-20261022: override generic button border normalization. */
+html:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid .qily-unified-qr-card :is(a,button).qily-unified-qr-art{
+ box-sizing:border-box!important;border:8px solid #0f4b5a!important;
+ border-width:8px!important;border-style:solid!important;border-color:#0f4b5a!important;
+}
