@@ -23,9 +23,14 @@ for(const rel of files){
  const before=fs.readFileSync(f,'utf8');let after=before;
  const china=rel.startsWith('cn-site/');
  after=after.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi,menu=>{
-  if(!/关于我们/.test(menu)||!/aria-label=["'](?:主导航|QilyLean核心导视)["']|qily-global-nav/.test(menu))return menu;
-  const next=menu.replace(/<a\b[^>]*href=["']\/(?:archive\/profile\/)?experience\/["'][^>]*>\s*履历主线\s*<\/a>/gi,'');
+  if(!/aria-label=["'](?:主导航|网站导航|QilyLean核心导视)["']|qily-global-nav|site-nav/.test(menu))return menu;
+  // Career is a child of About, never a standalone global-navigation item.
+  let next=menu.replace(/<a\b[^>]*href=["']\/(?:archive\/profile\/)?experience\/["'][^>]*>\s*履历主线\s*<\/a>/gi,'');
   if(next!==menu)removedMenu++;
+  // Legacy Improvements/Resources snapshots missed About entirely.
+  if(!/href=["']\/about\/["']/.test(next)&&/href=["']\/links\/["']/.test(next)){
+   next=next.replace(/<\/nav>$/i,'<a href="/about/">关于我们</a></nav>');
+  }
   return next;
  });
  if(china){
