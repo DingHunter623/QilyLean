@@ -67,3 +67,16 @@ html:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-
   width:min(240px,100%)!important;height:auto!important;aspect-ratio:1!important;max-width:240px!important;
  }
 }
+
+/* QILY-QR-CONSISTENT-SIZE-20261022: all three official codes share one scanned frame. */
+html:root:root:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid .qily-unified-qr-card :is(a,button).qily-unified-qr-art{
+ box-sizing:border-box!important;flex:0 0 200px!important;
+ width:200px!important;height:200px!important;max-width:100%!important;
+ min-width:0!important;min-height:0!important;margin-inline:auto!important;
+ padding:8px!important;border:8px solid #0f4b5a!important;border-radius:12px!important;
+ background:#fff!important;overflow:hidden!important;
+}
+html:root:root:root:root:root:root:root body .qily-unified-about-contact .qily-unified-qr-grid .qily-unified-qr-card :is(a,button).qily-unified-qr-art img{
+ display:block!important;width:100%!important;height:100%!important;
+ max-width:100%!important;max-height:100%!important;object-fit:contain!important;
+}
