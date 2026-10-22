@@ -2,11 +2,11 @@ const {test,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
-const labels=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
-const actions=['top','back','previous','search','current'];
+const labels=['回到顶部','上一网页','本站搜索','分享当前'];
+const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
 for(const width of [320,390,820,1180,1600]){
- test(`both sites share five readable footer actions at ${width}px`,async({page})=>{
+ test(`both sites share four readable footer actions at ${width}px`,async({page})=>{
   test.setTimeout(120000);await page.setViewportSize({width,height:900});let reference;
   for(const [base,route] of [[intBase,'/'],[intBase,'/about/'],...bridges.map(r=>[intBase,r]),[cnBase,'/'],[cnBase,'/resources/'],[cnBase,'/about/']]){
    await page.goto(base+route,{waitUntil:'load'});await page.waitForFunction(()=>window.__qilyDockV58CaptureBound===true);
@@ -18,7 +18,7 @@ for(const width of [320,390,820,1180,1600]){
    for(const b of g.buttons){expect(b.left).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(g.width+1);expect(Math.round(b.height),`Footer action height below 36px: ${b.height}`).toBeGreaterThanOrEqual(36);expect(b.overflow).toBeLessThanOrEqual(1);}
    const typography=g.buttons.map(({font,weight,family,radius})=>({font,weight,family,radius}));
    if(!reference)reference={gap:g.gap,typography};else expect({gap:g.gap,typography},base+route+' shared action styling').toEqual(reference);
-   if(width<=820){expect(g.buttons[2].top).toBeCloseTo(g.buttons[0].top,1);expect(g.buttons[3].top).toBeGreaterThan(g.buttons[0].top+20);}else expect(g.buttons.every(b=>Math.abs(b.top-g.buttons[0].top)<=1),JSON.stringify({base,route,g})).toBeTruthy();
+   expect(g.buttons.every(b=>Math.abs(b.top-g.buttons[0].top)<=1),JSON.stringify({base,route,g})).toBeTruthy();
    if(base===cnBase&&width<=620){
     const records=await page.locator('footer .footer-records>a').evaluateAll(nodes=>nodes.map(el=>{const r=el.getBoundingClientRect(),range=document.createRange();range.selectNodeContents(el);const c=range.getBoundingClientRect(),s=getComputedStyle(el),a=getComputedStyle(el,'::after');const spacing=[s.paddingLeft,s.paddingRight,s.borderLeftWidth,s.borderRightWidth,s.columnGap,a.width,a.marginLeft,a.marginRight].reduce((sum,n)=>sum+(parseFloat(n)||0),0);return {width:r.width,content:c.width,spacing,center:r.x+r.width/2,viewport:document.documentElement.clientWidth,overflow:el.scrollWidth-el.clientWidth};}));
     for(const r of records){expect(Math.abs(r.center-r.viewport/2),`Filing link not viewport-centered: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);expect(Math.abs(r.width-r.content-r.spacing),`Filing border width does not match content: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);expect(r.overflow,`Filing link overflows: ${JSON.stringify(r)}`).toBeLessThanOrEqual(1);}
@@ -44,6 +44,6 @@ test('China footer searches locally, shares current URL and follows real history
  await page.goto(cnBase+'/knowledge/');await page.locator('#floatDock [data-action="previous"]').click();await expect(page).toHaveURL(cnBase+'/about/');
  await page.goto(cnBase+'/archive/practice/factory-layout/');await page.locator('#floatDock [data-action="back"]').click();await expect(page).toHaveURL(cnBase+'/notes/');
 });
-test('all China generated pages receive final VI and five-action first paint',async()=>{
+test('all China generated pages receive final VI and four-action first paint',async()=>{
  let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,back,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
 });
