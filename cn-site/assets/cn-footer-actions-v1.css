@@ -494,7 +494,13 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
 }
 @media(max-width:359px){
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records{
-  flex-direction:column!important;padding-bottom:4px!important;
+  flex-direction:row!important;flex-wrap:nowrap!important;
+  justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;
+  padding:0 6px 4px!important;scrollbar-width:thin;
+  -webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;
+ }
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+  flex:0 0 auto!important;white-space:nowrap!important;
  }
 }
 
