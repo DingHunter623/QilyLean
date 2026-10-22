@@ -15,7 +15,7 @@ const cp=require('child_process');
 
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
-const DOCK_PATCH='20261022-four-actions-v1';
+const DOCK_PATCH='20261022-contentfit-four-actions-v2';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
 // Canonical cache revision for the approved underline-free international header.
@@ -106,8 +106,8 @@ function validateDock(){
     "top:['回到顶部']","back:['上一层级']","previous:['上一网页']","search:['本站搜索']","current:['分享当前']",
     'border-top:3px solid #c8a25a!important','background:#0f4b5a!important',
     'mobile-fixed-bottom-footer-navigation','v5.8-fixed-bottom-footer-navigation',
-    "setImportant(dock,'display','flex')","setImportant(dock,'flex-wrap','wrap')",
-    "setImportant(button,'flex','0 0 calc((100% - 12px)/4)'",
+    "setImportant(dock,'display','flex')","setImportant(dock,'flex-wrap','nowrap')",
+    "setImportant(button,'flex','0 0 auto'",
     'box-shadow:inset 0 0 0 2px rgba(255,227,155,.24)!important'
   ])assert(dock.includes(token),'Dock V5.8 four-action footer contract missing '+token);
   assert(!dock.includes('mobile-fixed-bottom-compact-navigation'),'retired compact mobile Dock returned');
