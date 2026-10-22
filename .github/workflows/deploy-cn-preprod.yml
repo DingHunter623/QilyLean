@@ -454,8 +454,8 @@ jobs:
                   for attempt in 1 2 3; do
                     echo "Upload and verify chunk $index (lane $lane, attempt $attempt/3)"
                     if timeout 240s scp -q "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" \
-                         -i ~/.ssh/qilylean_cn "$part" "$USER_NAME@$CN_PREPROD_HOST:$incoming" && \
-                       timeout 90s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -i ~/.ssh/qilylean_cn \
+                         -i ~/.ssh/qilylean_cn "$part" "$USER_NAME@$CN_PREPROD_HOST:$incoming" </dev/null && \
+                       timeout 90s ssh -n "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/$lane" -i ~/.ssh/qilylean_cn \
                          "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' accept --manifest '$REMOTE_MANIFEST' --index '$index' --incoming '$incoming'"; then
                       accepted=true
                       break
