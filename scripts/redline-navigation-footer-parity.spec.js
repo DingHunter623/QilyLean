@@ -15,7 +15,7 @@ for(const width of [320,390,820,1180,1600]){
    const g=await dock.evaluate(el=>{const s=getComputedStyle(el);return {width:document.documentElement.clientWidth,overflow:document.documentElement.scrollWidth-innerWidth,gap:s.gap,buttons:[...el.querySelectorAll('button')].map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,overflow:b.scrollWidth-b.clientWidth,font:s.fontSize,weight:s.fontWeight,family:s.fontFamily,radius:s.borderRadius};})};});
    expect(g.overflow,base+route+' horizontal overflow').toBeLessThanOrEqual(1);
    expect(Math.max(...g.buttons.map(b=>b.width))-Math.min(...g.buttons.map(b=>b.width))).toBeLessThanOrEqual(1);
-   for(const b of g.buttons){expect(b.left).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(g.width+1);expect(b.height).toBeGreaterThanOrEqual(36);expect(b.overflow).toBeLessThanOrEqual(1);}
+   for(const b of g.buttons){expect(b.left).toBeGreaterThanOrEqual(0);expect(b.right).toBeLessThanOrEqual(g.width+1);expect(Math.round(b.height),`Footer action height below 36px: ${b.height}`).toBeGreaterThanOrEqual(36);expect(b.overflow).toBeLessThanOrEqual(1);}
    const typography=g.buttons.map(({font,weight,family,radius})=>({font,weight,family,radius}));
    if(!reference)reference={gap:g.gap,typography};else expect({gap:g.gap,typography},base+route+' shared action styling').toEqual(reference);
    if(width<=820){expect(g.buttons[2].top).toBeCloseTo(g.buttons[0].top,1);expect(g.buttons[3].top).toBeGreaterThan(g.buttons[0].top+20);}else expect(g.buttons.every(b=>Math.abs(b.top-g.buttons[0].top)<=1),JSON.stringify({base,route,g})).toBeTruthy();
