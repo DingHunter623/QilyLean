@@ -12,7 +12,7 @@ const vm=require('vm');
 const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
-const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1';
+const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-contentfit-four-actions-v2';
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
 const NAVIGATION_INPUT_REV='20261010-user-nav-v5';
@@ -111,7 +111,7 @@ function materializeBridge(source){
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   next=next.replace(/<\/head\s*>/i,runtimeTag+'\n'+styleTag+'\n'+
     '<style id="qilyBridgeFooterOwnerV1">html:root:root:root body .cn-bridge-footer{position:static!important;padding:0!important;margin:0!important;border:0!important;min-height:0!important}html:root:root:root body:has(.cn-bridge-footer #floatDock){padding-bottom:0!important}</style>\n</head>');
-  next=next.replace(/(\/global-knowledge\/cn-bridge-shell-v1\.js\?[^"'\s<>]*)/g,url=>url.replace(/&footer=[^&"'\s<>]*/g,'')+'&footer=20261022-four-actions-v1');
+  next=next.replace(/(\/global-knowledge\/cn-bridge-shell-v1\.js\?[^"'\s<>]*)/g,url=>url.replace(/&footer=[^&"'\s<>]*/g,'')+'&footer=20261022-contentfit-four-actions-v2');
   next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
   return next;
 }
