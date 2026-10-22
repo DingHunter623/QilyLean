@@ -10,7 +10,7 @@ const cases=[
   ['daily-desktop','/qilylean/daily/2026-09-04.html',{width:1440,height:1000},false],
   ['daily-mobile','/qilylean/daily/2026-09-04.html',{width:390,height:844},true]
 ];
-const expected=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
+const expected=['回到顶部','上一网页','本站搜索','分享当前'];
 const out=path.join(process.cwd(),'dock-v58-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
@@ -59,8 +59,8 @@ for(const [name,url,viewport,mobile] of cases){
 
     expect(result.position).toBe('fixed');
     expect(result.labels).toEqual(expected);
-    expect(result.actions).toEqual(['top','back','previous','search','current']);
-    expect(result.buttons).toHaveLength(5);
+    expect(result.actions).toEqual(['top','previous','search','current']);
+    expect(result.buttons).toHaveLength(4);
     expect(result.bottomGap,'footer must touch viewport bottom').toBeLessThanOrEqual(1);
     expect(result.dockWidth/result.viewportWidth,'footer must span the layout viewport').toBeGreaterThanOrEqual(.995);
     expect(result.dockLeft,'footer must start at viewport left').toBeGreaterThanOrEqual(-1);
@@ -70,7 +70,7 @@ for(const [name,url,viewport,mobile] of cases){
     expect(result.borderTop,'China-style gold footer rule').toBeGreaterThanOrEqual(3);
     expect(result.background,'deep-teal footer fill').toMatch(/rgb\(15, 75, 90\)|rgba\(15, 75, 90/);
     expect(result.scrollWidth,'footer must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
-    expect(result.lineCounts).toEqual([1,1,1,1,1]);
+    expect(result.lineCounts).toEqual([1,1,1,1]);
 
     const expectedFont=viewport.width<=390?15:viewport.width<1440?16:18;
     for(const item of result.buttons){
@@ -95,13 +95,10 @@ for(const [name,url,viewport,mobile] of cases){
         expect(item.right,'mobile button must not clip right').toBeLessThanOrEqual(result.viewportWidth+1);
       }
       const firstRowTop=result.buttons[0].top;
-      expect(result.buttons[2].top,'three controls should occupy first row').toBeCloseTo(firstRowTop,1);
-      expect(result.buttons[3].top,'fourth control should begin centered second row').toBeGreaterThan(firstRowTop+20);
-      expect(result.buttons[3].left,'second row should be centered rather than left-packed').toBeGreaterThan(20);
-      expect(result.buttons[4].right,'second row should be centered rather than right-packed').toBeLessThan(result.viewportWidth-20);
+      for(const item of result.buttons)expect(Math.abs(item.top-firstRowTop),'all four mobile controls must share one row').toBeLessThanOrEqual(1);
     }else{
       expect(result.display).toBe('grid');
-      expect(result.gridColumns.split(' ').length).toBe(5);
+      expect(result.gridColumns.split(' ').length).toBe(4);
       expect(result.layout).toBe('fixed-bottom-footer-navigation');
       expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
       expect(Math.abs(result.spacerHeight-result.dockHeight),'desktop clearance must equal measured compact footer height').toBeLessThanOrEqual(2);
