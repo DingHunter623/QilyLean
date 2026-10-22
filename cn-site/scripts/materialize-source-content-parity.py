@@ -504,6 +504,21 @@ def destination_shell_styles(value, preserve_adapter=False):
         return '<style' + attrs + '>' + destination_css(css, 'index.html') + '</style>'
     return re.sub(r'<style\b([^>]*)>([\s\S]*?)</style>', inline, value, flags=re.I)
 
+
+def remove_duplicate_source_css_links(styles):
+    """Keep the final copy of identical mirrored styles (same cascade end-state)."""
+    seen = set()
+    result = []
+    for tag in reversed(styles):
+        matched = re.search(r'<link\\b[^>]*href=[\\x22\\x27]([^\\x22\\x27]+)', tag, re.I)
+        if matched and 'data-cn-source-css' in tag:
+            href = matched.group(1)
+            if href in seen:
+                continue
+            seen.add(href)
+        result.append(tag)
+    return list(reversed(result))
+
 class SourceStyles(HTMLParser):
     def __init__(self, value):
         super().__init__(convert_charrefs=False)
@@ -664,6 +679,12 @@ def main():
         updated = re.sub(r'<style\b[^>]*data-cn-source-css=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</style>', '', updated, flags=re.I)
         updated = re.sub(r'<script\b[^>]*data-cn-source-actions=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</script>', '', updated, flags=re.I)
         updated = destination_shell_styles(updated, preserve_adapter)
+        # A legacy 2026-10-15 CN link points to a file never published on this
+        # domain. The live server returns 404; removing this unused reference
+        # avoids a render-blocking network failure without changing pixel styles.
+        # The international site retains its own V5 stylesheet unchanged.
+        if name == 'index.html' and not (CN / 'site-visual-readability-v5.css').is_file():
+            updated = re.sub(r'<link\\b(?=[^>]*\\bid=[\\x22\\x27]qilyVisualReadabilityV5Stylesheet[\\x22\\x27])[^>]*>', '', updated, flags=re.I)
         # Preserve the destination's audited preview/print/share implementation,
         # refreshing its digest after the generator has materialized the runtime.
         runtime_tags = []
@@ -678,6 +699,7 @@ def main():
             if extension == 'css': style_tags.append('<link rel="stylesheet" data-cn-source-css="v1" href="' + url_asset + '">')
             else: runtime_tags.append('<script defer data-cn-source-runtime="v1" src="' + url_asset + '"></script>')
             STYLE_RECORDS['cn-site/assets/' + asset.name] = {'source': 'cn-site/assets/' + asset.name, 'url': url_asset, 'source_sha256': file_hash(asset), 'sha256': file_hash(asset), 'bytes': asset.stat().st_size}
+        style_tags = remove_duplicate_source_css_links(style_tags)
         updated = updated.replace('</head>', ''.join(style_tags) + '</head>', 1)
         updated = updated.replace('</body>', ''.join(runtime_tags) + '</body>', 1)
         updated = re.sub(r'\sdata-cn-source-parity=[\x22\x27][^\x22\x27]*[\x22\x27]', '', updated)
