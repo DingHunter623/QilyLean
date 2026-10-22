@@ -22,3 +22,29 @@
 .qily-about-career a{display:inline-flex;padding:8px 15px;background:#0f4b5a;border:1px solid #caa15f;border-radius:8px;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;text-decoration:none!important;font-size:16px;font-weight:750}
 @media(max-width:900px){.qily-unified-qr-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.qily-unified-qr-card:nth-child(3){grid-column:1/-1;justify-self:center;width:min(100%,390px)}}
 @media(max-width:680px){.qily-unified-qr-grid,.qily-unified-phone-grid{grid-template-columns:1fr}.qily-unified-qr-card:nth-child(3){grid-column:auto;width:100%}.qily-unified-qr-card{padding:18px 14px}.qily-unified-qr-art{width:min(100%,245px)!important}.qily-unified-email{padding:14px 16px}}
+
+/* QILY-ABOUT-QR-PARITY-20261022: identical three frames, legible codes. */
+.qily-unified-about-contact .qily-unified-qr-grid{align-items:stretch!important}
+.qily-unified-about-contact .qily-unified-qr-card{min-height:0!important}
+.qily-unified-about-contact :is(a,button).qily-unified-qr-art{
+ box-sizing:border-box!important;flex:0 0 auto!important;
+ width:min(100%,240px)!important;height:240px!important;aspect-ratio:1!important;
+ margin:0 auto!important;padding:8px!important;
+ border:8px solid #0f4b5a!important;border-radius:12px!important;
+ background:#fff!important;box-shadow:none!important;
+}
+.qily-unified-about-contact .qily-unified-qr-art img{
+ width:100%!important;height:100%!important;object-fit:contain!important;
+ image-rendering:auto!important;max-width:none!important;
+}
+.qily-unified-about-contact .qily-unified-qr-card:nth-child(3) .qily-unified-qr-art{
+ border-color:#0f4b5a!important;
+}
+.qily-unified-about-contact .qily-unified-qr-card:nth-child(3) .qily-unified-qr-art img{
+ width:83%!important;height:83%!important;
+}
+@media(max-width:680px){
+ .qily-unified-about-contact :is(a,button).qily-unified-qr-art{
+  width:min(100%,240px)!important;height:auto!important;aspect-ratio:1!important
+ }
+}

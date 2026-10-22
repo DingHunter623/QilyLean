@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* China footer: the canonical shared five actions above original filings.
+/* China footer: the canonical shared four actions above original filings.
  * Run after CN page generators and before the final source-content parity pass.
  */
 const fs=require('fs');
@@ -10,9 +10,9 @@ const vm=require('vm');
 const crypto=require('crypto');
 const ROOT=path.resolve(__dirname,'..');
 const CN=path.join(ROOT,'cn-site');
-const VERSION='20261021-five-actions-v1';
-const ACTIONS=['top','back','previous','search','current'];
-const LABELS=['回到顶部','上一层级','上一网页','本站搜索','分享当前'];
+const VERSION='20261022-four-actions-v1';
+const ACTIONS=['top','previous','search','current'];
+const LABELS=['回到顶部','上一网页','本站搜索','分享当前'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
 const JS_SRC='/assets/cn-footer-actions-v1.js?v='+VERSION;
 const runtime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
@@ -110,6 +110,56 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
 @media(max-width:620px){
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records{flex-direction:column!important;align-items:center!important;position:relative!important;left:calc(50vw - 50%)!important}
  html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{width:fit-content!important;max-width:100%!important;box-sizing:border-box!important;font-size:13px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+}
+
+/* QILY-FOUR-ACTIONS-20261022: desktop 4 actions + filings, mobile single-row controls. */
+html:root:root:root:root:root:root:root:root:root body footer.footer .footer-inner{
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ width:min(1180px,calc(100% - 24px))!important;max-width:1180px!important;
+ margin-inline:auto!important;gap:6px!important;align-items:center!important;
+}
+html:root:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+ flex:1 1 auto!important;min-width:0!important;width:auto!important;
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ padding:5px 0!important;gap:5px!important;position:static!important;
+}
+html:root:root:root:root:root:root:root:root:root body footer.footer .footer-records{
+ display:flex!important;flex:0 1 auto!important;width:auto!important;
+ flex-flow:row nowrap!important;align-items:center!important;gap:5px!important;
+ padding:0!important;margin:0!important;min-width:0!important;
+}
+html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+ white-space:nowrap!important;overflow-wrap:normal!important;
+ font-size:clamp(11px,1vw,14px)!important;font-weight:500!important;
+ padding:5px 5px!important;min-height:36px!important;
+}
+@media(max-width:820px){
+ html:root:root:root:root:root:root:root:root:root body footer.footer .footer-inner{
+  flex-direction:column!important;gap:2px!important;width:100%!important;
+ }
+ html:root:root:root:root:root:root:root:root:root body footer.footer #floatDock.qily-page-action-nav{
+  width:100%!important;flex:0 0 auto!important;display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:4px!important;padding:4px 6px!important;
+ }
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records{
+  display:flex!important;flex-flow:row nowrap!important;justify-content:center!important;
+  width:100%!important;left:auto!important;position:static!important;
+  gap:4px!important;padding:0 3px 5px!important;
+ }
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>a{
+  width:auto!important;max-width:none!important;white-space:nowrap!important;
+  font-size:clamp(10px,2.4vw,13px)!important;padding:3px!important;
+  min-height:30px!important;
+ }
+ html:root:root:root:root:root:root:root:root body footer.footer .police-record img{
+  width:14px!important;height:16px!important;flex:0 0 14px!important;
+ }
+}
+@media(max-width:359px){
+ html:root:root:root:root:root:root:root:root body footer.footer .footer-records{
+  flex-direction:column!important;padding-bottom:4px!important;
+ }
 }
 `;
 
