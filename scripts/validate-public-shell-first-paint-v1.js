@@ -18,7 +18,7 @@ let eligible=0,cacheCovered=0;
 for(const relative of files){
   const source=read(relative);
   if(!isEligible(relative,source)){
-    if(source.includes('<footer class="cn-bridge-footer">')){assert(source.includes('data-qily-stable-order="top,back,previous,search,current"'),`${relative}: shared five-action footer missing`);}else assert(!source.includes('data-qily-first-paint-dock="v1"'),`${relative}: independent shell received international menu`);
+    if(source.includes('<footer class="cn-bridge-footer">')){assert(source.includes('data-qily-stable-order="top,previous,search,current"'),`${relative}: shared four-action footer missing`);}else assert(!source.includes('data-qily-first-paint-dock="v1"'),`${relative}: independent shell received international menu`);
     continue;
   }
   eligible++;
