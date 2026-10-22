@@ -24,7 +24,8 @@ const END='/* QILY-CN-SHARED-SEVEN-ACTIONS-V2:END */';
 const regionCss=`
 :root{--qily-footer-record-h:46px}
 @media(max-width:760px){:root{--qily-footer-record-h:84px}}
-html:root:root:root:root:root:root{scrollbar-gutter:stable!important}
+/* Match international fixed-dock viewport width: do not reserve an extra 15px gutter. */
+html:root:root:root:root:root:root{scrollbar-gutter:auto!important}
 html:root:root:root:root:root:root body footer.footer{
   padding:0 0 env(safe-area-inset-bottom)!important;
   background:#0f4b5a!important;border-top:3px solid #c8a25a!important;
