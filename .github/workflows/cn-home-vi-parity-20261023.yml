@@ -27,16 +27,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Rebuild canonical public footer and China sitewide visual owner
+      - name: Materialize the entire audited noncommercial China mirror
         run: |
           set -euo pipefail
-          node scripts/materialize-cn-footer-actions-v2.js
-          python3 cn-site/scripts/enforce-fullsite-axis.py
-      - name: Re-materialize mirrored noncommercial content from international source
-        run: |
-          set -euo pipefail
-          python3 cn-site/scripts/materialize-source-content-parity.py
-          python3 cn-site/scripts/validate-source-content-parity.py
+          # Use production's canonical ordering so the public archive/media
+          # dependency tree is generated before source-main parity.
+          bash cn-site/scripts/materialize-practice-assets.sh
       - name: Validate shared China shell and foreign filing isolation
         run: |
           node scripts/validate-sitewide-vi-unification.js
