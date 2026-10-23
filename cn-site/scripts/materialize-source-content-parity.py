@@ -214,6 +214,12 @@ def render(node, source):
             attrs.pop('target', None); attrs.pop('rel', None)
             if href.startswith(('http:', 'https:')):
                 attrs.update(target='_blank', rel='noopener noreferrer')
+        # The international primary action is a commercial consultation link,
+        # intentionally excluded on China's filed personal knowledge site.
+        # Preserve the public case route as its single noncommercial primary
+        # action, without recreating any diagnosis/booking sales CTA.
+        if source == 'index.html' and re.sub(r'\\s+', '', node.text()) == '查看代表案例' and attrs.get('href') == '/notes/':
+            attrs['class'] = ' '.join(dict.fromkeys((attrs.get('class', '') + ' primary').split()))
         if attrs.get('href', '').startswith('/notes/#practice-'):
             return ''
     if tag == 'button':
