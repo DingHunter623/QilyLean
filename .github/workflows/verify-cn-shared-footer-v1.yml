@@ -1,0 +1,55 @@
+name: Verify CN shared footer against international VI
+on:
+  pull_request:
+    paths:
+      - 'cn-site/**'
+      - 'scripts/redline-navigation-footer-parity.spec.js'
+      - '.github/workflows/verify-cn-shared-footer-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  browser-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check shared frontend source contracts
+        run: |
+          set -euo pipefail
+          node --check cn-site/assets/cn-footer-actions-v1.js
+          node --check scripts/materialize-cn-footer-actions-v2.js
+          node scripts/materialize-cn-footer-actions-v2.js
+          echo 'Generated footer file differences:'
+          git diff --name-only -- cn-site
+          node scripts/materialize-cn-footer-actions-v2.js --check
+          node scripts/validate-sitewide-vi-unification.js
+      - name: Install Chromium for visual geometry acceptance
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve the actual international and Chinese static site trees
+        run: |
+          python3 -m http.server 4173 --directory . >/tmp/qily-intl-preview.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-preview.log 2>&1 &
+          sleep 2
+          curl -fsS http://127.0.0.1:4173/ >/dev/null
+          curl -fsS http://127.0.0.1:4174/ >/dev/null
+      - name: Enforce China 1588px desktop axis with no clipped filings
+        env:
+          QILY_INT_BASE: http://127.0.0.1:4173
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: |
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js \
+            --grep 'China shared footer has no desktop axis overflow at 1588' \
+            --reporter=line --workers=1 --trace=on
+      - name: Save browser evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-footer-1588-browser-failure
+          path: test-results/
+          retention-days: 7

@@ -250,3 +250,35 @@ test('China mobile filing links remain borderless while keeping their original d
     }
   }
 });
+
+test('China shared footer has no desktop axis overflow at 1588 on every representative route',async({page})=>{
+ test.setTimeout(240000);
+ const width=1588,axisRight=(width+1180)/2;
+ await page.setViewportSize({width,height:900});
+ await page.goto(intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+ await expect(page.locator('#floatDock button[data-action="top"]')).toBeVisible();
+ const internationalLeft=(await page.locator('#floatDock button[data-action="top"]').boundingBox()).x;
+ for(const route of ['/','/lean/','/notes/','/trust/','/knowledge/','/resources/','/about/','/briefs/']){
+   await page.goto(cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
+   await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
+   await page.evaluate(()=>document.fonts.ready);
+   const g=await page.evaluate(()=>{
+     const footer=document.querySelector('footer.footer');
+     const dock=footer&&footer.querySelector('#floatDock');
+     const rec=footer&&footer.querySelector('.footer-records');
+     const css=document.querySelector('#qilyCnFooterActionsV1Stylesheet');
+     const items=[...(dock?dock.querySelectorAll('button[data-action]'):[]),...(rec?rec.querySelectorAll(':scope>a'):[])];
+     const box=el=>{const r=el.getBoundingClientRect();const s=getComputedStyle(el);return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,border:s.borderTopWidth,background:s.backgroundColor};};
+     return {width:innerWidth,scroll:document.documentElement.scrollWidth,css:css?new URL(css.href).pathname:null,
+       labels:items.map(x=>x.textContent.trim()),items:items.map(box)};
+   });
+   expect(g.css,route+' must use single sitewide CSS').toBe('/assets/cn-footer-actions-v1.css');
+   expect(g.items.length,route+' must have four actions and two filings').toBe(6);
+   expect(g.scroll,route+' horizontal document overflow').toBeLessThanOrEqual(width+1);
+   expect(Math.abs(g.items[0].left-internationalLeft),route+' must match international first-button axis').toBeLessThanOrEqual(3);
+   expect(g.items[5].right,route+' filing overflow beyond international 1180px content axis: '+JSON.stringify(g)).toBeLessThanOrEqual(axisRight+3);
+   for(const item of g.items){expect(item.right,route+' element outside viewport').toBeLessThanOrEqual(width+1);expect(item.left).toBeGreaterThanOrEqual(-1);}
+   for(let i=1;i<g.items.length;i++)expect(g.items[i].left-g.items[i-1].right,route+' items collide: '+JSON.stringify(g)).toBeGreaterThanOrEqual(3);
+   for(const link of g.items.slice(-2)){expect(link.border,route+' filing button border').toBe('0px');expect(link.background,route+' filing background').toBe('rgba(0, 0, 0, 0)');}
+ }
+});

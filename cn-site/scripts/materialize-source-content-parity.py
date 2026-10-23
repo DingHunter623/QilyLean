@@ -492,6 +492,11 @@ def destination_shell_styles(value, preserve_adapter=False):
         saved = re.search(r'\bdata-cn-destination-origin=[\x22\x27]([^\x22\x27]+)', tag)
         href = re.search(r'\bhref=[\x22\x27]([^\x22\x27]+)', tag)
         origin = html.unescape(saved.group(1) if saved else href.group(1)) if saved or href else ''
+        # Sitewide China footer is shared shell CSS, not a cloned page stylesheet.
+        if '/assets/cn-footer-actions-v1.css' in origin:
+            tag = re.sub(r'\\bhref=([\\x22\\x27])[^\\x22\\x27]+[\\x22\\x27]',
+                         'href="/assets/cn-footer-actions-v1.css?v=20261023-cn-public-footer-source-v1"', tag, count=1)
+            return re.sub(r'\\s+data-cn-destination-origin=[\\x22\\x27][^\\x22\\x27]+[\\x22\\x27]', '', tag)
         mapped = copy_destination_css(origin)
         if not mapped: return tag
         tag = re.sub(r'\bhref=([\x22\x27])[^\x22\x27]+[\x22\x27]', 'href="' + html.escape(mapped, quote=True) + '"', tag, count=1)
