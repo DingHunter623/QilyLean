@@ -138,6 +138,47 @@ def operating_axis_steps(value):
     return steps
 
 
+
+def verify_noncommercial_module_order(source_value, target_value, source_name, url):
+    """Original noncommercial sections must retain their exact source order.
+
+    Commercial sections can be removed, but source modules cannot be reordered,
+    dropped or replaced with unrelated China-only content.
+    """
+    if source_name not in {
+        'index.html', 'experience/index.html', 'capabilities/index.html',
+        'improvements/index.html', 'lean-production/index.html',
+        'projects/index.html', 'trust/index.html', 'knowledge/index.html',
+    }:
+        return
+    match = re.search(r'<main\\b[^>]*>([\\s\\S]*?)</main\\s*>', source_value, re.I)
+    fragment = match.group(1) if match else parity.mirror.extract_fragment(source_value, source_name)
+    expected = parity.render(parity.Tree(fragment).root, source_name)
+    expected = parity.preserve_generated_page_heading(expected, target_value)
+
+    def signatures(value):
+        rows = []
+        for opening in re.findall(r'<section\\b[^>]*>', value, re.I):
+            identifier = re.search(r'\\bid=["\\x27]([^"\\x27]+)', opening, re.I)
+            classes = re.search(r'\\bclass=["\\x27]([^"\\x27]+)', opening, re.I)
+            rows.append((identifier.group(1) if identifier else '',
+                         ' '.join(classes.group(1).split()) if classes else ''))
+        return rows
+
+    source_modules = signatures(expected)
+    target_modules = signatures(parity.main_markup(target_value))
+    require(source_modules == target_modules,
+            'CN noncommercial module order differs from international source: ' + url
+            + ' source=' + repr(source_modules[:15]) + ' target=' + repr(target_modules[:15]))
+    if source_name == 'index.html':
+        main = parity.main_markup(target_value)
+        require(main.count('目视化设计与交付') >= 1, 'China home lost the third public service capsule')
+        require('href="/notes/"' in main and '查看代表案例' in main,
+                'China home lost the localized public case action')
+        require('免费60分钟沟通诊断' not in main and '/cooperation/#diagnosis' not in main,
+                'China personal site must not restore the international commercial booking CTA')
+
+
 def verify_operating_axis(source_value, target_value, url):
     source_steps = operating_axis_steps(source_value)
     if source_steps is None:
@@ -297,6 +338,7 @@ def main():
         local_value = local_path(row['url']).read_text()
         verify_semantics(local_value, row)
         verify_operating_axis(source.read_text(), local_value, row['url'])
+        verify_noncommercial_module_order(source.read_text(), local_value, row['source'], row['url'])
     run_parallel(pages, verify_local_page, args.workers)
     for key, rows in [('style', styles), ('media', media), ('destination', destination)]:
         run_parallel(rows, lambda row: verify_asset_local(row, key), args.workers)
