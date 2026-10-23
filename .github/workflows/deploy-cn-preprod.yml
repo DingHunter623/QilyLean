@@ -9,6 +9,7 @@ on:
       - '.github/workflows/deploy-cn-preprod.yml'
       - 'scripts/cn-release-transfer.py'
       - 'scripts/test-cn-release-transfer.py'
+      - 'scripts/test-cn-source-content-parity.py'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -42,6 +43,8 @@ on:
       - 'scripts/materialize-about-nav-footer-v1.js'
       - '.github/workflows/qily-about-contact-career-20261021.yml'
       - 'index.html'
+      - 'site-home-conversion-v1.js'
+      - 'site-home-owner-profile-v1.js'
       - 'experience/**'
       - 'capabilities/**'
       - 'improvements/**'
@@ -99,7 +102,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test private artifact transfer, deterministic archive and resumable integrity
-        run: python3 scripts/test-cn-release-transfer.py
+        run: |
+          python3 scripts/test-cn-release-transfer.py
+          python3 scripts/test-cn-source-content-parity.py
 
   inspect-translation:
     if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only
@@ -850,7 +855,7 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/redline-navigation-footer-parity.spec.js --reporter=line --workers=1 --trace=on
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js --reporter=line --workers=1 --trace=on
 
       - name: Upload production VI evidence
         if: always() && steps.source-parity.outputs.enabled == 'true'

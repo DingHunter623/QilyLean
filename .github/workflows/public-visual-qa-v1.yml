@@ -122,7 +122,7 @@ jobs:
             );
             await verifySemanticLabel(
               `${process.env.QA_CN_BASE}/`,
-              '.hero .eyebrow',
+              '.qily-home-conversion-hero__kicker',
               'china-home-hero-label'
             );
 

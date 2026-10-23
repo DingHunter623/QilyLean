@@ -2,9 +2,22 @@ name: CN public content & international VI acceptance
 on:
   pull_request:
     paths:
+      - 'index.html'
+      - 'site-home-*.js'
+      - 'capabilities/**'
+      - 'improvements/**'
+      - 'lean-production/**'
+      - 'projects/**'
+      - 'trust/**'
+      - 'knowledge/**'
+      - 'links/**'
+      - 'qilylean/**'
+      - '*.css'
+      - 'styles/**'
       - 'cn-site/scripts/**'
       - 'cn-site/assets/cn-sitewide-visual-parity-v1.css'
       - 'scripts/cn-home-visual-parity-20261023.spec.js'
+      - 'scripts/test-cn-source-content-parity.py'
       - '.github/workflows/cn-home-vi-parity-20261023.yml'
   workflow_dispatch:
 permissions:
@@ -21,6 +34,7 @@ jobs:
       - name: Rebuild China site using the production content pipeline
         run: |
           set -euo pipefail
+          python3 scripts/test-cn-source-content-parity.py
           bash cn-site/scripts/materialize-practice-assets.sh
           node scripts/validate-sitewide-vi-unification.js
       - name: Prepare local cross-domain browser comparison

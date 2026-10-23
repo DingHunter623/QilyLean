@@ -1,8 +1,33 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('fs');
+const path=require('path');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
-const hero='.qily-home-conversion-hero';
+const parity=JSON.parse(fs.readFileSync(path.join(__dirname,'../cn-site/archive/source-content-parity.json'),'utf8'));
+const publicModules=[
+ {source:'index.html',selectors:['#qily-home-industry-scenes','#qily-home-representative-cases','#qily-home-six-step-method','#qily-home-capability-building','#qily-home-standard-deliverables','#qily-evidence-value','#qily-knowledge-assets','#qily-trust-center']},
+ {source:'capabilities/index.html',selectors:['#flow','#data','#equipment','#quality','#layout','#management','#digital','#mechanism','#project-evidence','#digital-tools']},
+ {source:'improvements/index.html',selectors:['#paper-list']},
+ {source:'lean-production/index.html',selectors:['#method','#topics','section.section.dark']},
+ {source:'projects/index.html',selectors:['#project-reading-rule','#public-verification-structure']},
+ {source:'trust/index.html',selectors:['#data','#evidence','#evidence-levels','#publication','#ai','#journey']},
+ {source:'knowledge/index.html',selectors:['#knowledge-stats','#ai-manufacturing-knowledge','#terminology','#daily','#tools','#lean-series','#documents']},
+ {source:'links/index.html',selectors:['#electricalRecommendations']}
+].map(contract=>{
+ const record=parity.pages.find(item=>item.source===contract.source);
+ if(!record)throw new Error('Public visual contract has no route ledger entry: '+contract.source);
+ return {...contract,url:record.url,intUrl:contract.source==='index.html'?'/':'/'+contract.source.replace(/index\.html$/,'')};
+});
+async function visit(page,url,{home=false,expand=false}={}){
+ await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
+ await expect(page.locator('main')).toBeVisible();
+ if(home)await page.waitForFunction(()=>document.body?.dataset.qilyHomeConversion==='v1'||document.querySelector('main[data-cn-source-content="index.html"] .qily-home-conversion-hero'));
+ await page.evaluate(async({expand})=>{
+   await document.fonts.ready;
+   if(expand)document.querySelectorAll('main details').forEach(details=>{details.open=true;});
+   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+ },{expand});
+}
 async function snapshot(page){
  return page.evaluate(()=>{
    const hero=document.querySelector('.qily-home-conversion-hero');
@@ -29,29 +54,26 @@ test('China homepage desktop hero follows international typography and 3-chip ro
  fs.mkdirSync('test-results',{recursive:true});
  for(const width of [1440,1588,1920]){
    await page.setViewportSize({width,height:960});
-   await page.goto(intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
-   await page.waitForFunction(()=>document.body?.dataset.qilyHomeConversion==='v1');
-   await page.evaluate(()=>document.fonts.ready);
+   await visit(page,intBase+'/',{home:true});
    const intl=await snapshot(page);
-   await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
-   await page.evaluate(()=>document.fonts.ready);
+   await visit(page,cnBase+'/',{home:true});
    const cn=await snapshot(page);
    await page.screenshot({path:'test-results/cn-home-'+width+'.png',fullPage:false});
    expect(cn.width).toBe(width);
    expect(cn.scrollWidth,'no China viewport overflow '+width).toBeLessThanOrEqual(width+1);
    for(const part of ['kicker','h1','lead']){
      expect(cn[part].text,'content parity '+part).toBe(intl[part].text);
-     expect(cn[part].type.size,'type size '+part).toBe(intl[part].type.size);
-     expect(cn[part].type.color,'type color '+part).toBe(intl[part].type.color);
+     expect(cn[part].type,'shared font family, size, weight, line height and color: '+part).toEqual(intl[part].type);
    }
    expect(cn.chips.map(c=>c.text)).toEqual(intl.chips.map(c=>c.text));
    expect(cn.chips).toHaveLength(3);
    expect(Math.max(...cn.chips.map(c=>c.rect.y))-Math.min(...cn.chips.map(c=>c.rect.y)),'desktop business capsules must share one row').toBeLessThanOrEqual(2);
    expect(cn.chips[2].rect.right,'third capsule must not overlap project visual').toBeLessThanOrEqual(cn.media.x-5);
    for(let i=0;i<3;i++){
-     expect(cn.chips[i].type.size).toBe(intl.chips[i].type.size);
+     expect(cn.chips[i].type).toEqual(intl.chips[i].type);
      expect(cn.chips[i].background).toBe(intl.chips[i].background);
    }
+   expect(await page.locator('.qily-home-conversion-actions>a').count()).toBe(1);
    expect(cn.action.text).toBe('查看代表案例');
    expect(cn.action.href).toBe('/notes/');
    expect(cn.action.background).toBe(intl.action.background);
@@ -64,8 +86,7 @@ test('China responsive home and public modules keep four-button footer and filin
  fs.mkdirSync('test-results',{recursive:true});
  for(const width of [390,430,820]){
    await page.setViewportSize({width,height:850});
-   await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
-   await page.evaluate(()=>document.fonts.ready);
+   await visit(page,cnBase+'/',{home:true});
    const cn=await snapshot(page);
    await page.screenshot({path:'test-results/cn-mobile-'+width+'.png',fullPage:false});
    expect(cn.scrollWidth,'mobile horizontal overflow').toBeLessThanOrEqual(width+1);
@@ -78,5 +99,112 @@ test('China responsive home and public modules keep four-button footer and filin
    expect(await page.locator('footer.footer #floatDock button[data-action]').count(),route).toBe(4);
    expect(await page.locator('footer.footer .footer-records>a').count(),route).toBe(2);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth),route).toBeLessThanOrEqual(1589);
+ }
+});
+
+// Inspect settled public modules, including the international homepage runtime.
+// Compare the same retained IDs/text rather than whole-page text: commercial
+// paragraphs and CN-owned navigation, translation and filings are intentional
+// differences. Opening details on both sites exposes the shared extended axis.
+async function moduleSnapshot(page,selectors){
+ return page.evaluate(selectors=>{
+   const main=document.querySelector('main');
+   const normalize=value=>String(value||'').replace(/\s+/g,' ').trim();
+   const rect=element=>{const r=element.getBoundingClientRect();return {x:r.x,width:r.width,height:r.height,right:r.right};};
+   const typography=element=>{
+     const s=getComputedStyle(element);
+     return {fontFamily:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,color:s.color,letterSpacing:s.letterSpacing};
+   };
+   const textSnapshot=element=>({text:normalize(element.textContent),rect:rect(element),type:typography(element)});
+   const elements=selectors.map(selector=>({selector,element:main.querySelector(selector)}));
+   const order=elements.filter(item=>item.element).sort((a,b)=>a.element.compareDocumentPosition(b.element)&Node.DOCUMENT_POSITION_FOLLOWING?-1:1).map(item=>item.selector);
+   return {
+     width:innerWidth,scrollWidth:document.documentElement.scrollWidth,order,
+     hero:main.querySelector('h1')?textSnapshot(main.querySelector('h1')):null,
+     modules:elements.map(({selector,element})=>{
+       if(!element)return {selector,missing:true};
+       const inner=element.querySelector(':scope > :is(.inner,.module-inner,.hero-inner,.qily-home-conversion-inner,.qily-asset-inner,.qily-ia-inner)')||element;
+       return {selector,inner:rect(inner),
+         headings:[...element.querySelectorAll('h2,h3')].map(textSnapshot),
+         paragraphs:[...element.querySelectorAll('p')].map(textSnapshot).filter(item=>item.text),
+         background:getComputedStyle(element).backgroundColor};
+     })
+   };
+ },selectors);
+}
+function expectHorizontalParity(actual,expected,label){
+ for(const key of ['x','width'])expect(Math.abs(actual[key]-expected[key]),label+' '+key).toBeLessThanOrEqual(2);
+}
+for(const contract of publicModules){
+ for(const width of [1440,390]){
+   test('Public module content, order and VI: '+contract.url+' at '+width,async({page})=>{
+     test.setTimeout(120000);
+     await page.setViewportSize({width,height:900});
+     await visit(page,intBase+contract.intUrl,{home:contract.source==='index.html',expand:true});
+     const intl=await moduleSnapshot(page,contract.selectors);
+     await visit(page,cnBase+contract.url,{home:contract.source==='index.html',expand:true});
+     const cn=await moduleSnapshot(page,contract.selectors);
+     expect(cn.scrollWidth,contract.url+' viewport containment').toBeLessThanOrEqual(width+1);
+     expect(cn.order,'retained public module order').toEqual(intl.order);
+     expect(cn.order,'all contracted public modules must be present').toHaveLength(contract.selectors.length);
+     expect(cn.hero,'public page title').not.toBeNull();
+     expect(cn.hero.text,'public page title content').toBe(intl.hero.text);
+     expect(cn.hero.type,'public page title VI').toEqual(intl.hero.type);
+     expectHorizontalParity(cn.hero.rect,intl.hero.rect,contract.url+' title bounds');
+     for(let index=0;index<contract.selectors.length;index++){
+       const actual=cn.modules[index],expected=intl.modules[index],label=contract.url+' '+actual.selector;
+       expect(actual.missing,label+' present on China').not.toBe(true);
+       expect(expected.missing,label+' present on international').not.toBe(true);
+       expectHorizontalParity(actual.inner,expected.inner,label+' content bounds');
+       expect(actual.inner.width,label+' 1180px content maximum').toBeLessThanOrEqual(1182);
+       expect(actual.inner.x,label+' left containment').toBeGreaterThanOrEqual(-1);
+       expect(actual.inner.right,label+' right containment').toBeLessThanOrEqual(width+1);
+       expect(actual.background,label+' section background').toBe(expected.background);
+       expect(actual.headings.length,label+' public heading coverage').toBeGreaterThan(0);
+       // h3 statistics may be domain-specific live totals; the shared h2 and
+       // nonnumeric public card headings must remain in the source sequence.
+       const stableHeadings=actual.headings.filter(item=>!/^\d[\d\s,.]*\s*(?:项|篇|大模块)$/.test(item.text));
+       let headingIndex=-1;
+       for(const heading of stableHeadings){
+         const next=expected.headings.findIndex((item,i)=>i>headingIndex&&item.text===heading.text);
+         expect(next,label+' retained heading: '+heading.text).toBeGreaterThan(headingIndex);
+         const reference=expected.headings[next];
+         expect(heading.type,label+' heading VI: '+heading.text).toEqual(reference.type);
+         expectHorizontalParity(heading.rect,reference.rect,label+' heading bounds: '+heading.text);
+         headingIndex=next;
+       }
+       const body=actual.paragraphs.find(item=>expected.paragraphs.some(reference=>reference.text===item.text));
+       if(expected.paragraphs.length){
+         expect(body,label+' shared public body content').toBeTruthy();
+         const reference=expected.paragraphs.find(item=>item.text===body.text);
+         expect(body.type,label+' body VI').toEqual(reference.type);
+         expectHorizontalParity(body.rect,reference.rect,label+' body bounds');
+       }
+     }
+   });
+ }
+}
+test('All six public operating-axis topics retain the international 6/3/2 grid',async({page})=>{
+ test.setTimeout(180000);
+ const contract=publicModules.find(item=>item.source==='capabilities/index.html');
+ for(const [width,columns] of [[1440,6],[820,3],[390,2]]){
+   await page.setViewportSize({width,height:900});
+   const readAxis=()=>page.locator('main .qily-system-axis__steps').evaluate(element=>{
+     const style=getComputedStyle(element),rect=element.getBoundingClientRect();
+     return {columns:style.gridTemplateColumns.split(/\s+/).length,gap:style.gap,
+       x:rect.x,width:rect.width,right:rect.right,
+       topics:[...element.children].map(child=>({text:child.textContent.replace(/\s+/g,' ').trim(),width:child.getBoundingClientRect().width}))};
+   });
+   await visit(page,intBase+contract.intUrl);
+   const intl=await readAxis();
+   await visit(page,cnBase+contract.url);
+   const cn=await readAxis();
+   expect(cn.topics.map(item=>item.text),'all six engineering topics at '+width).toEqual(intl.topics.map(item=>item.text));
+   expect(cn.topics).toHaveLength(6);
+   expect(cn.columns,'international responsive grid at '+width).toBe(columns);
+   expect(cn.columns).toBe(intl.columns);
+   expect(cn.gap).toBe(intl.gap);
+   expectHorizontalParity(cn,intl,'operating-axis '+width);
+   expect(cn.right).toBeLessThanOrEqual(width+1);
  }
 });

@@ -1,6 +1,13 @@
 name: Validate international-CN header parity
 
 on:
+  pull_request:
+    paths:
+      - 'scripts/header-shell-parity.spec.js'
+      - 'cn-site/scripts/**'
+      - 'cn-site/assets/qilylean-vi-v2.css'
+      - 'cn-site/assets/cn-sitewide-visual-parity-v1.css'
+      - '.github/workflows/validate-header-parity.yml'
   push:
     branches: [main]
     paths:
@@ -19,6 +26,11 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Materialize China production bundle
+        run: bash cn-site/scripts/materialize-practice-assets.sh
       - name: Install Chromium
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.55.0

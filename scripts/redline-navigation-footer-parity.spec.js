@@ -49,7 +49,29 @@ test('China footer searches locally, shares current URL and follows real history
  await page.goto(cnBase+'/archive/practice/factory-layout/',{waitUntil:'domcontentloaded',timeout:45000});await expect(page.locator('#floatDock [data-action="current"]')).toBeVisible({timeout:15000});await expect(page.locator('#floatDock [data-action="back"]')).toHaveCount(0);
 });
 test('all China generated pages receive final VI and four-action first paint',async()=>{
- let checked=0;function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const s=fs.readFileSync(f,'utf8');if(!s.includes('/assets/site.css'))continue;checked++;expect(s).toContain('cn-sitewide-visual-parity-v1.css?v=20261021-sitewide-vi-v2');expect(s).toContain('data-qily-footer-contract="top,previous,search,current"');}}}walk(path.join(process.cwd(),'cn-site'));expect(checked).toBeGreaterThanOrEqual(28);
+ // The generator owns the cache version; a stale test literal must not reject
+ // pages that correctly receive its current stylesheet during materialization.
+ const authority=fs.readFileSync(path.join(process.cwd(),'cn-site/scripts/enforce-fullsite-axis.py'),'utf8').match(/^VI_HREF\s*=\s*"([^"]+)"/m);
+ expect(authority,'canonical China VI stylesheet must be declared').not.toBeNull();
+ const expectedHref=authority[1];
+ let checked=0;
+ function walk(dir){
+  for(const e of fs.readdirSync(dir,{withFileTypes:true})){
+   const f=path.join(dir,e.name);
+   if(e.isDirectory())walk(f);
+   else if(e.name.endsWith('.html')){
+    const s=fs.readFileSync(f,'utf8');
+    if(!s.includes('/assets/site.css'))continue;
+    checked++;
+    const styles=s.match(/<link\b[^>]*\bid=["']qilyCnSitewideVisualParityV1["'][^>]*>/g)||[];
+    expect(styles,f+' canonical China VI stylesheet count').toHaveLength(1);
+    expect(styles[0],f+' canonical China VI stylesheet version').toContain('href="'+expectedHref+'"');
+    expect(s,f+' four-action first-paint footer').toContain('data-qily-footer-contract="top,previous,search,current"');
+   }
+  }
+ }
+ walk(path.join(process.cwd(),'cn-site'));
+ expect(checked).toBeGreaterThanOrEqual(28);
 });
 
 
