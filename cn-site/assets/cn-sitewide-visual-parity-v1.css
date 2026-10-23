@@ -85,3 +85,27 @@ html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source
  width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;min-width:0!important;margin-inline:auto!important;
  transform:none!important;zoom:1!important;
 }
+
+
+/* QILY-CN-HOME-HERO-REFERENCE-PARITY-20261023
+ * International's three informational capsules remain a single row on wide
+ * screens. The commercial diagnosis CTA is filtered on .cn: keep the public
+ * representative-case link in the same action tier.
+ * All selectors are limited to the CN cloned homepage; no global VI overrides.
+ */
+@media(min-width:1180px){
+  html:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__chips{
+    flex-wrap:nowrap!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  html:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__chips>span{
+    flex:0 0 auto!important;
+    white-space:nowrap!important;
+  }
+}
+@media(max-width:1179px){
+  html:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__chips{
+    flex-wrap:wrap!important;
+  }
+}
