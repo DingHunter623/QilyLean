@@ -228,3 +228,25 @@ test('China 1588px footer stays consistent across public modules',async({page})=
     }
   }
 });
+
+
+test('China mobile filing links remain borderless while keeping their original destinations',async({page})=>{
+  test.setTimeout(90000);
+  for(const width of [375,390,430,768]){
+    await page.setViewportSize({width,height:850});
+    await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
+    const geometry=await page.locator('footer.footer .footer-records>a').evaluateAll(els=>els.map(el=>{
+      const s=getComputedStyle(el),r=el.getBoundingClientRect();
+      return {border:s.borderTopWidth,background:s.backgroundColor,href:el.getAttribute('href'),left:r.left,right:r.right};
+    }));
+    expect(geometry[0].href).toBe('https://beian.miit.gov.cn/');
+    expect(geometry[1].href).toContain('beian.mps.gov.cn/');
+    for(const item of geometry){
+      expect(item.border).toBe('0px');
+      expect(item.background).toBe('rgba(0, 0, 0, 0)');
+      expect(item.left).toBeGreaterThanOrEqual(-1);
+      expect(item.right).toBeLessThanOrEqual(width+1);
+    }
+  }
+});
