@@ -237,6 +237,10 @@ for(const rel of cnPages){
   }
   const title=(html.match(/<title>([^<]*)<\/title>/i)||[])[1]||'';
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
+  // Single-source footer contract: no page-specific generated/destination-shell clones.
+  assert(html.includes('id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261023-cn-public-footer-source-v1"'), rel+' must load the canonical public footer stylesheet.');
+  assert(html.includes('src="/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1"'), rel+' must load the canonical public footer behavior.');
+  assert(!html.includes('destination-shell/assets/cn-footer-actions-v1.css'), rel+' must not load forked footer CSS.');
   const footerBlock=(html.match(/<footer class="footer"(?: data-qily-footer-filing="none")?>[\s\S]*?<\/footer>/)||[])[0]||'';
   assert(footerBlock, rel+' must keep the shared China footer component.');
   assert(!footerBlock.includes('class="footer-home"'), rel+' retired footer site label must be removed.');
