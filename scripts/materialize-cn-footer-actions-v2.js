@@ -231,6 +231,33 @@ html:root:root:root:root:root:root:root:root body footer.footer .footer-records>
  }
 }
 
+
+
+/* QILY-CN-FOOTER-GEOMETRY-FINAL-20261023 | China only: public desktop axis & plain filing links */
+@media(min-width:821px){
+ html:root:root:root:root:root:root:root:root:root:root:root:root{scrollbar-gutter:auto!important}
+}
+@media(min-width:1101px){
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:space-between!important;box-sizing:border-box!important;width:min(var(--qily-dock-axis,1180px),calc(100% - 44px))!important;max-width:1180px!important;min-width:0!important;margin:0 auto!important;padding:0!important;gap:5px!important}
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>#floatDock.qily-page-action-nav{display:flex!important;position:static!important;flex:0 0 auto!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;box-sizing:border-box!important;width:auto!important;min-width:0!important;max-width:100%!important;margin:0!important;padding:5px 0!important;gap:5px!important;border:0!important;box-shadow:none!important}
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{display:flex!important;position:static!important;flex:0 0 auto!important;flex-flow:row nowrap!important;align-items:center!important;justify-content:flex-end!important;box-sizing:border-box!important;width:auto!important;min-width:0!important;max-width:100%!important;margin:0 0 0 auto!important;padding:0!important;gap:8px!important}
+}
+@media(min-width:821px) and (max-width:1100px){
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner{display:flex!important;flex-flow:row wrap!important;justify-content:flex-start!important;align-items:center!important;box-sizing:border-box!important;width:calc(100% - 44px)!important;max-width:100%!important;margin:0 auto!important;padding:4px 0!important;gap:4px 10px!important}
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>#floatDock.qily-page-action-nav,html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{position:static!important;display:flex!important;flex:0 1 auto!important;width:auto!important;max-width:100%!important;margin:0!important}
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records{flex-wrap:wrap!important}
+}
+html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a{
+ border:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;transform:none!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;text-decoration:none!important;
+}
+html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a:is(:hover,:active,:focus-visible){
+ border:0!important;border-radius:0!important;background:transparent!important;background-image:none!important;box-shadow:none!important;transform:none!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;text-decoration:underline!important;
+}
+html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a:focus-visible{outline:2px solid #ffe39b!important;outline-offset:2px!important}
+@media(min-width:821px){
+ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.footer>.footer-inner>.footer-records>a{padding:0!important}
+}
+
 `;
 
 function filings(footer){
