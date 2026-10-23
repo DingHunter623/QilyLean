@@ -1,0 +1,53 @@
+name: CN home & public-module VI materialization
+on:
+  push:
+    branches:
+      - fix/cn-home-and-fullsite-vi-parity-20261023
+    paths:
+      - 'cn-site/scripts/materialize-source-content-parity.py'
+      - 'cn-site/scripts/validate-source-content-parity.py'
+      - 'cn-site/scripts/enforce-fullsite-axis.py'
+      - 'cn-site/assets/cn-sitewide-visual-parity-v1.css'
+      - '.github/workflows/cn-home-vi-parity-20261023.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: cn-home-vi-parity-20261023
+  cancel-in-progress: false
+jobs:
+  materialize-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/cn-home-and-fullsite-vi-parity-20261023
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Rebuild canonical public footer and China sitewide visual owner
+        run: |
+          set -euo pipefail
+          node scripts/materialize-cn-footer-actions-v2.js
+          python3 cn-site/scripts/enforce-fullsite-axis.py
+      - name: Re-materialize mirrored noncommercial content from international source
+        run: |
+          set -euo pipefail
+          python3 cn-site/scripts/materialize-source-content-parity.py
+          python3 cn-site/scripts/validate-source-content-parity.py
+      - name: Validate shared China shell and foreign filing isolation
+        run: |
+          node scripts/validate-sitewide-vi-unification.js
+          git diff --check
+      - name: Commit generated CN assets and content manifest
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- cn-site
+          if ! git diff --cached --quiet; then
+            git commit -m 'build(cn): materialize international VI and safe module order [skip ci]'
+            git push origin HEAD:fix/cn-home-and-fullsite-vi-parity-20261023
+          fi
