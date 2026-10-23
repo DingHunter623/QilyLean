@@ -139,30 +139,26 @@ def operating_axis_steps(value):
 
 
 
-def verify_noncommercial_module_order(source_value, target_value, source_name, url):
+def verify_noncommercial_module_order(source_value, target_value, source_name, url, mode='source-main'):
     """Original noncommercial sections must retain their exact source order.
 
     Commercial sections can be removed, but source modules cannot be reordered,
     dropped or replaced with unrelated China-only content.
     """
-    if source_name not in {
-        'index.html', 'experience/index.html', 'capabilities/index.html',
-        'improvements/index.html', 'lean-production/index.html',
-        'projects/index.html', 'trust/index.html', 'knowledge/index.html',
-    }:
+    # Audited viewers have a purpose-built local DOM and independent acceptance
+    # checks. Every directly cloned source main must retain its source modules,
+    # including dated briefs and secondary pages, not just the primary routes.
+    if mode != 'source-main':
         return
-    match = re.search(r'<main\\b[^>]*>([\\s\\S]*?)</main\\s*>', source_value, re.I)
-    fragment = match.group(1) if match else parity.mirror.extract_fragment(source_value, source_name)
+    fragment = parity.source_fragment(source_value, source_name)
     expected = parity.render(parity.Tree(fragment).root, source_name)
     expected = parity.preserve_generated_page_heading(expected, target_value)
 
     def signatures(value):
         rows = []
-        for opening in re.findall(r'<section\\b[^>]*>', value, re.I):
-            identifier = re.search(r'\\bid=["\\x27]([^"\\x27]+)', opening, re.I)
-            classes = re.search(r'\\bclass=["\\x27]([^"\\x27]+)', opening, re.I)
-            rows.append((identifier.group(1) if identifier else '',
-                         ' '.join(classes.group(1).split()) if classes else ''))
+        for tag, attrs in Nodes(value).nodes:
+            if tag == 'section':
+                rows.append((attrs.get('id', ''), ' '.join(attrs.get('class', '').split())))
         return rows
 
     source_modules = signatures(expected)
@@ -170,6 +166,11 @@ def verify_noncommercial_module_order(source_value, target_value, source_name, u
     require(source_modules == target_modules,
             'CN noncommercial module order differs from international source: ' + url
             + ' source=' + repr(source_modules[:15]) + ' target=' + repr(target_modules[:15]))
+    # Class/ID signatures alone cannot detect reordered anonymous sections or
+    # dropped paragraphs. Compare the complete retained public text in order.
+    public_text = lambda value: re.sub(r'\s+', '', parity.Tree(value).root.text())
+    require(public_text(expected) == public_text(parity.main_markup(target_value)),
+            'CN noncommercial content differs from international source: ' + url)
     if source_name == 'index.html':
         main = parity.main_markup(target_value)
         require(main.count('目视化设计与交付') >= 1, 'China home lost the third public service capsule')
@@ -307,6 +308,8 @@ def main():
     raw_manifest = MANIFEST.read_bytes()
     manifest = json.loads(raw_manifest)
     require(manifest.get('version') == parity.VERSION, 'Unexpected source parity version')
+    require(manifest.get('source_runtimes') == parity.source_runtime_records((ROOT / 'index.html').read_text(), 'index.html'),
+            'Canonical homepage runtime changed after materialization')
     pages, styles, media = (manifest.get(key, []) for key in ('pages', 'styles', 'media_files'))
     destination = manifest.get('destination_assets', [])
     link_adaptations = manifest.get('link_adaptations', [])
@@ -335,10 +338,13 @@ def main():
     def verify_local_page(row):
         source = ROOT / row['source']
         require(source.is_file() and parity.file_hash(source) == row['source_html_sha256'], 'Source HTML changed after materialization: ' + row['source'])
+        require(row.get('source_runtime_sha256') == {
+                    item['source']: item['sha256'] for item in parity.source_runtime_records(source.read_text(), row['source'])},
+                'Source runtime provenance differs: ' + row['source'])
         local_value = local_path(row['url']).read_text()
         verify_semantics(local_value, row)
         verify_operating_axis(source.read_text(), local_value, row['url'])
-        verify_noncommercial_module_order(source.read_text(), local_value, row['source'], row['url'])
+        verify_noncommercial_module_order(source.read_text(), local_value, row['source'], row['url'], row['mode'])
     run_parallel(pages, verify_local_page, args.workers)
     for key, rows in [('style', styles), ('media', media), ('destination', destination)]:
         run_parallel(rows, lambda row: verify_asset_local(row, key), args.workers)
@@ -389,6 +395,7 @@ def main():
             remote_value = read_page(row['url']).decode()
             verify_semantics(remote_value, row)
             verify_operating_axis((ROOT / row['source']).read_text(), remote_value, row['url'])
+            verify_noncommercial_module_order((ROOT / row['source']).read_text(), remote_value, row['source'], row['url'], row['mode'])
 
         run_parallel(pages, verify_remote_page, args.workers)
         # Also check the canonical homepage URL without a cache-busting parameter.
@@ -430,7 +437,7 @@ def main():
         verify_navigation(remote_about, '/about/')
         require(read_page('/robots.txt') == (CN / 'robots.txt').read_bytes(), 'Production robots bytes differ')
         require(read_page('/sitemap.xml') == (CN / 'sitemap.xml').read_bytes(), 'Production sitemap bytes differ')
-    print(json.dumps({'ok': True, 'mode': 'production' if args.production else 'local', 'pages': len(pages), 'styles': len(styles), 'media_files': len(media), 'protected_assets': len(destination), 'navigation': len(NAV)}, ensure_ascii=False))
+    print(json.dumps({'ok': True, 'mode': 'production' if args.production else 'local', 'pages': len(pages), 'source_module_content_checks': sum(row['mode'] == 'source-main' for row in pages), 'styles': len(styles), 'media_files': len(media), 'protected_assets': len(destination), 'navigation': len(NAV)}, ensure_ascii=False))
 
 
 if __name__ == '__main__':

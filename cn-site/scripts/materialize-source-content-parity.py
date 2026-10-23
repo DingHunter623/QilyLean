@@ -5,6 +5,7 @@ Commercial routes/panels are excluded. Contact, translation, filings and the
 independently restored interactive knowledge viewers remain China-owned.
 """
 from __future__ import annotations
+import ast
 import hashlib
 import html
 from html.parser import HTMLParser
@@ -23,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261022-source-content-parity-v4-preserve-noncommercial-axis'
+VERSION = '20261023-source-content-parity-v5-settled-home'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -41,7 +42,7 @@ ROUTES.update({name: item[0] for name, item in PRIMARY.items()})
 ROUTES.update({'links/index.html': '/resources/', 'qilylean/daily-insights.html': '/briefs/', 'moments/index.html': '/archive/records/'})
 BLOCK_IDS = {'identity', 'contract', 'contact', 'project-cooperation', 'qily-commercial-deliveries',
              'qily-north', 'qily-core-services', 'qily-digital-enablers', 'nda-template', 'diagnosis',
-             'floatDock', 'qilyDockBottomSpacerV58'}
+             'qily-home-launch', 'floatDock', 'qilyDockBottomSpacerV58'}
 BLOCK_CLASSES = {'contact-panel', 'brief-feedback', 'brief-inline-message', 'resource-service',
                  'qily-resource-network', 'qily-contact-modal', 'commercial-panel'}
 COMMERCIAL_ROUTES = ('/cooperation/', '/contact/', '/projects/qilylean-commercial-deliveries/',
@@ -152,6 +153,206 @@ class Tree(HTMLParser):
     def handle_entityref(self, name): self.handle_data('&' + name + ';')
     def handle_charref(self, name): self.handle_data('&#' + name + ';')
 
+
+# COM's homepage is structurally settled by these two runtimes. Reading only
+# index.html silently drops the actual industry/case/method/deliverable modules.
+# Extract authored literal HTML without executing, copying or shipping source JS.
+HOME_RUNTIMES = ('site-home-conversion-v1.js', 'site-home-owner-profile-v1.js')
+JS_STRING = r"(?:'(?:\\.|[^'\\])*'|\"(?:\\.|[^\"\\])*\")"
+
+
+def literal_template(body, prefix, suffix=';'):
+    pattern = prefix + r'\s*(?P<literal>' + JS_STRING + r'(?:\s*\+\s*' + JS_STRING + r')*)\s*' + suffix
+    matches = list(re.finditer(pattern, body))
+    if len(matches) != 1:
+        raise RuntimeError('Canonical homepage literal template changed: ' + prefix)
+    expression = matches[0].group('literal')
+    return ''.join(ast.literal_eval(token.group()) for token in re.finditer(JS_STRING, expression))
+
+
+def runtime_function(runtime, name):
+    match = re.search(r'\n  function ' + re.escape(name) + r'\([^)]*\)\{([\s\S]*?)(?=\n  function |\n  if\(d\.readyState)', runtime)
+    if not match:
+        raise RuntimeError('Canonical homepage function missing: ' + name)
+    return match.group(1)
+
+
+def source_runtime_records(raw, name):
+    if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
+        return []
+    return [{'source': relative, 'sha256': file_hash(ROOT / relative), 'bytes': (ROOT / relative).stat().st_size}
+            for relative in HOME_RUNTIMES if '/' + relative in raw]
+
+
+def source_fragment(raw, name):
+    """The source's final authored content DOM, before CN commercial filtering.
+
+    The adapter deliberately supports the canonical runtime's literal builders
+    and explicit move operations only. A changed runtime fails closed instead
+    of approving a China homepage based on an obsolete raw-source snapshot.
+    """
+    match = re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>', raw, re.I)
+    fragment = match.group(1) if match else mirror.extract_fragment(raw, name)
+    if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
+        return fragment
+    runtime = (ROOT / HOME_RUNTIMES[0]).read_text()
+    root = Tree(fragment).root
+
+    def find(node, predicate):
+        if not isinstance(node, Node):
+            return None
+        if predicate(node):
+            return node
+        for child in node.children:
+            found = find(child, predicate)
+            if found is not None:
+                return found
+        return None
+
+    def by_id(identifier):
+        return find(root, lambda node: node.attrs.get('id') == identifier)
+
+    def by_class(node, classname):
+        return find(node, lambda item: classname in item.attrs.get('class', '').split())
+
+    def parent(node, target):
+        for child in node.children:
+            if child is target:
+                return node
+            if isinstance(child, Node):
+                found = parent(child, target)
+                if found is not None:
+                    return found
+        return None
+
+    def detach(node):
+        owner = parent(root, node)
+        if owner is not None:
+            owner.children.remove(node)
+
+    def after(anchor, node):
+        detach(node)
+        owner = parent(root, anchor)
+        if owner is None:
+            raise RuntimeError('Canonical homepage anchor is detached')
+        owner.children.insert(owner.children.index(anchor) + 1, node)
+
+    def children(value):
+        return Tree(value).root.children
+
+    def builder(function, prefix=r'return node\('):
+        result = [item for item in children(literal_template(runtime_function(runtime, function), prefix, r'\)\s*;'))
+                  if isinstance(item, Node)]
+        if len(result) != 1:
+            raise RuntimeError('Canonical homepage builder must return one element: ' + function)
+        return result[0]
+
+    def attributes(node, body, variable):
+        for attribute in ('className', 'id'):
+            if re.search(re.escape(variable) + r'\.' + attribute + r'\s*=', body):
+                node.attrs['class' if attribute == 'className' else attribute] = literal_template(
+                    body, re.escape(variable) + r'\.' + attribute + r'\s*=')
+        setter = re.escape(variable) + r'\.setAttribute\('
+        pairs = re.findall(setter + r'\s*(' + JS_STRING + r')\s*,\s*(' + JS_STRING + r')\s*\)', body)
+        if len(pairs) != len(re.findall(setter, body)):
+            raise RuntimeError('Canonical homepage attribute is no longer a literal: ' + variable)
+        for key, value in pairs:
+            node.attrs[ast.literal_eval(key)] = ast.literal_eval(value)
+
+    hero = next((node for node in root.children if isinstance(node, Node) and 'hero' in node.attrs.get('class', '').split()), None)
+    core, method = by_id('qily-core-services'), by_id('qily-competitive-value')
+    aircraft = by_class(root, 'qily-aircraft-brand-hero')
+    if hero is None or core is None or method is None:
+        raise RuntimeError('Canonical homepage boot prerequisites changed')
+    hero_body = runtime_function(runtime, 'transformHero')
+    attributes(hero, hero_body, 'hero')
+    hero.children = children(literal_template(hero_body, r'hero\.innerHTML\s*='))
+    core_body = runtime_function(runtime, 'setCoreCopy')
+    attributes(core, core_body, 'core')
+    heading = by_class(core, 'qily-ia-heading')
+    for variable, target in (('kicker', by_class(core, 'qily-ia-kicker')),
+                             ('title', find(heading, lambda node: node.tag == 'h2')),
+                             ('lead', find(heading, lambda node: node.tag == 'p'))):
+        if target is not None:
+            target.children = [literal_template(core_body, variable + r'\.textContent\s*=')]
+    actions = by_class(core, 'qily-ia-actions')
+    if actions is not None:
+        actions.children = children(literal_template(core_body, r'actions\.innerHTML\s*='))
+    method_body = runtime_function(runtime, 'transformMethod')
+    attributes(method, method_body, 'section')
+    method.children = children(literal_template(method_body, r'section\.innerHTML\s*='))
+
+    boot = runtime_function(runtime, 'boot')
+    moves = re.findall(r'\b(\w+)\.after\((\w+)\);', boot)
+    expected_moves = [('hero', 'core'), ('core', 'industry'), ('industry', 'cases'),
+                      ('cases', 'method'), ('method', 'capabilityBuilding'),
+                      ('capabilityBuilding', 'deliverables'), ('deliverables', 'collaboration'),
+                      ('collaboration', 'launch'), ('launch', 'extended'), ('extended', 'brandExtension')]
+    if moves != expected_moves:
+        raise RuntimeError('Canonical homepage module order changed; update the settled-source adapter')
+    nodes = {'hero': hero, 'core': core, 'method': method}
+    for variable, function in re.findall(r'var (\w+)=(build\w+)\(\);', boot):
+        nodes[variable] = builder(function)
+    # Match main.insertBefore(hero, main.firstElementChild), retaining any new
+    # unowned source modules in their original relative order.
+    detach(hero)
+    first = next((index for index, child in enumerate(root.children) if isinstance(child, Node)), len(root.children))
+    root.children.insert(first, hero)
+    for anchor, variable in expected_moves[:-2]:
+        after(nodes[anchor], nodes[variable])
+
+    extended_body = runtime_function(runtime, 'buildExtended')
+    extended = builder('buildExtended', r'var wrap=node\(')
+    extended_content = by_class(extended, 'qily-home-extended__content')
+    selector_list = re.search(r'\[([\s\S]*?)\]\.forEach', extended_body)
+    if extended_content is None or selector_list is None:
+        raise RuntimeError('Canonical extended-content container changed')
+    selectors = re.findall(r"(?:main\.(querySelector)|d\.(getElementById))\('([^']+)'\)", selector_list.group(1))
+    remainder = re.sub(r"(?:main\.querySelector|d\.getElementById)\('[^']+'\)", '', selector_list.group(1))
+    if not selectors or re.sub(r'[\s,]', '', remainder):
+        raise RuntimeError('Canonical extended-content selector list changed')
+    for query, identifier, value in selectors:
+        if query and not re.fullmatch(r'\.[\w-]+', value):
+            raise RuntimeError('Unsupported canonical extended-content selector: ' + value)
+        selected = by_class(root, value[1:]) if query and value.startswith('.') else by_id(value) if identifier else None
+        if selected is not None:
+            detach(selected)
+            extended_content.children.append(selected)
+    after(nodes['launch'], extended)
+    if aircraft is not None:
+        brand_body = runtime_function(runtime, 'buildBrandExtension')
+        attributes(aircraft, brand_body, 'aircraft')
+        image = find(aircraft, lambda node: node.tag == 'img')
+        if image is not None:
+            image.attrs['loading'] = literal_template(brand_body, r'img\.loading\s*=')
+            image.attrs['fetchpriority'] = literal_template(brand_body, r'img\.fetchPriority\s*=')
+        brand = builder('buildBrandExtension', r'var wrap=node\(')
+        inner = by_class(brand, 'qily-home-brand-extension__inner')
+        if inner is None:
+            raise RuntimeError('Canonical brand-extension container changed')
+        detach(aircraft)
+        inner.children.append(aircraft)
+        after(extended, brand)
+    if '/' + HOME_RUNTIMES[1] in raw:
+        profile_body = runtime_function((ROOT / HOME_RUNTIMES[1]).read_text(), 'apply')
+        role = by_class(nodes['collaboration'], 'qily-home-role')
+        if role is None:
+            raise RuntimeError('Canonical public owner-profile container missing')
+        profile = Node('div')
+        attributes(profile, profile_body, 'profile')
+        profile.children = children(literal_template(profile_body, r'profile\.innerHTML\s*='))
+        role.children.append(profile)
+
+    def serialize(node):
+        if not isinstance(node, Node):
+            return node
+        attrs = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"')
+                        for key, value in node.attrs.items())
+        value = ''.join(serialize(child) for child in node.children)
+        return '<' + node.tag + attrs + '>' + ('' if node.tag in VOID else value + '</' + node.tag + '>') if node.tag else value
+
+    return serialize(root)
+
 def render(node, source):
     if not isinstance(node, Node): return node
     if not node.tag: return ''.join(render(child, source) for child in node.children)
@@ -176,8 +377,11 @@ def render(node, source):
     # surrounding project facts, original cards, diagrams, photos and layout.
     prose = tag in {'p','li','figcaption','small','h2','h3','dd','dt'}
     commercial_card = tag == 'article' and any(isinstance(child, Node) and child.tag == 'strong' and child.text().strip() in {'交易机制', '责任边界'} for child in node.children)
+    procurement_card = tag == 'article' and 'qily-home-role' in classes and any(
+        isinstance(child, Node) and child.tag == 'h3' and child.text().strip() == '专家／供应商协同'
+        for child in node.children)
     commercial_note = bool(classes & {'qily-asset-note', 'qily-ia-result'})
-    if (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
+    if procurement_card or (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
         EXCLUDED.append({'source': source, 'panel': identifier or tag, 'reason': 'commercial-copy'})
         return ''
     if tag == 'a':
@@ -218,7 +422,7 @@ def render(node, source):
         # intentionally excluded on China's filed personal knowledge site.
         # Preserve the public case route as its single noncommercial primary
         # action, without recreating any diagnosis/booking sales CTA.
-        if source == 'index.html' and re.sub(r'\\s+', '', node.text()) == '查看代表案例' and attrs.get('href') == '/notes/':
+        if source == 'index.html' and re.sub(r'\s+', '', node.text()) == '查看代表案例' and attrs.get('href') == '/notes/':
             attrs['class'] = ' '.join(dict.fromkeys((attrs.get('class', '') + ' primary').split()))
         if attrs.get('href', '').startswith('/notes/#practice-'):
             return ''
@@ -358,8 +562,32 @@ def body_conditions(compound):
 def source_selector(selector):
     """Keep source specificity; emulate source body state on its content root."""
     selector = selector.strip()
+    # Current-module presentation depends on the real destination header.
+    # A header cannot be a descendant of the cloned main; keep that condition
+    # on body and localize both the header and content-link route selectors.
+    header_state = re.fullmatch(r'html\s+body:has\(header a\[href="([^"]+)"\]\[aria-current="page"\]\)\s+(.+)', selector)
+    if header_state:
+        original, rest = header_state.groups()
+        destination = link_url(original, 'index.html')
+        if not destination:
+            return ''
+        def local_selector(match):
+            mapped = link_url(match.group(1), 'index.html')
+            return '[href="' + (mapped or match.group(1)) + '"]'
+        rest = re.sub(r'\[href="([^"]+)"\]', local_selector, rest)
+        return 'html body:has(header a[href="' + destination + '"][aria-current="page"]) ' + SCOPE + ' ' + rest
     compounds = visual.selector_compounds(selector)
     body = next((part for part in compounds if re.match(r'body(?:[^\w-]|$)', part[2])), None)
+    # Shared reading-floor selectors group main with footer alternatives in
+    # :is(). Attach that compound to the cloned root instead of looking for a
+    # second main inside it; preserve the original :is() specificity.
+    grouped_main = next((part for part in compounds
+                         if part[2].startswith(':is(') and part[2].endswith(')')
+                         and 'main' in [item.strip() for item in visual.split_css(part[2][4:-1], ',')]), None)
+    if body and grouped_main and body[0] < grouped_main[0]:
+        start, end, compound = grouped_main
+        if not selector[body[1]:start].strip(' \t\r\n>'):
+            return selector[:body[0]] + SCOPE + body_conditions(body[2]) + compound + selector[end:]
     main = next((part for part in compounds if re.match(r'main(?:[^\w-]|$)', part[2])), None)
     if main:
         start, end, compound = main
@@ -500,9 +728,9 @@ def destination_shell_styles(value, preserve_adapter=False):
         origin = html.unescape(saved.group(1) if saved else href.group(1)) if saved or href else ''
         # Sitewide China footer is shared shell CSS, not a cloned page stylesheet.
         if '/assets/cn-footer-actions-v1.css' in origin:
-            tag = re.sub(r'\\bhref=([\\x22\\x27])[^\\x22\\x27]+[\\x22\\x27]',
+            tag = re.sub(r'\bhref=([\x22\x27])[^\x22\x27]+[\x22\x27]',
                          'href="/assets/cn-footer-actions-v1.css?v=20261023-cn-public-footer-source-v1"', tag, count=1)
-            return re.sub(r'\\s+data-cn-destination-origin=[\\x22\\x27][^\\x22\\x27]+[\\x22\\x27]', '', tag)
+            return re.sub(r'\s+data-cn-destination-origin=[\x22\x27][^\x22\x27]+[\x22\x27]', '', tag)
         mapped = copy_destination_css(origin)
         if not mapped: return tag
         tag = re.sub(r'\bhref=([\x22\x27])[^\x22\x27]+[\x22\x27]', 'href="' + html.escape(mapped, quote=True) + '"', tag, count=1)
@@ -624,7 +852,7 @@ def main():
         preserve_adapter = preserve_directory or bool(adapter and (adapter.group(1) in {'terminology', 'reference-viewer', 'pdf', 'knowledge-entry', 'brief-index'} or name.startswith('qilylean/reference-')))
         raw = source_path.read_text()
         match = re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>', raw, re.I)
-        fragment = match.group(2) if match else mirror.extract_fragment(raw, name)
+        fragment = source_fragment(raw, name)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
@@ -653,7 +881,11 @@ def main():
             if name == 'capabilities/index.html': settled.append('pure-ddz-capability-visual-v2.css')
             for relative in settled:
                 local = copy_css('/' + relative)
-                if local: style_tags.append('<link rel="stylesheet" data-cn-source-css="v1" href="' + local + '">')
+                # The source runtime reuses existing stylesheet nodes. Moving
+                # governance after readability changes equal-specificity type
+                # rules (for example a 20px body paragraph becomes 19.5px).
+                if local and not any('href="' + local + '"' in tag for tag in style_tags):
+                    style_tags.append('<link rel="stylesheet" data-cn-source-css="v1" href="' + local + '">')
         # R8's presentation runtime settles this exact stylesheet last on COM.
         # Materialize that final cascade without importing its shell runtime.
         if 'qilyVisualAuthorityR8' in raw:
@@ -666,6 +898,7 @@ def main():
         if name == 'index.html' and 'qily-home-conversion-hero' in fragment:
             source_body['data-qily-home-conversion'] = 'v1'
         attrs['data-cn-source-body-class'] = source_body.get('class', '')
+        attrs['data-cn-source-scrollbar-gutter'] = 'stable' if '/site-closure-bundle-v24.css' in raw else 'auto'
         if 'qilyViV4Formal' in raw:
             attrs['data-cn-source-body-data-qily-vi-shell'] = 'v4-formal'
         old_body = re.search(r'<body\b([^>]*)>', old)
@@ -722,6 +955,7 @@ def main():
         assert protected_dom(old) == protected_dom(updated), 'Destination shell changed: ' + name
         target.write_text(updated)
         records.append({'source': name, 'url': url, 'source_html_sha256': file_hash(source_path),
+                        'source_runtime_sha256': {row['source']: row['sha256'] for row in source_runtime_records(raw, name)},
                         'main_sha256': hashlib.sha256(replacement.encode()).hexdigest(),
                         'inline_css_sha256': hashlib.sha256('\n'.join(re.findall(r'<style\b[^>]*data-cn-source-css=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>([\s\S]*?)</style>', updated, re.I)).encode()).hexdigest(),
                         'mode': 'audited-interactive-adapter' if preserve_adapter else 'source-main',
@@ -757,6 +991,7 @@ def main():
         if not asset.is_file(): raise RuntimeError('China aircraft asset missing: ' + url_asset)
         destination_assets.append({'source': asset.relative_to(ROOT).as_posix(), 'url': url_asset, 'sha256': file_hash(asset), 'bytes': asset.stat().st_size})
     (CN / 'archive/source-content-parity.json').write_text(json.dumps({'version': VERSION, 'pages': records, 'styles': list(STYLE_RECORDS.values()), 'excluded_panels': EXCLUDED, 'link_adaptations': LINK_ADAPTATIONS, 'media_files': media_records,
+        'source_runtimes': source_runtime_records((ROOT / 'index.html').read_text(), 'index.html'),
         'destination_assets': destination_assets, 'protected': {'about_main_sha256': contact_sha, 'about_shell': protected_dom(about_html)}, 'media': sorted(MEDIA)}, ensure_ascii=False, indent=2))
     print(f'Source content parity: {len(records)} pages; {len(MEDIA)} original media paths; {len(EXCLUDED)} commercial panels excluded; {len(LINK_ADAPTATIONS)} commercial-target links safely localized or preserved as non-clickable content')
 

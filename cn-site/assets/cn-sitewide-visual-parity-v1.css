@@ -2,6 +2,9 @@
  * Destination-only final corrections; original public content retains its
  * international styles. The China shell, translator and filings remain local.
  */
+/* Match the source viewport used by vw typography, including classic-scrollbar
+ * browsers. Scoping source root styles to main cannot carry this root setting. */
+html:root:root:root:root:root:root:root:root:root:root:root:root:root:has(body[data-qily-site="cn"] main[data-cn-source-scrollbar-gutter="stable"]){scrollbar-gutter:stable!important;overflow-x:clip}
 html:root:root:root body[data-qily-site="cn"] main > :is(
  .hero,.page-hero,.module-hero,.project-hero,.projects-hero,.capability-hero,
  .experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,.document-hero,
@@ -11,18 +14,9 @@ html:root:root:root body[data-qily-site="cn"] main > :is(
  margin-left:auto!important;margin-right:auto!important;box-sizing:border-box!important;
 }
 
-/* The personal site omits the commercial cooperation step. Fill the same
- * content frame with its five retained steps rather than leaving a sixth cell.
+/* All six operating-axis topics are public engineering content. Their mirrored
+ * international stylesheet owns the shared six/three/two-column layout.
  */
-html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{
- grid-template-columns:repeat(5,minmax(0,1fr))!important;
-}
-@media(max-width:920px){
- html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{grid-template-columns:repeat(3,minmax(0,1fr))!important}
-}
-@media(max-width:620px){
- html:root:root:root body[data-qily-site="cn"] main .qily-system-axis__steps{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-}
 
 /* A generic China caption rule must not darken text on a dark photo overlay. */
 html:root:root:root body[data-qily-site="cn"] main .qily-home-project-visual figcaption{
