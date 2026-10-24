@@ -79,3 +79,16 @@ html:root:root:root body[data-qily-site="cn"] main .opl-grid>.opl-card{
  html body[data-qily-site="cn"] main[data-cn-source-content="capabilities/index.html"]
   #pure-ddz-digital-tool .capability-ddz-board{width:100%!important;}
 }
+
+/* QILY-CN-ABOUT-GOLD-KICKER-PARITY-20261024
+   Live Chromium comparison: the About eyebrow alone differed from the
+   international sample (#caa15f and Noto CJK font fallback).
+   The other matched public gold headings already share exactly the source
+   size, weight, line height, letter spacing and colors; leave them intact. */
+html:root:root body[data-qily-site="cn"] main#main:has(.qily-about-career)
+ > section.page-hero .hero-eyebrow{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",
+    "PingFang SC","Microsoft YaHei",Arial,sans-serif!important;
+  color:#caa15f!important;
+  -webkit-text-fill-color:#caa15f!important;
+}

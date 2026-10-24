@@ -1,0 +1,30 @@
+name: CN gold label parity preview gate
+on:
+  push:
+    branches: [fix/cn-about-gold-kicker-final-20261024]
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Generate China preview using production asset pipeline
+        run: bash cn-site/scripts/materialize-practice-assets.sh
+      - name: Prepare Chromium and local sites
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/qily-gold-int.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-gold-cn.log 2>&1 &
+          sleep 2
+      - name: Check 9 paired public pages at desktop and phone widths
+        env:
+          QILY_KICKER_INT_BASE: http://127.0.0.1:4173
+          QILY_KICKER_CN_BASE: http://127.0.0.1:4174
+          QILY_KICKER_STRICT: '1'
+        run: node scripts/cn-gold-kicker-diagnostic-20261024.cjs

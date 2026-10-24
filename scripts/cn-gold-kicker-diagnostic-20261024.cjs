@@ -23,14 +23,15 @@ async function snapshot(page,url) {
 }
 (async()=>{
  const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
- for(const width of [1440,390]){
+ for(const width of [1440,1588,390]){
   for(const [int,cn] of pairs){
     if(width===390 && !['/','/capabilities/','/trust/','/knowledge/'].includes(int))continue;
     const page=await browser.newPage({viewport:{width,height:900}});
-    const [a,b]=[await snapshot(page,'https://qilylean.com'+int),await snapshot(page,'https://qilylean.cn'+cn)];
+    const [a,b]=[await snapshot(page,(process.env.QILY_KICKER_INT_BASE||'https://qilylean.com')+int),await snapshot(page,(process.env.QILY_KICKER_CN_BASE||'https://qilylean.cn')+cn)];
     const map=new Map();for(const item of a){let list=map.get(item.t)||[];list.push(item);map.set(item.t,list)}
     const matched=b.map(x=>{let y=(map.get(x.t)||[]).shift();return {t:x.t,cls:x.cls,section:x.section,intl:y?.css,cn:x.css,intl_geo:y?.geo,cn_geo:x.geo,match:!!y&&JSON.stringify(y.css)===JSON.stringify(x.css)}}).filter(x=>x.intl);
     console.log('KICKER_PARITY '+JSON.stringify({width,int,cn,countIntl:a.length,countCN:b.length,matched:matched.length,diffs:matched.filter(x=>!x.match),equal:matched.filter(x=>x.match).length,cnOnly:b.filter(x=>!a.some(y=>y.t===x.t)).slice(0,10).map(x=>x.t)}));
+    if(process.env.QILY_KICKER_STRICT==='1'&&matched.some(x=>!x.match))throw Error('VI gold label mismatch: '+cn+' at '+width+'px');
     await page.close();
   }
  }
