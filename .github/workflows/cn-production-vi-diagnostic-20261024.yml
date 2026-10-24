@@ -8,7 +8,7 @@ permissions:
 jobs:
   diagnosis:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,3 +25,17 @@ jobs:
           sleep 2
       - name: Measure rendered CSS selectors and scrollbar offset
         run: node scripts/cn-vi-production-diagnostic-20261024.cjs
+      - name: Verify sourced capability and trust module layout
+        run: |
+          npx playwright test scripts/cn-home-visual-parity-20261023.spec.js --grep 'Public module content, order and VI: /(archive/profile/capabilities/|trust/)' --reporter=line --workers=1
+      - name: Verify China footer visual axis without changing its CSS
+        run: |
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js --grep 'China dock matches international|China 1588px footer stays|China shared footer has no desktop' --reporter=line --workers=1
+      - name: Save browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-vi-production-blockers-evidence
+          path: test-results/
+          if-no-files-found: warn
+
