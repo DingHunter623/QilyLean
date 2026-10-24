@@ -94,85 +94,70 @@ html:root:root body[data-qily-site="cn"] main#main:has(.qily-about-career)
 }
 
 
-/* QILY-CN-NATIVE-READING-FRAME-PARITY-20261024
- * The source international About page has a centered phone reading frame.
- * Legacy CN .section padding:... 0 and late .content / .article-shell
- * width:100%!important flatten that frame flush against both screen edges.
- *
- * Only CN-native content documents are corrected. Cloned public modules
- * (main[data-cn-source-content]) keep their exact international source CSS,
- * while header rail, four-action footer, embedded tables, QR and media are
- * deliberately outside the selector.
+/* QILY-CN-UNIFIED-CONTENT-FRAME-20261024-V2
+ * ONE public content axis: header / Hero / article / subsequent CN-native
+ * sections share the existing international 1180px maximum and the original
+ * site content-axis gutter (18px on phones). No extra 32px mobile inset,
+ * no page-specific 1128px desktop inner frame, no nested double-gutters.
+ * Mirrored international source pages are exclusively source-owned.
  */
-@media (max-width:900px){
-  html:root:root:root:root body[data-qily-site="cn"]{
-    --qily-cn-reading-inline-gutter:clamp(32px,5.2vw,56px);
-  }
-  html:root:root:root:root body[data-qily-site="cn"]
-    main:not([data-cn-source-content]) > :is(section.section,section.page-hero,section.hero){
-    padding-left:0!important;
-    padding-right:0!important;
-    box-sizing:border-box!important;
-  }
-  html:root:root:root:root body[data-qily-site="cn"]
-    main:not([data-cn-source-content]) > :is(section.section,section.page-hero,section.hero) > :is(.content,.hero-inner){
-    box-sizing:border-box!important;
-    width:min(1180px,calc(100% - (var(--qily-cn-reading-inline-gutter) * 2)))!important;
-    max-width:min(1180px,calc(100% - (var(--qily-cn-reading-inline-gutter) * 2)))!important;
-    min-width:0!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-  }
-  html:root:root:root:root body[data-qily-site="cn"]
-    main:not([data-cn-source-content]) > .section > .content.article-shell > .article-body{
-    min-width:0!important;
-    max-width:100%!important;
-  }
-}
-@media(max-width:620px){
-  html:root:root:root:root body[data-qily-site="cn"]{
-    --qily-cn-reading-inline-gutter:32px;
-  }
-}
-
-/* Native article headings inherit the same R8 readable type scale as COM.
- * COM 390px computed h2: 24.18px/29.016px, weight 800; CN legacy was
- * 19.5px/24.96px, weight 850. Keep source-cloned modules untouched. */
 html:root:root:root:root body[data-qily-site="cn"]
-  main:not([data-cn-source-content]) .article-body h2{
+ main:not([data-cn-source-content]) > :is(section.page-hero,section.hero,section.section){
+  box-sizing:border-box!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+html:root:root:root:root body[data-qily-site="cn"]
+ main:not([data-cn-source-content]) > :is(section.page-hero,section.hero,section.section)
+ > :is(.content,.hero-inner){
+  box-sizing:border-box!important;
+  width:min(1180px,calc(100% - (var(--qily-content-axis-gutter,18px) * 2)))!important;
+  max-width:1180px!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html:root:root:root:root body[data-qily-site="cn"]
+ main:not([data-cn-source-content]) > section.section > .content.article-shell > .article-body{
+  min-width:0!important;
+  max-width:100%!important;
+}
+/* The screen shot showed an unreasonably tall blank band between the Hero
+ * and first heading. Spacing is controlled here without moving content. */
+@media(max-width:900px){
+ html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) > section.section{
+   padding-top:24px!important;
+   padding-bottom:28px!important;
+ }
+ html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) > section.page-hero > .content{
+   padding-top:26px!important;
+   padding-bottom:26px!important;
+ }
+ html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) > section.section
+  > .content.article-shell > .article-body > h2:first-child{
+   margin-top:0!important;
+ }
+}
+/* Preserve exact international reading type/color verified in Chromium:
+ * heading R8 size/line-height/weight and body #3d6062. */
+html:root:root:root:root body[data-qily-site="cn"]
+ main:not([data-cn-source-content]) .article-body h2{
   font-size:clamp(24px,1.85vw,30px)!important;
   line-height:1.2!important;
   font-weight:800!important;
   letter-spacing:-.012em!important;
 }
 @media(max-width:620px){
-  html:root:root:root:root body[data-qily-site="cn"]
-    main:not([data-cn-source-content]) .article-body h2{
-    font-size:clamp(23px,6.2vw,27px)!important;
-  }
+ html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) .article-body h2{
+   font-size:clamp(23px,6.2vw,27px)!important;
+ }
 }
-
-
-/* CN-native engineering articles match the source international body-copy
- * foreground (#3d6062), not the CN legacy broad caption token (#3f5e5d).
- * Typography size/line height already match the source browser measurements. */
 html:root:root:root:root body[data-qily-site="cn"]
-  main:not([data-cn-source-content]) .article-body p{
+ main:not([data-cn-source-content]) .article-body p{
   color:#3d6062!important;
   -webkit-text-fill-color:#3d6062!important;
-}
-
-
-/* R8 desktop article measure: COM About aligns the long-form reading body
- * on a centered 1128px measure inside the 1180px public system axis.
- * This is intentionally not applied to hero, header, card grids, or clones. */
-@media(min-width:901px){
- html:root:root:root:root body[data-qily-site="cn"]
-  main:not([data-cn-source-content]) > section.section > .content.article-shell{
-    width:min(1128px,calc(100% - 52px))!important;
-    max-width:1128px!important;
-    min-width:0!important;
-    margin-left:auto!important;
-    margin-right:auto!important;
-  }
 }
