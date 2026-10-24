@@ -41,7 +41,7 @@ ROUTES = dict(mirror.SOURCE_TO_URL)
 ROUTES.update({name: item[0] for name, item in PRIMARY.items()})
 ROUTES.update({'links/index.html': '/resources/', 'qilylean/daily-insights.html': '/briefs/', 'moments/index.html': '/archive/records/'})
 BLOCK_IDS = {'identity', 'contract', 'contact', 'project-cooperation', 'qily-commercial-deliveries',
-             'qily-north', 'qily-core-services', 'qily-digital-enablers', 'nda-template', 'diagnosis',
+             'qily-north', 'nda-template', 'diagnosis',
              'qily-home-launch', 'floatDock', 'qilyDockBottomSpacerV58'}
 BLOCK_CLASSES = {'contact-panel', 'brief-feedback', 'brief-inline-message', 'resource-service',
                  'qily-resource-network', 'qily-contact-modal', 'commercial-panel'}
@@ -77,6 +77,27 @@ def uses_interaction_semantics(source):
         path = ROOT / source
         INTERACTION_SOURCES[source] = path.is_file() and '/site-interaction-semantics-v1.js' in path.read_text()
     return INTERACTION_SOURCES[source]
+
+# CN retains the two public engineering/digital capability sections.
+# Exclude source sales funnels rather than removing entire instructional modules.
+CN_PUBLIC_HOME_COPY = {
+ 'CORE BUSINESS｜制造工程直接交付': 'CORE DELIVERY｜制造工程实践主线',
+ '三大核心业务｜先解决制造现场真正影响交付的问题': '三类制造工程实践｜聚焦工厂效率、质量、交付与布局',
+ 'QilyLean以制造现场和工程数据为起点，核心项目交付聚焦三类：新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付。三类业务均可独立定义范围、交付物、阶段节点与验收边界，并沿同一制造运营闭环协同。':
+    '从制造现场与工程数据出发，系统整理新工厂／新产线规划、精益改善、目视化项目的工程方法、交付物、阶段节点与验收边界，沉淀可复用的制造运营实践。',
+ '数字化工厂用于把流程、数据、计划、设备、质量与现场执行固化到系统；APP软件与官网建设属于数字产品和工程作品能力，可按项目需要独立承接，也可作为制造改善成果的数字化载体。':
+    '数字化工厂用于把流程、数据、计划、设备、质量与现场执行固化到系统；APP软件与官网建设作为数字工程实践和技术作品，也可承载制造改善的知识、数据及可视化成果。',
+ '围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。':
+    '围绕品牌定位、信息架构、可信证据、内容体系、SEO、响应式适配及持续运维构建专业官网。',
+ '信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范':
+    '信息架构、页面模板、响应式官网、SEO基础、内容入口、部署与运维规范',
+}
+def public_home_copy(fragment):
+    for original, noncommercial in CN_PUBLIC_HOME_COPY.items():
+        if original not in fragment:
+            raise RuntimeError('International public home source changed; check safe CN adaptation: ' + original[:44])
+        fragment = fragment.replace(original, noncommercial, 1)
+    return fragment
 
 def media_url(value, source):
     if value.startswith('#'):
@@ -975,6 +996,8 @@ def main():
         raw = source_path.read_text()
         match = re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>', raw, re.I)
         fragment = source_fragment(raw, name)
+        if name == 'index.html':
+            fragment = public_home_copy(fragment)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
