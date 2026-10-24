@@ -134,3 +134,20 @@ html:root:root body[data-qily-site="cn"] main#main:has(.qily-about-career)
     --qily-cn-reading-inline-gutter:32px;
   }
 }
+
+/* Native article headings inherit the same R8 readable type scale as COM.
+ * COM 390px computed h2: 24.18px/29.016px, weight 800; CN legacy was
+ * 19.5px/24.96px, weight 850. Keep source-cloned modules untouched. */
+html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) .article-body h2{
+  font-size:clamp(24px,1.85vw,30px)!important;
+  line-height:1.2!important;
+  font-weight:800!important;
+  letter-spacing:-.012em!important;
+}
+@media(max-width:620px){
+  html:root:root:root:root body[data-qily-site="cn"]
+    main:not([data-cn-source-content]) .article-body h2{
+    font-size:clamp(23px,6.2vw,27px)!important;
+  }
+}
