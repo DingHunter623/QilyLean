@@ -28,11 +28,11 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         content = parity.render(parity.Tree(parity.source_fragment(source, 'capabilities/index.html')).root,
                                 'capabilities/index.html')
         import re
-        panel = re.search(r'<article\\b(?=[^>]*\\bid="times26001")[\\s\\S]*?</article>', content)
+        panel = re.search(r'<article\b(?=[^>]*\bid="times26001")[\s\S]*?</article>', content)
         self.assertIsNotNone(panel)
-        action_box = re.search(r'<div\\b[^>]*class="[^"]*\\bmodule-actions\\b[^"]*"[^>]*>([\\s\\S]*?)</div>', panel.group(0))
+        action_box = re.search(r'<div\b[^>]*class="[^"]*\bmodule-actions\b[^"]*"[^>]*>([\s\S]*?)</div>', panel.group(0))
         self.assertIsNotNone(action_box)
-        items = re.findall(r'<a\\b[^>]*\\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
+        items = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
         self.assertEqual([text.strip() for _, text in items],
                          ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持'])
         self.assertIn('/Times26001-Android-v1.1.14-Standard-Website-Logo.apk', items[0][0])
