@@ -151,3 +151,13 @@ html:root:root:root:root body[data-qily-site="cn"]
     font-size:clamp(23px,6.2vw,27px)!important;
   }
 }
+
+
+/* CN-native engineering articles match the source international body-copy
+ * foreground (#3d6062), not the CN legacy broad caption token (#3f5e5d).
+ * Typography size/line height already match the source browser measurements. */
+html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) .article-body p{
+  color:#3d6062!important;
+  -webkit-text-fill-color:#3d6062!important;
+}
