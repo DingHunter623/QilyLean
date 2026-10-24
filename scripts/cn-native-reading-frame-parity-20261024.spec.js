@@ -28,8 +28,8 @@ test('CN native About matches international reading frame and type',async({page}
   expect(Math.abs(target.width-source.width),'reading width source parity at '+width).toBeLessThanOrEqual(6);
   expect(Math.abs(target.headingX-target.x),'heading containment '+width).toBeLessThanOrEqual(1);
   expect(Math.abs(target.paragraphX-target.x),'paragraph containment '+width).toBeLessThanOrEqual(1);
-  expect(target.heading,'heading typography '+width).toEqual(source.heading);
-  expect(target.paragraph,'body typography '+width).toEqual(source.paragraph);
+  expect.soft(target.heading,'heading typography '+width).toEqual(source.heading);
+  expect.soft(target.paragraph,'body typography '+width).toEqual(source.paragraph);
  }
 });
 
