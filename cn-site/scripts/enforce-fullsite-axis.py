@@ -5,7 +5,7 @@ import re
 CN = Path(__file__).resolve().parents[1]
 AXIS_HREF = "/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10"
 AXIS_LINK = f'<link id="qilyContentAxisV1" rel="stylesheet" href="{AXIS_HREF}">'
-VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261023-fullsite-vi-parity-v4"
+VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261024-settled-fullsite-vi-v5"
 VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_HREF}">'
 ABOUT = (CN / 'about/index.html').read_text(encoding='utf-8')
 CANONICAL_HEADER = re.search(r'<header\b[\s\S]*?</header>', ABOUT, re.I).group(0)
@@ -40,8 +40,8 @@ for path in sorted(CN.rglob("*.html")):
     # CN owns its navigation, footer and measured header through local assets.
     text = INTERNATIONAL_SHELL_IMPORT.sub("", text)
 
-    # Normalize or append the canonical content-axis authority as the final
-    # stylesheet in <head>, so cached/legacy page-local width rules cannot win.
+    # Source clones retain their source cascade; an unscoped destination axis
+    # appended after it would replace section colors and phone gutters.
     text = re.sub(
         r'\n?[ \t]*<link[^>]+id=["\']qilyContentAxisV1["\'][^>]*>\n?',
         "",
@@ -49,7 +49,12 @@ for path in sorted(CN.rglob("*.html")):
         flags=re.I,
     )
     text = re.sub(r'\n?[ \t]*<link[^>]+id=["\']qilyCnSitewideVisualParityV1["\'][^>]*>\n?', "", text, flags=re.I)
-    text = text.replace("</head>", AXIS_LINK + "\n" + VI_LINK + "\n</head>", 1)
+    source_style = re.search(r'<(?:link|style)\b[^>]*\bdata-cn-source-css=', text, re.I)
+    if source_style:
+        text = text[:source_style.start()] + AXIS_LINK + "\n" + text[source_style.start():]
+        text = text.replace("</head>", VI_LINK + "\n</head>", 1)
+    else:
+        text = text.replace("</head>", AXIS_LINK + "\n" + VI_LINK + "\n</head>", 1)
 
     # Deterministic CN scope; avoids touching international layouts while using
     # the exact same canonical stylesheet.

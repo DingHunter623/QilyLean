@@ -13,6 +13,10 @@ parity = validator.parity
 
 
 class SourceContentAcceptanceTests(unittest.TestCase):
+    def test_direct_body_hero_rules_do_not_gain_a_main_match(self):
+        selector = parity.source_selector('html:root:root:root body > .hero .eyebrow')
+        self.assertIn(':where([data-cn-source-from-body="true"])', selector)
+
     def test_grouped_main_reading_floor_targets_clone_root(self):
         result = parity.source_selector('html:root:root body :is(main,footer,.site-footer,.qily-site-footer) :is(p,span)')
         self.assertIn('main[data-cn-source-content]', result)
@@ -60,7 +64,8 @@ class SourceContentAcceptanceTests(unittest.TestCase):
     def test_case_action_keeps_primary_style_with_source_whitespace(self):
         result = parity.render(parity.Tree('<a href="/projects/"> 查看代表案例\n</a>').root, 'index.html')
         self.assertIn('href="/notes/"', result)
-        self.assertIn('class="primary"', result)
+        self.assertIn('primary', parity.Tree(result).root.children[0].attrs['class'].split())
+        self.assertIn('qily-route-action', parity.Tree(result).root.children[0].attrs['class'].split())
 
     def test_footer_reference_is_refreshed_without_destination_fork(self):
         source = '<link rel="stylesheet" href="/assets/destination-shell/assets/cn-footer-actions-v1.css?v=old" data-cn-destination-origin="/assets/cn-footer-actions-v1.css?v=old">'
@@ -131,9 +136,27 @@ class SourceContentAcceptanceTests(unittest.TestCase):
     def test_home_runtime_provenance_covers_conversion_and_owner_profile(self):
         raw = (parity.ROOT / 'index.html').read_text()
         records = parity.source_runtime_records(raw, 'index.html')
-        self.assertEqual([item['source'] for item in records], list(parity.HOME_RUNTIMES))
+        self.assertEqual([item['source'] for item in records], list(parity.HOME_RUNTIMES) + ['site-interaction-semantics-v1.js'])
         self.assertTrue(all(len(item['sha256']) == 64 and item['bytes'] > 0 for item in records))
         self.assertEqual(parity.source_runtime_records('<main>静态课件</main>', 'index.html'), [])
+
+    def test_public_project_grades_follow_settled_source(self):
+        name = 'projects/index.html'
+        fragment = parity.source_fragment((parity.ROOT / name).read_text(), name)
+        self.assertEqual(fragment.count('data-qily-project-evidence='), 7)
+        self.assertIn('证据等级：已验证', fragment)
+
+    def test_public_trust_evidence_links_are_retained_and_local(self):
+        name = 'trust/index.html'
+        fragment = parity.source_fragment((parity.ROOT / name).read_text(), name)
+        public = parity.render(parity.Tree(fragment).root, name)
+        self.assertIn('当前公开归属：具备改善前后数据或过程验证的历史项目。', public)
+        self.assertIn('/archive/practice/smed-300t/', public)
+        self.assertNotIn('/projects/qilylean-commercial-deliveries/', public)
+
+    def test_executable_interaction_metadata_is_rejected(self):
+        with self.assertRaises(RuntimeError):
+            parity.javascript_data_literal('{note: window.dynamic()}')
 
 
 if __name__ == '__main__':

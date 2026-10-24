@@ -70,6 +70,13 @@ LINK_ADAPTATIONS = []
 STYLE_RECORDS = {}
 MEDIA_EXT = visual.MEDIA_EXT | {'.pdf', '.qly', '.woff', '.woff2', '.ttf', '.vtt'}
 VOID = {'area','base','br','col','embed','hr','img','input','link','meta','param','source','track','wbr'}
+INTERACTION_SOURCES = {}
+
+def uses_interaction_semantics(source):
+    if source not in INTERACTION_SOURCES:
+        path = ROOT / source
+        INTERACTION_SOURCES[source] = path.is_file() and '/site-interaction-semantics-v1.js' in path.read_text()
+    return INTERACTION_SOURCES[source]
 
 def media_url(value, source):
     if value.startswith('#'):
@@ -178,10 +185,11 @@ def runtime_function(runtime, name):
 
 
 def source_runtime_records(raw, name):
-    if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
-        return []
+    runtimes = list(HOME_RUNTIMES) if name == 'index.html' and '/site-home-conversion-v1.js' in raw else []
+    if '/site-interaction-semantics-v1.js' in raw:
+        runtimes.append('site-interaction-semantics-v1.js')
     return [{'source': relative, 'sha256': file_hash(ROOT / relative), 'bytes': (ROOT / relative).stat().st_size}
-            for relative in HOME_RUNTIMES if '/' + relative in raw]
+            for relative in runtimes if '/' + relative in raw]
 
 
 def source_fragment(raw, name):
@@ -194,7 +202,7 @@ def source_fragment(raw, name):
     match = re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>', raw, re.I)
     fragment = match.group(1) if match else mirror.extract_fragment(raw, name)
     if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
-        return fragment
+        return settle_interaction_content(fragment, raw, name)
     runtime = (ROOT / HOME_RUNTIMES[0]).read_text()
     root = Tree(fragment).root
 
@@ -351,6 +359,113 @@ def source_fragment(raw, name):
         value = ''.join(serialize(child) for child in node.children)
         return '<' + node.tag + attrs + '>' + ('' if node.tag in VOID else value + '</' + node.tag + '>') if node.tag else value
 
+    return settle_interaction_content(serialize(root), raw, name)
+
+
+def javascript_data_literal(expression):
+    """Read authored data only; refuse calls, member access or executable JS."""
+    tokens = re.findall(JS_STRING + r'|[A-Za-z_$][\w$]*|[^\s]', expression)
+    for index, token in enumerate(tokens):
+        if re.fullmatch(r'[A-Za-z_$][\w$]*', token):
+            if index + 1 >= len(tokens) or tokens[index + 1] != ':':
+                raise RuntimeError('Canonical interaction data is no longer literal')
+            tokens[index] = repr(token)
+    try:
+        return ast.literal_eval(''.join(tokens))
+    except (ValueError, SyntaxError) as error:
+        raise RuntimeError('Canonical interaction data changed') from error
+
+
+def settle_interaction_content(fragment, raw, name):
+    """Materialize public evidence added by the source interaction runtime."""
+    if '/site-interaction-semantics-v1.js' not in raw:
+        return fragment
+    runtime = (ROOT / 'site-interaction-semantics-v1.js').read_text()
+    root = Tree(fragment).root
+
+    def all_nodes(node):
+        if isinstance(node, Node):
+            yield node
+            for child in node.children:
+                yield from all_nodes(child)
+
+    def find(node, predicate):
+        return next((item for item in all_nodes(node) if predicate(item)), None)
+
+    def has_class(node, classname):
+        return classname in node.attrs.get('class', '').split()
+
+    def insert_after(owner, target, added):
+        parent = find(owner, lambda item: target in item.children)
+        if parent is None:
+            raise RuntimeError('Canonical evidence target is detached')
+        parent.children.insert(parent.children.index(target) + 1, added)
+
+    metadata = re.search(r'var PROJECT_EVIDENCE=({[\s\S]*?});', runtime)
+    if metadata is None:
+        raise RuntimeError('Canonical project evidence metadata missing')
+    evidence = javascript_data_literal(metadata.group(1))
+    source_url = '/' if name == 'index.html' else '/' + name.removesuffix('index.html')
+    markup = runtime_function(runtime, 'evidenceMarkup')
+    # These are structural source operations, rather than copied wording.
+    required = ["badge.textContent=meta.level", "text.textContent='证据等级：'+meta.label",
+                "note.textContent=meta.reason+'｜查看分级口径 →'",
+                "compact?'qily-project-list-grade ':'qily-project-evidence-grade '"]
+    if not all(token in markup for token in required):
+        raise RuntimeError('Canonical evidence markup changed; update settled adapter')
+
+    def grade(meta, compact):
+        link = Node('a', {'href': literal_template(markup, r'link\.href\s*='),
+                         'class': ('qily-project-list-grade ' if compact else 'qily-project-evidence-grade ') + 'qily-grade-' + meta['level'].lower(),
+                         'data-qily-project-evidence': meta['level'],
+                         'aria-label': '证据等级 ' + meta['level'] + ' ' + meta['label'] + '，查看证据分级口径'})
+        for tag, text in [('b', meta['level']), ('span', '证据等级：' + meta['label'])] + ([] if compact else [('small', meta['reason'] + '｜查看分级口径 →')]):
+            child = Node(tag); child.children = [html.escape(text)]; link.children.append(child)
+        return link
+
+    if source_url in evidence and find(root, lambda node: 'data-qily-project-evidence' in node.attrs) is None:
+        hero = find(root, lambda node: has_class(node, 'module-hero'))
+        title = find(hero, lambda node: node.tag == 'h1')
+        if title is not None:
+            insert_after(root, title, grade(evidence[source_url], False))
+    if source_url == '/projects/':
+        for card in [node for node in all_nodes(root) if has_class(node, 'project-list-card')]:
+            if find(card, lambda node: 'data-qily-project-evidence' in node.attrs) is not None:
+                continue
+            actions = find(card, lambda node: has_class(node, 'module-actions'))
+            route = find(actions, lambda node: node.tag == 'a' and node.attrs.get('href', '').startswith('/projects/'))
+            meta = evidence.get(route.attrs['href'].split('?')[0].split('#')[0]) if route else None
+            if not meta:
+                continue
+            content = find(card, lambda node: has_class(node, 'project-list-content')) or card
+            small = find(content, lambda node: node.tag == 'small')
+            if small is not None:
+                insert_after(content, small, grade(meta, True))
+            else:
+                content.children.insert(0, grade(meta, True))
+    if source_url == '/trust/':
+        section = find(root, lambda node: node.attrs.get('id') == 'evidence-levels')
+        if section is not None and section.attrs.get('data-qily-evidence-links') != 'v1':
+            levels = [node for node in all_nodes(section) if has_class(node, 'trust-level')]
+            group_match = re.search(r'var groups=(\[[\s\S]*?\]);', runtime_function(runtime, 'addTrustLinks'))
+            if group_match is None:
+                raise RuntimeError('Canonical trust evidence groups missing')
+            groups = javascript_data_literal(group_match.group(1))
+            if len(levels) >= 4:
+                for level, group in zip(levels, groups):
+                    box = Node('div', {'class': 'trust-evidence-links'})
+                    note = Node('span'); note.children = [html.escape(group['note'])]; box.children.append(note)
+                    for href, label in group['links']:
+                        link = Node('a', {'href': href}); link.children = [html.escape(label + ' →')]; box.children.append(link)
+                    level.children.append(box)
+                section.attrs['data-qily-evidence-links'] = 'v1'
+
+    def serialize(node):
+        if not isinstance(node, Node):
+            return node
+        attrs = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key, value in node.attrs.items())
+        content = ''.join(serialize(child) for child in node.children)
+        return '<' + node.tag + attrs + '>' + ('' if node.tag in VOID else content + '</' + node.tag + '>') if node.tag else content
     return serialize(root)
 
 def render(node, source):
@@ -426,6 +541,9 @@ def render(node, source):
             attrs['class'] = ' '.join(dict.fromkeys((attrs.get('class', '') + ' primary').split()))
         if attrs.get('href', '').startswith('/notes/#practice-'):
             return ''
+        if attrs.get('href') and not attrs['href'].startswith('#') and uses_interaction_semantics(source):
+            attrs['data-qily-interaction'] = 'route'
+            attrs['class'] = ' '.join(dict.fromkeys((attrs.get('class', '') + ' qily-route-action').split()))
     if tag == 'button':
         if re.fullmatch(r'(?:window\.)?print\(\);?', attrs.get('onclick', '').strip()):
             attrs['data-public-print'] = ''
@@ -604,7 +722,11 @@ def source_selector(selector):
         start, end, compound = body
         rest = selector[end:]
         if rest.lstrip().startswith(('+', '~')): return ''
-        return selector[:start] + SCOPE + body_conditions(compound) + rest
+        # A body > hero rule is for legacy pages without a main wrapper.
+        # Applying it to every cloned main would add a rule that never matched
+        # the original page (notably overriding the homepage kicker line-height).
+        direct_body = ':where([data-cn-source-from-body="true"])' if rest.lstrip().startswith('>') else ''
+        return selector[:start] + SCOPE + direct_body + body_conditions(compound) + rest
     if compounds and re.match(r'(?:html|:root)(?:[^\w-]|$)', compounds[0][2]):
         start, end, compound = compounds[0]
         rest = selector[end:]
@@ -898,6 +1020,7 @@ def main():
         if name == 'index.html' and 'qily-home-conversion-hero' in fragment:
             source_body['data-qily-home-conversion'] = 'v1'
         attrs['data-cn-source-body-class'] = source_body.get('class', '')
+        attrs['data-cn-source-from-body'] = 'false' if match else 'true'
         attrs['data-cn-source-scrollbar-gutter'] = 'stable' if '/site-closure-bundle-v24.css' in raw else 'auto'
         if 'qilyViV4Formal' in raw:
             attrs['data-cn-source-body-data-qily-vi-shell'] = 'v4-formal'
@@ -909,6 +1032,11 @@ def main():
         if attrs.get('style'): attrs['style'] = declarations(attrs['style'], name)
         main_attrs = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key, value in attrs.items())
         replacement = '<main id="main" data-cn-source-content="' + html.escape(name, quote=True) + '"' + main_attrs + '>' + content + '</main>' if content is not None else main_markup(old)
+        if content is None:
+            # Audited viewers retain their own DOM/styles, but viewport units
+            # still need the same root gutter as their international source.
+            replacement = re.sub(r'\sdata-cn-source-scrollbar-gutter="[^"]*"', '', replacement, count=1)
+            replacement = replacement.replace('<main', '<main data-cn-source-scrollbar-gutter="' + attrs['data-cn-source-scrollbar-gutter'] + '"', 1)
         replacement = localize_media_references(replacement)
         replacement = '\n'.join(line.rstrip() for line in replacement.split('\n'))
         # Audited interactive adapters retain their DOM, including image/PDF/Qly
@@ -927,7 +1055,7 @@ def main():
         # domain. The live server returns 404; removing this unused reference
         # avoids a render-blocking network failure without changing pixel styles.
         # The international site retains its own V5 stylesheet unchanged.
-        if name == 'index.html' and not (CN / 'site-visual-readability-v5.css').is_file():
+        if not (CN / 'site-visual-readability-v5.css').is_file():
             updated = re.sub(r'<link\b(?=[^>]*\bid=[\x22\x27]qilyVisualReadabilityV5Stylesheet[\x22\x27])[^>]*>', '', updated, flags=re.I)
         # Preserve the destination's audited preview/print/share implementation,
         # refreshing its digest after the generator has materialized the runtime.

@@ -197,6 +197,10 @@ def verify_operating_axis(source_value, target_value, url):
 def verify_semantics(value, row):
     url = row['url']
     main = parity.main_markup(value)
+    source_style = re.search(r'<(?:link|style)\b[^>]*\bdata-cn-source-css=', value, re.I)
+    axis_style = re.search(r'<link\b[^>]*\bid="qilyContentAxisV1"', value, re.I)
+    require(not source_style or axis_style and axis_style.start() < source_style.start(),
+            'Destination axis must precede the canonical source cascade: ' + url)
     require(sha(main.encode()) == row['main_sha256'], 'Content DOM SHA mismatch: ' + url)
     require(inline_hash(value) == row['inline_css_sha256'], 'Inline source CSS SHA mismatch: ' + url)
     require(len(re.findall(r'<img\b', main, re.I)) == row['images'], 'Image count differs: ' + url)
