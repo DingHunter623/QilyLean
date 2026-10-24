@@ -37,7 +37,7 @@
     var panel=section.querySelector('[data-qily-certificate-verification]');
     if(panel){
       panel.setAttribute('data-qily-certificate-verification','v2');
-      panel.innerHTML='<span class="module-eyebrow">VERIFICATION | 证书信息</span><h3>证书事实与关联平台</h3><div class="module-grid module-grid-3">'
+      panel.innerHTML='<span class="module-eyebrow">VERIFICATION | 证书信息</span><h3>证书事实与关联平台</h3><div class="module-grid module-grid-3" data-qily-card-count="6">'
         +'<article class="module-card"><small>关联平台 / 工具</small><h3>OpenAI · ChatGPT / Codex</h3></article>'
         +'<article class="module-card"><small>证书编号</small><h3>GPT-LE-2025-0422</h3></article>'
         +'<article class="module-card"><small>日期</small><h3>2025年4月22日</h3></article>'
