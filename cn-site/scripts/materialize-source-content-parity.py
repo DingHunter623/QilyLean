@@ -605,7 +605,24 @@ def render(node, source):
         attrs['style'] = declarations(attrs['style'], source)
         if not attrs['style']: attrs.pop('style')
     attrs = {key:value for key,value in attrs.items() if not key.lower().startswith('on')}
-    text = ''.join(render(child, source) for child in node.children)
+    # International R8 annotates each public card grid at runtime. CN does
+    # not load the international shell runtime, so materialize the equivalent
+    # data-card count after commercial children have been filtered. Shared
+    # R8 CSS then owns 3/4/5/6-column responsive grids without CN overrides.
+    rendered = [(child, render(child, source)) for child in node.children]
+    grid_classes = {'module-grid','paper-grid','project-grid','project-list-grid',
+       'career-full-grid','service-grid','resource-grid','knowledge-grid','trust-grid',
+       'qily-ia-grid','qily-six-grid','qily-proof-strip','qily-principle-grid',
+       'qily-secondary-links'}
+    if classes & grid_classes:
+        card_count = sum(1 for child, value in rendered if isinstance(child, Node)
+                         and value.strip() and child.attrs.get('hidden') is None
+                         and 'display:none' not in child.attrs.get('style', '').replace(' ', '').lower())
+        if 3 <= card_count <= 6:
+            attrs['data-qily-card-count'] = str(card_count)
+        else:
+            attrs.pop('data-qily-card-count', None)
+    text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())
     return '<' + tag + attributes + '>' + ('' if tag in VOID else text + '</' + tag + '>')
