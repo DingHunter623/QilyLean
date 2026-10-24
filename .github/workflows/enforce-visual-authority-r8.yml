@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - '**/*.html'
+      # A CN-only change must never rebuild/write the international public site.
+      - '!cn-site/**'
       - 'site-visual-authority-r8.css'
       - 'site-visual-runtime-r8.js'
       - 'site-visual-system-v2.css'
