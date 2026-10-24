@@ -5,7 +5,7 @@ import re
 CN = Path(__file__).resolve().parents[1]
 AXIS_HREF = "/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10"
 AXIS_LINK = f'<link id="qilyContentAxisV1" rel="stylesheet" href="{AXIS_HREF}">'
-VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261024-settled-fullsite-vi-v5"
+VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261024-source-r8-grid-parity-v4"
 VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_HREF}">'
 ABOUT = (CN / 'about/index.html').read_text(encoding='utf-8')
 CANONICAL_HEADER = re.search(r'<header\b[\s\S]*?</header>', ABOUT, re.I).group(0)
