@@ -122,10 +122,9 @@ def media_url(value, source):
     MEDIA.add(encoded)
     return versioned_media_url(encoded, media_digest(relative))
 
-# Public, non-commercial official APK releases must remain usable in the
-# mainland capability mirror. Mirror locally when the file has been staged;
-# otherwise link to the original published COM asset instead of flattening
-# the action into bare text. Never fabricate a local download path.
+# Official public APK assets are released as immutable, hash-verified media
+# on the CN host. Never substitute an external COM download URL; China's
+# published-content boundary and source parity checks prohibit that fallback.
 CAPABILITY_PUBLIC_APKS = frozenset({
     '/Times26001-Android-v1.1.14-Standard-Website-Logo.apk',
     '/QilyLean_Home_v2.3.3_API36_INSTALL.apk',
@@ -141,10 +140,15 @@ def link_url(value, source):
         return value
     path = parsed.path
     if source == 'capabilities/index.html' and path in CAPABILITY_PUBLIC_APKS:
-        # Only claim a CN same-origin download if that exact asset exists.
-        if (CN / path.lstrip('/')).is_file():
-            return urlunsplit(('', '', path, parsed.query, parsed.fragment))
-        return urlunsplit(('https', 'qilylean.com', path, parsed.query, parsed.fragment))
+        relative = unquote(path).lstrip('/')
+        # Missing release artifacts must fail closed, never turn into dead CTAs.
+        if relative not in TRACKED or not (ROOT / relative).is_file():
+            raise RuntimeError('Missing published digital APP package: ' + relative)
+        encoded = quote(relative, safe='/')
+        MEDIA.add(encoded)
+        # Main materializer copies and SHA-256 verifies the actual binary under
+        # cn-site/assets/public-media; this URL is local and content-versioned.
+        return versioned_media_url(encoded, media_digest(relative))
     if path.startswith(COMMERCIAL_ROUTES) or parsed.fragment in BLOCK_IDS:
         return ''
     if Path(path).suffix.lower() in visual.MEDIA_EXT | {'.pdf', '.qly'}:
