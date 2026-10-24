@@ -420,7 +420,12 @@ html body input.qily-primary-nav-scroll-rail[type="range"]{
  * Keep existing link colors, weights and button/navigation decoration rules.
  * Do not force nowrap: mobile layouts may wrap naturally by line.
  */
-html:root:root:root body a[href]{
+/* Apply to all underlined text, including non-anchor phone/WeChat labels,
+ * URLs, email, registration IDs, inline <u> and nested highlighted spans.
+ * This controls only underline continuity, never whether an element is underlined. */
+html:root:root:root body *,
+html:root:root:root body *::before,
+html:root:root:root body *::after{
   text-decoration-skip-ink:none!important;
   -webkit-text-decoration-skip:none!important;
 }

@@ -12,6 +12,14 @@ const marker = 'QILY-CONTINUOUS-LINK-UNDERLINE-20261024';
 const rules = shared.slice(shared.indexOf('/* '+marker));
 assert(shared.includes('/* '+marker), 'Shared dual-site underline rule is missing.');
 assert(/text-decoration-skip-ink\s*:\s*none\s*!important/.test(rules), 'Ink-skip must be disabled.');
+assert(/body\\s*\\*\\s*,/.test(rules), 'All underlined elements, not just links, must be included.');
+assert(/\\*::before/.test(rules) && /\\*::after/.test(rules), 'Pseudo-element coverage must be explicit.');
+for(const path of ['site-link-standard-v1.css','cn-site/assets/qilylean-vi-v2.css']){
+  const styles=read(path);
+  assert(styles.includes('QILY-ALL-UNDERLINED-TEXT-CONTINUOUS-20261024'),path+' global inline-text continuity guard is missing.');
+  assert(/body\\s*\\*\\s*,/.test(styles),path+' must include non-link text elements.');
+}
+
 assert(/-webkit-text-decoration-skip\s*:\s*none\s*!important/.test(rules), 'WebKit ink-skip must be disabled.');
 assert(/text-underline-offset\s*:\s*\.22em\s*!important/.test(rules), 'About-domain underline spacing must match VI.');
 assert(!/text-decoration-line\s*:/.test(rules), 'Do not change navigation/button underline semantics.');

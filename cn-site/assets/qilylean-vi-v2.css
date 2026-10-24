@@ -1581,3 +1581,12 @@ html body .qily-about-phone-item>a.qily-about-action:focus-visible{
   html body .qily-about-phone-item{padding:14px 16px}
   html body .qily-about-phone-item>a.qily-about-action{font-size:20px!important}
 }
+
+/* QILY-ALL-UNDERLINED-TEXT-CONTINUOUS-20261024
+ * Global CN public VI: continuous underline for every decorated text run.
+ * Affects only glyph ink skipping; never forces underlines onto controls.
+ */
+html:root:root body *,html:root:root body *::before,html:root:root body *::after{
+  text-decoration-skip-ink:none!important;
+  -webkit-text-decoration-skip:none!important;
+}
