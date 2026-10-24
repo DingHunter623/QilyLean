@@ -222,7 +222,7 @@ def verify_semantics(value, row):
     if url == '/':
         for section in ('qily-core-services', 'qily-digital-enablers'):
             require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)
-        require('三类制造工程实践' in main and '数智化增强' in main,
+        require('三类项目' in main and '数智化增强' in main,
                 'China homepage must retain engineering and digital capability summaries')
         require('免费60分钟沟通诊断' not in main and '咨询转化' not in main,
                 'China public homepage must not expose commercial conversion copy')
