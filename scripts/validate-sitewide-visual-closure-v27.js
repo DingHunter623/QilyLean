@@ -11,7 +11,7 @@ const forbid=(source,token,label)=>{if(source.includes(token))throw new Error(`$
 
 const visual=read('site-visual-system-v2.css');
 for(const token of ['V27 public visual closure','.qily-system-axis__step:not(:last-child)::after','right:-16px!important','z-index:8!important','.hero + .authority-strip','calc(100% - var(--qv2-gutter) - var(--qv2-gutter))','#boundary .boundary-split li{font-size:17.5px!important','section#contact .trust-contact>a[href]:is(:hover,:focus-visible,:active)','#evidence-levels .trust-level>span{min-height:calc(1.65em * 4)!important','.qily-web-translate__select','background-clip:padding-box!important'])must(visual,token,'V27 visual authority');
-const capabilities=read('capabilities/index.html');for(const token of ['PDCA项目机制','P｜计划 Plan','D｜执行 Do','C｜检查 Check','A｜处置 Act','class="module-grid four"'])must(capabilities,token,'Capability PDCA');
+const capabilities=read('capabilities/index.html');for(const token of ['PDCA项目机制','P｜计划 Plan','D｜执行 Do','C｜检查 Check','A｜处置 Act','class="module-grid four qily-pdca-loop"'])must(capabilities,token,'Capability PDCA');
 const semantics=read('site-interaction-semantics-v1.css');for(const token of ['[data-qily-interaction="static"]','cursor:default!important','transform:none!important'])must(semantics,token,'Static interaction semantics');
 
 const ddz=read('tools/pure-ddz/index.html');
