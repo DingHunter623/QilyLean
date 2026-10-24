@@ -511,11 +511,11 @@ def render(node, source):
     # surrounding project facts, original cards, diagrams, photos and layout.
     prose = tag in {'p','li','figcaption','small','h2','h3','dd','dt'}
     commercial_card = tag == 'article' and any(isinstance(child, Node) and child.tag == 'strong' and child.text().strip() in {'交易机制', '责任边界'} for child in node.children)
-    procurement_card = tag == 'article' and 'qily-home-role' in classes and any(
-        isinstance(child, Node) and child.tag == 'h3' and child.text().strip() == '专家／供应商协同'
-        for child in node.children)
+    # Expert/supplier coordination is manufacturing project governance, not
+    # a commercial solicitation. Preserve its public engineering-boundary card;
+    # transactional copy and lead-generation links remain filtered separately.
     commercial_note = bool(classes & {'qily-asset-note', 'qily-ia-result'})
-    if procurement_card or (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
+    if (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
         EXCLUDED.append({'source': source, 'panel': identifier or tag, 'reason': 'commercial-copy'})
         return ''
     if tag == 'a':
