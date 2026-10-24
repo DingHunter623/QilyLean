@@ -241,3 +241,51 @@ test('All six public operating-axis topics retain the international 6/3/2 grid',
    expect(cn.right).toBeLessThanOrEqual(width+1);
  }
 });
+
+test('Times26001 seven functional buttons and responsive VI match international',async({page})=>{
+ test.setTimeout(120000);
+ const labels=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
+ async function read(){
+  return page.locator('#times26001 .module-actions').evaluate(element=>{
+   const actions=[...element.querySelectorAll('a')];
+   const base=actions.length?actions[0].getBoundingClientRect().top:0;
+   return actions.map(anchor=>{
+    const style=getComputedStyle(anchor),box=anchor.getBoundingClientRect();
+    return {text:anchor.textContent.trim(),href:anchor.getAttribute('href'),
+      row:Math.round((box.top-base)/Math.max(1,box.height+8)),
+      top:Math.round(box.top),height:Math.round(box.height),
+      color:style.color,background:style.backgroundColor,
+      fontSize:style.fontSize,fontWeight:style.fontWeight,
+      radius:style.borderRadius,padding:style.padding,display:style.display};
+   });
+  });
+ }
+ for(const width of [1588,390]){
+  await page.setViewportSize({width,height:960});
+  await visit(page,intBase+'/capabilities/');
+  const intl=await read();
+  await visit(page,cnBase+'/archive/profile/capabilities/');
+  const cn=await read();
+  expect(intl.map(x=>x.text),'international Times26001 button contract').toEqual(labels);
+  expect(cn.map(x=>x.text),'China Times26001 buttons must all be links').toEqual(labels);
+  expect(cn.every(x=>x.href&&x.href!=='#'),'no inert buttons').toBe(true);
+  expect(cn[0].href).toContain('Times26001-Android-v1.1.14-Standard-Website-Logo.apk');
+  expect(cn[6].href).toBe('/app-support/');
+  for(let i=0;i<labels.length;i++){
+   for(const key of ['height','color','background','fontSize','fontWeight','radius','padding','display']){
+    expect(cn[i][key],'Times26001 button '+labels[i]+' '+key+' at '+width).toBe(intl[i][key]);
+   }
+  }
+  // Compare row groupings only after actual computed browser layout settles.
+  function rows(data){
+   const positions=[];
+   for(const button of data){
+    if(!positions.some(y=>Math.abs(y-button.top)<=2))positions.push(button.top);
+   }
+   return positions.map(y=>data.filter(x=>Math.abs(x.top-y)<=2).length);
+  }
+  expect(rows(cn),'matching seven-button row grouping at '+width).toEqual(rows(intl));
+  if(width===1588)expect(rows(cn),'desktop grouping per approved screenshot').toEqual([3,4]);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
+ }
+});
