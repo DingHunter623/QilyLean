@@ -55,8 +55,8 @@ async function inspect(page,url){
       assert.ok(state.intl.chips[2].rect.right<=state.intl.media.left-5,
          'narrow international desktop third chip overlaps media at '+width);
    }
-   assert.equal(state.intl.actions[0].text,'免费60分钟沟通诊断','international commercial CTA lost');
-   assert.equal(state.intl.actions[1].text,'查看代表案例','international case action lost');
+   assert.equal(state.intl.actions[0].text,'查看代表案例','international case action must lead, aligned with CN');
+   assert.equal(state.intl.actions[1].text,'免费60分钟沟通诊断','international commercial CTA must follow case action');
    assert.ok(state.intl.route.includes('标准启动路径：免费60分钟沟通诊断'),'international sales route lost');
    assert.ok(state.cn.actions.some(x=>x.text==='查看代表案例'),'CN public action missing');
    assert.ok(!state.cn.actions.some(x=>x.text.includes('60分钟')),'China accidentally gained commercial CTA');
