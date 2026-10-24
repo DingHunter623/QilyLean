@@ -1,0 +1,21 @@
+name: Diagnose public gold kicker VI without deploy
+on:
+  push:
+    branches: [fix/cn-gold-kicker-vi-parity-20261024]
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install browser
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Compare public label typography in real domains
+        run: node scripts/cn-gold-kicker-diagnostic-20261024.cjs
