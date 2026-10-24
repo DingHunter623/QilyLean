@@ -1,0 +1,43 @@
+name: Validate dual-site PDCA closed-loop VI
+on:
+  pull_request:
+    paths:
+      - 'capabilities/index.html'
+      - 'capability-pdca-loop-v1.css'
+      - 'scripts/test-pdca-dual-site-layout-20261024.cjs'
+      - '.github/workflows/validate-pdca-visual-20261024.yml'
+  push:
+    branches: [fix/dual-site-pdca-closed-loop-20261024]
+permissions:
+  contents: read
+jobs:
+  cross-site-pdca:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Generate China public clone using production source
+        run: |
+          set -euo pipefail
+          bash cn-site/scripts/materialize-practice-assets.sh
+          python3 cn-site/scripts/validate-source-content-parity.py
+      - name: Prepare actual Chromium for visual acceptance
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/qily-pdca-intl.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-pdca-cn.log 2>&1 &
+          sleep 2
+      - name: Confirm 田 grid, closed arrows and typography on both sites
+        run: node scripts/test-pdca-dual-site-layout-20261024.cjs
+      - name: Preserve international and China diagram screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdca-dual-site-visual-evidence
+          path: pdca-visual-evidence/
+          retention-days: 14
+          if-no-files-found: warn

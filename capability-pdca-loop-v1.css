@@ -1,0 +1,111 @@
+/* QILY PDCA LOOP | 2026-10-24
+ * Shared public engineering diagram; copied to .cn by source-content mirror.
+ * Intentionally scoped to #mechanism: do not alter four-column cards elsewhere.
+ *
+ *   P ───→ D
+ *   ↑      ↓
+ *   A ←─── C
+ */
+html:root:root body main #mechanism .module-grid.four.qily-pdca-loop{
+  --qily-pdca-gap:52px;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-areas:"plan do" "act check"!important;
+  gap:var(--qily-pdca-gap)!important;
+  align-items:stretch!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+html body main #mechanism .qily-pdca-loop>.module-card{
+  position:relative!important;
+  min-width:0!important;
+  max-width:100%!important;
+  height:100%!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+  isolation:isolate;
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="p"]{grid-area:plan!important}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="d"]{grid-area:do!important}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="c"]{grid-area:check!important}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="a"]{grid-area:act!important}
+html body main #mechanism .qily-pdca-loop>.module-card::before{
+  content:"";
+  display:block!important;
+  position:absolute!important;
+  z-index:2;
+  background:#caa15f;
+  pointer-events:none;
+}
+html body main #mechanism .qily-pdca-loop>.module-card::after{
+  position:absolute!important;
+  z-index:3;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:32px;
+  height:32px;
+  border:1px solid #d8b66e;
+  border-radius:50%;
+  box-sizing:border-box;
+  background:#0f4b5a;
+  color:#ffe39b;
+  font:700 22px/1 system-ui,sans-serif;
+  box-shadow:0 2px 7px rgba(7,60,71,.15);
+  pointer-events:none;
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="p"]::before{
+  top:50%;right:-52px;width:52px;height:2px;transform:translateY(-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="p"]::after{
+  content:"→";top:50%;right:-26px;transform:translate(50%,-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="d"]::before{
+  bottom:-52px;left:50%;width:2px;height:52px;transform:translateX(-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="d"]::after{
+  content:"↓";bottom:-26px;left:50%;transform:translate(-50%,50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="c"]::before{
+  top:50%;left:-52px;width:52px;height:2px;transform:translateY(-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="c"]::after{
+  content:"←";top:50%;left:-26px;transform:translate(-50%,-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="a"]::before{
+  top:-52px;left:50%;width:2px;height:52px;transform:translateX(-50%);
+}
+html body main #mechanism .qily-pdca-loop>[data-qily-pdca="a"]::after{
+  content:"↑";top:-26px;left:50%;transform:translate(-50%,-50%);
+}
+@media(max-width:620px){
+  html:root:root body main #mechanism .module-grid.four.qily-pdca-loop{
+    --qily-pdca-gap:32px;
+    gap:32px!important;
+  }
+  html body main #mechanism .qily-pdca-loop>.module-card{
+    padding:14px!important;
+  }
+  html body main #mechanism .qily-pdca-loop>.module-card h3{
+    font-size:clamp(18px,4.5vw,20px)!important;
+    overflow-wrap:anywhere!important;
+  }
+  html body main #mechanism .qily-pdca-loop>.module-card p{
+    font-size:clamp(16px,4vw,18px)!important;
+    line-height:1.6!important;
+    overflow-wrap:anywhere!important;
+  }
+  html body main #mechanism .qily-pdca-loop>.module-card::after{
+    width:24px;height:24px;font-size:17px;
+  }
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="p"]::before{right:-32px;width:32px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="p"]::after{right:-16px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="d"]::before{bottom:-32px;height:32px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="d"]::after{bottom:-16px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="c"]::before{left:-32px;width:32px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="c"]::after{left:-16px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="a"]::before{top:-32px;height:32px}
+  html body main #mechanism .qily-pdca-loop>[data-qily-pdca="a"]::after{top:-16px}
+}
