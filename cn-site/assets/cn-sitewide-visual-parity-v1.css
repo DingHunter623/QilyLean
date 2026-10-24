@@ -161,3 +161,18 @@ html:root:root:root:root body[data-qily-site="cn"]
   color:#3d6062!important;
   -webkit-text-fill-color:#3d6062!important;
 }
+
+
+/* R8 desktop article measure: COM About aligns the long-form reading body
+ * on a centered 1128px measure inside the 1180px public system axis.
+ * This is intentionally not applied to hero, header, card grids, or clones. */
+@media(min-width:901px){
+ html:root:root:root:root body[data-qily-site="cn"]
+  main:not([data-cn-source-content]) > section.section > .content.article-shell{
+    width:min(1128px,calc(100% - 52px))!important;
+    max-width:1128px!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+  }
+}
