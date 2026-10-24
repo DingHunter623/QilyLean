@@ -172,7 +172,8 @@
 
     var timesCard=document.getElementById('times26001');
     if(timesCard){
-      var image=timesCard.querySelector('img');
+      // Preserve the shared capability overview; real-device images belong to the tool page.
+      var image=timesCard.querySelector('.capability-digital-visual:not([data-qily-capability-overview]) img');
       if(image){image.src=TIMES_REAL_HERO;image.alt='Times26001 v1.1.14 三星C55真机首页截图';}
       var small=timesCard.querySelector('small');
       if(small)small.textContent='数字工具作品｜工业工程时间研究＋IE现场测时';

@@ -76,7 +76,11 @@ if (!/<div class="module-actions"[^>]*>[\s\S]*?<\/div>/.test(homeBlock)) fail('Q
 homeBlock = homeBlock.replace(/<div class="module-actions"[^>]*>[\s\S]*?<\/div>/, QHOME_ACTIONS);
 page = page.replace(homePattern, homeBlock);
 
-const shareScript = `<script defer id="qilyAppDownloadShareRuntime" src="/app-download-share-v1.js?v=${APP_SHARE_VERSION}"></script>`;
+// Keep page-specific cache revisions when refreshing the canonical runtime version.
+const existingShareSrc = page.match(/src="(\/app-download-share-v1\.js\?[^\"]+)"/);
+const shareUrl = new URL(existingShareSrc ? existingShareSrc[1] : '/app-download-share-v1.js', 'https://qilylean.com');
+shareUrl.searchParams.set('v', APP_SHARE_VERSION);
+const shareScript = `<script defer id="qilyAppDownloadShareRuntime" src="${shareUrl.pathname}?${shareUrl.searchParams.toString()}"></script>`;
 if (/src="\/app-download-share-v1\.js\?v=[^"]+"/.test(page)) {
   page = page.replace(/<script[^>]*src="\/app-download-share-v1\.js\?v=[^"]+"[^>]*><\/script>/, shareScript);
 } else if (!page.includes('/app-download-share-v1.js')) {
