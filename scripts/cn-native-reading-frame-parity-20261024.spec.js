@@ -3,7 +3,7 @@ const intl=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cn=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
 const widths=[390,430,820,1440,1920];
 function canonicalWidth(width){
- const gutter=Math.min(56,Math.max(18,width*.022));
+ const gutter=width<=620?15:Math.min(56,Math.max(18,width*.022));
  return Math.min(1180,width-2*gutter);
 }
 async function readNativeFrame(page,route,width){
