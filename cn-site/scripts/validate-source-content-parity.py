@@ -275,7 +275,11 @@ def verify_semantics(value, row):
             approved_apk = (row['source'] == 'capabilities/index.html'
                             and parsed.hostname == 'qilylean.com'
                             and parsed.path in parity.CAPABILITY_PUBLIC_APKS)
-            require(parsed.hostname not in {'qilylean.com', 'www.qilylean.com'} or approved_bridge or approved_apk,
+            approved_home_legal = (row['source'] == 'capabilities/index.html'
+                                   and parsed.hostname == 'qilylean.com'
+                                   and parsed.path in parity.CAPABILITY_HOME_OFFICIAL_LEGAL
+                                   and not parsed.query and not parsed.fragment)
+            require(parsed.hostname not in {'qilylean.com', 'www.qilylean.com'} or approved_bridge or approved_apk or approved_home_legal,
                     'International internal route was not localized: ' + url)
         if tag in {'img', 'source', 'video', 'track', 'image', 'use'}:
             for key in ('src', 'poster', 'href', 'xlink:href'):
