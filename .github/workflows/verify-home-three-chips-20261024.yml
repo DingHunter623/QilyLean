@@ -1,0 +1,40 @@
+name: Verify international homepage 3-chip parity
+on:
+  push:
+    branches: [fix/intl-home-three-chips-single-row-20261024]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'styles/qily-home-conversion-visual-fix-v2.css'
+      - 'scripts/test-home-three-chips-20261024.cjs'
+      - '.github/workflows/verify-home-three-chips-20261024.yml'
+permissions:
+  contents: read
+jobs:
+  browser-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Build China public mirror without changing source
+        run: bash cn-site/scripts/materialize-practice-assets.sh
+      - name: Chromium preview setup
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/intl-home-vi.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/cn-home-vi.log 2>&1 &
+          sleep 2
+      - name: Check both domain business-label geometry and CTA boundaries
+        run: node scripts/test-home-three-chips-20261024.cjs
+      - name: Attach before-release browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hero-single-row-dual-site-evidence
+          path: vi-hero-single-row-evidence/
+          if-no-files-found: warn
+          retention-days: 14
