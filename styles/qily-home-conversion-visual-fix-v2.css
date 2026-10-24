@@ -357,14 +357,14 @@ html body[data-qily-home-conversion="v1"] .qily-home-brand-extension__head p{
 
 /* QILY INTERNATIONAL HOME SINGLE ROW | 2026-10-24
  * Align international informational chips with approved China homepage VI.
- * Three pills occupy one row at >=1440px, where the source's two-column grid
+ * Three pills occupy one row at >=1280px, where the source's two-column grid
  * has enough horizontal room. Narrower screens retain natural wrapping,
  * avoiding card/image overlap without shrinking the content or typography.
  * This does not reduce size or alter
  * international commercial CTA, three project images, or mobile wrapping.
  * CN already has canonical shared one-row implementation; leave it untouched.
  */
-@media(min-width:1440px){
+@media(min-width:1280px){
   html:root:root body[data-qily-home-conversion="v1"]:not([data-qily-site="cn"]) .qily-home-conversion-hero__chips{
     display:flex!important;
     flex-wrap:nowrap!important;
