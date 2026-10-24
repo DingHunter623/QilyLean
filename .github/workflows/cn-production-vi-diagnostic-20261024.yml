@@ -31,6 +31,9 @@ jobs:
       - name: Verify China footer visual axis without changing its CSS
         run: |
           npx playwright test scripts/redline-navigation-footer-parity.spec.js --grep 'China dock matches international|China 1588px footer stays|China shared footer has no desktop' --reporter=line --workers=1
+      - name: Full international-China content and public footer regression
+        run: |
+          npx playwright test scripts/cn-home-visual-parity-20261023.spec.js scripts/redline-navigation-footer-parity.spec.js --reporter=line --workers=1
       - name: Save browser evidence
         if: always()
         uses: actions/upload-artifact@v4
