@@ -1,0 +1,51 @@
+name: Verify CN public supplier, PDCA, and home-action VI
+on:
+  push:
+    branches: [fix/dual-home-actions-supplier-pdca-20261024]
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'site-home-conversion-v1.js'
+      - 'scripts/enforce-aircraft-home-hero.js'
+      - 'cn-site/scripts/materialize-source-content-parity.py'
+      - 'scripts/test-cn-source-content-parity.py'
+      - 'scripts/test-home-three-chips-20261024.cjs'
+      - '.github/workflows/verify-cn-supplier-pdca-actions-20261024.yml'
+permissions:
+  contents: read
+jobs:
+  source-and-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 38
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Test authoritative international-to-China commercial boundary
+        run: |
+          set -euo pipefail
+          python3 scripts/test-cn-source-content-parity.py
+          bash cn-site/scripts/materialize-practice-assets.sh
+          python3 cn-site/scripts/validate-source-content-parity.py
+      - name: Chromium visual environment
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/intl-parity.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/cn-parity.log 2>&1 &
+          sleep 2
+      - name: Verify homepage case button and public supplier card across 7 widths
+        run: node scripts/test-home-three-chips-20261024.cjs
+      - name: Verify international/China P-D-C-A-P arrows and mobile geometry
+        run: node scripts/test-pdca-dual-site-layout-20261024.cjs
+      - name: Preserve preview visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-actions-supplier-pdca-proof
+          path: |
+            vi-hero-single-row-evidence/
+            pdca-visual-evidence/
+          retention-days: 14
+          if-no-files-found: warn
