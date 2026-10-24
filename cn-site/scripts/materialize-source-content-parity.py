@@ -122,6 +122,15 @@ def media_url(value, source):
     MEDIA.add(encoded)
     return versioned_media_url(encoded, media_digest(relative))
 
+# Public, non-commercial official APK releases must remain usable in the
+# mainland capability mirror. Mirror locally when the file has been staged;
+# otherwise link to the original published COM asset instead of flattening
+# the action into bare text. Never fabricate a local download path.
+CAPABILITY_PUBLIC_APKS = frozenset({
+    '/Times26001-Android-v1.1.14-Standard-Website-Logo.apk',
+    '/QilyLean_Home_v2.3.3_API36_INSTALL.apk',
+})
+
 def link_url(value, source):
     if value.startswith('#'):
         return value
@@ -131,6 +140,11 @@ def link_url(value, source):
     if parsed.netloc and parsed.hostname not in {'qilylean.com', 'www.qilylean.com', 'qilylean.cn', 'www.qilylean.cn'}:
         return value
     path = parsed.path
+    if source == 'capabilities/index.html' and path in CAPABILITY_PUBLIC_APKS:
+        # Only claim a CN same-origin download if that exact asset exists.
+        if (CN / path.lstrip('/')).is_file():
+            return urlunsplit(('', '', path, parsed.query, parsed.fragment))
+        return urlunsplit(('https', 'qilylean.com', path, parsed.query, parsed.fragment))
     if path.startswith(COMMERCIAL_ROUTES) or parsed.fragment in BLOCK_IDS:
         return ''
     if Path(path).suffix.lower() in visual.MEDIA_EXT | {'.pdf', '.qly'}:
@@ -540,6 +554,13 @@ def render(node, source):
                 attrs['data-cn-link-sanitized'] = 'commercial-destination'
                 LINK_ADAPTATIONS.append({'source': source, 'label': label, 'from': original_href,
                     'to': None, 'action': 'preserved-unlinked-content'})
+        elif original_url.scheme == 'mailto' and source == 'capabilities/index.html' and node.text().strip() == '技术支持':
+            # Product help is a public learning/support resource, not a sales CTA.
+            attrs['href'] = '/app-support/'
+            attrs.pop('target', None); attrs.pop('rel', None)
+            attrs.pop('download', None)
+            LINK_ADAPTATIONS.append({'source': source, 'label': '技术支持',
+                'from': original_href, 'to': '/app-support/', 'action': 'public-product-support'})
         elif original_url.scheme in {'tel', 'mailto', 'weixin', 'whatsapp'}:
             EXCLUDED.append({'source': source, 'panel': identifier or 'a', 'reason': 'commercial-link'})
             return ''
