@@ -97,6 +97,9 @@ class SourceContentAcceptanceTests(unittest.TestCase):
 
     def test_actual_home_public_clone_filters_launch_and_keeps_all_public_modules(self):
         raw, fragment = self.settled_home()
+        # Exactly the same post-runtime public-copy adapter as production.
+        # Rendering the unadapted source would compare against a different DOM.
+        fragment = parity.public_home_copy(fragment)
         content = parity.render(parity.Tree(fragment).root, 'index.html')
         target = '<main>' + content + '</main>'
         self.check_page(raw, target, 'index.html')
