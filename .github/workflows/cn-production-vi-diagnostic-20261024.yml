@@ -1,0 +1,44 @@
+name: Diagnose CN production VI failure without deployment
+on:
+  push:
+    branches: [fix/cn-production-vi-failures-20261024]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnosis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate both domain fixtures using actual production pipeline
+        run: bash cn-site/scripts/materialize-practice-assets.sh
+      - name: Prepare browser
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/qily-diag-int.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-diag-cn.log 2>&1 &
+          sleep 2
+      - name: Measure rendered CSS selectors and scrollbar offset
+        run: node scripts/cn-vi-production-diagnostic-20261024.cjs
+      - name: Verify sourced capability and trust module layout
+        run: |
+          npx playwright test scripts/cn-home-visual-parity-20261023.spec.js --grep 'Public module content, order and VI: /(archive/profile/capabilities/|trust/)' --reporter=line --workers=1
+      - name: Verify China footer visual axis without changing its CSS
+        run: |
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js --grep 'China dock matches international|China 1588px footer stays|China shared footer has no desktop' --reporter=line --workers=1
+      - name: Full international-China content and public footer regression
+        run: |
+          npx playwright test scripts/cn-home-visual-parity-20261023.spec.js scripts/redline-navigation-footer-parity.spec.js --reporter=line --workers=1
+      - name: Save browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-vi-production-blockers-evidence
+          path: test-results/
+          if-no-files-found: warn
+

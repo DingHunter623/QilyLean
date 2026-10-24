@@ -41,7 +41,7 @@ ROUTES = dict(mirror.SOURCE_TO_URL)
 ROUTES.update({name: item[0] for name, item in PRIMARY.items()})
 ROUTES.update({'links/index.html': '/resources/', 'qilylean/daily-insights.html': '/briefs/', 'moments/index.html': '/archive/records/'})
 BLOCK_IDS = {'identity', 'contract', 'contact', 'project-cooperation', 'qily-commercial-deliveries',
-             'qily-north', 'qily-core-services', 'qily-digital-enablers', 'nda-template', 'diagnosis',
+             'qily-north', 'nda-template', 'diagnosis',
              'qily-home-launch', 'floatDock', 'qilyDockBottomSpacerV58'}
 BLOCK_CLASSES = {'contact-panel', 'brief-feedback', 'brief-inline-message', 'resource-service',
                  'qily-resource-network', 'qily-contact-modal', 'commercial-panel'}
@@ -77,6 +77,25 @@ def uses_interaction_semantics(source):
         path = ROOT / source
         INTERACTION_SOURCES[source] = path.is_file() and '/site-interaction-semantics-v1.js' in path.read_text()
     return INTERACTION_SOURCES[source]
+
+# CN retains the two public engineering/digital capability sections.
+# Exclude source sales funnels rather than removing entire instructional modules.
+CN_PUBLIC_HOME_COPY = {
+ # The international JS runtime already replaces the raw core heading with
+ # the public CORE DELIVERY structure. Do not compare against obsolete HTML.
+ '数字化工厂用于把流程、数据、计划、设备、质量与现场执行固化到系统；APP软件与官网建设属于数字产品和工程作品能力，可按项目需要独立承接，也可作为制造改善成果的数字化载体。':
+   '数字化工厂用于把流程、数据、计划、设备、质量与现场执行固化到系统；APP软件与官网建设作为数字工程实践和技术作品，也可承载制造改善的知识、数据及可视化成果。',
+ '围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。':
+   '围绕品牌定位、信息架构、可信证据、内容体系、SEO、响应式适配及持续运维构建专业官网。',
+ '信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范':
+   '信息架构、页面模板、响应式官网、SEO基础、内容入口、部署与运维规范',
+}
+def public_home_copy(fragment):
+    for original, noncommercial in CN_PUBLIC_HOME_COPY.items():
+        if original in fragment:
+            fragment = fragment.replace(original, noncommercial, 1)
+    return fragment
+
 
 def media_url(value, source):
     if value.startswith('#'):
@@ -586,7 +605,24 @@ def render(node, source):
         attrs['style'] = declarations(attrs['style'], source)
         if not attrs['style']: attrs.pop('style')
     attrs = {key:value for key,value in attrs.items() if not key.lower().startswith('on')}
-    text = ''.join(render(child, source) for child in node.children)
+    # International R8 annotates each public card grid at runtime. CN does
+    # not load the international shell runtime, so materialize the equivalent
+    # data-card count after commercial children have been filtered. Shared
+    # R8 CSS then owns 3/4/5/6-column responsive grids without CN overrides.
+    rendered = [(child, render(child, source)) for child in node.children]
+    grid_classes = {'module-grid','paper-grid','project-grid','project-list-grid',
+       'career-full-grid','service-grid','resource-grid','knowledge-grid','trust-grid',
+       'qily-ia-grid','qily-six-grid','qily-proof-strip','qily-principle-grid',
+       'qily-secondary-links'}
+    if classes & grid_classes:
+        card_count = sum(1 for child, value in rendered if isinstance(child, Node)
+                         and value.strip() and child.attrs.get('hidden') is None
+                         and 'display:none' not in child.attrs.get('style', '').replace(' ', '').lower())
+        if 3 <= card_count <= 6:
+            attrs['data-qily-card-count'] = str(card_count)
+        else:
+            attrs.pop('data-qily-card-count', None)
+    text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())
     return '<' + tag + attributes + '>' + ('' if tag in VOID else text + '</' + tag + '>')
@@ -975,6 +1011,8 @@ def main():
         raw = source_path.read_text()
         match = re.search(r'<main\b([^>]*)>([\s\S]*?)</main\s*>', raw, re.I)
         fragment = source_fragment(raw, name)
+        if name == 'index.html':
+            fragment = public_home_copy(fragment)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)

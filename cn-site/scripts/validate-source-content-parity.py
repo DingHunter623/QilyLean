@@ -151,6 +151,8 @@ def verify_noncommercial_module_order(source_value, target_value, source_name, u
     if mode != 'source-main':
         return
     fragment = parity.source_fragment(source_value, source_name)
+    if source_name == 'index.html':
+        fragment = parity.public_home_copy(fragment)
     expected = parity.render(parity.Tree(fragment).root, source_name)
     expected = parity.preserve_generated_page_heading(expected, target_value)
 
@@ -216,6 +218,15 @@ def verify_semantics(value, row):
     canonical = [attrs.get('href') for tag, attrs in nodes if tag == 'link' and attrs.get('rel') == 'canonical']
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)
     require('湘ICP备2026041143号-1' in value and '湘公网安备43020002000443号' in value, 'Protected filings missing: ' + url)
+
+    if url == '/':
+        for section in ('qily-core-services', 'qily-digital-enablers'):
+            require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)
+        require('三类项目' in main and '数智化增强' in main,
+                'China homepage must retain engineering and digital capability summaries')
+        require('免费60分钟沟通诊断' not in main and '咨询转化' not in main,
+                'China public homepage must not expose commercial conversion copy')
+
     resources = row['protected']['translator_resources']
     require(len(resources) == 2 and any('.js?' in item for item in resources) and any('.css?' in item for item in resources), 'Translator assets missing: ' + url)
     for tag, attrs in Nodes(main).nodes:
