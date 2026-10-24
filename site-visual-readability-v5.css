@@ -529,7 +529,7 @@ html:root:root body main :is(
   line-height:1.45!important;
   color:var(--qily-v5-gold-text)!important;
   -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
-  font-weight:950!important;
+  font-weight:400!important;
   letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
