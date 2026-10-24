@@ -35,6 +35,7 @@ on:
       - 'scripts/test-cn-search-discovery.py'
       - 'scripts/cn-release-transfer.py'
       - 'scripts/test-cn-release-transfer.py'
+      - 'scripts/test-cn-source-content-parity.py'
 
       - 'about/**'
       - 'site-navigation.js'
