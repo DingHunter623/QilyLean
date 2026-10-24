@@ -2,6 +2,7 @@ name: Deploy QilyLean CN knowledge site
 # QILY-CN-STICKY-V17-PRODUCTION-DEPLOY | 2026-09-18
 # QILY-CN-V7-PRODUCTION-DEPLOY-TRIGGER | 2026-09-18
 # QILY-CN-FRESH-BUNDLE-V1 | 2026-09-20 | Never reuse a stale /tmp release archive
+# QILY-CN-UNDERLINE-VI-20261024 | bounded asset pull, audited checksum fallback; one-time stale-job recovery
 
 on:
   pull_request:
