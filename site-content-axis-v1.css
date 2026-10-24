@@ -414,3 +414,17 @@ html body input.qily-primary-nav-scroll-rail[type="range"]{
  html body #knowledge-stats .knowledge-stat-card{padding:12px!important;min-height:0!important}
  html body #knowledge-stats .knowledge-stat-card :is(h3,p,small,.knowledge-stat-jump){overflow-wrap:anywhere!important}
 }
+
+/* QILY-CONTINUOUS-LINK-UNDERLINE-20261024
+ * Both sites: prevent glyph descenders from carving holes in underlines.
+ * Keep existing link colors, weights and button/navigation decoration rules.
+ * Do not force nowrap: mobile layouts may wrap naturally by line.
+ */
+html:root:root:root body a[href]{
+  text-decoration-skip-ink:none!important;
+  -webkit-text-decoration-skip:none!important;
+}
+/* The two About-page domain links share the accepted baseline gap from text. */
+html:root:root:root body main .trust-box p.brand-domain a[href]{
+  text-underline-offset:.22em!important;
+}
