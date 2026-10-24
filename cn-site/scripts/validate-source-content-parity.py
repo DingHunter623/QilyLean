@@ -234,6 +234,22 @@ def verify_semantics(value, row):
                 'CN Times26001 APK download must point to the approved exact release')
         require(actions[-1][0] == '/app-support/', 'CN Times26001 technical-support route must stay local')
 
+        # The COM QilyLean Home reference has seven clickable actions.
+        # A missing CN link map formerly unwrapped the two legal anchors.
+        home_panel = re.search(r'<article\b(?=[^>]*\bid="qilylean-home")[\s\S]*?</article>', main)
+        require(home_panel is not None, 'CN QilyLean Home product card missing')
+        home_box = re.search(r'<div\b[^>]*class="[^"]*\bmodule-actions\b[^"]*"[^>]*>([\s\S]*?)</div>', home_panel.group(0))
+        require(home_box is not None, 'CN QilyLean Home action bar missing')
+        home_links = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', home_box.group(1))
+        require([html.unescape(label).strip() for _, label in home_links] == expected,
+                'CN QilyLean Home seven-button contract differs from COM: ' + repr(home_links))
+        require(home_links[0][0].split('?', 1)[0].endswith('/QilyLean_Home_v2.3.3_API36_INSTALL.apk'),
+                'CN QilyLean Home APK download must use approved local media')
+        require(home_links[4][0] == 'https://qilylean.com/legal/qilylean-home/privacy/' and
+                home_links[5][0] == 'https://qilylean.com/legal/qilylean-home/terms/',
+                'International Home APK privacy and terms must link to its official documents')
+        require(home_links[-1][0] == '/app-support/', 'CN QilyLean Home technical support must stay local')
+
     if url == '/':
         for section in ('qily-core-services', 'qily-digital-enablers'):
             require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)
