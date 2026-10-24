@@ -18,6 +18,8 @@ on:
       - 'scripts/validate-visual-authority-r8.js'
       - 'scripts/validate-translation-single-runtime-v1.js'
       - 'scripts/visual-authority-r8.spec.js'
+      - 'scripts/international-about-whitespace-guard-20261025.spec.js'
+      - 'scripts/validate-build-boundary-20261025.cjs'
       - '.github/workflows/enforce-visual-authority-r8.yml'
   pull_request:
     branches: [main]
@@ -67,6 +69,13 @@ jobs:
         env:
           QILY_VISUAL_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/visual-authority-r8.spec.js --reporter=line --workers=1
+
+      - name: Protect international whitespace and cross-domain build isolation
+        env:
+          QILY_VISUAL_BASE: http://127.0.0.1:4173
+        run: |
+          node scripts/validate-build-boundary-20261025.cjs
+          npx playwright test scripts/international-about-whitespace-guard-20261025.spec.js --reporter=line --workers=1
 
       - name: Upload R8 visual evidence
         if: always()
