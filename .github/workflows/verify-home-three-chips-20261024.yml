@@ -1,7 +1,7 @@
 name: Verify international homepage 3-chip parity
 on:
   push:
-    branches: [fix/intl-home-three-chips-single-row-20261024]
+    branches: [fix/intl-home-chips-responsive-safe-20261024]
   pull_request:
     paths:
       - 'index.html'

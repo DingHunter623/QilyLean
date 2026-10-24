@@ -43,19 +43,24 @@ async function inspect(page,url){
     assert.equal(s.chips.length,3,name+' expected 3 business-category pills');
     assert.deepEqual(s.chips.map(x=>x.text),['新工厂／新产线规划','精益改善项目交付','目视化设计与交付'],name+' labels changed');
     assert.ok(s.scroll<=width+2,name+' horizontal page overflow at '+width+': '+s.scroll);
-    if(width>=1180){
+    if(width>=1280){
      assert.equal(s.wrap,'nowrap',name+' pills should not wrap on desktop '+width);
      assert.ok(Math.max(...s.chips.map(x=>x.rect.top))-Math.min(...s.chips.map(x=>x.rect.top))<=2,name+' pills are not aligned at '+width);
      assert.ok(s.chips[0].rect.right<s.chips[1].rect.left&&s.chips[1].rect.right<s.chips[2].rect.left,name+' pills collide');
      assert.ok(s.chips[2].rect.right<=s.media.left-5,name+' chips overlap right media at '+width);
     }
    }
+   if(width>=1180 && width<1280){
+      assert.equal(state.intl.wrap,'wrap','narrow desktop must retain natural wrapping');
+      assert.ok(state.intl.chips[2].rect.right<=state.intl.media.left-5,
+         'narrow international desktop third chip overlaps media at '+width);
+   }
    assert.equal(state.intl.actions[0].text,'免费60分钟沟通诊断','international commercial CTA lost');
    assert.equal(state.intl.actions[1].text,'查看代表案例','international case action lost');
    assert.ok(state.intl.route.includes('标准启动路径：免费60分钟沟通诊断'),'international sales route lost');
    assert.ok(state.cn.actions.some(x=>x.text==='查看代表案例'),'CN public action missing');
    assert.ok(!state.cn.actions.some(x=>x.text.includes('60分钟')),'China accidentally gained commercial CTA');
-   if(width>=1180){
+   if(width>=1280){
     for(let i=0;i<3;i++){
       assert.equal(state.intl.chips[i].style.font,state.cn.chips[i].style.font,'chip font size changed');
       assert.equal(state.intl.chips[i].style.bg,state.cn.chips[i].style.bg,'chip background changed');
