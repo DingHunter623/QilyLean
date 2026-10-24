@@ -81,7 +81,8 @@
     }
     if(current==='/capabilities/'){
       var card=d.getElementById('times26001');if(!card)return;
-      var visual2=card.querySelector('.capability-digital-visual');if(visual2&&visual2.dataset.qilyTimesVisual!=='v3'){visual2.innerHTML=timesWorkflowMarkup();visual2.dataset.qilyTimesVisual='v3'}
+      // Capability cards share the CN overview layout; detail pages keep the workflow.
+      var visual2=card.querySelector('.capability-digital-visual');if(visual2&&!visual2.hasAttribute('data-qily-capability-overview')&&visual2.dataset.qilyTimesVisual!=='v3'){visual2.innerHTML=timesWorkflowMarkup();visual2.dataset.qilyTimesVisual='v3'}
       var paragraph=card.querySelector('.capability-digital-content p');
       if(paragraph&&paragraph.dataset.qilyTimesCopy!=='v2'){paragraph.innerHTML='<strong>面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。</strong> 将IE现场观察、分段测时、累计时间、数据复制与改善复验连成一条工程数据链，服务标准工时、线平衡、瓶颈识别与改善前后同口径验证。';paragraph.dataset.qilyTimesCopy='v2'}
     }
