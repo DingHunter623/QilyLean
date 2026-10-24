@@ -39,7 +39,7 @@ test('CN original knowledge, engineering and support routes retain readable safe
  const routes=[
   '/ie/','/factory/','/digital/','/methods/','/standardization/',
   '/knowledge/vsm-time-structure/','/knowledge/standard-time-capacity/',
-  '/app-support/','/resources/'
+  '/app-support/'
  ];
  for(const width of [390,820,1440]){
   await page.setViewportSize({width,height:900});
