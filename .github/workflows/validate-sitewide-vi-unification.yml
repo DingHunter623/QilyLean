@@ -4,6 +4,9 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
+      - 'site-content-axis-v1.css'
+      - 'site-link-standard-v1.css'
+      - 'scripts/validate-continuous-underlines-20261024.cjs'
       - 'site-interaction-semantics-v1.css'
       - 'site-visual-readability-v5.css'
       - 'global-knowledge/**'
@@ -34,6 +37,8 @@ jobs:
         run: bash cn-site/scripts/materialize-practice-assets.sh
       - name: Verify international/CN/Global Knowledge VI authority
         run: node scripts/validate-sitewide-vi-unification.js
+      - name: Verify continuous underlines for links and inline phone/email/WeChat text
+        run: node scripts/validate-continuous-underlines-20261024.cjs
       - name: Keep public-copy governance intact
         run: node scripts/validate-public-copy-governance.js
       - name: Verify clean patch formatting
