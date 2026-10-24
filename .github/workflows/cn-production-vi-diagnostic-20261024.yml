@@ -1,0 +1,27 @@
+name: Diagnose CN production VI failure without deployment
+on:
+  push:
+    branches: [fix/cn-production-vi-failures-20261024]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnosis:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Generate both domain fixtures using actual production pipeline
+        run: bash cn-site/scripts/materialize-practice-assets.sh
+      - name: Prepare browser
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          python3 -m http.server 4173 --directory . >/tmp/qily-diag-int.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-diag-cn.log 2>&1 &
+          sleep 2
+      - name: Measure rendered CSS selectors and scrollbar offset
+        run: node scripts/cn-vi-production-diagnostic-20261024.cjs
