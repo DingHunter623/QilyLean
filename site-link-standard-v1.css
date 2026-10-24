@@ -20,8 +20,8 @@ html body a[href] {
   text-decoration-color: currentColor !important;
   text-decoration-thickness: max(1.6px, .09em) !important;
   text-underline-offset: .22em !important;
-  text-decoration-skip-ink: auto !important;
-  -webkit-text-decoration-skip: ink !important;
+  text-decoration-skip-ink: none !important;
+  -webkit-text-decoration-skip: none !important;
   transition:
     color .16s ease,
     background-color .16s ease,
