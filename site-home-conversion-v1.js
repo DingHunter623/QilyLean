@@ -54,7 +54,7 @@
       +'<h1>用工程数据解决工厂效率、质量、交付与布局问题</h1>'
       +'<p class="qily-home-conversion-hero__lead">并把有效改善固化为组织能力。QilyLean以现场事实、工程数据、Pilot验证和标准交付为主线，让方案能落地、结果可验证、经验可复制。</p>'
       +'<div class="qily-home-conversion-hero__chips"><span>新工厂／新产线规划</span><span>精益改善项目交付</span><span>目视化设计与交付</span></div>'
-      +'<div class="qily-home-conversion-actions"><a class="primary" href="/cooperation/#diagnosis">免费60分钟沟通诊断</a><a href="/projects/">查看代表案例</a></div>'
+      +'<div class="qily-home-conversion-actions"><a class="primary" href="/projects/">查看代表案例</a><a href="/cooperation/#diagnosis">免费60分钟沟通诊断</a></div>'
       +'<p class="qily-home-conversion-hero__route">标准启动路径：免费60分钟沟通诊断 → 1天现场诊断 → 2周诊断／冲刺 → Pilot项目（按项目范围调整）</p>'
       +'</div>'
       +'<figure class="qily-home-project-visual" aria-label="QilyLean工厂项目与改善方案视觉">'

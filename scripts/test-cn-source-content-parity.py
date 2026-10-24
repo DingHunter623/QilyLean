@@ -110,7 +110,8 @@ class SourceContentAcceptanceTests(unittest.TestCase):
             'qily-home-extended', 'qily-home-proof', 'qily-home-brand-extension'])
         self.assertNotIn('qily-home-launch', content)
         self.assertNotIn('免费60分钟', content)
-        self.assertNotIn('专家／供应商协同', content)
+        self.assertIn('专家／供应商协同', content)
+        self.assertIn('接口、责任、费用、交付与验收通过书面边界管理', content)
         self.assertIn('丁启利｜20年制造业工程技术与精益改善履历', content)
         self.assertEqual(len(validator.operating_axis_steps(content)), 6)
 
