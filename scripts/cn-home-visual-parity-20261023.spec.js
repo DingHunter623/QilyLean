@@ -27,6 +27,12 @@ async function visit(page,url,{home=false,expand=false}={}){
    if(expand)document.querySelectorAll('main details').forEach(details=>{details.open=true;});
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
  },{expand});
+ // COM's existing R8 owner reasserts its final cascade at 120/700/1400ms.
+ // Compare settled presentation with CN's statically materialized cascade.
+ if(await page.evaluate(()=>document.body?.dataset.qilySite!=='cn')){
+   await page.waitForTimeout(1600);
+   await page.waitForFunction(()=>!document.getElementById('qilyVisualAuthorityR8')||document.head.lastElementChild?.id==='qilyVisualAuthorityR8');
+ }
 }
 async function snapshot(page){
  return page.evaluate(()=>{
@@ -115,7 +121,20 @@ async function moduleSnapshot(page,selectors){
      const s=getComputedStyle(element);
      return {fontFamily:s.fontFamily,fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,color:s.color,letterSpacing:s.letterSpacing};
    };
-   const textSnapshot=element=>({text:normalize(element.textContent),rect:rect(element),type:typography(element)});
+   const layoutAncestors=element=>{
+     const result=[];
+     for(let parent=element.parentElement;parent&&parent!==main;parent=parent.parentElement){
+       const display=getComputedStyle(parent).display;
+       if(/^(?:inline-)?(?:grid|flex)$/.test(display)){
+         const children=[...parent.children].filter(child=>getComputedStyle(child).display!=='none');
+         const item=children.findIndex(child=>child.contains(element));
+         result.push({display,children:children.length,item});
+       }
+       if(parent.matches('section'))break;
+     }
+     return result;
+   };
+   const textSnapshot=element=>({text:normalize(element.textContent),rect:rect(element),type:typography(element),layoutAncestors:layoutAncestors(element)});
    const elements=selectors.map(selector=>({selector,element:main.querySelector(selector)}));
    const order=elements.filter(item=>item.element).sort((a,b)=>a.element.compareDocumentPosition(b.element)&Node.DOCUMENT_POSITION_FOLLOWING?-1:1).map(item=>item.selector);
    return {
@@ -123,7 +142,7 @@ async function moduleSnapshot(page,selectors){
      hero:main.querySelector('h1')?textSnapshot(main.querySelector('h1')):null,
      modules:elements.map(({selector,element})=>{
        if(!element)return {selector,missing:true};
-       const inner=element.querySelector(':scope > :is(.inner,.module-inner,.hero-inner,.qily-home-conversion-inner,.qily-asset-inner,.qily-ia-inner)')||element;
+       const inner=element.querySelector(':scope > :is(.inner,.module-inner,.section-inner,.hero-inner,.qily-home-conversion-inner,.qily-asset-inner,.qily-ia-inner)')||element;
        return {selector,inner:rect(inner),
          headings:[...element.querySelectorAll('h2,h3')].map(textSnapshot),
          paragraphs:[...element.querySelectorAll('p')].map(textSnapshot).filter(item=>item.text),
@@ -134,6 +153,18 @@ async function moduleSnapshot(page,selectors){
 }
 function expectHorizontalParity(actual,expected,label){
  for(const key of ['x','width'])expect(Math.abs(actual[key]-expected[key]),label+' '+key).toBeLessThanOrEqual(2);
+}
+function expectRetainedTextLayout(actual,expected,inner,label){
+ // Removing commercial grid/flex siblings legitimately moves the retained card
+ // into a different column. Its type and module bounds still match the source;
+ // exact text bounds apply when all layout-ancestor sibling counts/indices do.
+ // This contract is structural and applies equally to every public route.
+ expect(actual.layoutAncestors.map(item=>item.display),label+' shared grid/flex layout').toEqual(expected.layoutAncestors.map(item=>item.display));
+ expect(actual.rect.x,label+' module left containment').toBeGreaterThanOrEqual(inner.x-2);
+ expect(actual.rect.right,label+' module right containment').toBeLessThanOrEqual(inner.right+2);
+ if(JSON.stringify(actual.layoutAncestors)===JSON.stringify(expected.layoutAncestors)){
+   expectHorizontalParity(actual.rect,expected.rect,label);
+ }
 }
 for(const contract of publicModules){
  for(const width of [1440,390]){
@@ -170,15 +201,17 @@ for(const contract of publicModules){
          expect(next,label+' retained heading: '+heading.text).toBeGreaterThan(headingIndex);
          const reference=expected.headings[next];
          expect(heading.type,label+' heading VI: '+heading.text).toEqual(reference.type);
-         expectHorizontalParity(heading.rect,reference.rect,label+' heading bounds: '+heading.text);
+         expectRetainedTextLayout(heading,reference,actual.inner,label+' heading bounds: '+heading.text);
          headingIndex=next;
        }
        const body=actual.paragraphs.find(item=>expected.paragraphs.some(reference=>reference.text===item.text));
-       if(expected.paragraphs.length){
-         expect(body,label+' shared public body content').toBeTruthy();
+       // The strict source validator checks all retained text. A section's
+       // only paragraph can be commercial copy; compare typography whenever
+       // a public paragraph survives that independently verified filter.
+       if(body){
          const reference=expected.paragraphs.find(item=>item.text===body.text);
          expect(body.type,label+' body VI').toEqual(reference.type);
-         expectHorizontalParity(body.rect,reference.rect,label+' body bounds');
+         expectRetainedTextLayout(body,reference,actual.inner,label+' body bounds');
        }
      }
    });

@@ -2,6 +2,16 @@ const {test,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
+async function settledGoto(page,url,options){
+ const response=await page.goto(url,options);
+ if(new URL(url).origin===new URL(intBase).origin){
+  // R8 reasserts final CSS at 1400ms; compare the settled source dock.
+  await page.waitForTimeout(1600);
+  await page.waitForFunction(()=>!document.getElementById('qilyVisualAuthorityR8')||document.head.lastElementChild?.id==='qilyVisualAuthorityR8');
+ }
+ return response;
+}
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
@@ -9,7 +19,7 @@ for(const width of [320,390,820,1180,1600]){
  test(`both sites share four readable footer actions at ${width}px`,async({page})=>{
   test.setTimeout(120000);await page.setViewportSize({width,height:900});let reference;
   for(const [base,route] of [[intBase,'/'],[intBase,'/about/'],...bridges.map(r=>[intBase,r]),[cnBase,'/'],[cnBase,'/resources/'],[cnBase,'/about/']]){
-   await page.goto(base+route,{waitUntil:'load'});await page.waitForFunction(()=>window.__qilyDockV58CaptureBound===true);
+   await settledGoto(page,base+route,{waitUntil:'load'});await page.waitForFunction(()=>window.__qilyDockV58CaptureBound===true);
    const dock=page.locator('#floatDock');await expect(dock.locator('button')).toHaveText(labels);
    expect(await dock.locator('button').evaluateAll(nodes=>nodes.map(n=>n.dataset.action))).toEqual(actions);
    const g=await dock.evaluate(el=>{const s=getComputedStyle(el);return {width:document.documentElement.clientWidth,overflow:document.documentElement.scrollWidth-innerWidth,gap:s.gap,buttons:[...el.querySelectorAll('button')].map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,width:r.width,height:r.height,overflow:b.scrollWidth-b.clientWidth,font:s.fontSize,weight:s.fontWeight,family:s.fontFamily,radius:s.borderRadius};})};});
@@ -33,7 +43,7 @@ for(const width of [320,390,820,1180,1600]){
  });
 }
 test('China About retains shared contacts, career and map navigation',async({page})=>{
- await page.goto(cnBase+'/about/');await expect(page.locator('.qily-unified-qr-card')).toHaveCount(3);
+ await settledGoto(page,cnBase+'/about/');await expect(page.locator('.qily-unified-qr-card')).toHaveCount(3);
  expect(await page.locator('a[href^="tel:"]').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href')).sort())).toEqual(['tel:13450014003','tel:15168120722','tel:17681788259']);
  await expect(page.locator('.qily-unified-email a')).toHaveAttribute('href','mailto:admin@qilylean.com');await expect(page.locator('.qily-about-career a')).toHaveAttribute('href','/archive/profile/experience/');
  expect(await page.locator('header nav a').allTextContents()).not.toContain('履历主线');
@@ -41,12 +51,12 @@ test('China About retains shared contacts, career and map navigation',async({pag
 });
 test('China footer searches locally, shares current URL and follows real history',async({page})=>{
  await page.addInitScript(()=>{Object.defineProperty(navigator,'share',{value:undefined});Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{window.__footerCopy=text;}}});});
- await page.goto(cnBase+'/about/');await page.locator('#floatDock [data-action="search"]').click();await expect(page.locator('#qilyCnFooterSearch')).toBeVisible();
+ await settledGoto(page,cnBase+'/about/');await page.locator('#floatDock [data-action="search"]').click();await expect(page.locator('#qilyCnFooterSearch')).toBeVisible();
  await page.locator('#qilyCnFooterSearchInput').fill('SMED');await expect(page.locator('#qilyCnFooterSearch li a').first()).toBeVisible();await expect(page.locator('#qilyCnFooterSearch [role="status"]')).toContainText('找到');
  for(const href of await page.locator('#qilyCnFooterSearch li a').evaluateAll(nodes=>nodes.map(n=>n.getAttribute('href'))))expect(href.startsWith('/')).toBeTruthy();
  await page.locator('[data-cn-search-close]').click();await page.locator('#floatDock [data-action="current"]').click();await expect.poll(()=>page.evaluate(()=>window.__footerCopy)).toContain(cnBase+'/about/');
- await page.goto(cnBase+'/knowledge/');await page.locator('#floatDock [data-action="previous"]').click();await expect(page).toHaveURL(cnBase+'/about/');
- await page.goto(cnBase+'/archive/practice/factory-layout/',{waitUntil:'domcontentloaded',timeout:45000});await expect(page.locator('#floatDock [data-action="current"]')).toBeVisible({timeout:15000});await expect(page.locator('#floatDock [data-action="back"]')).toHaveCount(0);
+ await settledGoto(page,cnBase+'/knowledge/');await page.locator('#floatDock [data-action="previous"]').click();await expect(page).toHaveURL(cnBase+'/about/');
+ await settledGoto(page,cnBase+'/archive/practice/factory-layout/',{waitUntil:'domcontentloaded',timeout:45000});await expect(page.locator('#floatDock [data-action="current"]')).toBeVisible({timeout:15000});await expect(page.locator('#floatDock [data-action="back"]')).toHaveCount(0);
 });
 test('all China generated pages receive final VI and four-action first paint',async()=>{
  // The generator owns the cache version; a stale test literal must not reject
@@ -78,7 +88,7 @@ test('all China generated pages receive final VI and four-action first paint',as
 test('paired knowledge summaries use readable two-by-two modules at desktop width',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
   for(const [base,route] of [[intBase,'/knowledge/'],[cnBase,'/knowledge/']]){
-    await page.goto(base+route,{waitUntil:'load'});
+    await settledGoto(page,base+route,{waitUntil:'load'});
     const cards=page.locator('#knowledge-stats .knowledge-stat-card');
     await expect(cards).toHaveCount(4);
     const rects=await cards.evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect(),s=getComputedStyle(n);return {x:r.left,y:r.top,width:r.width,height:r.height,font:parseFloat(s.fontSize)||0};}));
@@ -95,7 +105,7 @@ test('paired About pages keep all three QR frames at equal size and readable on 
   for(const width of [390,1440]){
     await page.setViewportSize({width,height:900});
     for(const base of [intBase,cnBase]){
-      await page.goto(base+'/about/',{waitUntil:'load'});
+      await settledGoto(page,base+'/about/',{waitUntil:'load'});
       const frames=page.locator('.qily-unified-qr-card .qily-unified-qr-art');
       await expect(frames).toHaveCount(3);
       const g=await frames.evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect(),s=getComputedStyle(n);return {width:r.width,height:r.height,border:parseFloat(s.borderTopWidth)||0,child:n.querySelector('img')?.getBoundingClientRect().width||0};}));
@@ -108,7 +118,7 @@ test('paired About pages keep all three QR frames at equal size and readable on 
 
 test('international home secondary heading remains smaller than its H1',async({page})=>{
   await page.setViewportSize({width:1440,height:900});
-  await page.goto(intBase+'/',{waitUntil:'load'});
+  await settledGoto(page,intBase+'/',{waitUntil:'load'});
   const h1=page.locator('.qily-home-conversion-hero h1');
   const h2=page.locator('#qily-core-services .qily-ia-heading h2');
   await expect(h1).toBeVisible();await expect(h2).toBeVisible();
@@ -120,7 +130,7 @@ test('China desktop footer actions and both filings remain inside one aligned ax
   test.setTimeout(180000);
   for(const width of [1180,1440,1600,1920]){
     await page.setViewportSize({width,height:1000});
-    await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await settledGoto(page,cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
     await expect(page.locator('#floatDock button[data-action]')).toHaveCount(4);
     await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
     await page.waitForFunction(()=>window.__qilyDockV58CaptureBound===true);
@@ -164,7 +174,7 @@ test('China dock matches international first-button axis and shared action VI ac
  test.setTimeout(240000);
  const pairs=[['/','/'],['/capabilities/','/archive/profile/capabilities/'],['/about/','/about/']];
  async function capture(base,route){
-   await page.goto(base+route,{waitUntil:'domcontentloaded',timeout:45000});
+   await settledGoto(page,base+route,{waitUntil:'domcontentloaded',timeout:45000});
    await expect(page.locator('#floatDock button[data-action="top"]')).toBeVisible({timeout:15000});
    return page.evaluate(()=>{
       const dock=document.querySelector('#floatDock');
@@ -224,12 +234,12 @@ test('China 1588px footer stays consistent across public modules',async({page})=
   await page.setViewportSize({width,height:1000});
   const routes=['/','/archive/profile/capabilities/','/resources/','/about/','/knowledge/'];
   const intl=await (async()=>{
-    await page.goto(intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await settledGoto(page,intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
     await expect(page.locator('#floatDock button')).toHaveCount(4);
     return page.locator('#floatDock button').first().boundingBox();
   })();
   for(const route of routes){
-    await page.goto(cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
+    await settledGoto(page,cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
     await expect(page.locator('#floatDock button')).toHaveCount(4);
     await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
     const geom=await page.evaluate(()=>{
@@ -256,7 +266,7 @@ test('China mobile filing links remain borderless while keeping their original d
   test.setTimeout(90000);
   for(const width of [375,390,430,768]){
     await page.setViewportSize({width,height:850});
-    await page.goto(cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+    await settledGoto(page,cnBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
     await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
     const geometry=await page.locator('footer.footer .footer-records>a').evaluateAll(els=>els.map(el=>{
       const s=getComputedStyle(el),r=el.getBoundingClientRect();
@@ -277,11 +287,11 @@ test('China shared footer has no desktop axis overflow at 1588 on every represen
  test.setTimeout(240000);
  const width=1588,axisRight=(width+1180)/2;
  await page.setViewportSize({width,height:900});
- await page.goto(intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
+ await settledGoto(page,intBase+'/',{waitUntil:'domcontentloaded',timeout:45000});
  await expect(page.locator('#floatDock button[data-action="top"]')).toBeVisible();
  const internationalLeft=(await page.locator('#floatDock button[data-action="top"]').boundingBox()).x;
  for(const route of ['/','/lean/','/notes/','/trust/','/knowledge/','/resources/','/about/','/briefs/']){
-   await page.goto(cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
+   await settledGoto(page,cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
    await expect(page.locator('footer.footer .footer-records>a')).toHaveCount(2);
    await page.evaluate(()=>document.fonts.ready);
    const g=await page.evaluate(()=>{
