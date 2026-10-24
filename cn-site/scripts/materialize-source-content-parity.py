@@ -24,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261024-source-content-parity-v6-times26001-action-parity'
+VERSION = '20261025-source-content-parity-v7-qhome-legal-action-parity'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -129,6 +129,14 @@ CAPABILITY_PUBLIC_APKS = frozenset({
     '/Times26001-Android-v1.1.14-Standard-Website-Logo.apk',
     '/QilyLean_Home_v2.3.3_API36_INSTALL.apk',
 })
+# CN also mirrors the international com.qilylean.home APK.
+# Its privacy/terms apply to that exact package, not cn.qilylean.home.
+# These COM legal pages have no CN-hosted equivalent: preserve their official
+# destinations instead of unwrapping anchors into unstyled plain-text labels.
+CAPABILITY_HOME_OFFICIAL_LEGAL = frozenset({
+    '/legal/qilylean-home/privacy/',
+    '/legal/qilylean-home/terms/',
+})
 
 def link_url(value, source):
     if value.startswith('#'):
@@ -139,6 +147,8 @@ def link_url(value, source):
     if parsed.netloc and parsed.hostname not in {'qilylean.com', 'www.qilylean.com', 'qilylean.cn', 'www.qilylean.cn'}:
         return value
     path = parsed.path
+    if source == 'capabilities/index.html' and path in CAPABILITY_HOME_OFFICIAL_LEGAL:
+        return 'https://qilylean.com' + path
     if source == 'capabilities/index.html' and path in CAPABILITY_PUBLIC_APKS:
         relative = unquote(path).lstrip('/')
         # Missing release artifacts must fail closed, never turn into dead CTAs.

@@ -38,6 +38,24 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('/Times26001-Android-v1.1.14-Standard-Website-Logo.apk', items[0][0])
         self.assertEqual(items[-1][0], '/app-support/')
 
+    def test_qilylean_home_cn_mirror_keeps_seven_clickable_actions(self):
+        # Test rendered source-derived HTML, not a visual-only CSS patch.
+        source = (parity.ROOT / 'capabilities/index.html').read_text()
+        content = parity.render(parity.Tree(parity.source_fragment(source, 'capabilities/index.html')).root,
+                                'capabilities/index.html')
+        import re
+        panel = re.search(r'<article\b(?=[^>]*\bid="qilylean-home")[\s\S]*?</article>', content)
+        self.assertIsNotNone(panel)
+        action_box = re.search(r'<div\b[^>]*class="[^"]*\bmodule-actions\b[^"]*"[^>]*>([\s\S]*?)</div>', panel.group(0))
+        self.assertIsNotNone(action_box)
+        items = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
+        self.assertEqual([text.strip() for _, text in items],
+                         ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持'])
+        self.assertIn('/QilyLean_Home_v2.3.3_API36_INSTALL.apk', items[0][0])
+        self.assertEqual(items[4][0], 'https://qilylean.com/legal/qilylean-home/privacy/')
+        self.assertEqual(items[5][0], 'https://qilylean.com/legal/qilylean-home/terms/')
+        self.assertEqual(items[-1][0], '/app-support/')
+
     def test_current_module_style_keeps_real_header_and_local_routes(self):
         selector = 'html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"] :is(strong,span)'
         result = parity.source_selector(selector)
