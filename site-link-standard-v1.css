@@ -346,5 +346,14 @@ html body :where(.module-footer, .footer, .contact-card, .qily-float-dock) a[hre
   }
 }
 
+/* QILY-ALL-UNDERLINED-TEXT-CONTINUOUS-20261024
+ * Not limited to anchor tags: phones, email, URLs, WeChat and filing numbers.
+ * Keep existing decoration visibility and VI; suppress glyph-induced holes only.
+ */
+html body *,html body *::before,html body *::after{
+  text-decoration-skip-ink:none!important;
+  -webkit-text-decoration-skip:none!important;
+}
+
 /* QILY-MAILTO-CONTINUOUS-UNDERLINE:20260827 */
 a[href^="mailto:"]{text-decoration-line:underline!important;text-decoration-style:solid!important;text-decoration-thickness:1px!important;text-underline-offset:3px!important;text-decoration-skip-ink:none!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
