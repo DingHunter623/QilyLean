@@ -1,0 +1,21 @@
+name: Validate CN release source-parity fixture
+on:
+  push:
+    branches: [fix/cn-acceptance-fixture-safe-copy-20261024]
+permissions:
+  contents: read
+jobs:
+  release-transfer-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run real China release transfer and source parity preflight
+        run: |
+          set -euo pipefail
+          python3 scripts/test-cn-release-transfer.py
+          python3 scripts/test-cn-source-content-parity.py
+      - name: Generate and verify China noncommercial source copy
+        run: |
+          set -euo pipefail
+          bash cn-site/scripts/materialize-practice-assets.sh
