@@ -16,7 +16,11 @@ async function inspect(page,url){
   const cs=e=>{const s=getComputedStyle(e);return {wrap:s.flexWrap,font:s.fontSize,weight:s.fontWeight,color:s.color,bg:s.backgroundColor}};
   return {chips:elements.map(x=>({text:x.textContent.trim(),rect:rect(x),style:cs(x)})),
    wrap:cs(root).wrap,root:rect(root),media:rect(media),
-   actions:[...actions.querySelectorAll('a')].map(x=>({text:x.textContent.trim(),href:x.getAttribute('href')})),
+   actions:[...actions.querySelectorAll('a')].map(x=>({text:x.textContent.trim(),href:x.getAttribute('href'),
+     rect:rect(x),color:getComputedStyle(x).color,background:getComputedStyle(x).backgroundColor})),
+   supplier:[...document.querySelectorAll('#qily-home-collaboration .qily-home-role')]
+     .filter(x=>x.querySelector('h3')?.textContent.includes('专家／供应商协同'))
+     .map(x=>x.textContent.trim()),
    route:route?.textContent.trim(),scroll:document.documentElement.scrollWidth,
    documentWidth:document.documentElement.clientWidth
   };
@@ -57,6 +61,18 @@ async function inspect(page,url){
    }
    assert.equal(state.intl.actions[0].text,'查看代表案例','international case action must lead, aligned with CN');
    assert.equal(state.intl.actions[1].text,'免费60分钟沟通诊断','international commercial CTA must follow case action');
+   assert.equal(state.cn.actions[0].text,'查看代表案例','China representative-case action must retain first position');
+   if(width>=1280){
+      assert.ok(Math.abs(state.intl.actions[0].rect.left-state.cn.actions[0].rect.left)<=10,
+        'Representative-case button left axis differs from China reference');
+      assert.equal(state.intl.actions[0].background,state.cn.actions[0].background,
+        'Representative-case button primary VI differs from China reference');
+   }
+   assert.equal(state.intl.supplier.length,1,'International owner/supplier coordination missing');
+   assert.equal(state.cn.supplier.length,1,'CN public owner/supplier engineering card over-filtered');
+   assert.ok(state.cn.supplier[0].includes('接口、责任、费用、交付与验收通过书面边界管理'),
+     'CN expert/supplier collaboration governance wording lost');
+
    assert.ok(state.intl.route.includes('标准启动路径：免费60分钟沟通诊断'),'international sales route lost');
    assert.ok(state.cn.actions.some(x=>x.text==='查看代表案例'),'CN public action missing');
    assert.ok(!state.cn.actions.some(x=>x.text.includes('60分钟')),'China accidentally gained commercial CTA');
