@@ -32,3 +32,32 @@ test('CN native About matches international reading frame and type',async({page}
   expect(target.paragraph,'body typography '+width).toEqual(source.paragraph);
  }
 });
+
+
+test('CN original knowledge, engineering and support routes retain readable safe gutters',async({page})=>{
+ test.setTimeout(180000);
+ const routes=[
+  '/ie/','/factory/','/digital/','/methods/','/standardization/',
+  '/knowledge/vsm-time-structure/','/knowledge/standard-time-capacity/',
+  '/app-support/','/resources/'
+ ];
+ for(const width of [390,820,1440]){
+  await page.setViewportSize({width,height:900});
+  for(const route of routes){
+   await page.goto(cn+route,{waitUntil:'domcontentloaded',timeout:30000});
+   const frame=await page.evaluate(()=>{
+    const main=document.querySelector('main:not([data-cn-source-content])');
+    if(!main)return {missingMain:true};
+    const node=main.querySelector(':scope > section.section > .content.article-shell, :scope > section.hero > .hero-inner');
+    if(!node)return {missingFrame:true};
+    const r=node.getBoundingClientRect();
+    return {x:r.left,right:r.right,scrollWidth:document.documentElement.scrollWidth};
+   });
+   expect(frame.missingMain,route+' native main').not.toBe(true);
+   expect(frame.missingFrame,route+' native reading frame').not.toBe(true);
+   expect(frame.scrollWidth,route+' no overflow at '+width).toBeLessThanOrEqual(width+1);
+   expect(frame.x,route+' left frame at '+width).toBeGreaterThanOrEqual(width<=620?24:16);
+   expect(width-frame.right,route+' right frame at '+width).toBeGreaterThanOrEqual(width<=620?24:16);
+  }
+ }
+});
