@@ -109,13 +109,13 @@ html:root:root body[data-qily-site="cn"] main#main:has(.qily-about-career)
     --qily-cn-reading-inline-gutter:clamp(18px,2.2vw,32px);
   }
   html:root:root:root:root body[data-qily-site="cn"]
-    main#main:not([data-cn-source-content]) > :is(section.section,section.page-hero){
+    main:not([data-cn-source-content]) > :is(section.section,section.page-hero,section.hero){
     padding-left:0!important;
     padding-right:0!important;
     box-sizing:border-box!important;
   }
   html:root:root:root:root body[data-qily-site="cn"]
-    main#main:not([data-cn-source-content]) > :is(section.section,section.page-hero) > .content{
+    main:not([data-cn-source-content]) > :is(section.section,section.page-hero,section.hero) > :is(.content,.hero-inner){
     box-sizing:border-box!important;
     width:min(1180px,calc(100% - (var(--qily-cn-reading-inline-gutter) * 2)))!important;
     max-width:min(1180px,calc(100% - (var(--qily-cn-reading-inline-gutter) * 2)))!important;
@@ -124,7 +124,7 @@ html:root:root body[data-qily-site="cn"] main#main:has(.qily-about-career)
     margin-right:auto!important;
   }
   html:root:root:root:root body[data-qily-site="cn"]
-    main#main:not([data-cn-source-content]) > .section > .content.article-shell > .article-body{
+    main:not([data-cn-source-content]) > .section > .content.article-shell > .article-body{
     min-width:0!important;
     max-width:100%!important;
   }
