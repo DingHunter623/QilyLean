@@ -4,6 +4,14 @@ on:
   push:
     branches: [main]
     paths-ignore:
+      # China-site deployment owns these files; V4 must not touch COM on CN-only pushes.
+      - 'cn-site/**'
+      - 'services/cn-translation/**'
+      - 'scripts/cn-*.spec.js'
+      - 'scripts/cn-*.py'
+      - 'scripts/test-cn-*.py'
+      - '.github/workflows/cn-*.yml'
+      - '.github/workflows/deploy-cn-preprod.yml'
       - 'meta/build.json'
       - 'maintenance/site-system-v4-*.json'
       - 'docs/site-system-v4/**'
