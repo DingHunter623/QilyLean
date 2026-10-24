@@ -222,11 +222,11 @@ def verify_semantics(value, row):
     if row['source'] == 'capabilities/index.html':
         # Product actions must stay interactive after commercial-only filtering.
         # Never replace a download with plain text or drop privacy/support links.
-        panel = re.search(r'<article\\b(?=[^>]*\\bid="times26001")([\\s\\S]*?)</article>', main)
+        panel = re.search(r'<article\b(?=[^>]*\bid="times26001")([\s\S]*?)</article>', main)
         require(panel is not None, 'CN Times26001 product card missing')
-        action_box = re.search(r'<div\\b[^>]*class="[^"]*\\bmodule-actions\\b[^"]*"[^>]*>([\\s\\S]*?)</div>', panel.group(0))
+        action_box = re.search(r'<div\b[^>]*class="[^"]*\bmodule-actions\b[^"]*"[^>]*>([\s\S]*?)</div>', panel.group(0))
         require(action_box is not None, 'CN Times26001 action bar missing')
-        actions = re.findall(r'<a\\b[^>]*\\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
+        actions = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
         expected = ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持']
         require([html.unescape(label).strip() for _, label in actions] == expected,
                 'CN Times26001 seven-button contract differs from COM: ' + repr(actions))
