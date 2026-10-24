@@ -19,7 +19,7 @@ const pngPath=path.join(root,approvedAircraft.source);
 const HOME_VERSION='20261015-cn-parity-home-axis-v3';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
-const HOME_VISUAL_FIX_VERSION='20261015-cn-parity-home-visual-v6';
+const HOME_VISUAL_FIX_VERSION='20261024-intl-3chips-single-row-v1';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const readabilityVersionMatch=readabilityPublisher.match(/const VERSION = '([^']+)'/);
 if(!readabilityVersionMatch)throw new Error('Readability publisher cache version is missing');
