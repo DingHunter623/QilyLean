@@ -13,6 +13,10 @@ parity = validator.parity
 
 
 class SourceContentAcceptanceTests(unittest.TestCase):
+    def test_direct_body_hero_rules_do_not_gain_a_main_match(self):
+        selector = parity.source_selector('html:root:root:root body > .hero .eyebrow')
+        self.assertIn(':where([data-cn-source-from-body="true"])', selector)
+
     def test_grouped_main_reading_floor_targets_clone_root(self):
         result = parity.source_selector('html:root:root body :is(main,footer,.site-footer,.qily-site-footer) :is(p,span)')
         self.assertIn('main[data-cn-source-content]', result)

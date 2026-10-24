@@ -722,7 +722,11 @@ def source_selector(selector):
         start, end, compound = body
         rest = selector[end:]
         if rest.lstrip().startswith(('+', '~')): return ''
-        return selector[:start] + SCOPE + body_conditions(compound) + rest
+        # A body > hero rule is for legacy pages without a main wrapper.
+        # Applying it to every cloned main would add a rule that never matched
+        # the original page (notably overriding the homepage kicker line-height).
+        direct_body = ':where([data-cn-source-from-body="true"])' if rest.lstrip().startswith('>') else ''
+        return selector[:start] + SCOPE + direct_body + body_conditions(compound) + rest
     if compounds and re.match(r'(?:html|:root)(?:[^\w-]|$)', compounds[0][2]):
         start, end, compound = compounds[0]
         rest = selector[end:]
@@ -1016,6 +1020,7 @@ def main():
         if name == 'index.html' and 'qily-home-conversion-hero' in fragment:
             source_body['data-qily-home-conversion'] = 'v1'
         attrs['data-cn-source-body-class'] = source_body.get('class', '')
+        attrs['data-cn-source-from-body'] = 'false' if match else 'true'
         attrs['data-cn-source-scrollbar-gutter'] = 'stable' if '/site-closure-bundle-v24.css' in raw else 'auto'
         if 'qilyViV4Formal' in raw:
             attrs['data-cn-source-body-data-qily-vi-shell'] = 'v4-formal'
