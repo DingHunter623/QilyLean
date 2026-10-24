@@ -219,6 +219,21 @@ def verify_semantics(value, row):
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)
     require('湘ICP备2026041143号-1' in value and '湘公网安备43020002000443号' in value, 'Protected filings missing: ' + url)
 
+    if row['source'] == 'capabilities/index.html':
+        # Product actions must stay interactive after commercial-only filtering.
+        # Never replace a download with plain text or drop privacy/support links.
+        panel = re.search(r'<article\\b(?=[^>]*\\bid="times26001")([\\s\\S]*?)</article>', main)
+        require(panel is not None, 'CN Times26001 product card missing')
+        action_box = re.search(r'<div\\b[^>]*class="[^"]*\\bmodule-actions\\b[^"]*"[^>]*>([\\s\\S]*?)</div>', panel.group(0))
+        require(action_box is not None, 'CN Times26001 action bar missing')
+        actions = re.findall(r'<a\\b[^>]*\\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
+        expected = ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持']
+        require([html.unescape(label).strip() for _, label in actions] == expected,
+                'CN Times26001 seven-button contract differs from COM: ' + repr(actions))
+        require(actions[0][0].split('?', 1)[0].endswith('/Times26001-Android-v1.1.14-Standard-Website-Logo.apk'),
+                'CN Times26001 APK download must point to the approved exact release')
+        require(actions[-1][0] == '/app-support/', 'CN Times26001 technical-support route must stay local')
+
     if url == '/':
         for section in ('qily-core-services', 'qily-digital-enablers'):
             require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)
@@ -238,7 +253,14 @@ def verify_semantics(value, row):
             require(not parsed.path.startswith(parity.COMMERCIAL_ROUTES) and parsed.fragment not in parity.BLOCK_IDS, 'Commercial CTA remains: ' + url)
             require(parsed.scheme not in {'javascript', 'tel', 'mailto', 'weixin', 'whatsapp'}, 'Conversion/contact action outside preserved About: ' + url)
             approved_bridge = attrs.get('href') == 'https://qilylean.com/links/cn-public/' and attrs.get('data-qily-approved-international-resource') == 'true'
-            require(parsed.hostname not in {'qilylean.com', 'www.qilylean.com'} or approved_bridge, 'International internal route was not localized: ' + url)
+            # A public, non-commercial APK is a downloadable product artifact, not
+            # an international business route. Preserve the exact source release
+            # when its bytes have not yet been mirrored on the CN server.
+            approved_apk = (row['source'] == 'capabilities/index.html'
+                            and parsed.hostname == 'qilylean.com'
+                            and parsed.path in parity.CAPABILITY_PUBLIC_APKS)
+            require(parsed.hostname not in {'qilylean.com', 'www.qilylean.com'} or approved_bridge or approved_apk,
+                    'International internal route was not localized: ' + url)
         if tag in {'img', 'source', 'video', 'track', 'image', 'use'}:
             for key in ('src', 'poster', 'href', 'xlink:href'):
                 if attrs.get(key):
