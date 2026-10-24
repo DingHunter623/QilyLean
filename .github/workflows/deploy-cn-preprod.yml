@@ -434,13 +434,13 @@ jobs:
           ARCHIVE_BYTES="$(stat -c '%s' /tmp/qilylean-cn-site.tar.gz)"
           echo "Release archive size: ${ARCHIVE_BYTES} bytes"
           copy_with_retry scripts/cn-release-transfer.py "$REMOTE_HELPER"
-          pulled=false
+          # Do not hold the publishing queue for 46 minutes if mainland HTTPS artifact pull stalls.\n          # Fallback stays checksum-addressed, 4-lane resumable SCP; no asset degradation.\n          pulled=false
           if test -n "$RELEASE_ARTIFACT_ID"; then
             # The GitHub bearer token stays on the runner. The one-time signed
             # storage URL is never echoed, saved, placed in argv or sent to logs.
             if python3 scripts/cn-release-transfer.py artifact-request \
                  --repository "$GITHUB_REPOSITORY" --artifact-id "$RELEASE_ARTIFACT_ID" \
-                 | timeout 2760s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" \
+                 | timeout 180s ssh "${SSH_OPTS[@]}" -o ControlPath="$CONTROL_DIR/0" \
                    -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "python3 '$REMOTE_HELPER' pull"; then
               pulled=true
             fi
