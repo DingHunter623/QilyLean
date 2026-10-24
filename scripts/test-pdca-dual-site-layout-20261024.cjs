@@ -1,5 +1,6 @@
 const {chromium}=require('@playwright/test');
 const assert=require('node:assert/strict');
+const fs=require('node:fs');
 const sites=[
   {id:'international',base:'http://127.0.0.1:4173',route:'/capabilities/'},
   {id:'China',base:'http://127.0.0.1:4174',route:'/archive/profile/capabilities/'}
@@ -18,7 +19,9 @@ async function sample(page){
    const after=getComputedStyle(card,'::after'),before=getComputedStyle(card,'::before');
    cards[key]={rect:ge(card),text:card.textContent.trim(),pseudo:after.content,
      arrowColor:after.color,arrowDisplay:after.display,lineColor:before.backgroundColor,
-     bg:getComputedStyle(card).backgroundColor};
+     bg:getComputedStyle(card).backgroundColor,
+     headingSize:parseFloat(getComputedStyle(card.querySelector('h3')).fontSize),
+     textSize:parseFloat(getComputedStyle(card.querySelector('p')).fontSize)};
   }
   const style=getComputedStyle(root);
   const links=[...document.styleSheets].map(x=>x.href).filter(Boolean).filter(x=>x.includes('capability-pdca-loop-v1.css'));
@@ -52,6 +55,16 @@ async function sample(page){
     for(const [key,arrow] of Object.entries(arrows)){
       assert.equal(z.cards[key].pseudo,'"'+arrow+'"',id+' no '+key+' arrow');
       assert.ok(z.cards[key].rect.w>90,id+' '+key+' insufficient card width');
+    }
+    if(width<=430){
+      for(const key of ['p','d','c','a']){
+        assert.ok(z.cards[key].textSize>=16,id+' mobile card body text too small');
+        assert.ok(z.cards[key].headingSize>=18,id+' mobile card heading text too small');
+      }
+    }
+    if([390,1588].includes(width)){
+      fs.mkdirSync('pdca-visual-evidence',{recursive:true});
+      await page.locator('#mechanism').screenshot({path:'pdca-visual-evidence/'+id+'-'+width+'.png',timeout:20000});
     }
     console.log('PDCA_VISUAL_PASS '+JSON.stringify({site:id,viewport:width,
        grid:z.grid,gap:z.gap,positions:Object.fromEntries(Object.entries(z.cards).map(([k,v])=>[k,{x:round(v.rect.left),y:round(v.rect.top),w:round(v.rect.w),h:round(v.rect.h)}])),
