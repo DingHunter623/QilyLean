@@ -17,6 +17,9 @@ on:
     branches:
       - main
     paths:
+      - 'site-content-axis-v1.css'
+      - 'site-link-standard-v1.css'
+      - 'scripts/validate-continuous-underlines-20261024.cjs'
       - 'site-interaction-semantics-v1.css'
       - 'site-visual-readability-v5.css'
       - 'global-knowledge/**'
