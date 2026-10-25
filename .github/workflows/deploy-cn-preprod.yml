@@ -3,6 +3,7 @@ name: Deploy QilyLean CN knowledge site
 # QILY-CN-V7-PRODUCTION-DEPLOY-TRIGGER | 2026-09-18
 # QILY-CN-FRESH-BUNDLE-V1 | 2026-09-20 | Never reuse a stale /tmp release archive
 # QILY-CN-UNDERLINE-VI-20261024 | bounded asset pull, audited checksum fallback; one-time stale-job recovery
+# QILY-CN-W43-RECOVERY-20261025 | supersede stale transfer so verified W43 mobile fix can reach production
 
 on:
   pull_request:
