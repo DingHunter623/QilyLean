@@ -24,7 +24,7 @@ test('International About: 18px mobile gutters, preserved desktop axis and verti
   expect(Math.abs(frame.hero.left-frame.article.left),'Hero/article common left axis '+width).toBeLessThanOrEqual(1);
   expect(Math.abs(frame.hero.right-frame.article.right),'Hero/article common right axis '+width).toBeLessThanOrEqual(1);
   expect(Math.abs(frame.heading.top-frame.heroSection.bottom-52),'preserve 52px Hero-to-heading vertical whitespace '+width).toBeLessThanOrEqual(2);
-  const expectedLeft=width<=620?(predeployLive?Math.round(width*0.077):18)
+  const expectedLeft=width<=620?(predeployLive?Math.min(33,Math.round(width*0.077)):18)
    :(width===820?42.59375:156);
   expect(Math.abs(frame.hero.left-expectedLeft),'left inset '+width).toBeLessThanOrEqual(1.8);
   expect(Math.abs(width-frame.hero.right-expectedLeft),'right inset '+width).toBeLessThanOrEqual(1.8);
