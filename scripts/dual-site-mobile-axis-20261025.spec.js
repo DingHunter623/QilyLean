@@ -71,14 +71,19 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
     const heads=[...table.querySelectorAll('thead th')].map(el=>el.getBoundingClientRect().width);
     const first=table.querySelector('tbody tr td:first-child');
     const marker=first?.querySelector('.w43-mobile-break');
-    const firstRect=first?.getBoundingClientRect();
     const markerRect=marker?.getBoundingClientRect();
+    let phraseTop=0;
+    if(first?.firstChild?.nodeType===Node.TEXT_NODE){
+      const range=document.createRange();
+      range.selectNodeContents(first.firstChild);
+      phraseTop=range.getBoundingClientRect().top;
+    }
     return {
       tableWidth:table.getBoundingClientRect().width,
       ratios:heads.map(v=>v/table.getBoundingClientRect().width),
       firstText:first?.innerText||'',
       markerDisplay:marker?getComputedStyle(marker).display:null,
-      firstTop:firstRect?.top||0,
+      phraseTop,
       markerTop:markerRect?.top||0,
       documentWidth:document.documentElement.scrollWidth
     };
@@ -90,7 +95,7 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
     expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeGreaterThanOrEqual(.35);
     expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeLessThanOrEqual(.37);
     expect.soft(metrics.markerDisplay,route.url+' mobile semantic break').toBe('block');
-    expect.soft(metrics.markerTop,route.url+' mobile second phrase next line').toBeGreaterThan(metrics.firstTop+1);
+    expect.soft(metrics.markerTop,route.url+' mobile second phrase next line').toBeGreaterThan(metrics.phraseTop+1);
    }else{
     expect.soft(metrics.ratios[0],route.url+' desktop first column').toBeGreaterThanOrEqual(.23);
     expect.soft(metrics.ratios[0],route.url+' desktop first column').toBeLessThanOrEqual(.25);
@@ -99,7 +104,7 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
     expect.soft(metrics.ratios[2],route.url+' desktop third column').toBeGreaterThanOrEqual(.35);
     expect.soft(metrics.ratios[2],route.url+' desktop third column').toBeLessThanOrEqual(.37);
     expect.soft(metrics.markerDisplay,route.url+' desktop no forced semantic break').toBe('inline');
-    expect.soft(metrics.markerTop,route.url+' desktop phrase remains same line').toBeLessThanOrEqual(metrics.firstTop+2);
+    expect.soft(Math.abs(metrics.markerTop-metrics.phraseTop),route.url+' desktop phrase remains same line').toBeLessThanOrEqual(1);
    }
   }
  }
