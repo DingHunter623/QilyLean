@@ -80,9 +80,9 @@ fn main() {
                 if event.id() == "home" {
                     let _ = window.navigate(HOME.parse().expect("valid fixed HTTPS URL"));
                 } else if event.id() == "back" {
-                    let _ = window.go_back();
+                    let _ = window.eval("window.history.back()");
                 } else if event.id() == "forward" {
-                    let _ = window.go_forward();
+                    let _ = window.eval("window.history.forward()");
                 } else if event.id() == "reload" {
                     let _ = window.reload();
                 } else if event.id() == "browser" {
