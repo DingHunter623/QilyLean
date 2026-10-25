@@ -199,9 +199,9 @@ html:root:root:root:root body[data-qily-site="cn"]
  main .qily-unified-qr-card>.qily-about-copy-feedback:not(.is-visible){display:none!important}
 html:root:root:root:root body[data-qily-site="cn"]
  main .qily-unified-qr-card>.qily-about-copy-feedback.is-visible{
-  display:block!important;position:absolute!important;bottom:2px!important;left:50%!important;
+  display:block!important;position:absolute!important;bottom:1px!important;left:50%!important;
   width:max-content!important;max-width:calc(100% - 20px)!important;
-  margin:0!important;padding:2px 8px!important;font-size:13px!important;line-height:1.2!important;
+  margin:0!important;padding:0 8px!important;font-size:13px!important;line-height:1.2!important;
   transform:translateX(-50%)!important;
 }
 @media(max-width:620px){
