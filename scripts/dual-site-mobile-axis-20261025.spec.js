@@ -16,7 +16,7 @@ test('Four screenshot pages preserve one 15px effective mobile reading gutter',a
    if(contract.site==='international')await page.waitForTimeout(1600);
    const rects=await page.evaluate(({selector,second})=>{
     const get=(s)=>{if(!s)return null;const el=document.querySelector(s);if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};};
-    return {primary:get(selector),secondary:get(second),documentWidth:document.documentElement.scrollWidth,layoutWidth:document.documentElement.clientWidth};
+    return {primary:get(selector),secondary:get(second),documentWidth:document.documentElement.scrollWidth,layoutWidth:Math.min(document.documentElement.clientWidth,document.documentElement.scrollWidth)};
    },contract);
    console.log('DUAL_SITE_GUTTER',JSON.stringify({site:contract.site,url:contract.url,width,...rects}));
    expect(rects.primary,contract.url+' expected principal reading content').toBeTruthy();
