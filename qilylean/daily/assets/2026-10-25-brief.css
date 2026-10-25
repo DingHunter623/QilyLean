@@ -1,0 +1,89 @@
+@import url("/qilylean/daily/brief-layout-standard.css");
+/* W43 2026-10-25: organization-governance diagrams only.
+   Typography, content axis, header/footer and responsive shell remain owned by the shared site VI. */
+html body.daily-single-page main article.post .w43-principle{margin:20px 0;padding:18px;border-left:4px solid #caa15f;border-radius:0 10px 10px 0;background:#fff8e8}
+html body.daily-single-page main article.post .w43-principle strong{display:block;color:#765713}
+html body.daily-single-page main article.post .w43-principle p{margin:8px 0 0}
+html body.daily-single-page main article.post .w43-figure{margin:22px 0}
+html body.daily-single-page main article.post .w43-figure figcaption{margin-top:9px;color:#526967;line-height:1.65}
+html body.daily-single-page main article.post .w43-grid{display:grid;gap:12px}
+html body.daily-single-page main article.post .w43-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+html body.daily-single-page main article.post .w43-card{min-width:0;padding:16px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa;text-align:center}
+html body.daily-single-page main article.post .w43-card strong{display:block;color:#0f4b5a}
+html body.daily-single-page main article.post .w43-card span{display:block;margin-top:5px;color:#526967}
+html body.daily-single-page main article.post .w43-card.numbered{text-align:left}
+html body.daily-single-page main article.post .w43-card.numbered b{display:inline-flex;align-items:center;justify-content:center;min-width:38px;min-height:30px;margin-bottom:10px;padding:3px 9px;border-radius:999px;background:#0f4b5a;color:#fff;-webkit-text-fill-color:#fff}
+html body.daily-single-page main article.post .w43-card.numbered p{margin:8px 0 0}
+html body.daily-single-page main article.post .w43-core{width:min(240px,80%);margin:0 auto 12px;padding:14px;border-radius:10px;background:#0f4b5a;color:#ffe0a4;-webkit-text-fill-color:#ffe0a4;text-align:center;font-weight:900}
+html body.daily-single-page main article.post .w43-arrow{text-align:center;color:#caa15f;-webkit-text-fill-color:#caa15f;font-weight:900;padding:5px 0}
+html body.daily-single-page main article.post .w43-result{width:min(620px,100%);margin:0 auto;padding:14px 18px;border:1px solid #caa15f;border-radius:10px;background:#fff8e8;text-align:center}
+html body.daily-single-page main article.post .w43-result span,html body.daily-single-page main article.post .w43-result strong{display:block}
+html body.daily-single-page main article.post .w43-result span{color:#765713;-webkit-text-fill-color:#765713;font-weight:850}
+html body.daily-single-page main article.post .w43-result strong{margin-top:4px;color:#0f4b5a;-webkit-text-fill-color:#0f4b5a}
+html body.daily-single-page main article.post .w43-flow{display:flex;align-items:stretch;gap:7px;flex-wrap:wrap}
+html body.daily-single-page main article.post .w43-flow .w43-step{flex:1 1 130px;min-width:0;padding:14px 10px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa;text-align:center}
+html body.daily-single-page main article.post .w43-flow .w43-step strong,html body.daily-single-page main article.post .w43-flow .w43-step span{display:block}
+html body.daily-single-page main article.post .w43-flow .w43-step strong{color:#0f4b5a}
+html body.daily-single-page main article.post .w43-flow .w43-step span{margin-top:4px;color:#526967}
+html body.daily-single-page main article.post .w43-flow>i{align-self:center;color:#0f4b5a;-webkit-text-fill-color:#0f4b5a;font-style:normal;font-weight:900}
+html body.daily-single-page main article.post .w43-return{flex:0 0 100%;margin-top:6px;padding:9px 12px;border-top:3px solid #caa15f;color:#765713;-webkit-text-fill-color:#765713;text-align:center;font-weight:850}
+html body.daily-single-page main article.post .w43-layers{display:flex;flex-direction:column;align-items:center;gap:8px}
+html body.daily-single-page main article.post .w43-layer{padding:14px 18px;border:1px solid #c9ddd8;border-radius:10px;text-align:center}
+html body.daily-single-page main article.post .w43-layer strong,html body.daily-single-page main article.post .w43-layer span{display:block}
+html body.daily-single-page main article.post .w43-layer span{margin-top:4px}
+html body.daily-single-page main article.post .w43-layer.culture{width:60%;background:#0f4b5a;border-color:#0f4b5a}
+html body.daily-single-page main article.post .w43-layer.culture strong{color:#ffe0a4;-webkit-text-fill-color:#ffe0a4}
+html body.daily-single-page main article.post .w43-layer.culture span{color:#fff;-webkit-text-fill-color:#fff}
+html body.daily-single-page main article.post .w43-layer.process{width:78%;background:#eef7f5}
+html body.daily-single-page main article.post .w43-layer.rule{width:96%;background:#f7fbfa}
+html body.daily-single-page main article.post .w43-layer.process strong,html body.daily-single-page main article.post .w43-layer.rule strong{color:#0f4b5a}
+html body.daily-single-page main article.post .w43-table-wrap{overflow-x:auto;margin:18px 0}
+html body.daily-single-page main article.post .w43-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #c9ddd8;border-radius:10px;overflow:hidden;background:#fff}
+html body.daily-single-page main article.post .w43-table th,html body.daily-single-page main article.post .w43-table td{padding:12px 14px;border-bottom:1px solid #dce9e6;text-align:left;vertical-align:top}
+html body.daily-single-page main article.post .w43-table th{background:#eef7f5;color:#0f4b5a}
+html body.daily-single-page main article.post .w43-table tr:last-child td{border-bottom:0}
+html body.daily-single-page main article.post .w43-callout{margin:20px 0;padding:16px 18px;border-left:4px solid #caa15f;border-radius:0 10px 10px 0;background:#fff8e8}
+html body.daily-single-page main article.post .w43-callout strong{color:#765713}
+html body.daily-single-page main article.post .w43-callout p{margin:8px 0 0}
+html body.daily-single-page main article.post .w43-diagnosis{width:min(760px,100%);margin:auto}
+html body.daily-single-page main article.post .w43-dq{padding:15px 18px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa}
+html body.daily-single-page main article.post .w43-dq b{display:inline-block;margin-right:10px;color:#765713;-webkit-text-fill-color:#765713}
+html body.daily-single-page main article.post .w43-dq strong{color:#0f4b5a}
+html body.daily-single-page main article.post .w43-dq span{display:block;margin-top:5px;color:#526967}
+html body.daily-single-page main article.post .w43-maturity{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:stretch;margin:20px 0}
+html body.daily-single-page main article.post .w43-maturity>div{padding:16px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa}
+html body.daily-single-page main article.post .w43-maturity>div strong{color:#0f4b5a}
+html body.daily-single-page main article.post .w43-maturity>div p{margin:8px 0 0}
+html body.daily-single-page main article.post .w43-maturity>i{align-self:center;color:#caa15f;-webkit-text-fill-color:#caa15f;font-style:normal;font-weight:900}
+html body.daily-single-page main article.post .w43-system{padding:18px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa}
+html body.daily-single-page main article.post .w43-system-top{width:min(430px,90%);margin:0 auto 14px;padding:14px;border-radius:10px;background:#0f4b5a;text-align:center}
+html body.daily-single-page main article.post .w43-system-top strong,html body.daily-single-page main article.post .w43-system-top span{display:block}
+html body.daily-single-page main article.post .w43-system-top strong{color:#ffe0a4;-webkit-text-fill-color:#ffe0a4}
+html body.daily-single-page main article.post .w43-system-top span{margin-top:4px;color:#fff;-webkit-text-fill-color:#fff}
+html body.daily-single-page main article.post .w43-system-middle{display:grid;grid-template-columns:1fr .72fr 1fr;gap:12px;align-items:stretch}
+html body.daily-single-page main article.post .w43-system-middle>div{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:14px;border:1px solid #c9ddd8;border-radius:10px;background:#fff;text-align:center}
+html body.daily-single-page main article.post .w43-system-middle>div strong,html body.daily-single-page main article.post .w43-system-middle>div span{display:block}
+html body.daily-single-page main article.post .w43-system-middle>div strong{color:#0f4b5a}
+html body.daily-single-page main article.post .w43-system-middle>div span{color:#526967}
+html body.daily-single-page main article.post .w43-system-middle .w43-system-center{background:#fff8e8;border-color:#caa15f}
+html body.daily-single-page main article.post .w43-system-bottom{display:flex;justify-content:center;gap:16px;align-items:center;color:#765713;-webkit-text-fill-color:#765713;font-weight:850}
+html body.daily-single-page main article.post .w43-system-bottom i{font-style:normal;color:#caa15f;-webkit-text-fill-color:#caa15f}
+html body.daily-single-page main article.post .w43-closing{margin:28px 0 10px;padding:24px;border-radius:12px;background:#0f4b5a}
+html body.daily-single-page main article.post .w43-closing>span{color:#ffe0a4;-webkit-text-fill-color:#ffe0a4;font-weight:900}
+html body.daily-single-page main article.post .w43-closing h2,html body.daily-single-page main article.post .w43-closing p{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body.daily-single-page main article.post .w43-closing strong{color:#ffe0a4!important;-webkit-text-fill-color:#ffe0a4!important}
+html body.daily-single-page main article.post .w43-note{margin-top:18px;padding-top:14px;border-top:1px solid #d5e4e3;color:#526967}
+@media(max-width:900px){
+html body.daily-single-page main article.post .w43-grid.three{grid-template-columns:1fr}
+html body.daily-single-page main article.post .w43-maturity{grid-template-columns:1fr}
+html body.daily-single-page main article.post .w43-maturity>i{transform:rotate(90deg);text-align:center}
+html body.daily-single-page main article.post .w43-system-middle{grid-template-columns:1fr}
+html body.daily-single-page main article.post .w43-layer.culture{width:78%}
+html body.daily-single-page main article.post .w43-layer.process{width:88%}
+html body.daily-single-page main article.post .w43-layer.rule{width:100%}
+}
+@media(max-width:680px){
+html body.daily-single-page main article.post .w43-flow{display:grid;grid-template-columns:1fr}
+html body.daily-single-page main article.post .w43-flow>i{transform:rotate(90deg);text-align:center}
+html body.daily-single-page main article.post .w43-system-bottom{flex-wrap:wrap}
+}
