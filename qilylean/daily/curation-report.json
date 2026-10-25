@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-10-18T00:00:00.000Z",
-  "total_before": 382,
-  "total_after": 382,
+  "generated_at": "2026-10-25T00:00:00.000Z",
+  "total_before": 383,
+  "total_after": 383,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -4960,6 +4960,19 @@
           "date": "2026-10-18",
           "title": "自动化包装的最后一公里：从产品身份识别到包装交付的全流程防错闭环",
           "score": 239,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-10-19",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-10-25",
+          "title": "制度管人、流程管事、文化留心：企业真正稳定运行的三层管理机制",
+          "score": 124,
           "protected": false
         }
       ],
