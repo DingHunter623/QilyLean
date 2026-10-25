@@ -38,7 +38,11 @@ html body.daily-single-page main article.post .w43-layer.process{width:78%;backg
 html body.daily-single-page main article.post .w43-layer.rule{width:96%;background:#f7fbfa}
 html body.daily-single-page main article.post .w43-layer.process strong,html body.daily-single-page main article.post .w43-layer.rule strong{color:#0f4b5a}
 html body.daily-single-page main article.post .w43-table-wrap{overflow-x:auto;margin:18px 0}
-html body.daily-single-page main article.post .w43-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #c9ddd8;border-radius:10px;overflow:hidden;background:#fff}
+html body.daily-single-page main article.post .w43-table{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;border:1px solid #c9ddd8;border-radius:10px;overflow:hidden;background:#fff}
+html body.daily-single-page main article.post .w43-table th:nth-child(1),html body.daily-single-page main article.post .w43-table td:nth-child(1){width:24%}
+html body.daily-single-page main article.post .w43-table th:nth-child(2),html body.daily-single-page main article.post .w43-table td:nth-child(2){width:40%}
+html body.daily-single-page main article.post .w43-table th:nth-child(3),html body.daily-single-page main article.post .w43-table td:nth-child(3){width:36%}
+html body.daily-single-page main article.post .w43-mobile-break{display:inline}
 html body.daily-single-page main article.post .w43-table th,html body.daily-single-page main article.post .w43-table td{padding:12px 14px;border-bottom:1px solid #dce9e6;text-align:left;vertical-align:top}
 html body.daily-single-page main article.post .w43-table th{background:#eef7f5;color:#0f4b5a}
 html body.daily-single-page main article.post .w43-table tr:last-child td{border-bottom:0}
@@ -95,4 +99,5 @@ html body.daily-single-page main article.post .w43-table th:nth-child(2),
 html body.daily-single-page main article.post .w43-table td:nth-child(2){width:32%!important;max-width:32vw!important}
 html body.daily-single-page main article.post .w43-table th:nth-child(3),
 html body.daily-single-page main article.post .w43-table td:nth-child(3){width:32%!important;max-width:32vw!important}
+html body.daily-single-page main article.post .w43-mobile-break{display:block!important}
 }
