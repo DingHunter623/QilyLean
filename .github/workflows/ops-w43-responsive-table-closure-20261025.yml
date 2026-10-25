@@ -114,19 +114,6 @@ jobs:
           fi
           curl -fsSL -X POST             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"             -H "Content-Type: application/json"             "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/purge_cache"             --data '{"files":["https://qilylean.com/qilylean/daily/2026-10-25.html","https://qilylean.com/qilylean/daily/assets/2026-10-25-brief.css"]}' || true
 
-      - name: Wait for international responsive source publication
-        run: |
-          set -euo pipefail
-          for i in $(seq 1 60); do
-            if curl -fsSL --max-time 20 -H 'Cache-Control: no-cache' "https://qilylean.com/qilylean/daily/2026-10-25.html?probe=${GITHUB_SHA::8}-$i" | grep -Fq 'w43-mobile-break'; then
-              echo "International responsive W43 source is live."
-              exit 0
-            fi
-            sleep 5
-          done
-          echo "International page still serves stale W43 source." >&2
-          exit 1
-
       - name: Verify responsive W43 on dual-site production
         env:
           QILY_INT_BASE: https://qilylean.com
