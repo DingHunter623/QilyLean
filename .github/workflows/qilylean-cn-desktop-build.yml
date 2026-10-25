@@ -65,6 +65,16 @@ jobs:
         working-directory: desktop/qilylean-cn
         run: npm run icons
 
+      # Cargo's source fingerprint walk can fail against a non-cone sparse Git index.
+      # A nested, local-only Git metadata boundary makes the Rust crate independent
+      # from the parent repository's sparse checkout; source files remain untouched.
+      - name: Isolate Cargo fingerprint scan from sparse repository
+        shell: bash
+        run: |
+          cd desktop/qilylean-cn/src-tauri
+          git init -q
+          git status --short > /dev/null
+
       - uses: tauri-apps/tauri-action@v1
         env:
           APPLE_SIGNING_IDENTITY: ${{ startsWith(matrix.os, 'macos') && '-' || '' }}
