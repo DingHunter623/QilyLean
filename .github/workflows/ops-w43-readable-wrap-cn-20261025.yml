@@ -109,7 +109,7 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          cat > /tmp/w43-readable.spec.js <<'JS'
+          cat > scripts/w43-readable-production.spec.js <<'JS'
           const {test,expect}=require('@playwright/test');
           test('W43 readable semantic wrap on CN mobile', async({page})=>{
             for(const width of [390,430]){
@@ -141,7 +141,7 @@ jobs:
             }
           });
           JS
-          npx playwright test /tmp/w43-readable.spec.js --reporter=line --workers=1
+          npx playwright test scripts/w43-readable-production.spec.js --reporter=line --workers=1
 
       - name: Roll back on failure
         if: failure() && env.W43_PREVIOUS != ''
