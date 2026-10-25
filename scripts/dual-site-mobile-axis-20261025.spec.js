@@ -85,9 +85,23 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
         scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
       };
     });
+    const firstCell=table.querySelector('tbody tr td:first-child');
+    let firstPhrase=null;
+    if(firstCell?.firstChild?.nodeType===Node.TEXT_NODE){
+      const node=firstCell.firstChild;
+      const phrase=document.createRange();
+      phrase.setStart(node,0);
+      phrase.setEnd(node,Math.min(5,node.length));
+      const phraseRects=[...phrase.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}));
+      const rest=document.createRange();
+      rest.setStart(node,Math.min(5,node.length));
+      rest.setEnd(node,node.length);
+      const restRects=[...rest.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}));
+      firstPhrase={phraseRects,restRects,text:node.textContent};
+    }
     return {
       tableWidth:table.getBoundingClientRect().width,
-      cells,row,overflow,
+      cells,row,overflow,firstPhrase,
       documentWidth:document.documentElement.scrollWidth
     };
    });
@@ -96,15 +110,20 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
    expect(metrics.cells).toHaveLength(3);
    expect(metrics.documentWidth,route.url+' no horizontal overflow').toBeLessThanOrEqual(width+1);
    const ratios=metrics.cells.map(c=>c.width/metrics.tableWidth);
-   expect.soft(ratios[0],route.url+' first column ratio').toBeGreaterThanOrEqual(.23);
-   expect.soft(ratios[0],route.url+' first column ratio').toBeLessThanOrEqual(.27);
-   expect.soft(ratios[1],route.url+' second column ratio').toBeGreaterThanOrEqual(.37);
-   expect.soft(ratios[1],route.url+' second column ratio').toBeLessThanOrEqual(.41);
-   expect.soft(ratios[2],route.url+' third column ratio').toBeGreaterThanOrEqual(.34);
-   expect.soft(ratios[2],route.url+' third column ratio').toBeLessThanOrEqual(.38);
+   expect.soft(ratios[0],route.url+' first column ratio').toBeGreaterThanOrEqual(.29);
+   expect.soft(ratios[0],route.url+' first column ratio').toBeLessThanOrEqual(.31);
+   expect.soft(ratios[1],route.url+' second column ratio').toBeGreaterThanOrEqual(.35);
+   expect.soft(ratios[1],route.url+' second column ratio').toBeLessThanOrEqual(.37);
+   expect.soft(ratios[2],route.url+' third column ratio').toBeGreaterThanOrEqual(.33);
+   expect.soft(ratios[2],route.url+' third column ratio').toBeLessThanOrEqual(.35);
    expect(ratios[0],route.url+' first column must remain the narrowest').toBeLessThan(ratios[2]);
    expect(ratios[0],route.url+' first column must remain narrower than common-expression column').toBeLessThan(ratios[1]);
    expect.soft(Math.abs(metrics.row[0]-metrics.cells[0].width),route.url+' body/header first-column alignment').toBeLessThanOrEqual(1);
+   expect.soft(metrics.firstPhrase?.text.startsWith('只有制度，'),route.url+' first semantic phrase source').toBeTruthy();
+   expect.soft(metrics.firstPhrase?.phraseRects.length,route.url+' “只有制度，” stays on one line').toBe(1);
+   if(metrics.firstPhrase?.phraseRects.length && metrics.firstPhrase?.restRects.length){
+    expect.soft(metrics.firstPhrase.restRects[0].top,route.url+' line break occurs after “只有制度，”').toBeGreaterThan(metrics.firstPhrase.phraseRects[0].top+1);
+   }
    for(const [i,item] of metrics.overflow.entries()){
     expect.soft(item.textLeft,route.url+' cell '+i+' text left containment').toBeGreaterThanOrEqual(item.cellLeft-0.5);
     expect.soft(item.textRight,route.url+' cell '+i+' text right containment').toBeLessThanOrEqual(item.cellRight+0.5);
