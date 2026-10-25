@@ -88,16 +88,24 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
     const firstCell=table.querySelector('tbody tr td:first-child');
     let firstPhrase=null;
     if(firstCell?.firstChild?.nodeType===Node.TEXT_NODE){
-      const node=firstCell.firstChild;
+      const phraseNode=firstCell.firstChild;
+      const br=phraseNode.nextSibling;
+      const restNode=br?.nextSibling;
       const phrase=document.createRange();
-      phrase.setStart(node,0);
-      phrase.setEnd(node,Math.min(5,node.length));
+      phrase.selectNodeContents(phraseNode);
       const phraseRects=[...phrase.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}));
-      const rest=document.createRange();
-      rest.setStart(node,Math.min(5,node.length));
-      rest.setEnd(node,node.length);
-      const restRects=[...rest.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}));
-      firstPhrase={phraseRects,restRects,text:node.textContent};
+      const restRects=[];
+      if(restNode?.nodeType===Node.TEXT_NODE){
+        const rest=document.createRange();
+        rest.selectNodeContents(restNode);
+        restRects.push(...[...rest.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom})));
+      }
+      firstPhrase={
+        phraseRects,restRects,
+        phraseText:phraseNode.textContent,
+        restText:restNode?.textContent||'',
+        hasBreak:br?.nodeName==='BR'
+      };
     }
     return {
       tableWidth:table.getBoundingClientRect().width,
@@ -118,7 +126,9 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
    expect.soft(ratios[2],route.url+' third column ratio').toBeLessThanOrEqual(.33);
    expect(ratios[0],route.url+' first column should be widest for semantic status phrases').toBeGreaterThan(ratios[1]);
    expect.soft(Math.abs(metrics.row[0]-metrics.cells[0].width),route.url+' body/header first-column alignment').toBeLessThanOrEqual(1);
-   expect.soft(metrics.firstPhrase?.text.startsWith('只有制度，'),route.url+' first semantic phrase source').toBeTruthy();
+   expect.soft(metrics.firstPhrase?.phraseText,route.url+' first semantic phrase source').toBe('只有制度，');
+   expect.soft(metrics.firstPhrase?.restText,route.url+' second semantic phrase source').toBe('没有流程');
+   expect.soft(metrics.firstPhrase?.hasBreak,route.url+' explicit semantic break').toBeTruthy();
    expect.soft(metrics.firstPhrase?.phraseRects.length,route.url+' “只有制度，” stays on one line').toBe(1);
    if(metrics.firstPhrase?.phraseRects.length && metrics.firstPhrase?.restRects.length){
     expect.soft(metrics.firstPhrase.restRects[0].top,route.url+' line break occurs after “只有制度，”').toBeGreaterThan(metrics.firstPhrase.phraseRects[0].top+1);
