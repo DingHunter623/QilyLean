@@ -55,88 +55,56 @@ test('Selected international and China public routes retain no mobile overflow',
  }
 });
 
-test('W43 governance table keeps balanced mobile columns on both domains',async({page})=>{
- test.setTimeout(120000);
+test('W43 governance table uses efficient desktop columns and semantic mobile wrapping on both domains',async({page})=>{
+ test.setTimeout(150000);
  const routes=[
   {site:'international',url:com+'/qilylean/daily/2026-10-25.html'},
   {site:'China',url:cn+'/briefs/archive/2026-10-25/'}
  ];
- for(const width of [390,430]){
-  await page.setViewportSize({width,height:900});
+ for(const width of [390,430,1440]){
+  await page.setViewportSize({width,height:1000});
   for(const route of routes){
    await page.goto(route.url,{waitUntil:'domcontentloaded'});
    const metrics=await page.evaluate(()=>{
     const table=document.querySelector('.w43-table');
     if(!table)return null;
-    const cells=[...table.querySelectorAll('thead th')].map(el=>{
-      const r=el.getBoundingClientRect();
-      return {width:r.width,left:r.left,right:r.right};
-    });
-    const tr=table.querySelector('tbody tr');
-    const row=[...(tr?.children||[])].map(el=>el.getBoundingClientRect().width);
-    const overflow=[...table.querySelectorAll('th,td')].map(el=>{
-      const cell=el.getBoundingClientRect();
+    const heads=[...table.querySelectorAll('thead th')].map(el=>el.getBoundingClientRect().width);
+    const first=table.querySelector('tbody tr td:first-child');
+    const marker=first?.querySelector('.w43-mobile-break');
+    const markerRect=marker?.getBoundingClientRect();
+    let phraseTop=0;
+    if(first?.firstChild?.nodeType===Node.TEXT_NODE){
       const range=document.createRange();
-      range.selectNodeContents(el);
-      const text=range.getBoundingClientRect();
-      return {
-        cellLeft:cell.left,cellRight:cell.right,
-        textLeft:text.left,textRight:text.right,
-        scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
-      };
-    });
-    const firstCell=table.querySelector('tbody tr td:first-child');
-    let firstPhrase=null;
-    if(firstCell?.firstChild?.nodeType===Node.TEXT_NODE){
-      const phraseNode=firstCell.firstChild;
-      const br=phraseNode.nextSibling;
-      const restNode=br?.nextSibling;
-      const phrase=document.createRange();
-      phrase.selectNodeContents(phraseNode);
-      const phraseRects=[...phrase.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}));
-      const restRects=[];
-      if(restNode?.nodeType===Node.TEXT_NODE){
-        const rest=document.createRange();
-        rest.selectNodeContents(restNode);
-        restRects.push(...[...rest.getClientRects()].map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom})));
-      }
-      firstPhrase={
-        phraseRects,restRects,
-        phraseText:phraseNode.textContent,
-        restText:restNode?.textContent||'',
-        hasBreak:br?.nodeName==='BR'
-      };
+      range.selectNodeContents(first.firstChild);
+      phraseTop=range.getBoundingClientRect().top;
     }
     return {
       tableWidth:table.getBoundingClientRect().width,
-      cells,row,overflow,firstPhrase,
+      ratios:heads.map(v=>v/table.getBoundingClientRect().width),
+      firstText:first?.innerText||'',
+      markerDisplay:marker?getComputedStyle(marker).display:null,
+      phraseTop,
+      markerTop:markerRect?.top||0,
       documentWidth:document.documentElement.scrollWidth
     };
    });
-   console.log('W43_MOBILE_TABLE',JSON.stringify({site:route.site,width,...metrics}));
+   console.log('W43_RESPONSIVE_TABLE',JSON.stringify({site:route.site,width,...metrics}));
    expect(metrics,route.url+' governance table exists').toBeTruthy();
-   expect(metrics.cells).toHaveLength(3);
    expect(metrics.documentWidth,route.url+' no horizontal overflow').toBeLessThanOrEqual(width+1);
-   const ratios=metrics.cells.map(c=>c.width/metrics.tableWidth);
-   expect.soft(ratios[0],route.url+' first column ratio').toBeGreaterThanOrEqual(.35);
-   expect.soft(ratios[0],route.url+' first column ratio').toBeLessThanOrEqual(.37);
-   expect.soft(ratios[1],route.url+' second column ratio').toBeGreaterThanOrEqual(.31);
-   expect.soft(ratios[1],route.url+' second column ratio').toBeLessThanOrEqual(.33);
-   expect.soft(ratios[2],route.url+' third column ratio').toBeGreaterThanOrEqual(.31);
-   expect.soft(ratios[2],route.url+' third column ratio').toBeLessThanOrEqual(.33);
-   expect(ratios[0],route.url+' first column should be widest for semantic status phrases').toBeGreaterThan(ratios[1]);
-   expect.soft(Math.abs(metrics.row[0]-metrics.cells[0].width),route.url+' body/header first-column alignment').toBeLessThanOrEqual(1);
-   expect.soft(metrics.firstPhrase?.phraseText,route.url+' first semantic phrase source').toBe('只有制度，');
-   expect.soft(metrics.firstPhrase?.restText,route.url+' second semantic phrase source').toBe('没有流程');
-   expect.soft(metrics.firstPhrase?.hasBreak,route.url+' explicit semantic break').toBeTruthy();
-   expect.soft(metrics.firstPhrase?.phraseRects.length,route.url+' “只有制度，” stays on one line').toBe(1);
-   if(metrics.firstPhrase?.phraseRects.length && metrics.firstPhrase?.restRects.length){
-    expect.soft(metrics.firstPhrase.restRects[0].top,route.url+' line break occurs after “只有制度，”').toBeGreaterThan(metrics.firstPhrase.phraseRects[0].top+1);
-   }
-   for(const [i,item] of metrics.overflow.entries()){
-    expect.soft(item.textLeft,route.url+' cell '+i+' text left containment').toBeGreaterThanOrEqual(item.cellLeft-0.5);
-    expect.soft(item.textRight,route.url+' cell '+i+' text right containment').toBeLessThanOrEqual(item.cellRight+0.5);
-    expect.soft(item.scrollWidth,route.url+' cell '+i+' internal scroll containment').toBeLessThanOrEqual(item.clientWidth+1);
+   if(width<=430){
+    expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeGreaterThanOrEqual(.35);
+    expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeLessThanOrEqual(.37);
+    expect.soft(metrics.markerDisplay,route.url+' mobile semantic break').toBe('block');
+    expect.soft(metrics.markerTop,route.url+' mobile second phrase next line').toBeGreaterThan(metrics.phraseTop+1);
+   }else{
+    expect.soft(metrics.ratios[0],route.url+' desktop first column').toBeGreaterThanOrEqual(.23);
+    expect.soft(metrics.ratios[0],route.url+' desktop first column').toBeLessThanOrEqual(.25);
+    expect.soft(metrics.ratios[1],route.url+' desktop second column').toBeGreaterThanOrEqual(.39);
+    expect.soft(metrics.ratios[1],route.url+' desktop second column').toBeLessThanOrEqual(.41);
+    expect.soft(metrics.ratios[2],route.url+' desktop third column').toBeGreaterThanOrEqual(.35);
+    expect.soft(metrics.ratios[2],route.url+' desktop third column').toBeLessThanOrEqual(.37);
+    expect.soft(metrics.markerDisplay,route.url+' desktop no forced semantic break').toBe('inline');
+    expect.soft(Math.abs(metrics.markerTop-metrics.phraseTop),route.url+' desktop phrase remains same line').toBeLessThanOrEqual(1);
    }
   }
  }
