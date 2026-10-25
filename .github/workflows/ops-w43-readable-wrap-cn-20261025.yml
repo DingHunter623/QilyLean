@@ -38,7 +38,7 @@ jobs:
           bash cn-site/scripts/materialize-practice-assets.sh
           test -s cn-site/briefs/archive/2026-10-25/index.html
           test -s cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
-          grep -Fq 'width:30%!important' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          grep -Fq 'width:32%!important' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
           grep -Fq 'word-break:normal!important' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
 
       - name: Configure SSH
@@ -88,7 +88,7 @@ jobs:
           set -euo pipefail
           EXPECTED="$1"
           SITE_ROOT=/var/www/qilylean-cn
-          grep -Fq 'width:30%!important' "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          grep -Fq 'width:32%!important' "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
           grep -Fq 'word-break:normal!important' "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
           NEXT="$SITE_ROOT/.current-w43read-${EXPECTED##*/}"
           ln -sfn "$EXPECTED" "$NEXT"
@@ -135,8 +135,8 @@ jobs:
               expect(m.text.startsWith('只有制度，')).toBeTruthy();
               expect(m.phrase.length).toBe(1);
               expect(m.rest[0].top).toBeGreaterThan(m.phrase[0].top+1);
-              expect(m.ratios[0]).toBeGreaterThanOrEqual(.29);
-              expect(m.ratios[0]).toBeLessThanOrEqual(.31);
+              expect(m.ratios[0]).toBeGreaterThanOrEqual(.31);
+              expect(m.ratios[0]).toBeLessThanOrEqual(.33);
               expect(m.scrollWidth).toBeLessThanOrEqual(width+1);
             }
           });
