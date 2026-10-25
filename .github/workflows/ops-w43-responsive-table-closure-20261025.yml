@@ -1,0 +1,127 @@
+name: One-time W43 responsive table production closure
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ops-w43-responsive-table-closure-20261025.yml'
+permissions:
+  contents: read
+  actions: write
+jobs:
+  deploy-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Materialize current CN brief
+        run: |
+          set -euo pipefail
+          bash cn-site/scripts/materialize-practice-assets.sh
+          test -s cn-site/briefs/archive/2026-10-25/index.html
+          test -s cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          grep -Fq 'w43-mobile-break' cn-site/briefs/archive/2026-10-25/index.html
+          grep -Fq 'width:24%' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          grep -Fq 'display:block!important' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+
+      - name: Configure SSH
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Atomically deploy responsive W43 files
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn)
+          RELEASE_ID="w43responsive-${GITHUB_SHA::12}-${GITHUB_RUN_ID}"
+          META="$(ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$RELEASE_ID'" <<'REMOTE'
+          set -euo pipefail
+          RELEASE_ID="$1"
+          SITE_ROOT=/var/www/qilylean-cn
+          exec 9>"$SITE_ROOT/.content-deploy.lock"
+          flock -w 120 9
+          PREVIOUS="$(readlink -f "$SITE_ROOT/current")"
+          EXPECTED="$SITE_ROOT/releases/$RELEASE_ID"
+          test -d "$PREVIOUS"
+          test ! -e "$EXPECTED"
+          mkdir -p "$EXPECTED"
+          cp -al "$PREVIOUS/." "$EXPECTED/"
+          rm -f             "$EXPECTED/briefs/archive/2026-10-25/index.html"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          mkdir -p             "$EXPECTED/briefs/archive/2026-10-25"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets"
+          printf '%s|%s\n' "$PREVIOUS" "$EXPECTED"
+          REMOTE
+          )"
+          PREVIOUS="${META%%|*}"
+          EXPECTED="${META#*|}"
+          echo "W43_PREVIOUS=$PREVIOUS" >> "$GITHUB_ENV"
+          echo "W43_EXPECTED=$EXPECTED" >> "$GITHUB_ENV"
+          scp -q "${OPTS[@]}" cn-site/briefs/archive/2026-10-25/index.html "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/briefs/archive/2026-10-25/index.html"
+          scp -q "${OPTS[@]}" cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$EXPECTED'" <<'REMOTE'
+          set -euo pipefail
+          EXPECTED="$1"
+          SITE_ROOT=/var/www/qilylean-cn
+          grep -Fq 'w43-mobile-break' "$EXPECTED/briefs/archive/2026-10-25/index.html"
+          grep -Fq 'width:24%' "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          NEXT="$SITE_ROOT/.current-w43responsive-${EXPECTED##*/}"
+          ln -sfn "$EXPECTED" "$NEXT"
+          mv -Tf "$NEXT" "$SITE_ROOT/current"
+          sudo nginx -t
+          test "$(readlink -f "$SITE_ROOT/current")" = "$EXPECTED"
+          test "$(curl --silent --show-error --connect-timeout 5 --max-time 20 --resolve qilylean.cn:443:127.0.0.1 -o /dev/null -w '%{http_code}' https://qilylean.cn/briefs/archive/2026-10-25/)" = 200
+          REMOTE
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Wait for international source publication
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 40); do
+            if curl -fsSL --max-time 20 "https://qilylean.com/qilylean/daily/2026-10-25.html?probe=${GITHUB_SHA::8}-$i" | grep -Fq 'w43-mobile-break'; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "International page did not publish responsive W43 source in time" >&2
+          exit 1
+
+      - name: Verify responsive W43 on dual-site production
+        env:
+          QILY_INT_BASE: https://qilylean.com
+          QILY_CN_BASE: https://qilylean.cn
+        run: |
+          set -euo pipefail
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          npx playwright test scripts/dual-site-mobile-axis-20261025.spec.js --grep "W43 governance table uses efficient desktop columns and semantic mobile wrapping" --reporter=line --workers=1 --trace=on
+
+      - name: Roll back CN on failure
+        if: failure() && env.W43_PREVIOUS != ''
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -o ConnectTimeout=20 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$W43_PREVIOUS' '$W43_EXPECTED'" <<'REMOTE'
+          set -euo pipefail
+          PREVIOUS="$1"; EXPECTED="$2"; SITE_ROOT=/var/www/qilylean-cn
+          if [ "$(readlink -f "$SITE_ROOT/current")" = "$EXPECTED" ]; then
+            NEXT="$SITE_ROOT/.current-w43responsive-rollback"
+            ln -sfn "$PREVIOUS" "$NEXT"
+            mv -Tf "$NEXT" "$SITE_ROOT/current"
+            sudo nginx -t
+          fi
+          REMOTE
