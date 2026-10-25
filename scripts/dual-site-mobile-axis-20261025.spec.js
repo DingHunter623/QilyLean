@@ -16,13 +16,13 @@ test('Four screenshot pages preserve one 15px effective mobile reading gutter',a
    if(contract.site==='international')await page.waitForTimeout(1600);
    const rects=await page.evaluate(({selector,second})=>{
     const get=(s)=>{if(!s)return null;const el=document.querySelector(s);if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width};};
-    return {primary:get(selector),secondary:get(second),documentWidth:document.documentElement.scrollWidth};
+    return {primary:get(selector),secondary:get(second),documentWidth:document.documentElement.scrollWidth,layoutWidth:document.documentElement.clientWidth};
    },contract);
    console.log('DUAL_SITE_GUTTER',JSON.stringify({site:contract.site,url:contract.url,width,...rects}));
    expect(rects.primary,contract.url+' expected principal reading content').toBeTruthy();
    expect(rects.documentWidth,contract.url+' no page overflow '+width).toBeLessThanOrEqual(width+1);
    expect.soft(Math.abs(rects.primary.left-15),contract.url+' left reading edge '+width).toBeLessThanOrEqual(1.5);
-   expect.soft(Math.abs(width-rects.primary.right-15),contract.url+' right reading edge '+width).toBeLessThanOrEqual(1.5);
+   expect.soft(Math.abs(rects.layoutWidth-rects.primary.right-15),contract.url+' right edge within layout viewport '+width).toBeLessThanOrEqual(1.5);
    if(rects.secondary){
     expect.soft(Math.abs(rects.primary.left-rects.secondary.left),contract.url+' hero-to-body axis '+width).toBeLessThanOrEqual(1);
     expect.soft(Math.abs(rects.primary.right-rects.secondary.right),contract.url+' hero-to-body right axis '+width).toBeLessThanOrEqual(1);
