@@ -43,7 +43,7 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn)
-          RELEASE_ID="w43responsive-${GITHUB_SHA::12}-${GITHUB_RUN_ID}"
+          RELEASE_ID="w43responsive-${GITHUB_SHA::12}-${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
           META="$(ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$RELEASE_ID'" <<'REMOTE'
           set -euo pipefail
           RELEASE_ID="$1"
