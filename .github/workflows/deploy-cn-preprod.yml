@@ -859,7 +859,7 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js --reporter=line --workers=1 --trace=on
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js scripts/dual-site-mobile-axis-20261025.spec.js --reporter=line --workers=1 --trace=on
 
       - name: Upload production VI evidence
         if: always() && steps.source-parity.outputs.enabled == 'true'
