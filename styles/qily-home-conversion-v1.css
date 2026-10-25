@@ -634,3 +634,16 @@ body[data-qily-home-conversion="v1"] .qily-home-brand-extension .qily-aircraft-b
   .qily-home-launch__cta{width:100%}
   .qily-home-extended summary{align-items:flex-start}
 }
+
+
+/* QILY-DUAL-SITE-MOBILE-AXIS-15-20261025
+ * Common homepage conversion Hero only. The legacy V4 rule can squeeze narrow
+ * phone layouts to 12px although other pages keep the canonical 15px axis.
+ * Preserve all internal card padding, typography, vertical rhythm and footer.
+ */
+@media(max-width:620px){
+ html:root:root:root body main > section.hero.qily-home-conversion-hero{
+   padding-left:15px!important;
+   padding-right:15px!important;
+ }
+}
