@@ -385,7 +385,7 @@ html:root:root body main .qily-knowledge-chain a small{
 }
 html:root:root body main :is(input,select,textarea,button){font-size:max(16px,1em)!important}
 html:root:root body main table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
-html:root:root body main :is(.table-wrap,.table-scroll,.table-responsive,.qily-table-scroll,.data-table-wrap) table :is(th,td):first-child{
+html:root:root body main :is(.table-wrap,.table-scroll,.table-responsive,.qily-table-scroll,.data-table-wrap) table:not(.w43-table) :is(th,td):first-child{
   min-width:6.5em!important;
   white-space:nowrap!important;
   word-break:keep-all!important;
