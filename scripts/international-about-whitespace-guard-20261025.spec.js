@@ -1,8 +1,9 @@
-const {test, expect}=require('@playwright/test');
+const {test,expect}=require('@playwright/test');
 const base=process.env.QILY_VISUAL_BASE||'http://127.0.0.1:4173';
-test('International About preserves its approved, intentionally spacious layout',async({page})=>{
+const predeployLive=process.env.QILY_ABOUT_PREDEPLOY_LIVE==='1'&&/^https:/.test(base);
+test('International About: 18px mobile gutters, preserved desktop axis and vertical rhythm',async({page})=>{
  test.setTimeout(120000);
- for(const width of [390,430,820,1440]){
+ for(const width of [390,430,620,820,1440]){
   await page.setViewportSize({width,height:900});
   await page.goto(base+'/about/',{waitUntil:'domcontentloaded'});
   const frame=await page.evaluate(()=>{
@@ -11,22 +12,22 @@ test('International About preserves its approved, intentionally spacious layout'
    const body=main?.querySelector(':scope>section.section>.content.article-shell');
    const section=main?.querySelector(':scope>section.section');
    const h=body?.querySelector('.article-body>h2');
-   const r=e=>{const a=e.getBoundingClientRect();return {left:a.left,right:a.right,width:a.width,top:a.top,bottom:a.bottom}};
-   if(!hero||!body||!h||!section)throw new Error('International About content hierarchy changed');
-   const a=r(hero),b=r(body),s=r(section),v=r(h),he=r(main.querySelector(':scope>section.page-hero'));
-   return {hero:a,body:b,section:s,heading:v,heroSection:he,
-    documentWidth:document.documentElement.scrollWidth};
+   const heroSection=main?.querySelector(':scope>section.page-hero');
+   if(!hero||!body||!h||!section||!heroSection)throw Error('International About hierarchy changed');
+   const rect=e=>{const a=e.getBoundingClientRect();return {left:a.left,right:a.right,width:a.width,top:a.top,bottom:a.bottom}};
+   return {hero:rect(hero),article:rect(body),heading:rect(h),heroSection:rect(heroSection),
+     section:rect(section),documentWidth:document.documentElement.scrollWidth,
+     stylesheet:document.querySelector('link[href*="/about/about-intl-parity-v1.css"]')?.getAttribute('href')||''};
   });
-  console.log('INTL_ABOUT_VI_BASELINE',JSON.stringify({width,...frame}));
-  expect(frame.documentWidth,'No international horizontal overflow '+width).toBeLessThanOrEqual(width+1);
-  expect(frame.hero.left,'Hero original horizontal whitespace '+width).toBeGreaterThanOrEqual(width<=620?20:32);
-  expect(frame.body.left,'Article original horizontal whitespace '+width).toBeGreaterThanOrEqual(width<=620?20:32);
-  expect(width-frame.hero.right,'Hero right whitespace '+width).toBeGreaterThanOrEqual(width<=620?20:32);
-  expect(width-frame.body.right,'Article right whitespace '+width).toBeGreaterThanOrEqual(width<=620?20:32);
-  expect(frame.heading.top-frame.heroSection.bottom,'Original transition white space '+width).toBeGreaterThanOrEqual(width<=620?18:24);
-  // This verifies the accepted mobile screenshot without imposing China
-  // compact spacing or rewriting the international component typography.
-  if(width<=620)
-   expect(Math.abs(frame.hero.left-frame.body.left),'International mobile Hero/article axes '+width).toBeLessThanOrEqual(5);
+  console.log('INTL_ABOUT_GUTTER_GEOMETRY',JSON.stringify({width,predeployLive,...frame}));
+  expect(frame.documentWidth,'no horizontal page overflow '+width).toBeLessThanOrEqual(width+1);
+  expect(Math.abs(frame.hero.left-frame.article.left),'Hero/article common left axis '+width).toBeLessThanOrEqual(1);
+  expect(Math.abs(frame.hero.right-frame.article.right),'Hero/article common right axis '+width).toBeLessThanOrEqual(1);
+  expect(Math.abs(frame.heading.top-frame.heroSection.bottom-52),'preserve 52px Hero-to-heading vertical whitespace '+width).toBeLessThanOrEqual(2);
+  const expectedLeft=width<=620?(predeployLive?Math.min(33,Math.round(width*0.077)):18)
+   :(width===820?42.59375:156);
+  expect(Math.abs(frame.hero.left-expectedLeft),'left inset '+width).toBeLessThanOrEqual(1.8);
+  expect(Math.abs(width-frame.hero.right-expectedLeft),'right inset '+width).toBeLessThanOrEqual(1.8);
+  if(!predeployLive)expect(frame.stylesheet,'live/source cache version '+width).toContain('20261025-mobile-double-gutter-closure-v2');
  }
 });
