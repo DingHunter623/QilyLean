@@ -74,9 +74,20 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
     });
     const tr=table.querySelector('tbody tr');
     const row=[...(tr?.children||[])].map(el=>el.getBoundingClientRect().width);
+    const overflow=[...table.querySelectorAll('th,td')].map(el=>{
+      const cell=el.getBoundingClientRect();
+      const range=document.createRange();
+      range.selectNodeContents(el);
+      const text=range.getBoundingClientRect();
+      return {
+        cellLeft:cell.left,cellRight:cell.right,
+        textLeft:text.left,textRight:text.right,
+        scrollWidth:el.scrollWidth,clientWidth:el.clientWidth
+      };
+    });
     return {
       tableWidth:table.getBoundingClientRect().width,
-      cells,row,
+      cells,row,overflow,
       documentWidth:document.documentElement.scrollWidth
     };
    });
@@ -94,6 +105,11 @@ test('W43 governance table keeps balanced mobile columns on both domains',async(
    expect(ratios[0],route.url+' first column must remain the narrowest').toBeLessThan(ratios[2]);
    expect(ratios[0],route.url+' first column must remain narrower than common-expression column').toBeLessThan(ratios[1]);
    expect.soft(Math.abs(metrics.row[0]-metrics.cells[0].width),route.url+' body/header first-column alignment').toBeLessThanOrEqual(1);
+   for(const [i,item] of metrics.overflow.entries()){
+    expect.soft(item.textLeft,route.url+' cell '+i+' text left containment').toBeGreaterThanOrEqual(item.cellLeft-0.5);
+    expect.soft(item.textRight,route.url+' cell '+i+' text right containment').toBeLessThanOrEqual(item.cellRight+0.5);
+    expect.soft(item.scrollWidth,route.url+' cell '+i+' internal scroll containment').toBeLessThanOrEqual(item.clientWidth+1);
+   }
   }
  }
 });
