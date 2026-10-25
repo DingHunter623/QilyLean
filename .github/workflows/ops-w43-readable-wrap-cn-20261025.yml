@@ -119,20 +119,26 @@ jobs:
                 const table=document.querySelector('.w43-table');
                 const cells=[...table.querySelectorAll('thead th')].map(el=>el.getBoundingClientRect().width);
                 const first=table.querySelector('tbody tr td:first-child');
-                const node=first.firstChild;
-                const phrase=document.createRange(); phrase.setStart(node,0); phrase.setEnd(node,5);
-                const rest=document.createRange(); rest.setStart(node,5); rest.setEnd(node,node.length);
+                const phraseNode=first.firstChild;
+                const br=phraseNode.nextSibling;
+                const restNode=br?.nextSibling;
+                const phrase=document.createRange(); phrase.selectNodeContents(phraseNode);
+                const rest=document.createRange(); rest.selectNodeContents(restNode);
                 const p=[...phrase.getClientRects()].map(r=>({top:r.top,left:r.left,right:r.right}));
                 const q=[...rest.getClientRects()].map(r=>({top:r.top,left:r.left,right:r.right}));
                 return {
-                  text:node.textContent,
+                  phraseText:phraseNode.textContent,
+                  restText:restNode.textContent,
+                  hasBreak:br?.nodeName==='BR',
                   ratios:cells.map(v=>v/table.getBoundingClientRect().width),
                   phrase:p,rest:q,
                   scrollWidth:document.documentElement.scrollWidth
                 };
               });
               console.log('W43_READABLE',JSON.stringify({width,...m}));
-              expect(m.text.startsWith('只有制度，')).toBeTruthy();
+              expect(m.phraseText).toBe('只有制度，');
+              expect(m.restText).toBe('没有流程');
+              expect(m.hasBreak).toBeTruthy();
               expect(m.phrase.length).toBe(1);
               expect(m.rest[0].top).toBeGreaterThan(m.phrase[0].top+1);
               expect(m.ratios[0]).toBeGreaterThanOrEqual(.35);
