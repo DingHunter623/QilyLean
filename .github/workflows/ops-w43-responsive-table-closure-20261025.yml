@@ -20,9 +20,14 @@ jobs:
           bash cn-site/scripts/materialize-practice-assets.sh
           test -s cn-site/briefs/archive/2026-10-25/index.html
           test -s cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          test -s cn-site/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          test -s cn-site/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css
           grep -Fq 'w43-mobile-break' cn-site/briefs/archive/2026-10-25/index.html
-          grep -Fq 'width:24%' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
-          grep -Fq 'display:block!important' cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css
+          for css in             cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css             cn-site/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css             cn-site/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css
+          do
+            grep -Fq 'width:24%' "$css"
+            grep -Fq 'display:block!important' "$css"
+          done
 
       - name: Configure SSH
         env:
@@ -56,8 +61,8 @@ jobs:
           test ! -e "$EXPECTED"
           mkdir -p "$EXPECTED"
           cp -al "$PREVIOUS/." "$EXPECTED/"
-          rm -f             "$EXPECTED/briefs/archive/2026-10-25/index.html"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
-          mkdir -p             "$EXPECTED/briefs/archive/2026-10-25"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets"
+          rm -f             "$EXPECTED/briefs/archive/2026-10-25/index.html"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"             "$EXPECTED/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"             "$EXPECTED/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css"
+          mkdir -p             "$EXPECTED/briefs/archive/2026-10-25"             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets"             "$EXPECTED/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets"             "$EXPECTED/assets/source-content/qilylean/daily/assets"
           printf '%s|%s\n' "$PREVIOUS" "$EXPECTED"
           REMOTE
           )"
@@ -67,12 +72,18 @@ jobs:
           echo "W43_EXPECTED=$EXPECTED" >> "$GITHUB_ENV"
           scp -q "${OPTS[@]}" cn-site/briefs/archive/2026-10-25/index.html "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/briefs/archive/2026-10-25/index.html"
           scp -q "${OPTS[@]}" cn-site/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          scp -q "${OPTS[@]}" cn-site/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          scp -q "${OPTS[@]}" cn-site/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css "$USER_NAME@$CN_PREPROD_HOST:$EXPECTED/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css"
           ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" "bash -se -- '$EXPECTED'" <<'REMOTE'
           set -euo pipefail
           EXPECTED="$1"
           SITE_ROOT=/var/www/qilylean-cn
           grep -Fq 'w43-mobile-break' "$EXPECTED/briefs/archive/2026-10-25/index.html"
-          grep -Fq 'width:24%' "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"
+          for css in             "$EXPECTED/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"             "$EXPECTED/assets/destination-shell/assets/brief-visual-source/qilylean/daily/assets/2026-10-25-brief.css"             "$EXPECTED/assets/source-content/qilylean/daily/assets/2026-10-25-brief.css"
+          do
+            grep -Fq 'width:24%' "$css"
+            grep -Fq 'display:block!important' "$css"
+          done
           NEXT="$SITE_ROOT/.current-w43responsive-${EXPECTED##*/}"
           ln -sfn "$EXPECTED" "$NEXT"
           mv -Tf "$NEXT" "$SITE_ROOT/current"
