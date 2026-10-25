@@ -1,0 +1,48 @@
+name: One-time diagnose W43 international origin
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ops-diagnose-intl-w43-origin-20261025.yml'
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Probe international production and Pages origin
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in             "https://qilylean.com/qilylean/daily/2026-10-25.html"             "https://dinghunter623.github.io/QilyLean/qilylean/daily/2026-10-25.html"             "https://dinghunter623.github.io/qilylean/daily/2026-10-25.html"
+          do
+            echo "=== $url ==="
+            curl -sSIL --max-time 20 "$url" | sed -n '1,20p' || true
+            body="$(curl -sSL --max-time 20 -H 'Cache-Control: no-cache' "$url?diag=${GITHUB_SHA::8}" || true)"
+            if printf '%s' "$body" | grep -Fq 'w43-mobile-break'; then
+              echo "W43_MARKER=present"
+            else
+              echo "W43_MARKER=missing"
+            fi
+            printf '%s' "$body" | grep -oE '<link[^>]+2026-10-25-brief\.css[^>]*>' | head -n 2 || true
+          done
+
+      - name: Inspect Cloudflare DNS routing when permitted
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${CLOUDFLARE_API_TOKEN:-}" ]; then
+            echo "Cloudflare token unavailable"
+            exit 0
+          fi
+          zone="$(curl -fsSL -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/zones?name=qilylean.com" || true)"
+          zid="$(printf '%s' "$zone" | python3 -c 'import json,sys; d=json.load(sys.stdin); print((d.get("result") or [{}])[0].get("id",""))' 2>/dev/null || true)"
+          if [ -z "$zid" ]; then
+            echo "Cloudflare zone lookup unavailable"
+            exit 0
+          fi
+          recs="$(curl -fsSL -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" "https://api.cloudflare.com/client/v4/zones/$zid/dns_records?name=qilylean.com" || true)"
+          printf '%s' "$recs" | python3 -c 'import json,sys; d=json.load(sys.stdin); print([{"type":x.get("type"),"name":x.get("name"),"content":x.get("content"),"proxied":x.get("proxied")} for x in d.get("result",[])])' || true
