@@ -54,3 +54,46 @@ test('Selected international and China public routes retain no mobile overflow',
   }
  }
 });
+
+test('W43 governance table keeps balanced mobile columns on both domains',async({page})=>{
+ test.setTimeout(120000);
+ const routes=[
+  {site:'international',url:com+'/qilylean/daily/2026-10-25.html'},
+  {site:'China',url:cn+'/briefs/archive/2026-10-25/'}
+ ];
+ for(const width of [390,430]){
+  await page.setViewportSize({width,height:900});
+  for(const route of routes){
+   await page.goto(route.url,{waitUntil:'domcontentloaded'});
+   const metrics=await page.evaluate(()=>{
+    const table=document.querySelector('.w43-table');
+    if(!table)return null;
+    const cells=[...table.querySelectorAll('thead th')].map(el=>{
+      const r=el.getBoundingClientRect();
+      return {width:r.width,left:r.left,right:r.right};
+    });
+    const tr=table.querySelector('tbody tr');
+    const row=[...(tr?.children||[])].map(el=>el.getBoundingClientRect().width);
+    return {
+      tableWidth:table.getBoundingClientRect().width,
+      cells,row,
+      documentWidth:document.documentElement.scrollWidth
+    };
+   });
+   console.log('W43_MOBILE_TABLE',JSON.stringify({site:route.site,width,...metrics}));
+   expect(metrics,route.url+' governance table exists').toBeTruthy();
+   expect(metrics.cells).toHaveLength(3);
+   expect(metrics.documentWidth,route.url+' no horizontal overflow').toBeLessThanOrEqual(width+1);
+   const ratios=metrics.cells.map(c=>c.width/metrics.tableWidth);
+   expect.soft(ratios[0],route.url+' first column ratio').toBeGreaterThanOrEqual(.23);
+   expect.soft(ratios[0],route.url+' first column ratio').toBeLessThanOrEqual(.27);
+   expect.soft(ratios[1],route.url+' second column ratio').toBeGreaterThanOrEqual(.37);
+   expect.soft(ratios[1],route.url+' second column ratio').toBeLessThanOrEqual(.41);
+   expect.soft(ratios[2],route.url+' third column ratio').toBeGreaterThanOrEqual(.34);
+   expect.soft(ratios[2],route.url+' third column ratio').toBeLessThanOrEqual(.38);
+   expect(ratios[0],route.url+' first column must remain the narrowest').toBeLessThan(ratios[2]);
+   expect(ratios[0],route.url+' first column must remain narrower than common-expression column').toBeLessThan(ratios[1]);
+   expect.soft(Math.abs(metrics.row[0]-metrics.cells[0].width),route.url+' body/header first-column alignment').toBeLessThanOrEqual(1);
+  }
+ }
+});
