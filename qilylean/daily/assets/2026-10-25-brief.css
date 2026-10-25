@@ -90,9 +90,9 @@ html body.daily-single-page main article.post .w43-table{table-layout:fixed!impo
 html body.daily-single-page main article.post .w43-table th,
 html body.daily-single-page main article.post .w43-table td{box-sizing:border-box!important;min-width:0!important;padding:8px 6px!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:hidden!important}
 html body.daily-single-page main article.post .w43-table th:nth-child(1),
-html body.daily-single-page main article.post .w43-table td:nth-child(1){width:30%!important;max-width:30vw!important}
+html body.daily-single-page main article.post .w43-table td:nth-child(1){width:32%!important;max-width:32vw!important}
 html body.daily-single-page main article.post .w43-table th:nth-child(2),
-html body.daily-single-page main article.post .w43-table td:nth-child(2){width:36%!important;max-width:36vw!important}
+html body.daily-single-page main article.post .w43-table td:nth-child(2){width:35%!important;max-width:35vw!important}
 html body.daily-single-page main article.post .w43-table th:nth-child(3),
-html body.daily-single-page main article.post .w43-table td:nth-child(3){width:34%!important;max-width:34vw!important}
+html body.daily-single-page main article.post .w43-table td:nth-child(3){width:33%!important;max-width:33vw!important}
 }
