@@ -80,6 +80,8 @@ jobs:
       - name: Verify public international About whitespace without deploying
         env:
           QILY_VISUAL_BASE: https://qilylean.com
+          # PR checks may run before updated static files reach production.
+          QILY_ABOUT_PREDEPLOY_LIVE: ${{ github.event_name == 'pull_request' && '1' || '0' }}
         run: npx playwright test scripts/international-about-whitespace-guard-20261025.spec.js --reporter=line --workers=1
 
       - name: Upload R8 visual evidence
