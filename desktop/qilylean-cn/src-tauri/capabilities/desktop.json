@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "desktop",
+  "description": "Local-only default window features; remote qilylean.cn receives no native IPC privileges.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

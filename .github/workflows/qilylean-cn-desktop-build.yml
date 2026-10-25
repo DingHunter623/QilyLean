@@ -1,0 +1,75 @@
+name: QilyLean CN Desktop V1 CI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'desktop/qilylean-cn/**'
+      - 'assets/tools/qilylean-unified-app-icon.svg'
+      - '.github/workflows/qilylean-cn-desktop-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    name: ${{ matrix.display }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - display: Windows x64 NSIS
+            os: windows-latest
+            args: '--bundles nsis'
+            rust_target: ''
+          - display: macOS Apple Silicon DMG
+            os: macos-latest
+            args: '--target aarch64-apple-darwin --bundles dmg'
+            rust_target: aarch64-apple-darwin
+          - display: macOS Intel DMG
+            os: macos-latest
+            args: '--target x86_64-apple-darwin --bundles dmg'
+            rust_target: x86_64-apple-darwin
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            desktop/qilylean-cn
+            assets/tools/qilylean-unified-app-icon.svg
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_target }}
+
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: desktop/qilylean-cn/src-tauri -> target
+
+      - name: Install client build tools
+        working-directory: desktop/qilylean-cn
+        run: npm install --no-audit --no-fund
+
+      - name: Check desktop security and VI boundaries
+        working-directory: desktop/qilylean-cn
+        run: npm run check
+
+      - name: Generate native icons from the approved brand SVG
+        working-directory: desktop/qilylean-cn
+        run: npm run icons
+
+      - uses: tauri-apps/tauri-action@v1
+        env:
+          APPLE_SIGNING_IDENTITY: ${{ startsWith(matrix.os, 'macos') && '-' || '' }}
+        with:
+          projectPath: desktop/qilylean-cn
+          args: ${{ matrix.args }}
+          uploadWorkflowArtifacts: true
+          workflowArtifactNamePattern: 'QilyLean-CN-Desktop-[platform]-[arch]-[bundle]'
