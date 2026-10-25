@@ -1,7 +1,7 @@
 const {test,expect}=require('@playwright/test');
 const base=process.env.QILY_VISUAL_BASE||'http://127.0.0.1:4173';
 const predeployLive=process.env.QILY_ABOUT_PREDEPLOY_LIVE==='1'&&/^https:/.test(base);
-test('International About: 18px mobile gutters, preserved desktop axis and vertical rhythm',async({page})=>{
+test('International About: 15px mobile gutters, preserved desktop axis and vertical rhythm',async({page})=>{
  test.setTimeout(120000);
  for(const width of [390,430,620,820,1440]){
   await page.setViewportSize({width,height:900});
@@ -24,11 +24,12 @@ test('International About: 18px mobile gutters, preserved desktop axis and verti
   expect(Math.abs(frame.hero.left-frame.article.left),'Hero/article common left axis '+width).toBeLessThanOrEqual(1);
   expect(Math.abs(frame.hero.right-frame.article.right),'Hero/article common right axis '+width).toBeLessThanOrEqual(1);
   expect(Math.abs(frame.heading.top-frame.heroSection.bottom-52),'preserve 52px Hero-to-heading vertical whitespace '+width).toBeLessThanOrEqual(2);
+  const deployedV3=frame.stylesheet.includes('20261025-dual-site-mobile-axis-15px-v3');
   const deployedV2=frame.stylesheet.includes('20261025-mobile-double-gutter-closure-v2');
-  const expectedLeft=width<=620?(predeployLive&&!deployedV2?Math.min(33,Math.round(width*0.077)):18)
+  const expectedLeft=width<=620?(predeployLive&&!deployedV3?(deployedV2?18:Math.min(33,Math.round(width*0.077))):15)
    :(width===820?42.59375:156);
   expect(Math.abs(frame.hero.left-expectedLeft),'left inset '+width).toBeLessThanOrEqual(1.8);
   expect(Math.abs(width-frame.hero.right-expectedLeft),'right inset '+width).toBeLessThanOrEqual(1.8);
-  if(!predeployLive)expect(frame.stylesheet,'live/source cache version '+width).toContain('20261025-mobile-double-gutter-closure-v2');
+  if(!predeployLive)expect(frame.stylesheet,'live/source cache version '+width).toContain('20261025-dual-site-mobile-axis-15px-v3');
  }
 });
