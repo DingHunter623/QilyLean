@@ -83,10 +83,11 @@ function materialize(source,relative){
   // This removes a transient full-width dark-teal line seen during load.
   // Other routes retain their existing first-paint contract unchanged.
   if(relative==='links/index.html'){
-    const r8=next.match(/<link\b[^>]*\bid=["']qilyVisualAuthorityR8["'][^>]*>/i);
+    const r8=next.match(/\n?<link\b[^>]*\bid=["']qilyVisualAuthorityR8["'][^>]*>\n?/i);
     if(!r8)throw new Error('Resource directory lost its R8 style authority');
-    next=next.replace(r8[0],'');
-    next=next.replace(/<\/head\s*>/i,r8[0]+'\n</head>');
+    const authorityLink=r8[0].trim();
+    next=next.replace(r8[0],'\n');
+    next=next.replace(/<\/head\s*>/i,authorityLink+'\n</head>');
   }
 
   next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+dockTag+'\n');
