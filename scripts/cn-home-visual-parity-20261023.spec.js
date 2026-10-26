@@ -372,13 +372,14 @@ test('International resource directory uses final R8 cascade at first paint with
  await page.setViewportSize({width:1588,height:960});
  await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
  const initial=await page.evaluate(()=>({
-   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id,
+   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id, lastStyle:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.outerHTML, recentStyles:[...document.head.querySelectorAll('link[rel="stylesheet"]')].slice(-4).map(el=>el.outerHTML),
    r8:!!document.getElementById('qilyVisualAuthorityR8'),
    bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
    recommendations:!!document.querySelector('#electricalRecommendations')
  }));
  expect(initial.r8).toBe(true);
- expect(initial.owner,'R8 must be the final stylesheet (runtime may add anonymous <style>)').toBe('qilyVisualAuthorityR8');
+ await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
+ expect(initial.owner,'R8 must be the final stylesheet: '+JSON.stringify(initial.recentStyles)).toBe('qilyVisualAuthorityR8');
  expect(initial.bridge&&initial.recommendations).toBe(true);
  fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
@@ -386,4 +387,34 @@ test('International resource directory uses final R8 cascade at first paint with
  const last=await page.evaluate(()=>[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id);
  expect(last,'R8 remains last after delayed shell checkpoints').toBe('qilyVisualAuthorityR8');
  await page.screenshot({path:'test-results/resource-settled-international.png'});
+});
+
+/* 20261026 figure containment: same portrait must not escape the reading frame
+ * at 375/390/430px, independently of browser's default <figure> margins. */
+test('Owner portrait keeps mobile reading gutters on both homepages',async({page})=>{
+ test.setTimeout(150000);
+ for(const width of [375,390,430]){
+  await page.setViewportSize({width,height:900});
+  for(const url of [intBase+'/',cnBase+'/']){
+   await page.goto(url,{waitUntil:'networkidle'});
+   await page.evaluate(()=>document.querySelectorAll('main details').forEach(x=>x.open=true));
+   if(url.startsWith(intBase))await page.waitForTimeout(1600);
+   const metrics=await page.locator('#qily-home-collaboration .qily-home-collaboration__portrait').evaluate(el=>{
+    const frame=el.getBoundingClientRect(),img=el.querySelector('img').getBoundingClientRect();
+    const owner=el.closest('section').getBoundingClientRect();
+    const style=getComputedStyle(el);
+    return {figure:{left:frame.left,right:frame.right,width:frame.width},
+      image:{left:img.left,right:img.right,width:img.width},
+      owner:{left:owner.left,right:owner.right},
+      marginLeft:parseFloat(style.marginLeft),marginRight:parseFloat(style.marginRight),
+      viewport:document.documentElement.clientWidth};
+   });
+   expect(metrics.marginLeft,url+' no default figure margin-left').toBe(0);
+   expect(metrics.marginRight,url+' no default figure margin-right').toBe(0);
+   expect(metrics.figure.left,url+' photo respects section left').toBeGreaterThanOrEqual(metrics.owner.left-3);
+   expect(metrics.figure.right,url+' photo respects section right').toBeLessThanOrEqual(metrics.owner.right+3);
+   expect(metrics.image.right,url+' image stays inside frame').toBeLessThanOrEqual(metrics.figure.right+2);
+   expect(metrics.figure.right,url+' no horizontal viewport overflow').toBeLessThanOrEqual(metrics.viewport+1);
+  }
+ }
 });
