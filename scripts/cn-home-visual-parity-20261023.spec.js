@@ -352,6 +352,21 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
   expect(Math.abs(p.figure.height-p.columns.height),url+' portrait scales to paired roles').toBeLessThanOrEqual(6);
   expect(p.fit).toBe('cover');
   expect(p.overflow).toBeLessThanOrEqual(1589);
+  if(url.startsWith(cnBase)){
+   const bio=page.locator('#qily-home-collaboration .qily-home-owner-profile');
+   await expect(bio,'CN owner full public biography must remain visible').toBeVisible();
+   await expect(bio).toContainText('丁启利｜20年制造业工程技术与精益改善履历');
+   await expect(bio).toContainText('累计6年多从事咨询交付');
+   const cta=bio.locator('a.qily-home-owner-profile__experience');
+   await expect(cta).toHaveAttribute('href','/archive/profile/experience/');
+   await expect(cta).toBeVisible();
+   const b=await cta.evaluate(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {display:s.display,color:s.color,background:s.backgroundColor,width:r.width,height:r.height}});
+   expect(b.display,'CN resume CTA is a styled button, not hidden prose').toBe('inline-flex');
+   expect(b.color).toBe('rgb(255, 255, 255)');
+   expect(b.background).toBe('rgb(15, 75, 90)');
+   expect(b.height).toBeGreaterThanOrEqual(43);
+   await page.screenshot({path:'test-results/cn-owner-public-bio-visual-parity.png'});
+  }
  }
 });
 
