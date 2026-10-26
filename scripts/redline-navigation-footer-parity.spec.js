@@ -192,6 +192,73 @@ test('sitewide three/four module card VI is consistent between COM and CN', asyn
   expect(checkedFour,'At least two actual 4-card groups on two domains').toBeGreaterThanOrEqual(2);
 });
 
+
+/* QILY-EVIDENCE-READABILITY-REDLINE-20261026
+ * Regression: all grades B/C/D on all project detail pages, both domains,
+ * desktop and mobile. Verify COMPUTED color, true contrast, and no collision
+ * with h1 or lead; source CSS existence alone is never enough.
+ */
+test('project evidence cards on both sites have contrasting text and no overlapping hero content',async({page})=>{
+  test.setTimeout(240000);
+  const projectPaths=['smed-300t','fuse-improvement','mold-warehouse','automotive-lean',
+    'factory-layout','digital-factory','visual-management'];
+  for(const width of [1588,390]){
+    await page.setViewportSize({width,height:1024});
+    for(const slug of projectPaths){
+      for(const [base,route] of [
+        [intBase,'/projects/'+slug+'/'],
+        [cnBase,'/archive/practice/'+slug+'/']
+      ]){
+        const url=base+route;
+        const response=await settledGoto(page,url,{waitUntil:'load',timeout:45000});
+        expect(response.status(),url).toBeLessThan(400);
+        await page.evaluate(()=>document.fonts.ready);
+        const badge=page.locator('.module-hero .qily-project-evidence-grade[data-qily-project-evidence]');
+        await expect(badge,url+' evidence card').toHaveCount(1);
+        const a=await badge.evaluate(node=>{
+          const rect=el=>{let r=el.getBoundingClientRect();return{x:r.x,y:r.y,top:r.top,bottom:r.bottom,width:r.width,height:r.height,right:r.right}};
+          const css=el=>getComputedStyle(el);
+          const small=node.querySelector(':scope > small'),
+                label=node.querySelector(':scope > span'),
+                disk=node.querySelector(':scope > b'),
+                hero=node.closest('.module-hero'),
+                heading=hero.querySelector('h1'),
+                lead=hero.querySelector('.module-lead');
+          const color=el=>css(el).webkitTextFillColor||css(el).color;
+          const paint=el=>css(el).backgroundColor;
+          const grade=rect(node),h=rect(heading),l=rect(lead);
+          return {grade,head:h,lead:l,level:node.dataset.qilyProjectEvidence,
+            bg:paint(node),fg:color(node),
+            small:{fg:color(small),text:small.textContent.trim(),rect:rect(small),opacity:css(small).opacity,display:css(small).display},
+            label:{fg:color(label),text:label.textContent.trim(),rect:rect(label)},
+            disk:{fg:color(disk),bg:paint(disk),text:disk.textContent.trim(),rect:rect(disk)},
+            scroll:document.documentElement.scrollWidth,
+            viewport:window.innerWidth};
+        });
+        expect(a.bg,url).toBe('rgb(255, 253, 248)');
+        expect(a.label.fg,url+' label contrast').toBe('rgb(7, 60, 71)');
+        expect(a.small.fg,url+' description contrast').toBe('rgb(49, 91, 97)');
+        expect(a.disk.fg,url+' badge foreground').toBe('rgb(255, 255, 255)');
+        expect(a.disk.bg,url+' badge background').toBe('rgb(15, 75, 90)');
+        expect(a.small.text,url+' missing explanation').toContain('查看分级口径');
+        expect(a.small.display,url).not.toBe('none');
+        expect(Number(a.small.opacity),url).toBeGreaterThanOrEqual(.99);
+        expect(a.grade.top-a.head.bottom,url+' evidence overlaps project title').toBeGreaterThanOrEqual(6);
+        expect(a.lead.top-a.grade.bottom,url+' evidence overlaps lead copy').toBeGreaterThanOrEqual(6);
+        for(const item of [a.label.rect,a.small.rect,a.disk.rect]){
+          expect(item.top,url+' child exits card').toBeGreaterThanOrEqual(a.grade.top-1);
+          expect(item.bottom,url+' child exits card').toBeLessThanOrEqual(a.grade.bottom+1);
+          expect(item.right,url+' child exceeds card width').toBeLessThanOrEqual(a.grade.right+1);
+        }
+        expect(a.scroll,url+' horizontal overflow').toBeLessThanOrEqual(a.viewport+1);
+        if(slug==='visual-management'){
+          await badge.screenshot({path:'test-results/vi-evidence-'+(base===cnBase?'cn':'intl')+'-'+width+'.png'});
+        }
+      }
+    }
+  }
+});
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
