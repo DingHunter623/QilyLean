@@ -54,7 +54,9 @@ async function auditPage(page,entry,width){
       result.error='HTTP '+(response?response.status():'no response');
       return result;
     }
-    await page.waitForTimeout(60);
+    // The COM R8 authority restamps CSS after 1400ms. Sampling at 60ms
+    // reported obsolete card geometry; production acceptance samples settled UI.
+    await page.waitForTimeout(entry.site==='COM'?1650:180);
     const data=await page.evaluate(()=>{
       const rgb=color=>{
         const m=String(color||'').match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/i);
