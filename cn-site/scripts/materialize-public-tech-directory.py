@@ -275,6 +275,9 @@ def main() -> None:
     rendered_css += f'{cn_cards} > h2{{font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;font-size:clamp(17px,1.15vw,19px)!important;font-weight:680!important;line-height:1.44!important;letter-spacing:0!important;font-stretch:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;text-transform:none!important}}\n'
     rendered_css += f'{cn_cards} .mark{{font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;font-size:14px!important;font-weight:700!important;line-height:1.25!important;letter-spacing:0!important}}\n'
     rendered_css += f'@media(max-width:560px){{{cn_cards} > h2{{font-size:18px!important;line-height:1.46!important}}}}\n'
+    # Preserve the international 850-weight for the unranked electrical heading.
+    electrical_title = 'html:root:root body[data-qily-site="cn"] ' + final_scope + ' #electricalRecommendations .qily-electrical-recommendations__head > h2'
+    rendered_css += electrical_title + '{font-weight:850!important}\n'
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
