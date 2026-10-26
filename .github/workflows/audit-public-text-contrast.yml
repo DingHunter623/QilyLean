@@ -1,0 +1,55 @@
+name: Audit both sites for unreadable text contrast
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 2 * * 1'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/audit-public-text-contrast.js'
+      - '.github/workflows/audit-public-text-contrast.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-public-text-contrast-audit
+  cancel-in-progress: false
+
+jobs:
+  sitewide-readable-contrast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Materialize China site from international SSOT
+        run: bash cn-site/scripts/materialize-practice-assets.sh
+      - name: Install Chromium for real computed styles
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Serve both domains locally
+        run: |
+          python3 -m http.server 4175 --directory . >/tmp/qily-contrast-com.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-contrast-cn.log 2>&1 &
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4175/ >/dev/null
+          curl --fail --silent http://127.0.0.1:4174/ >/dev/null
+      - name: Scan all public HTML routes in desktop and mobile Chromium
+        env:
+          QILY_INT_BASE: http://127.0.0.1:4175
+          QILY_CN_BASE: http://127.0.0.1:4174
+          QILY_CONTRAST_WORKERS: '4'
+        run: node scripts/audit-public-text-contrast.js
+      - name: Upload per-page contrast evidence even if checks fail
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-dual-site-text-contrast-evidence
+          path: test-results/qily-sitewide-contrast-audit.json
+          if-no-files-found: warn
+          retention-days: 21
