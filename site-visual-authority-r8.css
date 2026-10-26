@@ -318,11 +318,12 @@ html body main :is(.module-grid,.paper-grid,.project-grid,.project-list-grid,.ca
 }
 @media(min-width:1180px){
   html body main [data-qily-card-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
-  html body main [data-qily-card-count="4"]{grid-template-columns:repeat(4,minmax(0,1fr))!important;}
+  html body main [data-qily-card-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
   html body main [data-qily-card-count="5"]{grid-template-columns:repeat(5,minmax(0,1fr))!important;}
   html body main [data-qily-card-count="6"]{grid-template-columns:repeat(3,minmax(0,1fr))!important;}
 }
 
+/* 20261026 VI: the four-card count is a TWO-COLUMN TIAN, never four narrow columns. */
 /* 09 | Interaction stays visible but static information remains static. */
 @media (hover:hover) and (pointer:fine){
   html body main :is(a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href]):hover{
