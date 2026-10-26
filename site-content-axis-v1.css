@@ -576,6 +576,11 @@ html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
  */
 @media(min-width:900px){
   html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main :is(
+    .trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .service-grid,.resource-grid,.knowledge-grid,.career-full-grid,
+    .qily-ia-grid,.qily-proof-strip,.qily-principle-grid
+  ):not(.knowledge-stat-grid):has(> :nth-child(2):last-child),
   html:root:root:root:root body main [data-qily-card-count="2"]{
     display:grid!important;
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -610,6 +615,7 @@ html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
 }
 @media(min-width:720px) and (max-width:899px){
   html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):not(.knowledge-stat-grid):has(> :nth-child(2):last-child),
   html:root:root:root:root body main [data-qily-card-count="2"],
   html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(3):last-child),
   html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(4):last-child){
@@ -621,6 +627,7 @@ html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
 }
 @media(max-width:719px){
   html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):not(.knowledge-stat-grid):has(> :nth-child(2):last-child),
   html:root:root:root:root body main [data-qily-card-count="2"],
   html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(3):last-child),
   html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(4):last-child){
@@ -631,6 +638,7 @@ html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
   }
 }
 html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child) > .panel,
+html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):not(.knowledge-stat-grid):has(> :nth-child(2):last-child) > :is(.panel,.module-card,.trust-card,.paper-card,.service-card,.project-card,.project-list-card,.resource-card,.knowledge-card),
 html:root:root:root:root body main [data-qily-card-count="2"] > :is(.panel,.module-card,.trust-card,.paper-card,.service-card,.project-card,.project-list-card,.resource-card,.knowledge-card){
   min-width:0!important;
   max-width:100%!important;
