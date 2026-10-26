@@ -267,6 +267,14 @@ def main() -> None:
     rendered_css += final_scope + ">.section{padding-top:var(--qily-r8-section-y)!important;padding-bottom:var(--qily-r8-section-y)!important}\n"
     rendered_css += final_scope + " h1" + EXCLUDE_SERVICES + "{font-weight:950!important}\n"
     rendered_css += ",".join(final_scope + " " + token + EXCLUDE_SERVICES for token in [".cn",".tag",".meta",".result"]) + "{font-size:20px!important;line-height:1.62!important}\n"
+    # CN directory cards: same calm Latin heading optics as the international
+    # SSOT. Scope to CN body so the international reference is never modified.
+    # The generated CSS has 12-ID !important source selectors; include the
+    # company grid and body attribute to prevent subsequent parity regressions.
+    cn_cards = 'html:root:root body[data-qily-site="cn"] ' + final_scope + ' #companyGrid > a.card'
+    rendered_css += f'{cn_cards} > h2{{font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;font-size:clamp(17px,1.15vw,19px)!important;font-weight:680!important;line-height:1.44!important;letter-spacing:0!important;font-stretch:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;text-transform:none!important}}\\n'
+    rendered_css += f'{cn_cards} .mark{{font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;font-size:14px!important;font-weight:700!important;line-height:1.25!important;letter-spacing:0!important}}\\n'
+    rendered_css += f'@media(max-width:560px){{{cn_cards} > h2{{font-size:18px!important;line-height:1.46!important}}}}\\n'
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
