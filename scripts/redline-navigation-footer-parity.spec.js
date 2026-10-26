@@ -72,6 +72,58 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
   }
 });
 
+
+/* QILY-DUAL-SITE-FOUR-CARD-TIAN-20261026: user-annotated 2x2 grid parity. */
+test('both domains arrange only the two nominated four-card modules in a balanced 2x2 grid',async({page})=>{
+  test.setTimeout(120000);
+  const cases=[
+    {url:intBase+'/projects/',selector:'#public-verification-structure .module-grid.four',tag:'com-projects'},
+    {url:cnBase+'/notes/',selector:'#public-verification-structure .module-grid.four',tag:'cn-projects'},
+    {url:intBase+'/projects/lean-improvement-evidence/',selector:'.module-grid.four:has(> .module-card .financial-proof)',tag:'com-professional-value'},
+    {url:cnBase+'/archive/practice/lean-improvement-evidence/',selector:'.module-grid.four:has(> .module-card .financial-proof)',tag:'cn-professional-value'}
+  ];
+  for(const width of [1588,390]){
+    await page.setViewportSize({width,height:960});
+    for(const sample of cases){
+      const response=await settledGoto(page,sample.url,{waitUntil:'load',timeout:45000});
+      expect(response.status(),sample.url).toBeLessThan(400);
+      await page.evaluate(()=>document.fonts.ready);
+      const grid=page.locator(sample.selector);
+      await expect(grid,sample.url+' target grid').toHaveCount(1);
+      const cards=grid.locator(':scope > .module-card');
+      await expect(cards,sample.url+' exactly four cards').toHaveCount(4);
+      const geometry=await grid.evaluate(node=>{
+        const r=node.getBoundingClientRect();
+        const items=[...node.children].filter(el=>el.classList.contains('module-card')).map(el=>{
+          const b=el.getBoundingClientRect();
+          return {left:b.left,top:b.top,width:b.width,height:b.height,right:b.right};
+        });
+        return {width:r.width,scroll:document.documentElement.scrollWidth,items,
+          columns:getComputedStyle(node).gridTemplateColumns};
+      });
+      expect(geometry.scroll,sample.url+' horizontal overflow '+width).toBeLessThanOrEqual(width+1);
+      const [a,b,c,d]=geometry.items;
+      if(width>=720){
+        expect(Math.abs(a.top-b.top),sample.url+' row 1 aligned').toBeLessThanOrEqual(2);
+        expect(Math.abs(c.top-d.top),sample.url+' row 2 aligned').toBeLessThanOrEqual(2);
+        expect(Math.abs(a.left-c.left),sample.url+' first column aligned').toBeLessThanOrEqual(2);
+        expect(Math.abs(b.left-d.left),sample.url+' second column aligned').toBeLessThanOrEqual(2);
+        expect(b.left-a.right,sample.url+' horizontal gap').toBeGreaterThanOrEqual(8);
+        expect(c.top-Math.max(a.top+a.height,b.top+b.height),sample.url+' vertical gap').toBeGreaterThanOrEqual(8);
+        expect(Math.abs(a.width-b.width),sample.url+' equal card widths').toBeLessThanOrEqual(2);
+        expect(Math.abs(a.height-b.height),sample.url+' row 1 equal height').toBeLessThanOrEqual(2);
+        expect(Math.abs(c.height-d.height),sample.url+' row 2 equal height').toBeLessThanOrEqual(2);
+      }else{
+        for(let i=1;i<4;i++){
+          expect(Math.abs(geometry.items[i].left-a.left),sample.url+' mobile single column').toBeLessThanOrEqual(2);
+          expect(geometry.items[i].top-geometry.items[i-1].top,sample.url+' mobile card order').toBeGreaterThan(4);
+        }
+      }
+      await grid.screenshot({path:'test-results/four-card-'+sample.tag+'-'+width+'.png'});
+    }
+  }
+});
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
