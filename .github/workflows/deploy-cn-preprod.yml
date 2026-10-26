@@ -33,6 +33,7 @@ on:
       - 'site-daily-brief-layout-guard-v1.css'
       - 'services/cn-translation/**'
       - 'scripts/redline-navigation-footer-parity.spec.js'
+      - 'scripts/cn-home-visual-parity-20261023.spec.js'
       - '.github/workflows/deploy-cn-preprod.yml'
       - 'scripts/cn-search-discovery.py'
       - 'scripts/test-cn-search-discovery.py'
