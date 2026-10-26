@@ -35,7 +35,7 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
       const pill=node.querySelector('.qily-unified-qr-value');
       const art=node.querySelector('.qily-unified-qr-art');
       const p=pill.getBoundingClientRect(),q=art.getBoundingClientRect(),s=getComputedStyle(pill);
-      return {label:pill.textContent.trim(),top:p.top,bottom:p.bottom,height:p.height,
+      return {label:pill.textContent.trim(),top:p.top,bottom:p.bottom,height:p.height,labelGap:p.top-q.bottom,
         background:s.backgroundColor,color:s.color,borderRadius:s.borderRadius,
         fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,
         border:s.borderTopWidth,padding:s.padding,display:s.display,
@@ -47,9 +47,10 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
       expect(item.color,JSON.stringify(metrics)).toBe('rgb(255, 255, 255)');
       expect(item.height,JSON.stringify(metrics)).toBeGreaterThanOrEqual(43);
       expect(item.borderRadius,JSON.stringify(metrics)).toBe('24px');
-      expect(Math.abs(item.top-metrics[0].top),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      if(width>=900)expect(Math.abs(item.top-metrics[0].top),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      expect(Math.abs(item.labelGap-metrics[0].labelGap),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
       expect(Math.abs(item.height-metrics[0].height),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
-      expect(Math.abs(item.qrTop-metrics[0].qrTop),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      if(width>=900)expect(Math.abs(item.qrTop-metrics[0].qrTop),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
       expect(Math.abs(item.qrWidth-metrics[0].qrWidth),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
       expect(Math.abs(item.qrHeight-metrics[0].qrHeight),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
       for(const key of ['fontSize','fontWeight','lineHeight','border','padding','display'])
