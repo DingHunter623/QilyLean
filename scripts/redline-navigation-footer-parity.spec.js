@@ -124,6 +124,74 @@ test('both domains arrange only the two nominated four-card modules in a balance
   }
 });
 
+
+/* QILY-UNIFIED-EXACT-CARD-COUNT-GRIDS-20261026
+ * Test the CSS grid's *rendered* card geometry, not stylesheet text.
+ * These shared rules cover all 3-card and 4-card module grids on both sites.
+ */
+test('sitewide three/four module card VI is consistent between COM and CN', async({page})=>{
+  test.setTimeout(180000);
+  const routes=[
+    {base:intBase,route:'/projects/'},
+    {base:cnBase,route:'/notes/'},
+    {base:intBase,route:'/projects/lean-improvement-evidence/'},
+    {base:cnBase,route:'/archive/practice/lean-improvement-evidence/'}
+  ];
+  let checkedThree=0,checkedFour=0;
+  for(const width of [1588,390]){
+    await page.setViewportSize({width,height:960});
+    for(const {base,route} of routes){
+      const response=await settledGoto(page,base+route,{waitUntil:'load',timeout:45000});
+      expect(response.status(),base+route+' HTTP status').toBeLessThan(400);
+      await page.evaluate(()=>document.fonts.ready);
+      const layouts=await page.evaluate(()=>{
+        const sel='.module-grid.three:has(> .module-card:nth-child(3):last-child),.module-grid.four:has(> .module-card:nth-child(4):last-child)';
+        return [...document.querySelectorAll('main '+sel.replaceAll(',',',main '))].map(el=>{
+          const boxes=[...el.children].filter(x=>x.classList.contains('module-card')).map(x=>{
+            const r=x.getBoundingClientRect();
+            return {x:r.left,y:r.top,w:r.width,h:r.height,right:r.right,bottom:r.bottom};
+          });
+          return {type:el.classList.contains('three')?3:4,boxes,columns:getComputedStyle(el).gridTemplateColumns,
+            overflow:el.scrollWidth-el.clientWidth};
+        });
+      });
+      for(const g of layouts){
+        if(g.type===3)checkedThree++;
+        else checkedFour++;
+        expect(g.boxes.length).toBe(g.type);
+        expect(g.overflow,base+route+' grid overflow '+JSON.stringify(g)).toBeLessThanOrEqual(1);
+        const b=g.boxes;
+        if(width>=900){
+          if(g.type===3){
+            expect(Math.abs(b[0].y-b[1].y),JSON.stringify({route,g})).toBeLessThanOrEqual(2);
+            expect(Math.abs(b[1].y-b[2].y),JSON.stringify({route,g})).toBeLessThanOrEqual(2);
+            expect(b[1].x-b[0].right).toBeGreaterThanOrEqual(4);
+            expect(b[2].x-b[1].right).toBeGreaterThanOrEqual(4);
+            expect(Math.abs(b[0].w-b[1].w)).toBeLessThanOrEqual(2);
+            expect(Math.abs(b[1].w-b[2].w)).toBeLessThanOrEqual(2);
+          }else{
+            expect(Math.abs(b[0].y-b[1].y)).toBeLessThanOrEqual(2);
+            expect(Math.abs(b[2].y-b[3].y)).toBeLessThanOrEqual(2);
+            expect(Math.abs(b[0].x-b[2].x)).toBeLessThanOrEqual(2);
+            expect(Math.abs(b[1].x-b[3].x)).toBeLessThanOrEqual(2);
+            expect(b[1].x-b[0].right).toBeGreaterThanOrEqual(4);
+            expect(b[2].y-Math.max(b[0].bottom,b[1].bottom)).toBeGreaterThanOrEqual(4);
+            expect(Math.abs(b[0].w-b[1].w)).toBeLessThanOrEqual(2);
+          }
+        } else {
+          for(let i=1;i<g.boxes.length;i++){
+            expect(Math.abs(b[i].x-b[0].x),base+route+' mobile alignment').toBeLessThanOrEqual(2);
+            expect(b[i].y-b[i-1].bottom,base+route+' mobile vertical gap').toBeGreaterThanOrEqual(4);
+          }
+        }
+      }
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth),base+route+' document horizontal overflow').toBeLessThanOrEqual(width+1);
+    }
+  }
+  expect(checkedThree,'At least two actual 3-card groups on two domains').toBeGreaterThanOrEqual(2);
+  expect(checkedFour,'At least two actual 4-card groups on two domains').toBeGreaterThanOrEqual(2);
+});
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];

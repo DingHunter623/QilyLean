@@ -471,3 +471,50 @@ html:root:root:root body main .module-grid.four:has(> .module-card .financial-pr
 html:root:root:root body main .module-grid.four:has(> .module-card .financial-proof) .financial-proof{
   overflow-wrap:anywhere!important;
 }
+
+
+/* QILY-UNIFIED-EXACT-CARD-COUNT-GRIDS-20261026
+ * Whole-site visual invariant for both international and CN source mirrors.
+ * Precisely 3 module cards => 3 columns on desktop; precisely 4 => 2x2.
+ * :last-child prevents changing larger grids (6/8/12 cards).
+ * Preserve 2x2 miniature knowledge-stat tiles on small phones.
+ * The shared content axis is materialized to CN from this COM SSOT.
+ */
+@media (min-width:900px){
+  html:root:root:root:root body main .module-grid.three:has(> .module-card:nth-child(3):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    align-items:stretch!important;
+  }
+  html:root:root:root:root body main .module-grid.four:has(> .module-card:nth-child(4):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    align-items:stretch!important;
+  }
+}
+@media (min-width:720px) and (max-width:899px){
+  html:root:root:root:root body main .module-grid:is(.three,.four):has(> .module-card:nth-child(3):last-child),
+  html:root:root:root:root body main .module-grid.four:has(> .module-card:nth-child(4):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    align-items:stretch!important;
+  }
+}
+@media (max-width:719px){
+  html:root:root:root:root body main .module-grid.three:has(> .module-card:nth-child(3):last-child),
+  html:root:root:root:root body main .module-grid.four:not(.knowledge-stat-grid):has(> .module-card:nth-child(4):last-child){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-auto-flow:row!important;
+  }
+}
+html:root:root:root:root body main .module-grid.three:has(> .module-card:nth-child(3):last-child) > .module-card,
+html:root:root:root:root body main .module-grid.four:has(> .module-card:nth-child(4):last-child) > .module-card{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  max-width:100%!important;
+  align-self:stretch!important;
+}
