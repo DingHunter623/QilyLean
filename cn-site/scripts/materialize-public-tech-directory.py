@@ -278,6 +278,9 @@ def main() -> None:
     # Preserve the international 850-weight for the unranked electrical heading.
     electrical_title = 'html:root:root body[data-qily-site="cn"] ' + final_scope + ' #electricalRecommendations .qily-electrical-recommendations__head > h2'
     rendered_css += electrical_title + '{font-weight:850!important}\n'
+    # Electrical brand names follow the international 800-weight H3 contract.
+    electrical_brands = 'html:root:root body[data-qily-site="cn"] ' + final_scope + ' #electricalRecommendations .qily-electrical-recommendation h3'
+    rendered_css += electrical_brands + '{font-weight:800!important}\n'
     version = hashlib.sha256((fragment + rendered_js + rendered_css).encode()).hexdigest()[:12]
     page = PAGE.read_text(encoding="utf-8")
     page, count = re.subn(r"<main\b[\s\S]*?</main>", lambda _: fragment, page)
