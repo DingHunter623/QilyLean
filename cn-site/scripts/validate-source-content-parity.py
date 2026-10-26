@@ -163,15 +163,22 @@ def verify_noncommercial_module_order(source_value, target_value, source_name, u
                 rows.append((attrs.get('id', ''), ' '.join(attrs.get('class', '').split())))
         return rows
 
+    target_main = parity.main_markup(target_value)
+    if source_name == 'index.html':
+        owner = re.search(r'<!-- QILY-CN-OWNER-COLLABORATION-V1:START[^>]*-->[\s\S]*?<!-- QILY-CN-OWNER-COLLABORATION-V1:END -->', target_main)
+        require(owner is not None, 'Approved CN owner module missing')
+        owner_html = owner.group(0)
+        require(owner_html.count('class="qily-home-role"') == 2 and 'grid-template-columns:minmax(0,1fr)!important' in owner_html, 'CN owner stack regression')
+        target_main = target_main.replace(owner_html, '', 1)
     source_modules = signatures(expected)
-    target_modules = signatures(parity.main_markup(target_value))
+    target_modules = signatures(target_main)
     require(source_modules == target_modules,
             'CN noncommercial module order differs from international source: ' + url
             + ' source=' + repr(source_modules[:15]) + ' target=' + repr(target_modules[:15]))
     # Class/ID signatures alone cannot detect reordered anonymous sections or
     # dropped paragraphs. Compare the complete retained public text in order.
     public_text = lambda value: re.sub(r'\s+', '', parity.Tree(value).root.text())
-    require(public_text(expected) == public_text(parity.main_markup(target_value)),
+    require(public_text(expected) == public_text(target_main),
             'CN noncommercial content differs from international source: ' + url)
     if source_name == 'index.html':
         main = parity.main_markup(target_value)
