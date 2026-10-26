@@ -366,3 +366,24 @@ test('About semantic small headers follow one dual-site VI instead of decorative
   expect(type.color,url+' eyebrow remains warm gold').not.toBe('rgb(255, 255, 255)');
  }
 });
+
+test('International resource directory uses final R8 cascade at first paint without a delayed bar',async({page})=>{
+ test.setTimeout(60000);
+ await page.setViewportSize({width:1588,height:960});
+ await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
+ const initial=await page.evaluate(()=>({
+   owner:document.head.lastElementChild?.id,
+   r8:!!document.getElementById('qilyVisualAuthorityR8'),
+   bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
+   recommendations:!!document.querySelector('#electricalRecommendations')
+ }));
+ expect(initial.r8).toBe(true);
+ expect(initial.owner,'R8 must be the final static link before runtime CSS relinking').toBe('qilyVisualAuthorityR8');
+ expect(initial.bridge&&initial.recommendations).toBe(true);
+ fs.mkdirSync('test-results',{recursive:true});
+ await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
+ await page.waitForTimeout(1900);
+ const last=await page.evaluate(()=>document.head.lastElementChild?.id);
+ expect(last,'R8 remains last after delayed shell checkpoints').toBe('qilyVisualAuthorityR8');
+ await page.screenshot({path:'test-results/resource-settled-international.png'});
+});
