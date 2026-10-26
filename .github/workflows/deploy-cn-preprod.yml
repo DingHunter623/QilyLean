@@ -12,6 +12,7 @@ on:
       - 'scripts/cn-release-transfer.py'
       - 'scripts/test-cn-release-transfer.py'
       - 'scripts/test-cn-source-content-parity.py'
+      - 'scripts/guard-approved-cn-contact-vi.py'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -38,6 +39,8 @@ on:
       - 'scripts/cn-release-transfer.py'
       - 'scripts/test-cn-release-transfer.py'
       - 'scripts/test-cn-source-content-parity.py'
+      - 'scripts/guard-approved-cn-contact-vi.py'
+      - 'scripts/public-resources-refresh.spec.js'
 
       - 'about/**'
       - 'site-navigation.js'
@@ -108,6 +111,7 @@ jobs:
         run: |
           python3 scripts/test-cn-release-transfer.py
           python3 scripts/test-cn-source-content-parity.py
+          python3 scripts/guard-approved-cn-contact-vi.py --self-test
 
   inspect-translation:
     if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only
@@ -206,6 +210,9 @@ jobs:
           set -euo pipefail
           chmod +x cn-site/scripts/materialize-practice-assets.sh
           cn-site/scripts/materialize-practice-assets.sh
+
+      - name: Poka-yoke approved three-label contact VI before any production switch
+        run: python3 scripts/guard-approved-cn-contact-vi.py --self-test
 
       - name: Detect source-content clone contract
         id: source-parity
@@ -685,6 +692,14 @@ jobs:
           test ! -e "$EXPECTED"
           mkdir -p "$EXPECTED"
           tar --no-same-owner -xzf /tmp/qilylean-cn-site.tar.gz -C "$EXPECTED"
+          # Recheck the actual unpacked release, not only the runner source tree.
+          # This blocks a stale/incorrect tarball before the live symlink switch.
+          test -s "$EXPECTED/about/index.html"
+          test -s "$EXPECTED/assets/cn-sitewide-visual-parity-v1.css"
+          grep -Fq 'id="qilyCnWechatPillAlignment20261026"' "$EXPECTED/about/index.html"
+          grep -Fq 'id="qilyCnWechatValue"' "$EXPECTED/about/index.html"
+          grep -Fq 'background-color:#0f4b5a!important' "$EXPECTED/about/index.html"
+          grep -Fq 'QILY-CN-ABOUT-CONTACT-PARITY-20261025' "$EXPECTED/assets/cn-sitewide-visual-parity-v1.css"
           for required in index.html robots.txt sitemap.xml favicon.ico assets/site.css assets/portal.css archive/source-content-parity.json meta/cn-content-release.json; do
             test -s "$EXPECTED/$required"
           done
