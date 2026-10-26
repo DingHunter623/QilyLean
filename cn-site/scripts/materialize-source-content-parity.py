@@ -726,6 +726,27 @@ def preserve_cn_owner_section(content, existing):
     if not owner:
         raise RuntimeError('Approved CN owner module missing; never silently drop it')
     section = owner.group(0)
+    # China filters transactional offers only. The identity, career narrative,
+    # 20-year public CV and resume CTA remain source-backed public facts.
+    profile_source = runtime_function((ROOT / HOME_RUNTIMES[1]).read_text(), 'apply')
+    profile_public = Tree(literal_template(profile_source, r'profile\.innerHTML\s*=')).root.text()
+    public_copy = re.sub(r'\s+', '', html.unescape(section))
+    required = (
+        'OWNER & COLLABORATION',
+        'QilyLean主理',
+        '负责问题定义、现场诊断、工程数据、方案设计、Pilot逻辑、标准固化、交付文件与技术验收',
+        'qily-home-owner-profile',
+        '丁启利｜20年制造业工程技术与精益改善履历',
+        '查看履历主线 →',
+        'href="/archive/profile/experience/"',
+        '专家／供应商协同',
+    )
+    if any(token not in section for token in required):
+        raise RuntimeError('CN owner module missing approved international public biography/CTA')
+    if re.sub(r'\s+', '', profile_public) not in re.sub(r'\s+', '', Tree(section).root.text()):
+        raise RuntimeError('CN owner biography differs from COM professional source')
+    if re.search(r'费用|报价|付费|签约|预约|交易邀约', section):
+        raise RuntimeError('CN owner module contains disallowed commercial CTA')
     role_open = '<div class="qily-home-collaboration__roles">'
     role_fixed = ('<div class="qily-home-collaboration__roles" '
                   'style="display:grid!important;grid-template-columns:minmax(0,1fr)!important;'
