@@ -160,3 +160,36 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience:f
   html:root:root body #qily-home-collaboration .qily-home-collaboration__roles{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}
   html:root:root body #qily-home-collaboration .qily-home-role{height:auto!important;min-height:0!important;overflow-wrap:anywhere!important}
 }
+
+/* QILY-OWNER-FIGURE-MOBILE-CONTAINMENT-20261026 | visual R8 nine-width fix.
+ * Browser figure default margin-inline:40px pushed the portrait beyond the
+ * section's inner axis at 375/390/430. Never move image independently of frame.
+ */
+html:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{
+  box-sizing:border-box!important;
+  margin:0!important;
+  min-width:0!important;
+  max-width:100%!important;
+}
+@media(max-width:820px){
+  html:root:root:root body #qily-home-collaboration .qily-home-collaboration{
+    min-width:0!important;max-width:100%!important;width:100%!important;
+  }
+  html:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{
+    margin:0!important;
+    width:min(440px,100%)!important;
+    max-width:100%!important;
+    min-height:0!important;
+    height:auto!important;
+  }
+  html:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{
+    box-sizing:border-box!important;
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    object-fit:contain!important;
+    object-position:center top!important;
+  }
+}
