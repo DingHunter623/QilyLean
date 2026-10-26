@@ -518,3 +518,46 @@ html:root:root:root:root body main .module-grid.four:has(> .module-card:nth-chil
   max-width:100%!important;
   align-self:stretch!important;
 }
+
+
+/* QILY-SHARED-LATIN-READABILITY-20261026
+ * Both sites: calm down Latin-only headings without shrinking Chinese text.
+ * Avoid generic h2/p/tag overrides: CN labels, category chips and navigation
+ * retain their approved VI, as do logos and brand lockups.
+ * #companyGrid only contains the 100 ASCII company names rendered by the
+ * international public-technology directory SSOT.
+ * Higher selector specificity is intentional: the cloned source CSS carries
+ * high-specificity !important rules that otherwise restore 950-weight labels.
+ */
+html:root:root body main:is(#main#main#main#main#main#main#main#main#main#main#main#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"] #companyGrid > a.card > h2{
+  font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;
+  font-size:clamp(17px,1.15vw,19px)!important;
+  font-weight:680!important;
+  line-height:1.44!important;
+  letter-spacing:0!important;
+  font-stretch:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  text-transform:none!important;
+}
+html:root:root body main:is(#main#main#main#main#main#main#main#main#main#main#main#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"] #companyGrid > a.card .mark{
+  font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;
+  font-size:14px!important;
+  font-weight:700!important;
+  line-height:1.25!important;
+  letter-spacing:0!important;
+}
+@media(max-width:560px){
+  html:root:root body main:is(#main#main#main#main#main#main#main#main#main#main#main#main,#qilyResourcePublicDirectory)[data-qily-public-tech-directory="v2"] #companyGrid > a.card > h2{
+    font-size:18px!important;
+    line-height:1.46!important;
+  }
+}
+/* Future explicitly tagged Latin-only content headings use the same optical
+ * weight. Chinese-only and bilingual headings are deliberately excluded. */
+html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
+  font-family:"Segoe UI",Arial,Helvetica,sans-serif!important;
+  font-weight:680!important;
+  letter-spacing:0!important;
+  line-height:1.44!important;
+}
