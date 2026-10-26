@@ -66,7 +66,7 @@ assert(readabilityPublisher.includes(`const VERSION = '${VISUAL_READABILITY_VERS
 assert(readabilityCss.includes('QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2'),'Full-site small-copy floor V2 is missing');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
-assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
+assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}&portrait=20261026-vertical-roles">`),'Homepage owner-profile stylesheet is not directly materialized');
 assert(html.includes(`<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>`),'Conversion runtime must register synchronously in head with the current first-paint cache version');
 assert(!html.includes(`<script defer id="qilyHomeConversionV1Runtime"`),'Conversion runtime must not wait in the deferred script queue');
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');

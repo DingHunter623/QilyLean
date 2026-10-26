@@ -65,3 +65,6 @@ html body.qily-about-intl main .trust-box p{font-size:17px!important;line-height
     margin-right:auto!important;
   }
 }
+
+/* QILY-ABOUT-EYEBROW-CASCADE-20261026: outrank generic 21px small-copy floor. */
+html:root:root:root:root:root:root:root:root:root:root body.qily-about-intl main#main .page-hero .content > .hero-eyebrow{font-size:15px!important;font-weight:400!important;line-height:1.45!important;letter-spacing:.035em!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
