@@ -543,6 +543,13 @@ def render(node, source):
     # a commercial solicitation. Preserve its public engineering-boundary card;
     # transactional copy and lead-generation links remain filtered separately.
     commercial_note = bool(classes & {'qily-asset-note', 'qily-ia-result'})
+    # The homepage trust heading explains evidence and professional identity, not
+    # a mainland commercial offer. Adapt only these two prose nodes so the
+    # general commercial exclusion remains strict for every other page.
+    if source == 'index.html' and tag == 'h2' and node.text().strip() == '把“能力展示、职业成果、商业合作、AI辅助”放回各自正确的位置':
+        return '<h2>把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置</h2>'
+    if source == 'index.html' and tag == 'p' and node.text().strip().startswith('QilyLean以真实制造实践和公开知识资产建立专业信用，同时明确签约主体'):
+        return '<p>QilyLean以真实制造实践和公开知识资产建立专业信用，同时明确职业履历、项目证据、资料来源与AI辅助使用边界。可信不是把自己说得更大，而是让访问者知道哪些内容可以核验、哪些仍需项目现场验证。</p>'
     if (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
         EXCLUDED.append({'source': source, 'panel': identifier or tag, 'reason': 'commercial-copy'})
         return ''
@@ -657,6 +664,13 @@ def render(node, source):
             attrs['data-qily-card-count'] = str(card_count)
         else:
             attrs.pop('data-qily-card-count', None)
+    # After commercial exclusions, fix the China homepage grids at generation
+    # time. Inline important geometry is a first-paint guard against high-
+    # specificity shared R8 rules (and remains responsive via auto-fit).
+    if source == 'index.html' and 'qily-six-grid' in classes and card_count == 1:
+        attrs['style'] = 'display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;'
+    if source == 'index.html' and 'qily-ia-delivery-summary' in classes and card_count == 2:
+        attrs['style'] = 'display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))!important;width:100%!important;max-width:100%!important;gap:14px!important;'
     text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())
