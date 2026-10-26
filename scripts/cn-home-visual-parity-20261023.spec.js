@@ -372,18 +372,18 @@ test('International resource directory uses final R8 cascade at first paint with
  await page.setViewportSize({width:1588,height:960});
  await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
  const initial=await page.evaluate(()=>({
-   owner:document.head.lastElementChild?.id,
+   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id,
    r8:!!document.getElementById('qilyVisualAuthorityR8'),
    bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
    recommendations:!!document.querySelector('#electricalRecommendations')
  }));
  expect(initial.r8).toBe(true);
- expect(initial.owner,'R8 must be the final static link before runtime CSS relinking').toBe('qilyVisualAuthorityR8');
+ expect(initial.owner,'R8 must be the final stylesheet (runtime may add anonymous <style>)').toBe('qilyVisualAuthorityR8');
  expect(initial.bridge&&initial.recommendations).toBe(true);
  fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
  await page.waitForTimeout(1900);
- const last=await page.evaluate(()=>document.head.lastElementChild?.id);
+ const last=await page.evaluate(()=>[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id);
  expect(last,'R8 remains last after delayed shell checkpoints').toBe('qilyVisualAuthorityR8');
  await page.screenshot({path:'test-results/resource-settled-international.png'});
 });
