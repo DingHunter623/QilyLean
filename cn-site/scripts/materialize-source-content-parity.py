@@ -741,8 +741,13 @@ def preserve_cn_owner_section(content, existing):
         if not img_path:
             raise RuntimeError('Cannot localize approved owner portrait')
         section = portrait.sub(img_path, section)
-    if 'id="qily-home-collaboration"' in content:
-        raise RuntimeError('Owner module duplicated by source clone')
+    # COM materializes a commercial owner section from its JS builder. It
+    # already has this ID; replace that one section with the approved CN-only
+    # knowledge/practice module rather than appending a duplicate.
+    source_owner = re.compile(r'<section\b(?=[^>]*\bid="qily-home-collaboration")[^>]*>[\s\S]*?</section\s*>', re.I)
+    content, count = source_owner.subn('', content)
+    if count != 1:
+        raise RuntimeError('Expected exactly one canonical owner module, got ' + str(count))
     anchor = re.search(r'<section\b[^>]*id="qily-secondary-assets"[^>]*>', content)
     if not anchor:
         raise RuntimeError('Cannot position CN owner module before secondary assets')
