@@ -3,7 +3,7 @@ html body.qily-about-intl{margin:0!important;background:#fff!important;color:#36
 html body.qily-about-intl main{display:block;min-height:0;background:#fff}
 html body.qily-about-intl main .content{width:min(1128px,calc(100% - 36px));margin-inline:auto;max-width:1128px}
 html body.qily-about-intl main .page-hero{background:linear-gradient(110deg,#073c47,#0f4b5a 64%,#075262);padding:35px 0 36px!important}
-html:root:root body.qily-about-intl main .page-hero .hero-eyebrow{display:block;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-size:15px!important;font-weight:400!important;font-style:normal!important;letter-spacing:.035em!important;line-height:1.45!important;margin-bottom:8px;text-shadow:none!important}
+html:root:root body.qily-about-intl main .page-hero .hero-eyebrow{display:block;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-size:21px!important;font-weight:400!important;font-style:normal!important;letter-spacing:.035em!important;line-height:1.45!important;margin-bottom:8px;text-shadow:none!important}
 html body.qily-about-intl main .page-hero h1{margin:0 0 14px!important;color:white!important;-webkit-text-fill-color:white!important;font-size:clamp(29px,3vw,36px)!important;font-weight:800!important;line-height:1.22!important}
 html body.qily-about-intl main .page-hero p{max-width:1128px;color:#f4fbfb!important;-webkit-text-fill-color:#f4fbfb!important;font-size:18px!important;line-height:1.72!important;margin:0!important}
 html body.qily-about-intl main .section{padding:52px 0 62px!important;background:white!important}
@@ -66,5 +66,5 @@ html body.qily-about-intl main .trust-box p{font-size:17px!important;line-height
   }
 }
 
-/* QILY-ABOUT-EYEBROW-CASCADE-20261026: outrank generic 21px small-copy floor. */
-html:root:root:root:root:root:root:root:root:root:root body.qily-about-intl main#main .page-hero .content > .hero-eyebrow{font-size:15px!important;font-weight:400!important;line-height:1.45!important;letter-spacing:.035em!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
+/* QILY-ABOUT-EYEBROW-CASCADE-20261026-V2: enforce shared 21px VI rather than shrinking labels to 15px. */
+html:root:root:root:root:root:root:root:root:root:root body.qily-about-intl main#main .page-hero .content > .hero-eyebrow{font-size:21px!important;font-weight:400!important;line-height:1.45!important;letter-spacing:.035em!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
