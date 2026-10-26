@@ -257,6 +257,22 @@ def verify_semantics(value, row):
                 'China homepage must retain engineering and digital capability summaries')
         require('免费60分钟沟通诊断' not in main and '咨询转化' not in main,
                 'China public homepage must not expose commercial conversion copy')
+        # Regression gate for China-only filtered home modules. Shared VI may
+        # change but must never restore 3/4-column empty slots or remove titles.
+        trust_section = re.search(r'<section\b[^>]*id="qily-trust-center"[^>]*>[\s\S]*?</section>', main)
+        proof_section = re.search(r'<section\b[^>]*id="qily-home-proof"[^>]*>[\s\S]*?</section>', main)
+        require(trust_section is not None and proof_section is not None,
+                'China home evidence/trust section missing')
+        trust_html, proof_html = trust_section.group(0), proof_section.group(0)
+        require('把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置' in trust_html
+                and '明确职业履历、项目证据、资料来源与AI辅助使用边界' in trust_html,
+                'China homepage trust title/lead missing or reverted')
+        require(trust_html.count('qily-value-card-link') == 1
+                and 'grid-template-columns:minmax(0,1fr)!important' in trust_html,
+                'China trust evidence card must use entire module width')
+        require(len(re.findall(r'<article\b', proof_html)) == 2
+                and 'grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))!important' in proof_html,
+                'China home two evidence cards must occupy equal responsive columns')
 
     resources = row['protected']['translator_resources']
     require(len(resources) == 2 and any('.js?' in item for item in resources) and any('.css?' in item for item in resources), 'Translator assets missing: ' + url)
