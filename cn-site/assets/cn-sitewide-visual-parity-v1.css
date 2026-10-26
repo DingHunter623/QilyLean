@@ -251,3 +251,17 @@ html:root:root:root:root body[data-qily-site="cn"] main :is(.qily-six-grid,.qily
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+
+/* QILY-CN-OWNER-PORTRAIT-FIRST-PAINT-20261026 */
+@media(min-width:821px){
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration{display:grid!important;grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr)!important;align-items:stretch!important;gap:clamp(16px,2vw,24px)!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration__roles{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:repeat(2,minmax(min-content,auto))!important;gap:14px!important;align-items:stretch!important;height:auto!important;min-height:0!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-role{display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;min-height:0!important;height:auto!important;overflow-wrap:anywhere!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration__portrait{width:100%!important;min-width:0!important;height:auto!important;align-self:stretch!important;overflow:hidden!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration__portrait img{display:block!important;width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;object-fit:cover!important;object-position:center 20%!important}
+}
+@media(max-width:820px){
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration{grid-template-columns:minmax(0,1fr)!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration__roles{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-collaboration__portrait img{width:100%!important;height:auto!important;max-height:660px!important;object-fit:contain!important}
+}
