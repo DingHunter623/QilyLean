@@ -8,12 +8,40 @@
 <link id="qilyUnifiedAboutContactVI" rel="stylesheet" href="/assets/contact/qily-about-contact-v1.css?v=20261025-contact-parity-v3">
 <!-- QILY-CN-ABOUT-DUAL-CONTACT-CAREER-RELEASE-20261021 --><link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20261024-continuous-link-underline-v1">
 <link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="/assets/cn-sitewide-visual-parity-v1.css?v=20261025-about-contact-parity-v8">
+
+<!-- QILY-CN-WECHAT-PILL-ALIGNMENT-20261026: route-local override for generic copy button rules.
+     Three contact labels MUST occupy the same baseline, with copy feedback out of flex flow. -->
+<style id="qilyCnWechatPillAlignment20261026">
+html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .qily-unified-qr-grid .qily-unified-qr-card > :is(a.qily-unified-qr-value,button#qilyCnWechatValue){
+  box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;width:auto!important;max-width:100%!important;min-height:44px!important;height:auto!important;
+  margin:0!important;padding:8px 14px!important;
+  border:1px solid #0f4b5a!important;border-radius:24px!important;
+  background:#0f4b5a!important;background-color:#0f4b5a!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font:750 20px/1.3 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  letter-spacing:0!important;text-decoration:none!important;white-space:nowrap!important;
+  box-shadow:none!important;appearance:none!important;-webkit-appearance:none!important;
+}
+html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .qily-unified-qr-card > button#qilyCnWechatValue:is(:hover,:focus-visible){
+  background:#167d8a!important;background-color:#167d8a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+}
+html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .qily-unified-qr-card{position:relative!important}
+html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .qily-unified-qr-card > .qily-about-copy-feedback{
+  position:absolute!important;left:50%!important;bottom:1px!important;max-width:calc(100% - 20px)!important;
+  margin:0!important;padding:0 8px!important;transform:translateX(-50%)!important;
+  white-space:nowrap!important;pointer-events:none!important;display:none!important;
+}
+html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .qily-unified-qr-card > .qily-about-copy-feedback.is-visible{
+  display:block!important;
+}
+</style>
 </head><body data-qily-site="cn"><a class="skip" href="#main">跳到主要内容</a><header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><nav class="nav" aria-label="主导航" data-qily-cn-nav-contract="20260926-v7-bridge"><a href="/" data-qily-nav-key="home">首页</a><a href="/archive/profile/capabilities/" data-qily-nav-key="capabilities">能力体系</a><a href="/archive/profile/tools/" data-qily-nav-key="tools">改善工具</a><a href="/lean/" data-qily-nav-key="lean">精益生产</a><a href="/notes/" data-qily-nav-key="projects">代表项目</a><a href="/trust/" data-qily-nav-key="trust">信任中心</a><a href="/knowledge/" data-qily-nav-key="knowledge">知识资产</a><a href="/resources/" data-qily-nav-key="resources">资源协同</a><a href="/about/" data-qily-nav-key="contact" aria-current="page">关于我们</a></nav></div></header><main id="main"><section class="page-hero"><div class="content"><span class="hero-eyebrow">ABOUT QILYLEAN | 关于我们</span><h1>关于“精益制造经验分享”</h1><p>qilylean.cn 网站名称统一使用备案服务名称“精益制造经验分享”；内容用于沉淀可公开、可验证、可复用的精益生产、工业工程、标准化与数智工厂知识。</p></div></section><section class="section"><div class="content article-shell"><article class="article-body"><h2 id="position">1. 这里分享什么</h2><p>围绕精益生产、工业工程、标准化、工厂规划、制造数据与数智工厂，持续整理方法、工程思考、学习记录和实践复盘。</p><h2 id="boundary">2. 资料与实践</h2><p>实践内容以方法、数据逻辑和通用结论为主；涉及企业或个人信息时，采用必要的隐私处理，让读者能够理解工程逻辑，同时尊重原始资料的保密要求。</p><h2 id="quality">3. 内容质量原则</h2><p>尽量区分事实、假设和结论；涉及制造指标时说明口径；涉及方法时说明适用边界；涉及改善结果时强调验证条件。知识站不追求“术语越多越专业”，而追求能否解释现场问题。</p><section class="qily-about-career" id="experience" aria-label="关于我们——履历主线"><h3>履历主线</h3><p>从制造工程、工业工程到工程管理、精益改善与数智工厂规划，记录可公开的职业历程与项目经验。</p><a href="/archive/profile/experience/">查看完整履历主线 →</a></section><h2 id="contact">4. 联系方式</h2><p>以下渠道用于制造知识交流、内容勘误及版权事务。</p><div class="qily-unified-about-contact" data-qily-contact-parity="dual-v1">
 <h3>官网与微信</h3>
 <div class="qily-unified-qr-grid">
 <article class="qily-unified-qr-card"><h4>国际站官方网址</h4><a class="qily-unified-qr-art" href="https://qilylean.com/" target="_blank" rel="noopener noreferrer" aria-label="打开国际站"><img src="/assets/contact/qilylean-com-qr.svg" width="250" height="250" loading="lazy" alt="国际站 qilylean.com 官方二维码"></a><a class="qily-unified-qr-value" href="https://qilylean.com/" target="_blank" rel="noopener noreferrer">qilylean.com</a></article>
 <article class="qily-unified-qr-card"><h4>中国站官方网址</h4><a class="qily-unified-qr-art" href="https://qilylean.cn/" target="_blank" rel="noopener noreferrer" aria-label="打开中国站"><img src="/assets/contact/qilylean-cn-qr.svg" width="250" height="250" loading="lazy" alt="中国站 qilylean.cn 官方二维码"></a><a class="qily-unified-qr-value" href="https://qilylean.cn/" target="_blank" rel="noopener noreferrer">qilylean.cn</a></article>
-<article class="qily-unified-qr-card"><h4>微信联系</h4><button class="qily-unified-qr-art qily-about-action qily-copy-action" type="button" data-qily-copy="Qily259" data-qily-copy-label="微信号" aria-label="复制微信号 Qily259"><img src="/assets/contact/qilylean-wechat-qr.png" width="250" height="250" loading="lazy" alt="微信 Qily259 二维码"></button><span class="qily-about-copy-feedback" role="status" aria-live="polite"></span><button type="button" class="qily-unified-qr-value qily-about-action qily-copy-action" data-qily-copy="Qily259" data-qily-copy-label="微信号">Qily259</button><span class="qily-about-copy-feedback" role="status" aria-live="polite"></span></article>
+<article class="qily-unified-qr-card"><h4>微信联系</h4><button class="qily-unified-qr-art qily-about-action qily-copy-action" type="button" data-qily-copy="Qily259" data-qily-copy-label="微信号" aria-label="复制微信号 Qily259"><img src="/assets/contact/qilylean-wechat-qr.png" width="250" height="250" loading="lazy" alt="微信 Qily259 二维码"></button><button id="qilyCnWechatValue" type="button" class="qily-unified-qr-value qily-about-action qily-copy-action" data-qily-copy="Qily259" data-qily-copy-label="微信号">Qily259</button><span class="qily-about-copy-feedback" role="status" aria-live="polite"></span></article>
 </div>
 <h3>联系电话</h3><div class="qily-unified-phone-grid">
 <article class="qily-unified-phone"><strong>东莞</strong><a href="tel:13450014003">134 5001 4003</a></article>
@@ -76,7 +104,8 @@
       event.preventDefault();
       var value=link.getAttribute('data-qily-copy')||'';
       var label=link.getAttribute('data-qily-copy-label')||'内容';
-      var feedback=link.nextElementSibling;
+      var card=link.closest('.qily-unified-qr-card');
+      var feedback=card?card.querySelector('.qily-about-copy-feedback'):link.nextElementSibling;
       copyText(value).then(function(){
         if(feedback&&feedback.classList.contains('qily-about-copy-feedback')){
           feedback.textContent='已复制'+label;
