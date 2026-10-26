@@ -212,14 +212,14 @@ html:root:root:root:root body[data-qily-site="cn"]
 }
 
 /* QILY-CN-ABOUT-KICKER-PARITY-20261026
- * Same restrained semantic eyebrow used by international About/Home;
+ * Use the approved 21px semantic eyebrow on both sites;
  * exclude all heading h1/h2 and every navigation/filing element.
  */
 html:root:root:root:root body[data-qily-site="cn"] main#main .page-hero .hero-eyebrow{
   color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
   font-family:inherit!important;
-  font-size:15px!important;
+  font-size:21px!important;
   font-weight:400!important;
   font-style:normal!important;
   letter-spacing:.035em!important;
