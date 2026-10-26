@@ -372,13 +372,14 @@ test('International resource directory uses final R8 cascade at first paint with
  await page.setViewportSize({width:1588,height:960});
  await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
  const initial=await page.evaluate(()=>({
-   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id,
+   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id, lastStyle:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.outerHTML, recentStyles:[...document.head.querySelectorAll('link[rel="stylesheet"]')].slice(-4).map(el=>el.outerHTML),
    r8:!!document.getElementById('qilyVisualAuthorityR8'),
    bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
    recommendations:!!document.querySelector('#electricalRecommendations')
  }));
  expect(initial.r8).toBe(true);
- expect(initial.owner,'R8 must be the final stylesheet (runtime may add anonymous <style>)').toBe('qilyVisualAuthorityR8');
+ await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
+ expect(initial.owner,'R8 must be the final stylesheet: '+JSON.stringify(initial.recentStyles)).toBe('qilyVisualAuthorityR8');
  expect(initial.bridge&&initial.recommendations).toBe(true);
  fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
