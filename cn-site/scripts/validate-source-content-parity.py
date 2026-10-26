@@ -270,6 +270,26 @@ def verify_semantics(value, row):
                 'China homepage must retain engineering and digital capability summaries')
         require('免费60分钟沟通诊断' not in main and '咨询转化' not in main,
                 'China public homepage must not expose commercial conversion copy')
+        # China may exclude commerce, never the owner's public CV or biography.
+        owner = re.search(r'<section\b[^>]*id="qily-home-collaboration"[^>]*>[\s\S]*?</section>', main)
+        require(owner is not None, 'CN owner section missing')
+        owner_html = owner.group(0)
+        require(owner_html.count('class="qily-home-role"') == 2 and
+                'grid-template-columns:minmax(0,1fr)!important' in owner_html,
+                'CN owner card layout regressed')
+        for token in ('QilyLean主理', '丁启利｜20年制造业工程技术与精益改善履历',
+                      '9年任职欧美企业', '4年担任上市公司工程部长',
+                      '累计6年多从事咨询交付', 'qily-home-owner-profile',
+                      'class="qily-home-owner-profile__experience"',
+                      'href="/archive/profile/experience/"', '查看履历主线 →',
+                      '专家／供应商协同'):
+            require(token in owner_html, 'CN owner lost approved COM content: ' + token)
+        source_profile = parity.runtime_function((ROOT / parity.HOME_RUNTIMES[1]).read_text(), 'apply')
+        source_bio = parity.Tree(parity.literal_template(source_profile, r'profile\.innerHTML\s*=')).root.text()
+        require(re.sub(r'\s+', '', source_bio) in re.sub(r'\s+', '', parity.Tree(owner_html).root.text()),
+                'CN owner public profile differs from international SSOT')
+        require(not re.search(r'费用|报价|付费|签约|预约|交易邀约', owner_html),
+                'Commercial owner transaction statement leaked into China homepage')
         # Regression gate for China-only filtered home modules. Shared VI may
         # change but must never restore 3/4-column empty slots or remove titles.
         trust_section = re.search(r'<section\b[^>]*id="qily-trust-center"[^>]*>[\s\S]*?</section>', main)
