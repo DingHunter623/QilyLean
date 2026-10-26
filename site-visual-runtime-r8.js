@@ -170,7 +170,7 @@
         var style=w.getComputedStyle(node);
         return style.display!=='none'&&style.visibility!=='hidden';
       });
-      if(children.length>=3&&children.length<=6)grid.setAttribute('data-qily-card-count',String(children.length));
+      if(children.length>=2&&children.length<=6)grid.setAttribute('data-qily-card-count',String(children.length));
     });
   }
 
