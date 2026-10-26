@@ -741,7 +741,7 @@ def preserve_cn_owner_section(content, existing):
         'href="/archive/profile/experience/"',
         '专家／供应商协同',
     )
-    if any(token not in section for token in required):
+    if any(token not in html.unescape(section) for token in required):
         raise RuntimeError('CN owner module missing approved international public biography/CTA')
     if re.sub(r'\s+', '', profile_public) not in re.sub(r'\s+', '', Tree(section).root.text()):
         raise RuntimeError('CN owner biography differs from COM professional source')
