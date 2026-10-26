@@ -100,10 +100,59 @@ async function auditPage(page,entry,width){
             sampleX:Math.round(r.x),sampleY:Math.round(r.y)});
         }
       }
+
+      // Whole-site INFORMATION CARD grid visual-acceptance redline.
+      // Flows/carousels/metric strips are excluded; their geometry is semantic.
+      const layoutIssues=[],layoutSamples=[];
+      const candidate='main .matrix,main .trust-grid,main [data-qily-card-count],'+
+        'main .module-grid.three,main .module-grid.four,'+
+        'main .paper-grid,main .project-grid,main .service-grid,main .knowledge-grid';
+      for(const grid of new Set(document.querySelectorAll(candidate))){
+        const parentStyle=getComputedStyle(grid);
+        if(parentStyle.display!=='grid')continue;
+        const visible=[...grid.children].filter(el=>{
+          const q=getComputedStyle(el);
+          return q.display!=='none'&&q.visibility!=='hidden'&&el.getBoundingClientRect().width>0;
+        });
+        const n=visible.length,isMatrix=grid.classList.contains('matrix')&&n===2&&
+          visible.every(x=>x.classList.contains('panel'));
+        if(!isMatrix&&![3,4].includes(n))continue;
+        if(n===4&&grid.classList.contains('knowledge-stat-grid')&&innerWidth<720)continue;
+        const rects=visible.map(el=>{
+          const r=el.getBoundingClientRect(),last=el.lastElementChild?.getBoundingClientRect();
+          return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom,
+            blank:last?Math.max(0,r.bottom-last.bottom):0};
+        });
+        layoutSamples.push({kind:isMatrix?'two':n,className:String(grid.className).slice(0,100)});
+        const bad=(message)=>{
+          if(layoutIssues.length<24)layoutIssues.push({kind:isMatrix?'two':n,
+            className:String(grid.className).slice(0,100),issue:message,coords:rects});
+        };
+        const near=(a,b)=>Math.abs(a-b)<=2;
+        if(innerWidth>=900){
+          if(isMatrix){
+            if(!near(rects[0].y,rects[1].y)||!near(rects[0].w,rects[1].w)||
+              rects.some(x=>x.blank>55))bad('two unequal columns or forced giant blank');
+          }else if(n===3){
+            if(!near(rects[0].y,rects[1].y)||!near(rects[1].y,rects[2].y)||
+              !near(rects[0].w,rects[2].w))bad('three cards not one balanced row');
+          }else if(n===4){
+            if(!near(rects[0].y,rects[1].y)||!near(rects[2].y,rects[3].y)||
+              !near(rects[0].x,rects[2].x)||!near(rects[1].x,rects[3].x)||
+              !near(rects[0].w,rects[1].w))bad('four cards not two by two');
+          }
+        }else if(innerWidth<720){
+          if(rects.some((r,i)=>i>0&&!near(r.x,rects[0].x))){
+            bad('mobile information cards not one column');
+          }
+        }
+      }
       return {checked,violations,manual:manual.length,manualSamples:manual,
+        layoutsAudited:layoutSamples.length,layoutIssues,
         horizontalOverflow:Math.max(0,document.documentElement.scrollWidth-innerWidth)};
     });
     result.checked=data.checked;result.violations=data.violations;
+    result.layoutsAudited=data.layoutsAudited;result.layoutIssues=data.layoutIssues;
     result.reviewNeeded=data.manual;result.manualSamples=data.manualSamples;
     result.horizontalOverflow=data.horizontalOverflow;
   }catch(err){result.error=String(err).slice(0,250)}
@@ -135,12 +184,14 @@ async function main(){
  await browser.close();
  const violations=results.flatMap(r=>(r.violations||[]).map(v=>({site:r.site,route:r.route,width:r.width,...v})));
  const unreachable=results.filter(r=>r.error),review=results.reduce((n,r)=>n+(r.reviewNeeded||0),0);
+ const gridFailures=results.flatMap(r=>(r.layoutIssues||[]).map(v=>({site:r.site,route:r.route,width:r.width,...v})));
  const summary={totalRoutes:targets.length,screens:results.length,checkedTextNodes:results.reduce((n,r)=>n+(r.checked||0),0),
-  belowContrastThreshold:violations.length,unreachable:unreachable.length,gradientOrUnknownCandidates:review};
- fs.writeFileSync(path.join(OUT,'qily-sitewide-contrast-audit.json'),JSON.stringify({summary,violations,unreachable,results},null,2));
+  belowContrastThreshold:violations.length,unreachable:unreachable.length,gradientOrUnknownCandidates:review,
+  informationGridsAudited:results.reduce((n,r)=>n+(r.layoutsAudited||0),0),cardGridViolations:gridFailures.length};
+ fs.writeFileSync(path.join(OUT,'qily-sitewide-contrast-audit.json'),JSON.stringify({summary,violations,cardGridViolations:gridFailures,unreachable,results},null,2));
  console.log(JSON.stringify(summary));
  console.log(JSON.stringify(violations.slice(0,30),null,2));
  // Do not mark images/gradients as passed: they require visual review.
- if(violations.length||unreachable.length)process.exitCode=1;
+ if(violations.length||unreachable.length||gridFailures.length)process.exitCode=1;
 }
 main().catch(e=>{console.error(e);process.exitCode=1});
