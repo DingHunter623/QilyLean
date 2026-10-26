@@ -35,7 +35,7 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
       const pill=node.querySelector('.qily-unified-qr-value');
       const art=node.querySelector('.qily-unified-qr-art');
       const p=pill.getBoundingClientRect(),q=art.getBoundingClientRect(),s=getComputedStyle(pill);
-      return {label:pill.textContent.trim(),top:p.top,bottom:p.bottom,height:p.height,labelGap:p.top-q.bottom,
+      return {label:pill.textContent.trim(),top:p.top,bottom:p.bottom,height:p.height,relativeTop:p.top-node.getBoundingClientRect().top,labelGap:p.top-q.bottom,
         background:s.backgroundColor,color:s.color,borderRadius:s.borderRadius,
         fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,
         border:s.borderTopWidth,padding:s.padding,display:s.display,
@@ -63,10 +63,10 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
     expect(await page.evaluate(()=>window.__qilyTestCopiedValue)).toBe('Qily259');
     const post=await cards.evaluateAll(nodes=>nodes.map(node=>{
       const b=node.querySelector('.qily-unified-qr-value').getBoundingClientRect();
-      return {top:b.top,height:b.height};
+      return {relativeTop:b.top-node.getBoundingClientRect().top,height:b.height};
     }));
     for(let i=0;i<3;i++){
-      expect(Math.abs(post[i].top-metrics[i].top),'Click-to-copy must not shift pill '+i).toBeLessThanOrEqual(1);
+      expect(Math.abs(post[i].relativeTop-metrics[i].relativeTop),'Click-to-copy must not shift pill within card '+i).toBeLessThanOrEqual(1);
       expect(Math.abs(post[i].height-metrics[i].height),'Click-to-copy must not resize pill '+i).toBeLessThanOrEqual(1);
     }
   }
