@@ -331,6 +331,11 @@ def fixture_checks():
     require([item[0] for item in tokens] == ['link', 'style', 'link'], 'Source head cascade order changed')
     isolated = parity.destination_css('main p::before{content:"x"}', 'assets/site.css')
     require(parity.SHELL_EXCLUSION + '::before' in isolated, 'Destination styles can reach cloned content')
+    # Reproduce the former release-blocking unbound card_count regression.
+    only_one = parity.render(parity.Tree('<div class="qily-six-grid"><a href="/trust/#evidence-levels">证据分级</a></div>').root, 'index.html')
+    require('grid-template-columns:minmax(0,1fr)!important' in only_one, 'Single trust card grid regression')
+    exactly_two = parity.render(parity.Tree('<div class="qily-ia-delivery-summary"><article>专业基础</article><article>项目证据</article></div>').root, 'index.html')
+    require('repeat(auto-fit,minmax(min(100%,420px),1fr))!important' in exactly_two, 'Double proof grid regression')
     facts = '<span>1个月内完成供应商寻源与施工合同签订。</span><span>信息合同、状态词典与异常升级。</span>'
     rendered = parity.render(parity.Tree(facts).root, 'projects/index.html')
     require('施工合同签订' in rendered and '信息合同' in rendered, 'Public project facts were filtered by a generic commercial keyword')
