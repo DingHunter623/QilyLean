@@ -13,6 +13,7 @@ for(const width of [1588,820,390,320]){
  test('calm Latin directory titles with unchanged Chinese labels on both sites at '+width,async({browser})=>{
    test.setTimeout(120000);
    const context=await browser.newContext({viewport:{width,height:960}});
+   const paritySnapshots=[];
    await context.route('**/*',route=>new URL(route.request().url()).hostname==='127.0.0.1'?route.continue():route.abort());
    for(const [base,route] of [[intBase,'/links/'],[cnBase,'/resources/']]){
      const page=await context.newPage();
@@ -52,8 +53,21 @@ for(const width of [1588,820,390,320]){
      expect(sample.labels[0].chinese).toContain('谷歌');
      // Chinese captions continue to use the approved large-label hierarchy.
      expect(sample.labels[0].chineseSize,'Chinese type must not be scaled down').toBeGreaterThanOrEqual(18);
+     paritySnapshots.push(sample);
      await page.locator('#companyGrid > a.card').first().screenshot({path:'test-results/latin-directory-'+(base===intBase?'com':'cn')+'-'+width+'.png'});
      await page.close();
+   }
+   // Regression/poka-yoke: all 100 titles and initials must retain the
+   // same computed typography as the international SSOT, not just a loose cap.
+   const [international,chinese]=paritySnapshots;
+   expect(paritySnapshots).toHaveLength(2);
+   for(let i=0;i<international.labels.length;i++){
+     const reference=international.labels[i],actual=chinese.labels[i];
+     expect(actual.name).toBe(reference.name);
+     expect(actual.font,actual.name+' dual-site title parity').toBeCloseTo(reference.font,1);
+     expect(actual.weight,actual.name+' dual-site weight parity').toBe(reference.weight);
+     expect(actual.monogramFont,actual.name+' dual-site initials parity').toBe(reference.monogramFont);
+     expect(actual.monogramWeight,actual.name+' dual-site initials weight').toBe(reference.monogramWeight);
    }
    await context.close();
  });
