@@ -31,7 +31,7 @@ async function visit(page,url,{home=false,expand=false}={}){
  // Compare settled presentation with CN's statically materialized cascade.
  if(await page.evaluate(()=>document.body?.dataset.qilySite!=='cn')){
    await page.waitForTimeout(1600);
-   await page.waitForFunction(()=>!document.getElementById('qilyVisualAuthorityR8')||document.head.lastElementChild?.id==='qilyVisualAuthorityR8');
+   await page.waitForFunction(()=>!document.getElementById('qilyVisualAuthorityR8')||[...document.head.querySelectorAll('link[rel="stylesheet"]')].filter(el=>{try{return new URL(el.href,location.href).origin===location.origin}catch{return false}}).at(-1)?.id==='qilyVisualAuthorityR8');
  }
 }
 async function snapshot(page){
@@ -371,12 +371,14 @@ test('About semantic labels preserve the approved 21px dual-site VI on desktop a
  }
 });
 
+// Only first-party, site-controlled styles belong in the R8 ordering contract.
+// Third-party translation UI styles may load afterwards independently.
 test('International resource directory uses final R8 cascade at first paint without a delayed bar',async({page})=>{
  test.setTimeout(60000);
  await page.setViewportSize({width:1588,height:960});
  await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
  const initial=await page.evaluate(()=>({
-   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id, lastStyle:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.outerHTML, recentStyles:[...document.head.querySelectorAll('link[rel="stylesheet"]')].slice(-4).map(el=>el.outerHTML),
+   owner:[...document.head.querySelectorAll('link[rel="stylesheet"]')].filter(el=>{try{return new URL(el.href,location.href).origin===location.origin}catch{return false}}).at(-1)?.id, lastStyle:[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.outerHTML, recentStyles:[...document.head.querySelectorAll('link[rel="stylesheet"]')].slice(-4).map(el=>el.outerHTML),
    r8:!!document.getElementById('qilyVisualAuthorityR8'),
    bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
    recommendations:!!document.querySelector('#electricalRecommendations')
@@ -388,7 +390,7 @@ test('International resource directory uses final R8 cascade at first paint with
  fs.mkdirSync('test-results',{recursive:true});
  await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
  await page.waitForTimeout(1900);
- const last=await page.evaluate(()=>[...document.head.querySelectorAll('link[rel="stylesheet"]')].at(-1)?.id);
+ const last=await page.evaluate(()=>[...document.head.querySelectorAll('link[rel="stylesheet"]')].filter(el=>{try{return new URL(el.href,location.href).origin===location.origin}catch{return false}}).at(-1)?.id);
  expect(last,'R8 remains last after delayed shell checkpoints').toBe('qilyVisualAuthorityR8');
  await page.screenshot({path:'test-results/resource-settled-international.png'});
 });
