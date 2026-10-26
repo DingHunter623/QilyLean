@@ -16,9 +16,10 @@ const checkOnly = process.argv.includes('--check');
 const versions = {
   firstPaintBuild: '20260824-readable-floor-plus2-v4',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',
+  homeContentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5&geometry=20261026-single-pair',
   // Explicitly accepted international About underline/VI cache authority.
   // Do not roll this page back to the older August URL during R34 checks.
-  aboutContentAxis: '/site-content-axis-v1.css?v=20261024-continuous-link-underline-v1'
+  aboutContentAxis: '/site-content-axis-v1.css?v=20261024-continuous-link-underline-v1&geometry=20261026-single-pair'
 };
 
 function trackedHtml() {
@@ -33,7 +34,7 @@ function publish(source, relative) {
   let next = source;
   next = next.replace(/(data-qily-r2-first-paint[^>]*>\s*\(function\([^)]*\)\{[\s\S]{0,180}?\bBUILD=)'[^']+'/gi, `$1'${versions.firstPaintBuild}'`);
   next = next.replace(/\/site-content-axis-v1\.css(?:\?v=[^"']*)?/g,
-    relative === 'about/index.html' ? versions.aboutContentAxis : versions.contentAxis);
+    relative === 'about/index.html' ? versions.aboutContentAxis : relative === 'index.html' ? versions.homeContentAxis : versions.contentAxis);
   next = next.replace(/\s*<script\b[^>]*data-qily-dock-firstpaint-lock=["'][^"']+["'][^>]*>[\s\S]*?<\/script>\s*/gi, '\n');
   return next;
 }

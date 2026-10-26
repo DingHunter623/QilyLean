@@ -651,3 +651,89 @@ html:root:root:root:root body main :is(.matrix,.trust-grid,.module-grid,.paper-g
   max-width:100%!important;
   overflow-wrap:anywhere;
 }
+
+/* QILY-SITEWIDE-CARD-GEOMETRY-20261026
+ * Explicit SINGLE and PAIR content grids share the enclosing content axis.
+ * A single card is not a one-third-width column; a pair fills equal halves.
+ * Only these established card collections qualify: no change to navigation,
+ * editorial prose, forms, aircraft, equipment figures or custom diagrams.
+ */
+html:root:root:root:root:root body main :is(
+  .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+  .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+  .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+):has(> :only-child),
+html:root:root:root:root:root body main :is(
+  .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+  .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+  .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+)[data-qily-card-count="1"]{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-flow:row!important;
+  grid-auto-rows:auto!important;
+  align-items:stretch!important;
+  gap:clamp(14px,1.35vw,22px)!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+}
+html:root:root:root:root:root body main :is(
+  .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+  .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+  .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+):has(> :only-child)>*{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  height:auto!important;
+  min-height:0!important;
+  box-sizing:border-box!important;
+}
+@media(min-width:720px){
+  html:root:root:root:root:root body main :is(
+    .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+    .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+  ):has(> :nth-child(2):last-child),
+  html:root:root:root:root:root body main :is(
+    .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+    .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+  )[data-qily-card-count="2"]{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+    grid-auto-rows:auto!important;
+    align-items:stretch!important;
+    gap:clamp(14px,1.35vw,22px)!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+  }
+}
+html:root:root:root:root:root body main :is(
+  .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+  .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+  .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+):has(> :nth-child(2):last-child)>*,
+html:root:root:root:root:root body main :is(
+  .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+  .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+  .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+)[data-qily-card-count="2"]>*{
+  min-width:0!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  overflow-wrap:anywhere!important;
+}
+@media(max-width:719px){
+  html:root:root:root:root:root body main :is(
+    .qily-six-grid,.qily-ia-delivery-summary,.qily-principle-grid,.qily-proof-strip,
+    .qily-secondary-links,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .career-full-grid,.service-grid,.resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid
+  ):has(> :nth-child(2):last-child){grid-template-columns:minmax(0,1fr)!important}
+}

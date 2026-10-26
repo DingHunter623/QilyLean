@@ -100,3 +100,63 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience:f
     font-size:17px!important;
   }
 }
+
+/* QILY-HOME-OWNER-VI-20261026 | both domains use the same SSOT owner figure.
+ * A portrait sits beside TWO vertically stacked, full-width text panels.
+ * Content determines row height: never force two narrow columns or clip copy.
+ */
+@media(min-width:821px){
+  html:root:root body #qily-home-collaboration .qily-home-collaboration{
+    display:grid!important;
+    grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr)!important;
+    align-items:stretch!important;
+    gap:clamp(16px,2vw,24px)!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__roles{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:repeat(2,minmax(min-content,auto))!important;
+    align-content:stretch!important;
+    align-items:stretch!important;
+    gap:14px!important;
+    min-height:0!important;
+    height:auto!important;
+    min-width:0!important;
+  }
+  html:root:root body #qily-home-collaboration .qily-home-role{
+    display:flex!important;
+    flex-direction:column!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    overflow-wrap:anywhere!important;
+  }
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    min-height:0!important;
+    height:auto!important;
+    align-self:stretch!important;
+    overflow:hidden!important;
+  }
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    min-height:0!important;
+    max-height:none!important;
+    object-fit:cover!important;
+    object-position:center 20%!important;
+  }
+}
+@media(max-width:820px){
+  html:root:root body #qily-home-collaboration .qily-home-collaboration{grid-template-columns:minmax(0,1fr)!important}
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{width:100%!important;max-width:min(440px,100%)!important;height:auto!important}
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{display:block!important;width:100%!important;height:auto!important;max-height:660px!important;object-fit:contain!important;object-position:center top!important}
+  html:root:root body #qily-home-collaboration .qily-home-collaboration__roles{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto!important}
+  html:root:root body #qily-home-collaboration .qily-home-role{height:auto!important;min-height:0!important;overflow-wrap:anywhere!important}
+}

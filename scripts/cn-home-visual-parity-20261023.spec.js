@@ -289,3 +289,101 @@ test('Times26001 seven functional buttons and responsive VI match international'
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+1);
  }
 });
+
+/* QILY-HISTORICAL-VI-20261026: screenshot redlines across both domains.
+ * Full-width single card, equal-width pairs, vertically stacked owner panels.
+ */
+test('QilyLean CN homepage one/two-card rows occupy the entire content axis',async({page})=>{
+ test.setTimeout(120000);
+ for(const width of [1588,1024,820,390]){
+  await page.setViewportSize({width,height:960});
+  await page.goto(cnBase+'/',{waitUntil:'networkidle'});
+  const grids=await page.evaluate(()=>{
+   function metric(selector){
+    const grid=document.querySelector(selector);
+    if(!grid)return null;
+    const parent=grid.parentElement;
+    const rr=x=>{const z=x.getBoundingClientRect();return {x:z.x,right:z.right,width:z.width,height:z.height,top:z.top};};
+    return {grid:rr(grid),parent:rr(parent),children:[...grid.children].filter(x=>getComputedStyle(x).display!=='none').map(rr),columns:getComputedStyle(grid).gridTemplateColumns};
+   }
+   return {single:metric('#qily-trust-center .qily-six-grid'),paired:metric('main .qily-ia-delivery-summary'),scroll:document.documentElement.scrollWidth};
+  });
+  expect(grids.single,'single proof card').not.toBeNull();
+  expect(grids.paired,'two evidence cards').not.toBeNull();
+  expect(grids.single.children).toHaveLength(1);
+  expect(grids.paired.children).toHaveLength(2);
+  expect(grids.single.grid.width-grids.single.children[0].width).toBeLessThanOrEqual(2);
+  expect(grids.paired.grid.width-grids.paired.parent.width).toBeLessThanOrEqual(2);
+  if(width>=720){
+   const [a,b]=grids.paired.children;
+   expect(Math.abs(a.width-b.width),'two evenly divided columns').toBeLessThanOrEqual(3);
+   expect(Math.abs(a.top-b.top),'same row not staggered').toBeLessThanOrEqual(3);
+   expect(Math.abs(b.right-grids.paired.grid.right),'pair reaches reading right edge').toBeLessThanOrEqual(3);
+  }else{
+   expect(Math.abs(grids.paired.children[0].width-grids.paired.grid.width)).toBeLessThanOrEqual(3);
+  }
+  expect(grids.scroll).toBeLessThanOrEqual(width+1);
+ }
+});
+
+test('Both homepages present full-width stacked owner roles beside uncropped portrait',async({page})=>{
+ test.setTimeout(120000);
+ for(const url of [intBase+'/',cnBase+'/']){
+  await page.setViewportSize({width:1588,height:1000});
+  await page.goto(url,{waitUntil:'networkidle'});
+  await page.evaluate(()=>document.querySelectorAll('main details').forEach(d=>d.open=true));
+  if(url.startsWith(intBase))await page.waitForTimeout(1650);
+  const p=await page.evaluate(()=>{
+   const root=document.querySelector('#qily-home-collaboration .qily-home-collaboration');
+   if(!root)return null;
+   const columns=root.querySelector('.qily-home-collaboration__roles');
+   const figure=root.querySelector('.qily-home-collaboration__portrait');
+   const photo=figure.querySelector('img');
+   const cards=[...columns.querySelectorAll(':scope > .qily-home-role')];
+   const rect=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+   return {root:rect(root),columns:rect(columns),figure:rect(figure),photo:rect(photo),fit:getComputedStyle(photo).objectFit,cards:cards.map(rect),overflow:document.documentElement.scrollWidth};
+  });
+  expect(p,url+' owner section exists').toBeTruthy();
+  expect(p.cards).toHaveLength(2);
+  expect(Math.abs(p.cards[0].left-p.cards[1].left),url+' vertically aligned roles').toBeLessThanOrEqual(3);
+  expect(Math.abs(p.cards[0].width-p.columns.width),url+' full-width top role').toBeLessThanOrEqual(3);
+  expect(Math.abs(p.cards[1].width-p.columns.width),url+' full-width lower role').toBeLessThanOrEqual(3);
+  expect(p.cards[1].top,url+' role cards do not overlap').toBeGreaterThanOrEqual(p.cards[0].bottom-2);
+  expect(Math.abs(p.figure.height-p.columns.height),url+' portrait scales to paired roles').toBeLessThanOrEqual(6);
+  expect(p.fit).toBe('cover');
+  expect(p.overflow).toBeLessThanOrEqual(1589);
+ }
+});
+
+test('About semantic small headers follow one dual-site VI instead of decorative oversized text',async({page})=>{
+ for(const url of [intBase+'/about/',cnBase+'/about/']){
+  await page.setViewportSize({width:1588,height:900});
+  await page.goto(url,{waitUntil:'networkidle'});
+  if(url.startsWith(intBase))await page.waitForTimeout(1650);
+  const type=await page.locator('main .page-hero .hero-eyebrow').evaluate(el=>{const s=getComputedStyle(el);return {size:parseFloat(s.fontSize),weight:parseInt(s.fontWeight,10),color:s.color};});
+  expect(type.size,url+' eyebrow size').toBeLessThanOrEqual(16);
+  expect(type.weight,url+' eyebrow weight').toBeLessThanOrEqual(500);
+  expect(type.color,url+' eyebrow remains warm gold').not.toBe('rgb(255, 255, 255)');
+ }
+});
+
+test('International resource directory uses final R8 cascade at first paint without a delayed bar',async({page})=>{
+ test.setTimeout(60000);
+ await page.setViewportSize({width:1588,height:960});
+ await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
+ const initial=await page.evaluate(()=>({
+   owner:document.head.lastElementChild?.id,
+   r8:!!document.getElementById('qilyVisualAuthorityR8'),
+   bridge:!!document.querySelector('#qilyChinaKnowledgeBridge'),
+   recommendations:!!document.querySelector('#electricalRecommendations')
+ }));
+ expect(initial.r8).toBe(true);
+ expect(initial.owner,'R8 must be the final static link before runtime CSS relinking').toBe('qilyVisualAuthorityR8');
+ expect(initial.bridge&&initial.recommendations).toBe(true);
+ fs.mkdirSync('test-results',{recursive:true});
+ await page.screenshot({path:'test-results/resource-firstpaint-international.png'});
+ await page.waitForTimeout(1900);
+ const last=await page.evaluate(()=>document.head.lastElementChild?.id);
+ expect(last,'R8 remains last after delayed shell checkpoints').toBe('qilyVisualAuthorityR8');
+ await page.screenshot({path:'test-results/resource-settled-international.png'});
+});
