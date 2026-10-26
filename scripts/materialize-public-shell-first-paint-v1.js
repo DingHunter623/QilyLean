@@ -78,6 +78,17 @@ function materialize(source,relative){
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag+'\n';
   next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+'</head>');
+  // Resource directory: paint with the settled R8 stylesheet priority from the
+  // original HTML instead of moving the authority after 120/700/1400 ms.
+  // This removes a transient full-width dark-teal line seen during load.
+  // Other routes retain their existing first-paint contract unchanged.
+  if(relative==='links/index.html'){
+    const r8=next.match(/<link\b[^>]*\bid=["']qilyVisualAuthorityR8["'][^>]*>/i);
+    if(!r8)throw new Error('Resource directory lost its R8 style authority');
+    next=next.replace(r8[0],'');
+    next=next.replace(/<\/head\s*>/i,r8[0]+'\n</head>');
+  }
+
   next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+dockTag+'\n');
   next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
   return next;
