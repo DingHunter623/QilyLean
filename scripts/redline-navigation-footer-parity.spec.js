@@ -56,7 +56,7 @@ test('China About Qily259 matches both URL pills in style and alignment',async({
         expect(item[key],JSON.stringify(metrics)).toBe(metrics[0][key]);
     }
     expect(await page.evaluate(()=>document.documentElement.scrollWidth),'About horizontal overflow').toBeLessThanOrEqual(width+1);
-    await cards.screenshot({path:'test-results/cn-about-wechat-pill-'+width+'.png'});
+    await page.locator('.qily-unified-qr-grid').screenshot({path:'test-results/cn-about-wechat-pill-'+width+'.png'});
     await page.locator('#qilyCnWechatValue').click();
     await expect(page.locator('.qily-unified-qr-card:nth-child(3) .qily-about-copy-feedback')).toHaveClass(/is-visible/);
     expect(await page.evaluate(()=>window.__qilyTestCopiedValue)).toBe('Qily259');
