@@ -259,6 +259,90 @@ test('project evidence cards on both sites have contrasting text and no overlapp
   }
 });
 
+
+/* QILY-20261026-SITEWIDE-TWO-THREE-FOUR-CARD-BALANCE
+ * Verify shared grid geometry in settled Chromium; R8 performs a 1400ms
+ * stylesheet reassertion, which defeated prior premature visual checks.
+ * The CN trust page intentionally has fewer cards than the COM commercial
+ * trust page. Both must be laid out according to their ACTUAL card counts.
+ */
+test('sitewide two/three/four information card balance survives final R8 and CN mirror',async({page})=>{
+  test.setTimeout(240000);
+  const cases=[
+    {url:intBase+'/lean-production/',kind:'two',selector:'.matrix:has(> .panel:nth-child(2):last-child)',name:'com-lean'},
+    {url:cnBase+'/lean/',kind:'two',selector:'.matrix:has(> .panel:nth-child(2):last-child)',name:'cn-lean'},
+    {url:intBase+'/trust/',kind:'trust',selector:'#data .trust-grid',name:'com-trust'},
+    {url:cnBase+'/trust/',kind:'trust',selector:'#data .trust-grid',name:'cn-trust'}
+  ];
+  for(const width of [1588,820,390]){
+    await page.setViewportSize({width,height:1000});
+    for(const item of cases){
+      const response=await settledGoto(page,item.url,{waitUntil:'load',timeout:45000});
+      expect(response.status(),item.url).toBeLessThan(400);
+      await page.evaluate(()=>document.fonts.ready);
+      await page.waitForTimeout(150);
+      const grid=page.locator(item.selector);
+      await expect(grid,item.url).toHaveCount(1);
+      const d=await grid.evaluate(node=>{
+        const s=getComputedStyle(node);
+        const children=[...node.children].filter(el=>getComputedStyle(el).display!=='none');
+        const items=children.map(el=>{
+          const r=el.getBoundingClientRect(),last=el.lastElementChild?.getBoundingClientRect();
+          return {x:r.x,y:r.y,w:r.width,h:r.height,right:r.right,bottom:r.bottom,
+            whitespace:last?Math.max(0,r.bottom-last.bottom):0,
+            scrollWidth:el.scrollWidth,clientWidth:el.clientWidth};
+        });
+        return {type:s.display,cols:s.gridTemplateColumns,items,
+          viewport:innerWidth,overflow:document.documentElement.scrollWidth-innerWidth};
+      });
+      expect(d.type,item.url+' grid display').toBe('grid');
+      expect(d.overflow,item.url+' horizontal overflow').toBeLessThanOrEqual(1);
+      expect(d.items.length,item.url+' card count').toBeGreaterThanOrEqual(item.kind==='two'?2:3);
+      for(const c of d.items){
+        expect(c.w,item.url+' zero width').toBeGreaterThan(100);
+        expect(c.scrollWidth-c.clientWidth,item.url+' overflow in card').toBeLessThanOrEqual(2);
+      }
+      if(item.kind==='two'){
+        expect(d.items.length).toBe(2);
+        const [a,b]=d.items;
+        if(width>=720){
+          expect(Math.abs(a.y-b.y),item.url+' top-aligned').toBeLessThanOrEqual(2);
+          expect(Math.abs(a.w-b.w),item.url+' balanced equal columns').toBeLessThanOrEqual(2);
+          expect(b.x-a.right,item.url+' gutter').toBeGreaterThanOrEqual(6);
+          expect(a.whitespace,item.url+' empty blank inside sparse panel').toBeLessThanOrEqual(55);
+          expect(b.whitespace,item.url+' bottom padding').toBeLessThanOrEqual(55);
+        }else{
+          expect(b.y-a.bottom,item.url+' mobile stacked spacing').toBeGreaterThanOrEqual(6);
+        }
+      }else{
+        const n=d.items.length;
+        expect([3,4],item.url+' trust group supports differing site content').toContain(n);
+        if(width>=900){
+          const a=d.items;
+          if(n===3){
+            expect(Math.abs(a[0].y-a[1].y)).toBeLessThanOrEqual(2);
+            expect(Math.abs(a[1].y-a[2].y)).toBeLessThanOrEqual(2);
+            expect(Math.abs(a[0].w-a[1].w)).toBeLessThanOrEqual(2);
+          }else{
+            expect(Math.abs(a[0].y-a[1].y)).toBeLessThanOrEqual(2);
+            expect(Math.abs(a[0].x-a[2].x)).toBeLessThanOrEqual(2);
+            expect(Math.abs(a[1].x-a[3].x)).toBeLessThanOrEqual(2);
+            expect(Math.abs(a[2].y-a[3].y)).toBeLessThanOrEqual(2);
+            expect(a[2].y-Math.max(a[0].bottom,a[1].bottom)).toBeGreaterThanOrEqual(6);
+            expect(Math.abs(a[0].w-a[1].w)).toBeLessThanOrEqual(2);
+          }
+        }else if(width<720){
+          for(let k=1;k<n;k++){
+            expect(Math.abs(d.items[k].x-d.items[0].x)).toBeLessThanOrEqual(2);
+            expect(d.items[k].y-d.items[k-1].bottom).toBeGreaterThanOrEqual(6);
+          }
+        }
+      }
+      await grid.screenshot({path:'test-results/sitewide-card-balance-'+item.name+'-'+width+'.png'});
+    }
+  }
+});
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
