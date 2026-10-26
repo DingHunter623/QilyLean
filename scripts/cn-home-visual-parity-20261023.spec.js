@@ -355,15 +355,19 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
  }
 });
 
-test('About semantic small headers follow one dual-site VI instead of decorative oversized text',async({page})=>{
- for(const url of [intBase+'/about/',cnBase+'/about/']){
-  await page.setViewportSize({width:1588,height:900});
-  await page.goto(url,{waitUntil:'networkidle'});
-  if(url.startsWith(intBase))await page.waitForTimeout(1650);
-  const type=await page.locator('main .page-hero .hero-eyebrow').evaluate(el=>{const s=getComputedStyle(el);return {size:parseFloat(s.fontSize),weight:parseInt(s.fontWeight,10),color:s.color};});
-  expect(type.size,url+' eyebrow size').toBeLessThanOrEqual(16);
-  expect(type.weight,url+' eyebrow weight').toBeLessThanOrEqual(500);
-  expect(type.color,url+' eyebrow remains warm gold').not.toBe('rgb(255, 255, 255)');
+test('About semantic labels preserve the approved 21px dual-site VI on desktop and mobile',async({page})=>{
+ for(const width of [1588,390]){
+  await page.setViewportSize({width,height:900});
+  for(const url of [intBase+'/about/',cnBase+'/about/']){
+   await page.goto(url,{waitUntil:'networkidle'});
+   if(url.startsWith(intBase))await page.waitForTimeout(1650);
+   const type=await page.locator('main .page-hero .hero-eyebrow').evaluate(el=>{const s=getComputedStyle(el);return {size:parseFloat(s.fontSize),weight:parseInt(s.fontWeight,10),color:s.color,fill:s.webkitTextFillColor};});
+   expect(type.size,url+' '+width+'px public VI label size').toBeGreaterThanOrEqual(20.5);
+   expect(type.size,url+' '+width+'px public VI label size').toBeLessThanOrEqual(21.5);
+   expect(type.weight,url+' eyebrow regular weight').toBeLessThanOrEqual(500);
+   expect(type.color,url+' light-gold text color').toBe('rgb(255, 227, 155)');
+   expect(type.fill,url+' light-gold text fill').toBe('rgb(255, 227, 155)');
+  }
  }
 });
 
