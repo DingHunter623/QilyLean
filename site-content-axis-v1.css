@@ -561,3 +561,85 @@ html:root:root:root body main :is(h2,h3,h4)[lang="en"]{
   letter-spacing:0!important;
   line-height:1.44!important;
 }
+
+
+/* QILY-DUAL-SITE-CARD-BALANCE-REDLINE-20261026
+ * Whole-site VI (COM master, CN mirror): all conventional information-card
+ * grids follow a consistent 2/3/4 card layout. Controls, process diagrams,
+ * carousel strips and dense metric tiles are intentionally excluded.
+ *
+ * 2 cards: equal-width independent intrinsic heights; never stretch a sparse
+ * information panel to the tall neighbor and leave a giant empty surface.
+ * 3 cards: one desktop row.
+ * 4 cards: desktop 2x2, including trust/privacy cards; never skinny 4-in-row.
+ * Mobile: one readable column for these content cards.
+ */
+@media(min-width:900px){
+  html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main [data-qily-card-count="2"]{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:clamp(14px,1.35vw,22px)!important;
+    align-items:start!important;
+    grid-auto-rows:auto!important;
+    grid-auto-flow:row!important;
+  }
+  html:root:root:root:root body main :is(
+    .trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .service-grid,.resource-grid,.knowledge-grid,.career-full-grid,
+    .qily-ia-grid,.qily-proof-strip,.qily-principle-grid
+  ):has(> :nth-child(3):last-child),
+  html:root:root:root:root body main [data-qily-card-count="3"]{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    grid-auto-flow:row!important;
+  }
+  html:root:root:root:root body main :is(
+    .trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,
+    .service-grid,.resource-grid,.knowledge-grid,.career-full-grid,
+    .qily-ia-grid,.qily-proof-strip,.qily-principle-grid
+  ):has(> :nth-child(4):last-child),
+  html:root:root:root:root body main [data-qily-card-count="4"]{
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:clamp(14px,1.35vw,22px)!important;
+    align-items:stretch!important;
+    grid-auto-flow:row!important;
+    grid-auto-rows:auto!important;
+  }
+}
+@media(min-width:720px) and (max-width:899px){
+  html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main [data-qily-card-count="2"],
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(3):last-child),
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(4):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-items:start!important;
+    grid-auto-flow:row!important;
+  }
+}
+@media(max-width:719px){
+  html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child),
+  html:root:root:root:root body main [data-qily-card-count="2"],
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(3):last-child),
+  html:root:root:root:root body main :is(.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid,.career-full-grid,.qily-ia-grid):has(> :nth-child(4):last-child){
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    align-items:start!important;
+    grid-auto-flow:row!important;
+  }
+}
+html:root:root:root:root body main .matrix:has(> .panel:nth-child(2):last-child) > .panel,
+html:root:root:root:root body main [data-qily-card-count="2"] > :is(.panel,.module-card,.trust-card,.paper-card,.service-card,.project-card,.project-list-card,.resource-card,.knowledge-card){
+  min-width:0!important;
+  max-width:100%!important;
+  min-height:0!important;
+  height:auto!important;
+  align-self:start!important;
+}
+html:root:root:root:root body main :is(.matrix,.trust-grid,.module-grid,.paper-grid,.project-grid,.project-list-grid,.service-grid,.resource-grid,.knowledge-grid) > :is(.panel,.trust-card,.module-card,.paper-card,.project-card,.project-list-card,.service-card,.resource-card,.knowledge-card){
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere;
+}
