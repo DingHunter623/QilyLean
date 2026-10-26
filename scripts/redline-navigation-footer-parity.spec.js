@@ -12,6 +12,65 @@ async function settledGoto(page,url,options){
  return response;
 }
 
+
+/* QILY-CN-WECHAT-PILL-20261026 | production screenshot regression.
+ * Verify the actual CSS result (not simply the presence of a stylesheet or a PR).
+ * The WeChat button must occupy exactly the same visual row as the two URL pills.
+ */
+test('China About Qily259 matches both URL pills in style and alignment',async({page})=>{
+  test.setTimeout(120000);
+  await page.addInitScript(()=>{
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:{
+      writeText:async value=>{window.__qilyTestCopiedValue=value;}
+    }});
+  });
+  for(const width of [1680,390]){
+    await page.setViewportSize({width,height:960});
+    await settledGoto(page,cnBase+'/about/',{waitUntil:'load'});
+    await page.evaluate(()=>document.fonts.ready);
+    await page.waitForTimeout(1700);
+    const cards=page.locator('.qily-unified-qr-grid > .qily-unified-qr-card');
+    await expect(cards).toHaveCount(3);
+    const metrics=await cards.evaluateAll(nodes=>nodes.map(node=>{
+      const pill=node.querySelector('.qily-unified-qr-value');
+      const art=node.querySelector('.qily-unified-qr-art');
+      const p=pill.getBoundingClientRect(),q=art.getBoundingClientRect(),s=getComputedStyle(pill);
+      return {label:pill.textContent.trim(),top:p.top,bottom:p.bottom,height:p.height,
+        background:s.backgroundColor,color:s.color,borderRadius:s.borderRadius,
+        fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,
+        border:s.borderTopWidth,padding:s.padding,display:s.display,
+        qrWidth:q.width,qrHeight:q.height,qrTop:q.top};
+    }));
+    expect(metrics.map(m=>m.label)).toEqual(['qilylean.com','qilylean.cn','Qily259']);
+    for(const item of metrics){
+      expect(item.background,JSON.stringify(metrics)).toBe('rgb(15, 75, 90)');
+      expect(item.color,JSON.stringify(metrics)).toBe('rgb(255, 255, 255)');
+      expect(item.height,JSON.stringify(metrics)).toBeGreaterThanOrEqual(43);
+      expect(item.borderRadius,JSON.stringify(metrics)).toBe('24px');
+      expect(Math.abs(item.top-metrics[0].top),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      expect(Math.abs(item.height-metrics[0].height),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      expect(Math.abs(item.qrTop-metrics[0].qrTop),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      expect(Math.abs(item.qrWidth-metrics[0].qrWidth),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      expect(Math.abs(item.qrHeight-metrics[0].qrHeight),JSON.stringify(metrics)).toBeLessThanOrEqual(1);
+      for(const key of ['fontSize','fontWeight','lineHeight','border','padding','display'])
+        expect(item[key],JSON.stringify(metrics)).toBe(metrics[0][key]);
+    }
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth),'About horizontal overflow').toBeLessThanOrEqual(width+1);
+    await cards.screenshot({path:'test-results/cn-about-wechat-pill-'+width+'.png'});
+    await page.locator('#qilyCnWechatValue').click();
+    await expect(page.locator('.qily-unified-qr-card:nth-child(3) .qily-about-copy-feedback')).toHaveClass(/is-visible/);
+    expect(await page.evaluate(()=>window.__qilyTestCopiedValue)).toBe('Qily259');
+    const post=await cards.evaluateAll(nodes=>nodes.map(node=>{
+      const b=node.querySelector('.qily-unified-qr-value').getBoundingClientRect();
+      return {top:b.top,height:b.height};
+    }));
+    for(let i=0;i<3;i++){
+      expect(Math.abs(post[i].top-metrics[i].top),'Click-to-copy must not shift pill '+i).toBeLessThanOrEqual(1);
+      expect(Math.abs(post[i].height-metrics[i].height),'Click-to-copy must not resize pill '+i).toBeLessThanOrEqual(1);
+    }
+  }
+});
+
 const labels=['回到顶部','上一网页','本站搜索','分享当前'];
 const actions=['top','previous','search','current'];
 const bridges=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
