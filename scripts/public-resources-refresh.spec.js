@@ -21,7 +21,7 @@ for(const width of [1588,820,390,320]){
      await page.evaluate(()=>document.fonts.ready);
      const sample=await page.locator('#companyGrid').evaluate(grid=>{
        const cards=[...grid.querySelectorAll(':scope > a.card')];
-       const labels=cards.slice(0,9).map(el=>{
+       const labels=cards.map(el=>{
          const h=el.querySelector('h2'),mark=el.querySelector('.mark'),cn=el.querySelector('.cn');
          const s=getComputedStyle(h),ms=getComputedStyle(mark),cs=getComputedStyle(cn);
          const rect=h.getBoundingClientRect(),box=el.getBoundingClientRect();
@@ -35,6 +35,7 @@ for(const width of [1588,820,390,320]){
        return {total:cards.length,labels,documentWidth:document.documentElement.scrollWidth};
      });
      expect(sample.total,'company count / '+base).toBe(100);
+     expect(sample.labels.length,'All 100 Latin company titles must be audited').toBe(100);
      expect(sample.documentWidth,'document overflow '+base+' '+width).toBeLessThanOrEqual(width+1);
      for(const v of sample.labels){
        expect(v.font,v.name+' English title too large').toBeGreaterThanOrEqual(17);
