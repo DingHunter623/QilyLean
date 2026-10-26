@@ -278,3 +278,31 @@ html:root:root:root:root body[data-qily-site="cn"] main #qily-home-collaboration
    display:block!important;width:100%!important;max-width:100%!important;min-height:0!important;height:auto!important;object-fit:contain!important;
  }
 }
+
+/* QILY-CN-OWNER-BIO-PARITY-20261027
+ * Mirror the approved international owner biography and CTA styling.
+ * Do not reduce the professional profile to an unstyled inline link.
+ */
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-owner-profile{
+  margin-top:18px!important;padding-top:16px!important;border-top:1px solid #d5e4e3!important;
+}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-owner-profile>strong{
+  display:block!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  font-size:18px!important;font-weight:900!important;line-height:1.5!important;
+}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-owner-profile>p{
+  margin:8px 0 0!important;color:#526967!important;-webkit-text-fill-color:#526967!important;
+  font-size:18px!important;font-weight:560!important;line-height:1.74!important;
+}
+html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-owner-profile__experience{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;
+  margin-top:16px!important;padding:9px 15px!important;border:1px solid #caa15f!important;border-radius:8px!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;text-decoration:none!important;
+  font-size:17px!important;font-weight:900!important;line-height:1.4!important;
+  box-shadow:0 5px 14px rgba(15,75,90,.14)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root:root body[data-qily-site="cn"] #qily-home-collaboration .qily-home-owner-profile__experience:hover{
+    background:#12606f!important;border-color:#ffe39b!important;box-shadow:0 7px 18px rgba(15,75,90,.22)!important;
+  }
+}
