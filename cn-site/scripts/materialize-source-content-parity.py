@@ -654,8 +654,9 @@ def render(node, source):
     rendered = [(child, render(child, source)) for child in node.children]
     grid_classes = {'module-grid','paper-grid','project-grid','project-list-grid',
        'career-full-grid','service-grid','resource-grid','knowledge-grid','trust-grid',
-       'qily-ia-grid','qily-six-grid','qily-proof-strip','qily-principle-grid',
+       'qily-ia-grid','qily-ia-delivery-summary','qily-six-grid','qily-proof-strip','qily-principle-grid',
        'qily-secondary-links'}
+    card_count = 0
     if classes & grid_classes:
         card_count = sum(1 for child, value in rendered if isinstance(child, Node)
                          and value.strip() and child.attrs.get('hidden') is None
@@ -713,6 +714,39 @@ def main_markup(value):
     match = re.search(r'<main\b[^>]*>[\s\S]*?</main\s*>', value, re.I)
     if not match: raise RuntimeError('Page has no content main')
     return match.group(0)
+
+def preserve_cn_owner_section(content, existing):
+    """Keep the China owner's approved noncommercial counterpart across clones.
+
+    The source home inserts its commercial owner module via runtime, while CN
+    must materialize an approved, stable, China-only professional counterpart.
+    """
+    marker = re.compile(r'<!-- QILY-CN-OWNER-COLLABORATION-V1:START[^>]*-->[\s\S]*?<!-- QILY-CN-OWNER-COLLABORATION-V1:END -->')
+    owner = marker.search(main_markup(existing))
+    if not owner:
+        raise RuntimeError('Approved CN owner module missing; never silently drop it')
+    section = owner.group(0)
+    role_open = '<div class="qily-home-collaboration__roles">'
+    role_fixed = ('<div class="qily-home-collaboration__roles" '
+                  'style="display:grid!important;grid-template-columns:minmax(0,1fr)!important;'
+                  'grid-template-rows:repeat(2,minmax(min-content,auto))!important;'
+                  'width:100%!important;gap:14px!important;">')
+    if role_open in section:
+        section = section.replace(role_open, role_fixed, 1)
+    elif role_fixed not in section:
+        raise RuntimeError('CN owner card layout cannot be stabilized')
+    portrait = re.compile(r'/qilylean/ding-qili-ai-avatar-560\.webp(?:\?[^"\s]*)?')
+    if portrait.search(section):
+        img_path = media_url('/qilylean/ding-qili-ai-avatar-560.webp', 'index.html')
+        if not img_path:
+            raise RuntimeError('Cannot localize approved owner portrait')
+        section = portrait.sub(img_path, section)
+    if 'id="qily-home-collaboration"' in content:
+        raise RuntimeError('Owner module duplicated by source clone')
+    anchor = re.search(r'<section\b[^>]*id="qily-secondary-assets"[^>]*>', content)
+    if not anchor:
+        raise RuntimeError('Cannot position CN owner module before secondary assets')
+    return content[:anchor.start()] + '\n' + section + '\n' + content[anchor.start():]
 
 def preserve_generated_page_heading(content, existing):
     """Keep the destination's public title when the source H1 lives outside <main>."""
@@ -1065,6 +1099,8 @@ def main():
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
+            if name == 'index.html':
+                content = preserve_cn_owner_section(content, old)
             if name == 'projects/index.html':
                 # Preserve existing China project bookmarks on the shared cards.
                 project_ids = iter(('automotive-lean', 'smed-300t', 'mold-warehouse',
