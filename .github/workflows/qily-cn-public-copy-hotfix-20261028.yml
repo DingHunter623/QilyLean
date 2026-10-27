@@ -77,9 +77,22 @@ jobs:
                 after=after.replace(old,new,1);changed+=1
               elif after.count(old)==0 and after.count(new)==1:pass
               else:raise RuntimeError('Mixed copy: '+old[:20])
+            # Restore the owner module to the public page outside the
+            # international-derived extended-content details wrapper.
+            marker=re.search(r'<!-- QILY-CN-OWNER-COLLABORATION-V1:START[^>]*-->[\s\S]*?<!-- QILY-CN-OWNER-COLLABORATION-V1:END -->',after)
+            extended=re.search(r'<section\b(?=[^>]*\bid="qily-home-extended")[^>]*>',after)
+            if not marker or not extended:raise RuntimeError('Canonical owner/extended structure missing')
+            moved=0
+            if marker.start()>extended.start():
+              preserved=marker.group(0)
+              without=after[:marker.start()]+after[marker.end():]
+              anchor=re.search(r'<section\b(?=[^>]*\bid="qily-home-extended")[^>]*>',without)
+              if not anchor:raise RuntimeError('Canonical extended section changed')
+              after=without[:anchor.start()]+preserved+'\n'+without[anchor.start():]
+              moved=1
             check(after)
             backup=None
-            if changed:
+            if changed or moved:
               backups=root/'public-copy-backups'
               backups.mkdir(parents=True,exist_ok=True)
               backup=backups/('home-'+str(int(time.time()))+'-'+hashlib.sha256(before.encode()).hexdigest()[:12]+'.html')
@@ -103,7 +116,7 @@ jobs:
                 shutil.copy2(backup,target)
                 print('COPY_HOTFIX_ROLLED_BACK',flush=True)
               raise
-            print('PRODUCTION_ORIGIN_COPY_PASS changed='+str(changed)+' release='+release.name+' sha256='+hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
+            print('PRODUCTION_ORIGIN_COPY_PASS changed='+str(changed)+' moved_owner='+str(moved)+' release='+release.name+' sha256='+hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
           PY
           if test -n "$CN_PREPROD_USER"; then USER_NAME="$CN_PREPROD_USER"; else USER_NAME=ubuntu; fi
           REMOTE="/tmp/qily-copy-$GITHUB_RUN_ID.py"
