@@ -69,7 +69,7 @@
       lead.innerHTML='QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，形成六类核心能力，合计六类项目合作能力。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。';
       var founder=el('p','qily-founder-line','丁启利｜制造工程、工业工程与精益改善项目实践者');
       lead.parentNode.insertBefore(founder,lead);
-      var relocation=el('p','qily-home-relocation-note','专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。');
+      var relocation=el('p','qily-home-relocation-note','查看<a href="/capabilities/">能力画像</a>、<a href="/experience/">履历主线</a>和<a href="/projects/">代表项目</a>，了解专业领域、岗位实践及成果证据。');
       insertAfter(lead,relocation);
     }
 
@@ -120,7 +120,7 @@
       var resultsHeading=results.querySelector('.head h2');
       var resultsLead=results.querySelector('.head>p:not(.metric-display-note)');
       if(resultsHeading)resultsHeading.textContent='更多职业成果与方法积累';
-      if(resultsLead)resultsLead.textContent='首页仅显示部分代表性结果；完整项目背景、角色边界、数据口径和佐证材料统一归入代表项目与能力画像。';
+      if(resultsLead)resultsLead.textContent='了解代表项目的背景、参与职责、数据依据与成果验证，可进一步查看代表项目和能力画像。';
       var toggle=el('button','qily-ia-button qily-results-toggle','展开全部成果概览');
       toggle.type='button';
       toggle.addEventListener('click',function(){
@@ -139,7 +139,7 @@
       var latestTitle=latest.querySelector('.head h2');
       var latestText=latest.querySelector('.head p');
       if(latestTitle)latestTitle.textContent='知识资产与持续更新';
-      if(latestText)latestText.textContent='简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六类项目合作能力争夺首页主视觉。';
+      if(latestText)latestText.textContent='持续整理精选简报、制造术语、标准文件与参考资料，便于学习、查阅和现场应用。';
       if(results)insertAfter(results,latest);
     }
 
@@ -158,7 +158,7 @@
       '<a class="qily-ia-secondary-link" href="/knowledge/">知识分享<span>简报、术语、程序文件与参考资料</span></a>'+
       '<a class="qily-ia-secondary-link" href="/ai.html">QilyLean AI<span>制造改善知识交流与站内导航</span></a>'+
       '<a class="qily-ia-secondary-link" href="/moments.html">行走印记<span>工作现场、团队同行与生活记录</span></a>';
-    var links=buildSection({id:'qily-more-context',alt:true,kicker:'FURTHER CONTEXT｜进一步了解',title:'个人信息与知识资产各归其位',lead:'保留全部有价值内容，但不再让个人标签、工具和知识数量遮挡客户最关心的服务、交付与验收。',body:linksBody});
+    var links=buildSection({id:'qily-more-context',alt:true,kicker:'FURTHER CONTEXT｜进一步了解',title:'了解专业经历、工程能力与知识成果',lead:'通过能力画像、职业履历、知识分享与数字工具，进一步了解QilyLean的制造工程实践与方法积累。',body:linksBody});
     main.appendChild(links);
   }
 
