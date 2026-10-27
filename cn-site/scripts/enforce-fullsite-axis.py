@@ -11,6 +11,7 @@ VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_H
 # destination CSS file remains unchanged; other CN routes retain their
 # settled visual cache and layout.
 # QILY-CN-HOME-HERO-KICKER-PUBLISH-PRIORITY-20261028: release only when updated home CSS URL is served.
+# QILY-CN-FONT-RASTER-PARITY-20261028: first hero uses international antialiased WebKit smoothing via generated inline style.
 HOME_VI_HREF = VI_HREF + "&home=20261028-gold-regular-v1"
 HOME_VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{HOME_VI_HREF}">'
 ABOUT = (CN / 'about/index.html').read_text(encoding='utf-8')
