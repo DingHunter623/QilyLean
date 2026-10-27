@@ -676,7 +676,7 @@ def render(node, source):
     # inline important weight protects first paint without touching
     # headings, nearby sections or the international stylesheet.
     if source == 'index.html' and tag == 'span' and 'qily-home-conversion-hero__kicker' in classes:
-        attrs['style'] = (attrs.get('style', '').rstrip(';') + ';' if attrs.get('style') else '') + 'font-weight:400!important;'
+        attrs['style'] = (attrs.get('style', '').rstrip(';') + ';' if attrs.get('style') else '') + 'font-weight:400!important;-webkit-font-smoothing:antialiased!important;'
     text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())

@@ -53,7 +53,7 @@ async function snapshot(page){
    const media=hero.querySelector('.qily-home-project-visual');
    const action=hero.querySelector('.qily-home-conversion-actions>a');
    const rect=e=>{const r=e.getBoundingClientRect();return {x:r.left,y:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};};
-   const type=e=>{const s=getComputedStyle(e);return {size:s.fontSize,weight:s.fontWeight,color:s.color,font:s.fontFamily,line:s.lineHeight};};
+   const type=e=>{const s=getComputedStyle(e);return {size:s.fontSize,weight:s.fontWeight,smoothing:s.webkitFontSmoothing,color:s.color,font:s.fontFamily,line:s.lineHeight};};
    return {kicker:{text:kicker.textContent.trim(),rect:rect(kicker),type:type(kicker)},
      h1:{text:h1.textContent.trim(),rect:rect(h1),type:type(h1)},
      lead:{text:lead.textContent.trim(),type:type(lead)},

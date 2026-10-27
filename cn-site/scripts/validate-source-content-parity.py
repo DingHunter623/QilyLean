@@ -284,7 +284,8 @@ def verify_semantics(value, row):
             if tag == 'span' and 'qily-home-conversion-hero__kicker' in attrs.get('class', '').split()
         ]
         require(len(hero_kickers) == 1 and
-                'font-weight:400!important' in hero_kickers[0].get('style', '').replace(' ', ''),
+                'font-weight:400!important' in hero_kickers[0].get('style', '').replace(' ', '') and
+                '-webkit-font-smoothing:antialiased!important' in hero_kickers[0].get('style', '').replace(' ', ''),
                 'China homepage gold hero kicker must render at international regular weight')
         for section in ('qily-core-services', 'qily-digital-enablers'):
             require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)

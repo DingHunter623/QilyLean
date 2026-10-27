@@ -22,6 +22,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         label = re.search(r'<span\b[^>]*class="qily-home-conversion-hero__kicker"[^>]*>', generated)
         self.assertIsNotNone(label, 'Cloned homepage gold kicker missing')
         self.assertIn('font-weight:400!important', label.group(0))
+        self.assertIn('-webkit-font-smoothing:antialiased!important', label.group(0))
         self.assertNotIn('font-weight:950', label.group(0))
 
 
