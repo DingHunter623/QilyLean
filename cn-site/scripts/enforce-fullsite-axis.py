@@ -10,7 +10,8 @@ VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_H
 # The home hero golden label receives a fresh, home-only CSS URL. The
 # destination CSS file remains unchanged; other CN routes retain their
 # settled visual cache and layout.
-# QILY-CN-HOME-HERO-KICKER-PUBLISH-PRIORITY-20261028: release only when updated home CSS URL is served.\nHOME_VI_HREF = VI_HREF + "&home=20261028-gold-regular-v1"
+# QILY-CN-HOME-HERO-KICKER-PUBLISH-PRIORITY-20261028: release only when updated home CSS URL is served.
+HOME_VI_HREF = VI_HREF + "&home=20261028-gold-regular-v1"
 HOME_VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{HOME_VI_HREF}">'
 ABOUT = (CN / 'about/index.html').read_text(encoding='utf-8')
 CANONICAL_HEADER = re.search(r'<header\b[\s\S]*?</header>', ABOUT, re.I).group(0)
