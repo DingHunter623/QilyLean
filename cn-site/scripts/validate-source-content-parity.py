@@ -212,6 +212,18 @@ def verify_operating_axis(source_value, target_value, url):
 def verify_semantics(value, row):
     url = row['url']
     main = parity.main_markup(value)
+    # Sitewide public-copy poka-yoke: catch backend planning expressions
+    # accidentally placed in visitor-facing content on any CN public page.
+    internal_only = (
+        '辅助资产降级', '不抢主线', '争夺一级认知位置',
+        '放回各自正确的位置', '争夺首页主视觉',
+        '个人信息与知识资产各归其位',
+        '不再让个人标签、工具和知识数量遮挡',
+        '专业标签已归入',
+    )
+    for phrase in internal_only:
+        require(phrase not in html.unescape(main),
+                'Internal planning language leaked into CN public content: ' + url + ': ' + phrase)
     source_style = re.search(r'<(?:link|style)\b[^>]*\bdata-cn-source-css=', value, re.I)
     axis_style = re.search(r'<link\b[^>]*\bid="qilyContentAxisV1"', value, re.I)
     require(not source_style or axis_style and axis_style.start() < source_style.start(),
