@@ -3,6 +3,15 @@ const fs=require('fs');
 const path=require('path');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
+// Production verifies an immutable release identity rather than a CDN's
+// potentially cached previous homepage. The source-manifest gate uses this
+// same release query, so visual acceptance checks the actual candidate.
+function freshCnUrl(url){
+ if(!process.env.GITHUB_SHA || !url.startsWith(cnBase))return url;
+ const next=new URL(url);
+ next.searchParams.set('release',process.env.GITHUB_SHA);
+ return next.toString();
+}
 const parity=JSON.parse(fs.readFileSync(path.join(__dirname,'../cn-site/archive/source-content-parity.json'),'utf8'));
 const publicModules=[
  {source:'index.html',selectors:['#qily-home-industry-scenes','#qily-home-representative-cases','#qily-home-six-step-method','#qily-home-capability-building','#qily-home-standard-deliverables','#qily-evidence-value','#qily-knowledge-assets','#qily-trust-center']},
@@ -19,7 +28,7 @@ const publicModules=[
  return {...contract,url:record.url,intUrl:contract.source==='index.html'?'/':'/'+contract.source.replace(/index\.html$/,'')};
 });
 async function visit(page,url,{home=false,expand=false}={}){
- await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000});
+ await page.goto(freshCnUrl(url),{waitUntil:'domcontentloaded',timeout:45000});
  await expect(page.locator('main')).toBeVisible();
  if(home)await page.waitForFunction(()=>document.body?.dataset.qilyHomeConversion==='v1'||document.querySelector('main[data-cn-source-content="index.html"] .qily-home-conversion-hero'));
  await page.evaluate(async({expand})=>{
@@ -101,7 +110,7 @@ test('China responsive home and public modules keep four-button footer and filin
  }
  for(const route of ['/','/lean/','/notes/','/trust/','/knowledge/','/resources/','/briefs/','/archive/profile/capabilities/']){
    await page.setViewportSize({width:1588,height:900});
-   await page.goto(cnBase+route,{waitUntil:'domcontentloaded',timeout:45000});
+   await page.goto(freshCnUrl(cnBase+route),{waitUntil:'domcontentloaded',timeout:45000});
    expect(await page.locator('footer.footer #floatDock button[data-action]').count(),route).toBe(4);
    expect(await page.locator('footer.footer .footer-records>a').count(),route).toBe(2);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth),route).toBeLessThanOrEqual(1589);
@@ -297,7 +306,7 @@ test('QilyLean CN homepage one/two-card rows occupy the entire content axis',asy
  test.setTimeout(120000);
  for(const width of [1588,1024,820,390]){
   await page.setViewportSize({width,height:960});
-  await page.goto(cnBase+'/',{waitUntil:'networkidle'});
+  await page.goto(freshCnUrl(cnBase+'/'),{waitUntil:'networkidle'});
   const grids=await page.evaluate(()=>{
    function metric(selector){
     const grid=document.querySelector(selector);
@@ -330,7 +339,7 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
  test.setTimeout(120000);
  for(const url of [intBase+'/',cnBase+'/']){
   await page.setViewportSize({width:1588,height:1000});
-  await page.goto(url,{waitUntil:'networkidle'});
+  await page.goto(freshCnUrl(url),{waitUntil:'networkidle'});
   await page.evaluate(()=>document.querySelectorAll('main details').forEach(d=>d.open=true));
   if(url.startsWith(intBase))await page.waitForTimeout(1650);
   const p=await page.evaluate(()=>{
@@ -374,7 +383,7 @@ test('About semantic labels preserve the approved 21px dual-site VI on desktop a
  for(const width of [1588,390]){
   await page.setViewportSize({width,height:900});
   for(const url of [intBase+'/about/',cnBase+'/about/']){
-   await page.goto(url,{waitUntil:'networkidle'});
+   await page.goto(freshCnUrl(url),{waitUntil:'networkidle'});
    if(url.startsWith(intBase))await page.waitForTimeout(1650);
    const type=await page.locator('main .page-hero .hero-eyebrow').evaluate(el=>{const s=getComputedStyle(el);return {size:parseFloat(s.fontSize),weight:parseInt(s.fontWeight,10),color:s.color,fill:s.webkitTextFillColor};});
    expect(type.size,url+' '+width+'px public VI label size').toBeGreaterThanOrEqual(20.5);
@@ -417,7 +426,7 @@ test('Owner portrait keeps mobile reading gutters on both homepages',async({page
  for(const width of [375,390,430]){
   await page.setViewportSize({width,height:900});
   for(const url of [intBase+'/',cnBase+'/']){
-   await page.goto(url,{waitUntil:'networkidle'});
+   await page.goto(freshCnUrl(url),{waitUntil:'networkidle'});
    await page.evaluate(()=>document.querySelectorAll('main details').forEach(x=>x.open=true));
    if(url.startsWith(intBase))await page.waitForTimeout(1600);
    const metrics=await page.locator('#qily-home-collaboration .qily-home-collaboration__portrait').evaluate(el=>{
