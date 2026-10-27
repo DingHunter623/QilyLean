@@ -53,8 +53,11 @@ jobs:
             for old,new in changes:
               if old in s or s.count(new)!=1:raise RuntimeError('Unexpected public copy: '+old[:20])
             owner=re.search(r'<section\b(?=[^>]*\bid="qily-home-collaboration")[^>]*>',s)
-            extended=re.search(r'<section\b(?=[^>]*\bid="qily-home-extended")[^>]*>',s)
-            if not(owner and extended and owner.start()<extended.start()):raise RuntimeError('Owner module must be visible')
+            if not owner:raise RuntimeError('Owner module is missing')
+            before_owner=s[:owner.start()]
+            details_depth=len(re.findall(r'<details\b',before_owner,re.I))-len(re.findall(r'</details\s*>',before_owner,re.I))
+            if details_depth>0 or re.search(r'\bhidden\b|display\s*:\s*none',owner.group(0),re.I):
+              raise RuntimeError('Owner module remains in hidden content')
             for k in ('湘ICP备2026041143号-1','湘公网安备43020002000443号','href="/archive/profile/experience/"'):
               if k not in s:raise RuntimeError('Missing public marker: '+k)
           with (root/'.content-deploy.lock').open('a+') as lock:
