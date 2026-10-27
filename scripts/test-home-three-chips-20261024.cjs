@@ -70,8 +70,10 @@ async function inspect(page,url){
    }
    assert.equal(state.intl.supplier.length,1,'International owner/supplier coordination missing');
    assert.equal(state.cn.supplier.length,1,'CN public owner/supplier engineering card over-filtered');
-   assert.ok(state.cn.supplier[0].includes('接口、责任、费用、交付与验收通过书面边界管理'),
-     'CN expert/supplier collaboration governance wording lost');
+   assert.ok(state.intl.supplier[0].includes('接口、责任、费用、交付与验收通过书面边界管理'),
+     'International expert/supplier governance wording lost');
+   assert.ok(state.cn.supplier[0].includes('接口、责任、交付与验收通过书面边界管理'),
+     'CN public supplier wording or legal boundary regressed');
 
    assert.ok(state.intl.route.includes('标准启动路径：免费60分钟沟通诊断'),'international sales route lost');
    assert.ok(state.cn.actions.some(x=>x.text==='查看代表案例'),'CN public action missing');
