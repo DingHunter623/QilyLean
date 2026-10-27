@@ -44,6 +44,12 @@ jobs:
                   });
                   console.log('LIVE_HERO_VI '+JSON.stringify({site,width,url,data}));
                   await page.screenshot({path:`test-results/hero-gold-${site}-${width}.png`});
+                  if(site==='cn'){
+                    await page.locator('.qily-home-conversion-hero__kicker').evaluate(e=>e.style.setProperty('-webkit-font-smoothing','antialiased','important'));
+                    const style=await page.locator('.qily-home-conversion-hero__kicker').evaluate(e=>getComputedStyle(e).webkitFontSmoothing);
+                    console.log('CN_PREVIEW_SMOOTHING '+JSON.stringify({width,style}));
+                    await page.screenshot({path:`test-results/hero-gold-cn-smoothing-preview-${width}.png`});
+                  }
                   await page.close();
                 }
               }
