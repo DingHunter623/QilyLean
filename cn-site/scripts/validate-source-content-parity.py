@@ -304,7 +304,8 @@ def verify_semantics(value, row):
                 and 'grid-template-columns:minmax(0,1fr)!important' in trust_html,
                 'China trust evidence card must use entire module width')
         require(len(re.findall(r'<article\b', proof_html)) == 2
-                and 'grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))!important' in proof_html,
+                and 'grid-template-columns:repeat(auto-fit' not in proof_html
+                and 'display:grid!important' in proof_html,
                 'China home two evidence cards must occupy equal responsive columns')
 
     resources = row['protected']['translator_resources']
@@ -361,7 +362,7 @@ def fixture_checks():
     only_one = parity.render(parity.Tree('<div class="qily-six-grid"><a href="/trust/#evidence-levels">证据分级</a></div>').root, 'index.html')
     require('grid-template-columns:minmax(0,1fr)!important' in only_one, 'Single trust card grid regression')
     exactly_two = parity.render(parity.Tree('<div class="qily-ia-delivery-summary"><article>专业基础</article><article>项目证据</article></div>').root, 'index.html')
-    require('repeat(auto-fit,minmax(min(100%,420px),1fr))!important' in exactly_two, 'Double proof grid regression')
+    require('display:grid!important' in exactly_two and 'grid-template-columns:repeat(auto-fit' not in exactly_two, 'Double proof grid responsive authority regression')
     facts = '<span>1个月内完成供应商寻源与施工合同签订。</span><span>信息合同、状态词典与异常升级。</span>'
     rendered = parity.render(parity.Tree(facts).root, 'projects/index.html')
     require('施工合同签订' in rendered and '信息合同' in rendered, 'Public project facts were filtered by a generic commercial keyword')

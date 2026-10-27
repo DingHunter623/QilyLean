@@ -671,7 +671,7 @@ def render(node, source):
     if source == 'index.html' and 'qily-six-grid' in classes and card_count == 1:
         attrs['style'] = 'display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;'
     if source == 'index.html' and 'qily-ia-delivery-summary' in classes and card_count == 2:
-        attrs['style'] = 'display:grid!important;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))!important;width:100%!important;max-width:100%!important;gap:14px!important;'
+        attrs['style'] = 'display:grid!important;width:100%!important;max-width:100%!important;gap:14px!important;'
     text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())
