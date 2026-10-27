@@ -1,0 +1,60 @@
+name: Compare CN and international gold hero kicker on production (read only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-cn-hero-gold-weight-20261028.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Read real production CSS and first hero label at desktop and mobile
+        shell: bash
+        run: |
+          mkdir -p test-results
+          node <<'JS'
+          const {chromium}=require('@playwright/test');
+          (async()=>{
+            const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+            try{
+              for(const width of [1588,390]){
+                for(const [site,url] of [['intl','https://qilylean.com/'],['cn','https://qilylean.cn/']]){
+                  const page=await browser.newPage({viewport:{width,height:960},deviceScaleFactor:1});
+                  await page.goto(url+'?vi-verify-20261028='+Date.now(),{waitUntil:'domcontentloaded',timeout:65000});
+                  await page.evaluate(()=>document.fonts.ready);
+                  await page.waitForTimeout(2200);
+                  const data=await page.evaluate(()=>{
+                    const e=document.querySelector('.qily-home-conversion-hero__kicker');
+                    if(!e)return {error:'hero kicker missing'};
+                    const c=getComputedStyle(e);
+                    const props=['fontFamily','fontSize','fontWeight','fontStyle','fontSynthesis','fontStretch','fontVariationSettings','fontFeatureSettings','lineHeight','letterSpacing','color','webkitTextFillColor','webkitTextStrokeWidth','textShadow'];
+                    return {text:e.textContent.trim(),style:e.getAttribute('style'),computed:Object.fromEntries(props.map(x=>[x,c[x]])),rect:{width:e.getBoundingClientRect().width,height:e.getBoundingClientRect().height},stylesheets:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>x.href).filter(x=>/visual|conversion|vi-|cn-sitewide|content/.test(x)).slice(-22)};
+                  });
+                  console.log('LIVE_HERO_VI '+JSON.stringify({site,width,url,data}));
+                  await page.screenshot({path:`test-results/hero-gold-${site}-${width}.png`});
+                  await page.close();
+                }
+              }
+            }finally{await browser.close();}
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+      - name: Preserve untouched production screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-gold-hero-live-evidence-20261028
+          path: test-results/
+          if-no-files-found: warn
+          retention-days: 7
