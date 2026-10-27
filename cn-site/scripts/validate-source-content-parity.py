@@ -273,6 +273,11 @@ def verify_semantics(value, row):
         # China may exclude commerce, never the owner's public CV or biography.
         owner = re.search(r'<section\b[^>]*id="qily-home-collaboration"[^>]*>[\s\S]*?</section>', main)
         require(owner is not None, 'CN owner section missing')
+        # Poka-yoke: the owner module is a standalone, immediately visible
+        # homepage section. Never nest it in the "展开" extended <details>.
+        extended = re.search(r'<section\b(?=[^>]*\bid="qily-home-extended")[^>]*>', main, re.I)
+        require(extended is not None and owner.start() < extended.start(),
+                'CN owner must appear before the collapsed extended section')
         owner_html = owner.group(0)
         require(owner_html.count('class="qily-home-role"') == 2 and
                 'grid-template-columns:minmax(0,1fr)!important' in owner_html,
