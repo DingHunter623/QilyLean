@@ -33,7 +33,11 @@
   "tool_application_case_gate": {
     "required": true,
     "minimum": "每个被重点讲解的工具至少一个与其决策点直接对应的制造场景案例",
-    "case_types": ["career_practice", "public_case", "teaching_simulation"],
+    "case_types": [
+      "career_practice",
+      "public_case",
+      "teaching_simulation"
+    ],
     "case_structure": "Situation → Baseline/Signal → Method → Action/Pilot → Metric → Verification/Standardization",
     "forbidden": [
       "只写工具定义和适用场景而无案例",
@@ -72,7 +76,8 @@
     "2026-08-09",
     "2026-08-12",
     "2026-08-14",
-    "2026-08-25"
+    "2026-08-25",
+    "2026-10-27"
   ],
   "protected_notes": {
     "2026-07-29": "NPI四阶段：EVT、DVT、PVT、MP；用户明确要求长期保留",
@@ -80,7 +85,8 @@
     "2026-08-09": "Ceiling／天花板、Benchmark、Target、Stretch Target；用户明确要求长期保留",
     "2026-08-12": "本周精选：汽车座椅开关PMO量产交付闭环",
     "2026-08-14": "用户明确指定高价值简报：改革自上而下、改善自下而上；纠正精益等于降本误区；配套场景简图、六类基础、RACI、90天路线和财务验证方法，长期保护",
-    "2026-08-25": "用户审核并明确批准发布：《居安思危｜识别制造业八大浪费：从看见问题到解决问题的改善闭环》；要求八种浪费均具备场景简图、案例、根因、改善方法、验证指标与标准固化逻辑，长期保护"
+    "2026-08-25": "用户审核并明确批准发布：《居安思危｜识别制造业八大浪费：从看见问题到解决问题的改善闭环》；要求八种浪费均具备场景简图、案例、根因、改善方法、验证指标与标准固化逻辑，长期保护",
+    "2026-10-27": "用户明确要求发布的特别精选：《知识可以传播，价值源于转化：从专业认知到制造生产力》；强调工程转化链、真实与推演案例边界、PQCD验证和知识传播的培训价值，与本周2026-10-25精选并存。"
   },
   "quality_dimensions": [
     "manufacturing_professional_relevance",
