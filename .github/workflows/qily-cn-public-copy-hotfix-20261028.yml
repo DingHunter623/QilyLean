@@ -1,0 +1,118 @@
+name: CN scoped homepage copy production hotfix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qily-cn-public-copy-hotfix-20261028.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: qily-cn-copy-hotfix-20261028
+  cancel-in-progress: false
+jobs:
+  hotfix:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify upstream copy SSOT
+        run: |
+          set -euo pipefail
+          grep -Fq '专业能力有依据，项目成果可核验' cn-site/index.html
+          grep -Fq 'AI助手、行走印记与产业资源协同' cn-site/index.html
+          ! grep -Fq '辅助资产降级，不抢主线' cn-site/index.html
+      - name: Apply copy only, preserve other bytes, verify and automatically rollback if needed
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -T 20 -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+          cat > /tmp/qily-copy.py <<'PY'
+          import pathlib,os,fcntl,time,re,shutil,hashlib,tempfile,subprocess
+          root=pathlib.Path('/var/www/qilylean-cn')
+          current=root/'current'
+          target=current/'index.html'
+          changes=(
+          ('TRUST BY DESIGN｜可信度来自边界清楚','TRUST BY DESIGN｜专业可信与证据核验'),
+          ('把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置','专业能力有依据，项目成果可核验'),
+          ('QilyLean以真实制造实践和公开知识资产建立专业信用，同时明确职业履历、项目证据、资料来源与AI辅助使用边界。可信不是把自己说得更大，而是让访问者知道哪些内容可以核验、哪些仍需项目现场验证。','QilyLean公开呈现制造工程实践、职业履历和项目证据，说明资料来源、成果核验口径及AI辅助使用方式，方便访问者查阅专业信息与实践成果。'),
+          ('EXTENDED ASSETS｜辅助资产降级，不抢主线','EXTENDED RESOURCES｜延伸资源与实践'),
+          ('AI、行走印记与产业资源仍然保留，但服务于专业主线','AI助手、行走印记与产业资源协同'),
+          ('它们用于理解、导航、交流和资源连接，不与制造运营能力、项目证据和知识资产争夺一级认知位置。','从智能知识查询、现场与生活记录，到产业资源导航，提供多元化的学习、交流与资源连接入口。'))
+          def check(s):
+            for old,new in changes:
+              if old in s or s.count(new)!=1:raise RuntimeError('Unexpected public copy: '+old[:20])
+            owner=re.search(r'<section\b(?=[^>]*\bid="qily-home-collaboration")[^>]*>',s)
+            extended=re.search(r'<section\b(?=[^>]*\bid="qily-home-extended")[^>]*>',s)
+            if not(owner and extended and owner.start()<extended.start()):raise RuntimeError('Owner module must be visible')
+            for k in ('湘ICP备2026041143号-1','湘公网安备43020002000443号','href="/archive/profile/experience/"'):
+              if k not in s:raise RuntimeError('Missing public marker: '+k)
+          with (root/'.content-deploy.lock').open('a+') as lock:
+            deadline=time.monotonic()+120
+            while True:
+              try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB);break
+              except BlockingIOError:
+                if time.monotonic()>deadline:raise RuntimeError('Deploy lock timeout')
+                time.sleep(1)
+            release=current.resolve(strict=True)
+            if not release.is_relative_to(root/'releases'):raise RuntimeError('Invalid release')
+            before=target.read_text(encoding='utf-8')
+            after=before
+            changed=0
+            for old,new in changes:
+              if after.count(old)==1 and after.count(new)==0:
+                after=after.replace(old,new,1);changed+=1
+              elif after.count(old)==0 and after.count(new)==1:pass
+              else:raise RuntimeError('Mixed copy: '+old[:20])
+            check(after)
+            backup=None
+            if changed:
+              backups=root/'public-copy-backups'
+              backups.mkdir(parents=True,exist_ok=True)
+              backup=backups/('home-'+str(int(time.time()))+'-'+hashlib.sha256(before.encode()).hexdigest()[:12]+'.html')
+              shutil.copy2(target,backup)
+              fd,tmp=tempfile.mkstemp(prefix='.qily-copy-',dir=str(release))
+              try:
+                with os.fdopen(fd,'wb') as f:
+                  f.write(after.encode('utf-8'));f.flush();os.fsync(f.fileno())
+                os.chmod(tmp,target.stat().st_mode&0o777)
+                os.replace(tmp,target)
+              finally:
+                if os.path.exists(tmp):os.unlink(tmp)
+            try:
+              if current.resolve(strict=True)!=release:raise RuntimeError('Release changed during repair')
+              check(target.read_text(encoding='utf-8'))
+              url='https://qilylean.cn/?copy-check='+hashlib.sha256(after.encode()).hexdigest()[:16]
+              live=subprocess.run(['curl','-fsSk','--max-time','35','--resolve','qilylean.cn:443:127.0.0.1','-H','Cache-Control: no-cache',url],capture_output=True,text=True,timeout=45,check=True)
+              check(live.stdout)
+            except Exception:
+              if backup is not None and current.resolve(strict=True)==release:
+                shutil.copy2(backup,target)
+                print('COPY_HOTFIX_ROLLED_BACK',flush=True)
+              raise
+            print('PRODUCTION_ORIGIN_COPY_PASS changed='+str(changed)+' release='+release.name+' sha256='+hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
+          PY
+          if test -n "$CN_PREPROD_USER"; then USER_NAME="$CN_PREPROD_USER"; else USER_NAME=ubuntu; fi
+          REMOTE="/tmp/qily-copy-$GITHUB_RUN_ID.py"
+          timeout 90s scp -q -o ConnectTimeout=20 -o BatchMode=yes -i ~/.ssh/qilylean_cn /tmp/qily-copy.py "$USER_NAME@$CN_PREPROD_HOST:$REMOTE"
+          timeout 240s ssh -o ConnectTimeout=20 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 '$REMOTE'; rc=\$?; rm -f '$REMOTE'; exit \$rc"
+      - name: Confirm real HTTPS public homepage returns approved text
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --connect-timeout 15 --max-time 60 -H 'Cache-Control: no-cache' "https://qilylean.cn/?public-copy=$GITHUB_SHA" -o /tmp/live.html
+          grep -Fq '专业能力有依据，项目成果可核验' /tmp/live.html
+          grep -Fq 'AI助手、行走印记与产业资源协同' /tmp/live.html
+          ! grep -Fq '辅助资产降级，不抢主线' /tmp/live.html
+          ! grep -Fq '放回各自正确的位置' /tmp/live.html
+          echo PUBLIC_URL_VERIFIED_COPY_PASS
