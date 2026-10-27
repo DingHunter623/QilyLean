@@ -670,6 +670,13 @@ def render(node, source):
         attrs['style'] = 'display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;'
     if source == 'index.html' and 'qily-ia-delivery-summary' in classes and card_count == 2:
         attrs['style'] = 'display:grid!important;width:100%!important;max-width:100%!important;gap:14px!important;'
+    # QILY-CN-HOME-HERO-KICKER-REGULAR-20261028
+    # International SSOT defines this gold label as regular weight.
+    # The CN mirrored cascade contains legacy 950!important rules; the
+    # inline important weight protects first paint without touching
+    # headings, nearby sections or the international stylesheet.
+    if source == 'index.html' and tag == 'span' and 'qily-home-conversion-hero__kicker' in classes:
+        attrs['style'] = (attrs.get('style', '').rstrip(';') + ';' if attrs.get('style') else '') + 'font-weight:400!important;'
     text = ''.join(value for _, value in rendered)
     if tag in {'a','nav'} and not text.strip(): return ''
     attributes = ''.join(' ' + key + ('' if value is None else '="' + html.escape(value, quote=True) + '"') for key,value in attrs.items())

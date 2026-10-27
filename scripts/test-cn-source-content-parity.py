@@ -14,6 +14,17 @@ parity = validator.parity
 
 class SourceContentAcceptanceTests(unittest.TestCase):
 
+    def test_home_hero_gold_kicker_does_not_regress_to_bold(self):
+        source = (parity.ROOT / 'index.html').read_text(encoding='utf-8')
+        main = parity.source_fragment(source, 'index.html')
+        generated = parity.render(parity.Tree(main).root, 'index.html')
+        import re
+        label = re.search(r'<span\\b[^>]*class="qily-home-conversion-hero__kicker"[^>]*>', generated)
+        self.assertIsNotNone(label, 'Cloned homepage gold kicker missing')
+        self.assertIn('font-weight:400!important', label.group(0))
+        self.assertNotIn('font-weight:950', label.group(0))
+
+
     def test_cn_semantic_kicker_weight_is_regular_and_cache_busted(self):
         """Guard source-approved light-gold semantic labels against bold regressions."""
         root = Path(__file__).resolve().parents[1]

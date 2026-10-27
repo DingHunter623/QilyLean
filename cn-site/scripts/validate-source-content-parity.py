@@ -277,6 +277,15 @@ def verify_semantics(value, row):
         require(home_links[-1][0] == '/app-support/', 'CN QilyLean Home technical support must stay local')
 
     if url == '/':
+        # First hero gold kicker must inherit the approved COM regular VI,
+        # even when the mirrored legacy CSS is cached or reasserted.
+        hero_kickers = [
+            attrs for tag, attrs in Nodes(main).nodes
+            if tag == 'span' and 'qily-home-conversion-hero__kicker' in attrs.get('class', '').split()
+        ]
+        require(len(hero_kickers) == 1 and
+                'font-weight:400!important' in hero_kickers[0].get('style', '').replace(' ', ''),
+                'China homepage gold hero kicker must render at international regular weight')
         for section in ('qily-core-services', 'qily-digital-enablers'):
             require('id="' + section + '"' in main, 'Public engineering capability section was over-filtered: ' + section)
         require('三类项目' in main and '数智化增强' in main,
