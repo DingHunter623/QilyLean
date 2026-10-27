@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Strict local/source and production-byte verification of the CN public clone."""
+# QILY-CN-COPY-20261027-RELEASE-TRIGGER: content-only dual-site public copy accepted.
 from __future__ import annotations
 
 import argparse
