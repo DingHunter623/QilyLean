@@ -13,6 +13,24 @@ parity = validator.parity
 
 
 class SourceContentAcceptanceTests(unittest.TestCase):
+
+    def test_cn_semantic_kicker_weight_is_regular_and_cache_busted(self):
+        """Guard source-approved light-gold semantic labels against bold regressions."""
+        root = Path(__file__).resolve().parents[1]
+        css = (root / 'cn-site/assets/cn-sitewide-visual-parity-v1.css').read_text(encoding='utf-8')
+        rule = css.split('QILY-CN-CANONICAL-SEMANTIC-KICKER-WEIGHT-20261027', 1)[-1]
+        self.assertIn('font-weight:400!important;', rule)
+        for selector in ('.qily-home-conversion-hero__kicker', '.qily-ia-kicker', '.module-eyebrow', '.section-kicker'):
+            self.assertIn(selector, rule)
+        tracked = 0
+        for page in (root / 'cn-site').rglob('*.html'):
+            content = page.read_text(encoding='utf-8')
+            if '/assets/cn-sitewide-visual-parity-v1.css?v=' in content:
+                tracked += 1
+                self.assertIn('cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1',
+                              content, str(page.relative_to(root)))
+        self.assertGreaterEqual(tracked, 20)
+
     def test_direct_body_hero_rules_do_not_gain_a_main_match(self):
         selector = parity.source_selector('html:root:root:root body > .hero .eyebrow')
         self.assertIn(':where([data-cn-source-from-body="true"])', selector)
