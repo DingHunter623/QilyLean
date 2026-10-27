@@ -376,7 +376,7 @@ test('CN public homepage and release URL retain the three approved VI modules',a
       proofHeading:proof.querySelector('.qily-ia-heading h2')?.textContent.trim(),proofGrid:r(pg),proofCards:pc.map(r),
       ownerHeading:owner.querySelector('h2')?.textContent.trim(),ownerGrid:r(og),ownerCards:oc.map(r),
       ownerCardTitles:oc.map(c=>c.querySelector('h3')?.textContent.trim()),
-      ownerBio:owner.querySelector('.qily-home-owner-profile')?.textContent.replace(/\\s+/g,' ').trim(),
+      ownerBio:owner.querySelector('.qily-home-owner-profile')?.textContent.replace(/\s+/g,' ').trim(),
       photo:portrait?r(portrait):null,
       resumeHref:resume?.getAttribute('href'),resumeStyle:style?{display:style.display,color:style.color,bg:style.backgroundColor,height:r(resume).height}:null,
       scrollWidth:document.documentElement.scrollWidth
