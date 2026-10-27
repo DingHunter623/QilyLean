@@ -132,6 +132,20 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         raw = (parity.ROOT / 'index.html').read_text()
         return raw, parity.source_fragment(raw, 'index.html')
 
+    def test_dual_site_public_home_copy_is_visitor_facing(self):
+        international = (parity.ROOT / 'index.html').read_text()
+        chinese = (parity.CN / 'index.html').read_text()
+        for content in (international, chinese):
+            for phrase in ('辅助资产降级', '不抢主线', '争夺一级认知位置',
+                           '放回各自正确的位置', '仍然保留，但服务于专业主线'):
+                self.assertNotIn(phrase, parity.main_markup(content))
+            for title in ('专业能力有依据，项目成果可核验',
+                          'AI助手、行走印记与产业资源协同'):
+                self.assertIn(title, parity.main_markup(content))
+        cn_main = parity.main_markup(chinese)
+        self.assertIn('资料来源、成果核验口径及AI辅助使用方式', cn_main)
+        self.assertNotIn('签约主体、客户资料、成果证据', cn_main)
+
     def test_actual_home_has_canonical_runtime_modules_in_order(self):
         _, fragment = self.settled_home()
         identifiers = [attrs.get('id') for tag, attrs in validator.Nodes(fragment).nodes if tag == 'section']
