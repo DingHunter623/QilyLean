@@ -23,13 +23,16 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         for selector in ('.qily-home-conversion-hero__kicker', '.qily-ia-kicker', '.module-eyebrow', '.section-kicker'):
             self.assertIn(selector, rule)
         tracked = 0
+        stale = []
         for page in (root / 'cn-site').rglob('*.html'):
             content = page.read_text(encoding='utf-8')
             if '/assets/cn-sitewide-visual-parity-v1.css?v=' in content:
                 tracked += 1
-                self.assertIn('cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1',
-                              content, str(page.relative_to(root)))
+                if 'cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1' not in content:
+                    stale.append(str(page.relative_to(root)))
         self.assertGreaterEqual(tracked, 20)
+        self.assertFalse(stale, 'Stale CN VI cache references: ' + ', '.join(stale[:40]) +
+                         (' (+ more)' if len(stale) > 40 else ''))
 
     def test_direct_body_hero_rules_do_not_gain_a_main_match(self):
         selector = parity.source_selector('html:root:root:root body > .hero .eyebrow')
