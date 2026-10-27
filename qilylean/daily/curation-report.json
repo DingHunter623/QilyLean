@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-10-25T00:00:00.000Z",
-  "total_before": 383,
-  "total_after": 383,
+  "generated_at": "2026-10-27T00:00:00.000Z",
+  "total_before": 384,
+  "total_after": 384,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -10,7 +10,8 @@
     "2026-08-09",
     "2026-08-12",
     "2026-08-14",
-    "2026-08-25"
+    "2026-08-25",
+    "2026-10-27"
   ],
   "decisions": [
     {
@@ -4974,6 +4975,19 @@
           "title": "制度管人、流程管事、文化留心：企业真正稳定运行的三层管理机制",
           "score": 124,
           "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-10-26",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-10-27",
+          "title": "知识可以传播，价值源于转化：从专业认知到制造生产力",
+          "score": 10235,
+          "protected": true
         }
       ],
       "removed_count": 0

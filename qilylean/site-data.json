@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 383,
-    "latestDate": "2026-10-25",
-    "latestTheme": "组织治理与管理机制",
-    "latestTitle": "制度管人、流程管事、文化留心：企业真正稳定运行的三层管理机制",
-    "latestSummary": "制度解决边界，流程解决运行，文化解决认同；从制造现场、跨部门协同到组织成熟度，拆解企业如何从“靠人盯”走向“靠机制运行、靠文化持续”。",
-    "latestUrl": "/qilylean/daily/2026-10-25.html",
+    "total": 384,
+    "latestDate": "2026-10-27",
+    "latestTheme": "工程认知与生产力转化",
+    "latestTitle": "知识可以传播，价值源于转化：从专业认知到制造生产力",
+    "latestSummary": "知识与方法可以传播，但将其转化为制造现场的PQCD成果，仍需系统认知、情境判断、工程设计、试点验证与标准固化。",
+    "latestUrl": "/qilylean/daily/2026-10-27.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
     "earliestDate": "2019-07-10",
@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 750,
-    "indexedPages": 651,
+    "indexedEntries": 751,
+    "indexedPages": 652,
     "terminologyTotal": 193,
-    "briefTotal": 383,
-    "latestBriefDate": "2026-10-25",
+    "briefTotal": 384,
+    "latestBriefDate": "2026-10-27",
     "sitemapLastmod": "2026-10-27"
   }
 }
