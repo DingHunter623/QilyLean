@@ -347,6 +347,80 @@ test('QilyLean CN homepage one/two-card rows occupy the entire content axis',asy
  }
 });
 
+// The customer-facing URL is the delivery, not just an SHA-qualified preview.
+// Enforce the three *approved* modules on BOTH routes and compare their settled
+// text/layout fingerprint. Keep screenshot evidence for production regressions.
+test('CN public homepage and release URL retain the three approved VI modules',async({page})=>{
+ test.setTimeout(180000);
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:1000});
+  const measured=[];
+  for(const [tag,url] of [['public',cnBase+'/'],['release',freshCnUrl(cnBase+'/')]]){
+   await page.goto(url,{waitUntil:'networkidle',timeout:60000});
+   await page.evaluate(async()=>{await document.fonts.ready;document.querySelectorAll('main details').forEach(el=>el.open=true);await new Promise(ok=>requestAnimationFrame(()=>requestAnimationFrame(ok)));});
+   const m=await page.evaluate(()=>{
+    const root=document.querySelector('main[data-cn-source-content="index.html"]');
+    if(!root)return null;
+    const trust=root.querySelector('#qily-trust-center'),proof=root.querySelector('#qily-home-proof'),owner=root.querySelector('#qily-home-collaboration');
+    if(!trust||!proof||!owner)return null;
+    const r=el=>{const x=el.getBoundingClientRect();return {left:x.left,right:x.right,top:x.top,bottom:x.bottom,width:x.width,height:x.height};};
+    const tg=trust.querySelector('.qily-six-grid'), tc=[...tg.children].filter(el=>getComputedStyle(el).display!=='none');
+    const pg=proof.querySelector('.qily-ia-delivery-summary'),pc=[...pg.children].filter(el=>getComputedStyle(el).display!=='none');
+    const og=owner.querySelector('.qily-home-collaboration__roles'),oc=[...og.querySelectorAll(':scope > .qily-home-role')];
+    const portrait=owner.querySelector('.qily-home-collaboration__portrait');
+    const resume=owner.querySelector('.qily-home-owner-profile__experience');
+    const style=resume?getComputedStyle(resume):null;
+    return {trustHeading:trust.querySelector('.qily-asset-heading h2')?.textContent.trim(),
+      trustLead:trust.querySelector('.qily-asset-heading p')?.textContent.trim(),
+      trustGrid:r(tg),trustCards:tc.map(r),
+      proofHeading:proof.querySelector('.qily-ia-heading h2')?.textContent.trim(),proofGrid:r(pg),proofCards:pc.map(r),
+      ownerHeading:owner.querySelector('h2')?.textContent.trim(),ownerGrid:r(og),ownerCards:oc.map(r),
+      ownerCardTitles:oc.map(c=>c.querySelector('h3')?.textContent.trim()),
+      ownerBio:owner.querySelector('.qily-home-owner-profile')?.textContent.replace(/\\s+/g,' ').trim(),
+      photo:portrait?r(portrait):null,
+      resumeHref:resume?.getAttribute('href'),resumeStyle:style?{display:style.display,color:style.color,bg:style.backgroundColor,height:r(resume).height}:null,
+      scrollWidth:document.documentElement.scrollWidth
+    };
+   });
+   expect(m,tag+' page has all three modules').not.toBeNull();
+   expect(m.trustHeading).toBe('把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置');
+   expect(m.trustLead).toContain('明确职业履历、项目证据、资料来源与AI辅助使用边界');
+   expect(m.trustCards).toHaveLength(1);
+   expect(Math.abs(m.trustCards[0].width-m.trustGrid.width),'single card full reading width').toBeLessThanOrEqual(3);
+   expect(m.proofCards).toHaveLength(2);
+   if(width>=720){
+    expect(Math.abs(m.proofCards[0].top-m.proofCards[1].top),'two proof cards same row').toBeLessThanOrEqual(3);
+    expect(Math.abs(m.proofCards[0].width-m.proofCards[1].width),'two proof cards equal width').toBeLessThanOrEqual(3);
+   }else{
+    expect(m.proofCards[1].top,'phone proof cards vertically stacked').toBeGreaterThanOrEqual(m.proofCards[0].bottom-2);
+   }
+   expect(m.ownerCardTitles).toEqual(['QilyLean主理','专家／供应商协同']);
+   expect(m.ownerBio).toContain('丁启利｜20年制造业工程技术与精益改善履历');
+   expect(m.ownerBio).toContain('累计6年多从事咨询交付');
+   expect(m.ownerCards).toHaveLength(2);
+   expect(Math.abs(m.ownerCards[0].width-m.ownerCards[1].width),'owner cards equal width').toBeLessThanOrEqual(3);
+   expect(m.ownerCards[1].top,'owner cards vertically stacked').toBeGreaterThanOrEqual(m.ownerCards[0].bottom-2);
+   expect(m.photo,'owner portrait stays visible').not.toBeNull();
+   expect(m.photo.width).toBeGreaterThan(150);
+   if(width>=821)expect(m.photo.right,'owner photo left of role cards').toBeLessThanOrEqual(m.ownerGrid.left-8);
+   expect(m.resumeHref).toBe('/archive/profile/experience/');
+   expect(m.resumeStyle).toMatchObject({display:'inline-flex',color:'rgb(255, 255, 255)',bg:'rgb(15, 75, 90)'});
+   expect(m.resumeStyle.height).toBeGreaterThanOrEqual(43);
+   expect(m.scrollWidth,'homepage may not overflow viewport').toBeLessThanOrEqual(width+1);
+   fs.mkdirSync('test-results',{recursive:true});
+   await page.screenshot({path:'test-results/cn-three-locked-modules-'+tag+'-'+width+'.png',fullPage:true});
+   measured.push({headings:[m.trustHeading,m.proofHeading,m.ownerHeading],titles:m.ownerCardTitles,bio:m.ownerBio,href:m.resumeHref,
+    cardWidths:[m.trustCards[0].width,...m.proofCards.map(x=>x.width),...m.ownerCards.map(x=>x.width)]});
+  }
+  expect(measured[0].headings,'default URL matches release text').toEqual(measured[1].headings);
+  expect(measured[0].titles).toEqual(measured[1].titles);
+  expect(measured[0].bio).toBe(measured[1].bio);
+  for(let n=0;n<measured[0].cardWidths.length;n++){
+   expect(Math.abs(measured[0].cardWidths[n]-measured[1].cardWidths[n]),'default/release layout must match').toBeLessThanOrEqual(3);
+  }
+ }
+});
+
 test('Both homepages present full-width stacked owner roles beside uncropped portrait',async({page})=>{
  test.setTimeout(120000);
  for(const url of [intBase+'/',cnBase+'/']){
