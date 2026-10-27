@@ -212,6 +212,18 @@ def verify_operating_axis(source_value, target_value, url):
 def verify_semantics(value, row):
     url = row['url']
     main = parity.main_markup(value)
+    # Sitewide public-copy poka-yoke: catch backend planning expressions
+    # accidentally placed in visitor-facing content on any CN public page.
+    internal_only = (
+        '辅助资产降级', '不抢主线', '争夺一级认知位置',
+        '放回各自正确的位置', '争夺首页主视觉',
+        '个人信息与知识资产各归其位',
+        '不再让个人标签、工具和知识数量遮挡',
+        '专业标签已归入',
+    )
+    for phrase in internal_only:
+        require(phrase not in html.unescape(main),
+                'Internal planning language leaked into CN public content: ' + url + ': ' + phrase)
     source_style = re.search(r'<(?:link|style)\b[^>]*\bdata-cn-source-css=', value, re.I)
     axis_style = re.search(r'<link\b[^>]*\bid="qilyContentAxisV1"', value, re.I)
     require(not source_style or axis_style and axis_style.start() < source_style.start(),
@@ -302,8 +314,8 @@ def verify_semantics(value, row):
         require(trust_section is not None and proof_section is not None,
                 'China home evidence/trust section missing')
         trust_html, proof_html = trust_section.group(0), proof_section.group(0)
-        require('把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置' in trust_html
-                and '明确职业履历、项目证据、资料来源与AI辅助使用边界' in trust_html,
+        require('专业能力有依据，项目成果可核验' in trust_html
+                and '资料来源、成果核验口径及AI辅助使用方式' in trust_html,
                 'China homepage trust title/lead missing or reverted')
         require(trust_html.count('qily-value-card-link') == 1
                 and 'grid-template-columns:minmax(0,1fr)!important' in trust_html,

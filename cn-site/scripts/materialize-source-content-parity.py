@@ -543,13 +543,11 @@ def render(node, source):
     # a commercial solicitation. Preserve its public engineering-boundary card;
     # transactional copy and lead-generation links remain filtered separately.
     commercial_note = bool(classes & {'qily-asset-note', 'qily-ia-result'})
-    # The homepage trust heading explains evidence and professional identity, not
-    # a mainland commercial offer. Adapt only these two prose nodes so the
-    # general commercial exclusion remains strict for every other page.
-    if source == 'index.html' and tag == 'h2' and node.text().strip() == '把“能力展示、职业成果、商业合作、AI辅助”放回各自正确的位置':
-        return '<h2>把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置</h2>'
-    if source == 'index.html' and tag == 'p' and node.text().strip().startswith('QilyLean以真实制造实践和公开知识资产建立专业信用，同时明确签约主体'):
-        return '<p>QilyLean以真实制造实践和公开知识资产建立专业信用，同时明确职业履历、项目证据、资料来源与AI辅助使用边界。可信不是把自己说得更大，而是让访问者知道哪些内容可以核验、哪些仍需项目现场验证。</p>'
+    # Keep the public trust heading identical on both sites. Only the
+    # international cooperation-specific lead needs a CN knowledge-only copy;
+    # the commercial exclusion rule remains strict everywhere else.
+    if source == 'index.html' and tag == 'p' and node.text().strip().startswith('从制造工程实践到项目交付，QilyLean公开说明专业经历'):
+        return '<p>QilyLean公开呈现制造工程实践、职业履历和项目证据，说明资料来源、成果核验口径及AI辅助使用方式，方便访问者查阅专业信息与实践成果。</p>'
     if (prose or commercial_card or commercial_note) and COMMERCIAL_COPY.search(node.text()):
         EXCLUDED.append({'source': source, 'panel': identifier or tag, 'reason': 'commercial-copy'})
         return ''

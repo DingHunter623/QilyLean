@@ -204,20 +204,15 @@ for(const contract of publicModules){
        // h3 statistics may be domain-specific live totals; the shared h2 and
        // nonnumeric public card headings must remain in the source sequence.
        const stableHeadings=actual.headings.filter(item=>!/^\d[\d\s,.]*\s*(?:项|篇|大模块)$/.test(item.text));
-       // Explicitly authorize the ONE filed-China noncommercial rewrite.
-       // All other headings remain exact COM text; the rewrite must also
-       // preserve source typography and normal section geometry.
-       const cnLegalHeadings=new Map([
-         ['把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置',
-          '把“能力展示、职业成果、商业合作、AI辅助”放回各自正确的位置']
-       ]);
+       // Public-facing headings must be identical on both sites; only
+       // explicitly approved commercial paragraphs may differ on the CN site.
        if(contract.source==='index.html'&&actual.selector==='#qily-trust-center'){
-         expect(actual.headings.some(h=>h.text===Array.from(cnLegalHeadings.keys())[0]),
-          'Approved China trust heading must not disappear').toBe(true);
+         expect(actual.headings.some(h=>h.text==='专业能力有依据，项目成果可核验'),
+          'Approved public trust heading must not disappear').toBe(true);
        }
        let headingIndex=-1;
        for(const heading of stableHeadings){
-         const counterpart=cnLegalHeadings.get(heading.text)||heading.text;
+         const counterpart=heading.text;
          const next=expected.headings.findIndex((item,i)=>i>headingIndex&&item.text===counterpart);
          expect(next,label+' retained heading: '+heading.text).toBeGreaterThan(headingIndex);
          const reference=expected.headings[next];
