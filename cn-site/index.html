@@ -95,6 +95,25 @@ html :where(main[data-cn-source-content]):is(body,main) header.qily-site-header 
 <link rel="stylesheet" data-cn-source-css="v1" href="/assets/public-content-interactions.css?v=25170df09c17"><link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10&geometry=20261026-single-pair">
 <link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="/assets/cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1&kicker=21px-v2&home=20261028-gold-regular-v1&raster=20261028-section-gold-v1">
   <link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20261015-cn-parity-h1-38px-v6">
+<!-- QILY-CN-OWNER-FULL-ART-20261029: immediate fallback before mirrored SSOT CSS loads -->
+<style id="qilyCnOwnerFullArtCritical">
+@media(min-width:821px){
+html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration{
+grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr)!important;
+align-items:center!important;gap:clamp(18px,2.6vw,34px)!important;
+max-width:1220px!important;margin-inline:auto!important}
+html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{
+align-self:center!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important}
+html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{
+display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center!important}
+html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__roles{
+align-self:center!important;grid-template-rows:auto auto!important;align-content:center!important;height:auto!important}
+}
+@media(max-width:820px){
+html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{
+width:100%!important;height:auto!important;max-height:none!important;min-height:0!important;object-fit:contain!important}
+}
+</style>
 </head>
 <body data-cn-source-parity="v1" data-qily-site="cn">
 <a class="skip" href="#main">跳到主要内容</a>

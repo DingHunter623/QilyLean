@@ -202,7 +202,7 @@
     var hero=main.querySelector(':scope > section.hero, :scope > .hero');
     var core=d.getElementById('qily-core-services');
     var method=d.getElementById('qily-competitive-value');
-    if(!hero||!core||!method)return;
+    if(!hero||!core||!method){d.documentElement.classList.remove('qily-home-layout-pending');return;}
 
     d.body.setAttribute('data-qily-home-conversion','v1');
     transformHero(hero);
@@ -233,6 +233,7 @@
     if(brandExtension)extended.after(brandExtension);
 
     d.documentElement.setAttribute('data-qily-home-conversion','v1');
+    d.documentElement.classList.remove('qily-home-layout-pending');
     try{d.dispatchEvent(new CustomEvent('qily:home-conversion-ready',{detail:{version:'v1'}}));}catch(error){}
   }
 
