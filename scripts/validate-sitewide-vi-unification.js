@@ -239,7 +239,10 @@ for(const rel of cnPages){
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
   // Single-source footer contract: no page-specific generated/destination-shell clones.
   assert(html.includes('id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261023-cn-public-footer-source-v1"'), rel+' must load the canonical public footer stylesheet.');
-  assert(html.includes('src="/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1"'), rel+' must load the canonical public footer behavior.');
+  // Checked-in source pages may still use the previous cache address until CN's
+  // deterministic materializer refreshes them during deployment. Both point to
+  // the same strictly checked local asset; production requires the new cache tag.
+  assert(/src="\/assets\/cn-footer-actions-v1\.js\?v=20261023-cn-public-footer-source-v1(?:&share=20261028-cn-copy-first-v1)?"/.test(html), rel+' must load the canonical public footer behavior.');
   assert(!html.includes('destination-shell/assets/cn-footer-actions-v1.css'), rel+' must not load forked footer CSS.');
   const footerBlock=(html.match(/<footer class="footer"(?: data-qily-footer-filing="none")?>[\s\S]*?<\/footer>/)||[])[0]||'';
   assert(footerBlock, rel+' must keep the shared China footer component.');
@@ -265,7 +268,11 @@ assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared four-a
 assert(cnFooterCss.includes('display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;'), 'Four shared controls must use left-aligned intrinsic widths.');
 assert(cnFooterCss.includes('font:500 14px/1.3'), 'CN filing font must remain readable below the controls.');
 assert(cnFooterCss.includes('@media(max-width:760px)'), 'CN responsive footer not declared.');
-assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
+// Mainland share uses the international copy-first semantics. The only approved
+// byte-level runtime differences are derived and verified by the CN generator;
+// geometry/order, source asset and all other actions remain shared.
+const approvedCnFooterRuntime=require('./materialize-cn-footer-actions-v2.js').runtime;
+assert(cnFooterJs===approvedCnFooterRuntime, 'China must deploy the exactly approved generated copy-first runtime.');
 assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared four-action footer VI missing.');
 assert(cnFooterJs.includes("var CN_ORDER=['top','previous','search','current'];"), 'CN footer must expose exactly four actions.');
 assert(cnFooterJs.includes("['回到顶部']"), 'CN top action must be labelled 回到顶部.');

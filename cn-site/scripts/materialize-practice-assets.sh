@@ -51,10 +51,70 @@ python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py" --cn-only
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
 
+# Ensure two new independent OPL lessons, the glossary entries and the
+# same-origin search manifest all enter the actual mainland release.
+# Do not accept a 384-brief page alone as proof that knowledge assets synced.
+python3 - "$CN_ROOT" <<'PYCNOPL'
+import json, pathlib, sys
+cn = pathlib.Path(sys.argv[1])
+manifest = json.loads((cn / "archive/content-manifest.json").read_text(encoding="utf-8"))
+items = manifest.get("items", [])
+glossary = (cn / "archive/knowledge/terminology/index.html").read_text(encoding="utf-8")
+for slug, code, chinese in (
+    ("owner", "OWNER", "主理人"),
+    ("baseline", "BASELINE", "基线"),
+):
+    source = f"knowledge/terminology/{slug}.html"
+    route = f"/archive/knowledge/terminology/{slug}/"
+    matches = [row for row in items if row.get("source") == source and row.get("url") == route]
+    assert len(matches) == 1, f"CN OPL is not in same-origin search manifest: {code}"
+    assert code.lower() in matches[0].get("title", "").lower(), f"CN OPL title is not searchable: {code}"
+    local = cn / route.lstrip("/") / "index.html"
+    assert local.is_file(), f"CN OPL page missing: {code}"
+    content = local.read_text(encoding="utf-8")
+    assert code in content and chinese in content, f"CN OPL explanation missing: {code}"
+    assert f'id="term-{slug}"' in glossary, f"CN glossary card missing: {code}"
+    assert route in glossary, f"CN glossary local OPL link missing: {code}"
+    assert "qilylean.com/knowledge/terminology/" not in content, f"CN OPL uses international canonical: {code}"
+print("PASS: BASELINE/OWNER localized glossary, 2 standalone lessons, and searchable CN content manifest.")
+PYCNOPL
+
+
 # The current public-content contract owns complete source mains and layouts.
 # Legacy front-shelf wording/layout checks below apply only to legacy releases.
 if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
   node "$REPO_ROOT/scripts/materialize-cn-footer-actions-v2.js"
+
+  node --check "$CN_ROOT/assets/cn-footer-actions-v1.js"
+  node - "$CN_ROOT/assets/cn-footer-actions-v1.js" <<'PYCNSHARE'
+const fs=require('fs');
+const runtime=fs.readFileSync(process.argv[2],'utf8');
+const a=runtime.indexOf('function shareCurrent(){');
+const b=runtime.indexOf('function openContactPage(){',a);
+if(a<0||b<a)throw Error('China share handler missing');
+const section=runtime.slice(a,b);
+const copied=section.indexOf('copyText(text).then(');
+const native=section.indexOf('navigator.share(');
+if(copied<0||native<=copied||!section.includes('标题与网址已复制，正在打开系统分享')||!section.includes('复制失败，请手动复制地址栏网址'))throw Error('Copy-first and truthful feedback contract is missing');
+if(!runtime.includes('navigator.clipboard.writeText(text)')||!runtime.includes("d.execCommand('copy')===true"))throw Error('Clipboard fallback and result validation missing');
+console.log('PASS: CN share copies URL before native share and displays honest feedback.');
+PYCNSHARE
+
+# Generated China pages must reference the new immutable share runtime identity.
+node - "$CN_ROOT" <<'PYCNSHARECACHE'
+const fs=require('fs'),path=require('path'),root=process.argv[2];
+const expected='/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1&share=20261028-cn-copy-first-v1';
+function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?files(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.join(dir,entry.name)]:[]);}
+let count=0;
+for(const filename of files(root)){
+  const html=fs.readFileSync(filename,'utf8');
+  if(!html.includes('/assets/cn-footer-actions-v1.js?v='))continue;
+  if(!html.includes(expected))throw Error('CN page still caches old share runtime: '+path.relative(root,filename));
+  count++;
+}
+if(count<25)throw Error('CN shared dock scope unexpectedly small: '+count);
+console.log('PASS: '+count+' CN pages carry the current copy-first share cache identity.');
+PYCNSHARECACHE
   python3 "$REPO_ROOT/scripts/materialize-cn-intent-prefetch.py"
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
