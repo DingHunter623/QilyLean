@@ -29,11 +29,11 @@ function replaceRuntimeSection(input,from,to,replacement){
 const robustClipboard=String.raw`function legacyCopy(text){return new Promise(function(resolve,reject){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.focus();area.select();var ok=false;try{ok=d.execCommand('copy')===true;}catch(error){}area.remove();if(ok)resolve();else reject(new Error('Clipboard copy failed'));});}
 function copyText(text){return navigator.clipboard&&w.isSecureContext?navigator.clipboard.writeText(text).catch(function(){return legacyCopy(text);}):legacyCopy(text);}
 `;
-const copyFirstShare=String.raw`function shareCurrent(){var title=d.title||'QilyLean｜启力精益',url=w.location.href,text=title+'\n'+url;copyText(text).then(function(){toast('标题与网址已复制，可直接粘贴分享');if(navigator.share){return navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError'){toast('已复制，可直接粘贴分享');return;}toast('已复制，可粘贴到微信、微博等应用');});}}).catch(function(){toast('复制失败，请手动复制地址栏网址');if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){});});}
+const copyFirstShare=String.raw`function shareCurrent(){var title=d.title||'QilyLean｜启力精益',url=w.location.href,text=title+'\n'+url;copyText(text).then(function(){toast(navigator.share?'标题与网址已复制，正在打开系统分享':'标题与网址已复制，可直接粘贴分享');if(navigator.share){return navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError'){toast('已复制，可直接粘贴分享');return;}toast('已复制，可粘贴到微信、微博等应用');});}}).catch(function(){toast('复制失败，请手动复制地址栏网址');if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){});});}
 `;
 let runtime=replaceRuntimeSection(originalRuntime,'function legacyCopy(text){','function toast(message){',robustClipboard);
 runtime=replaceRuntimeSection(runtime,'function shareCurrent(){','function openContactPage(){',copyFirstShare);
-if(!runtime.includes("copyText(text).then(function(){toast('标题与网址已复制"))throw new Error('CN copy-first share contract missing');
+if(!runtime.includes("copyText(text).then(function(){toast(navigator.share?"))throw new Error('CN copy-first share contract missing');
 
 const cssArray=runtime.match(/style\.textContent=(\[[\s\S]*?\])\.join\(''\);/);
 if(!cssArray)throw new Error('Canonical public action CSS unavailable.');
