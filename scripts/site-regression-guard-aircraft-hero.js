@@ -17,10 +17,11 @@ aircraftAssets.validate();
 const approvedAircraft=aircraftAssets.artwork('international');
 const pngPath=path.join(root,approvedAircraft.source);
 const HOME_VERSION='20261025-dual-site-narrow-mobile-15px-v4';
-const HOME_JS_VERSION='20260901-home-first-paint-v6';
+const HOME_JS_VERSION='20261029-no-layout-flash-v1';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20261024-intl-3chips-single-row-v1';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
+const OWNER_PROFILE_CSS_VERSION='20261029-full-illustration-v1';
 const readabilityVersionMatch=readabilityPublisher.match(/const VERSION = '([^']+)'/);
 if(!readabilityVersionMatch)throw new Error('Readability publisher cache version is missing');
 const VISUAL_READABILITY_VERSION=readabilityVersionMatch[1];
@@ -66,7 +67,7 @@ assert(readabilityPublisher.includes(`const VERSION = '${VISUAL_READABILITY_VERS
 assert(readabilityCss.includes('QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2'),'Full-site small-copy floor V2 is missing');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
-assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}&portrait=20261026-vertical-roles-v2">`),'Homepage owner-profile stylesheet is not directly materialized');
+assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_CSS_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
 assert(html.includes(`<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>`),'Conversion runtime must register synchronously in head with the current first-paint cache version');
 assert(!html.includes(`<script defer id="qilyHomeConversionV1Runtime"`),'Conversion runtime must not wait in the deferred script queue');
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
@@ -74,6 +75,10 @@ assert(homeMaterializer.includes('First paint must never expose the retired home
 assert(homeMaterializer.includes('const staticHero=['),'Homepage materializer must own the static approved Hero');
 assert(homeMaterializer.includes('<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>'),'Homepage materializer must keep conversion runtime outside the deferred queue');
 assert(homeJs.includes("d.addEventListener('readystatechange',onReadyState)"),'Homepage conversion runtime must run at parser-complete readyState');
+assert(html.includes('qily-home-layout-pending')&&html.includes('qilyHomeNoFoucCritical'),'Homepage first-paint content mask must survive materialization');
+assert(homeJs.includes("classList.remove('qily-home-layout-pending')"),'Homepage structural conversion must release the pending mask when ready');
+assert(ownerProfileCss.includes('QILY-OWNER-FULL-ART-20261029')&&ownerProfileCss.includes('object-fit:contain!important'),'Owner illustration must be displayed without cropping');
+
 assert(!homeJs.includes("d.addEventListener('DOMContentLoaded',boot"),'Homepage conversion runtime regressed to DOMContentLoaded delay');
 assert(homeCss.includes('project hero -> three core deliveries -> industry scenes -> representative cases'),'Homepage conversion visual order contract missing');
 assert(homeCss.includes('.qily-home-conversion-heading{\n  width:100%;\n  max-width:none;'),'Homepage conversion heading must follow the full content axis');
