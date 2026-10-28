@@ -1,6 +1,14 @@
 <!doctype html>
-<html lang="zh-CN" class="qily-shell-pending">
+<html lang="zh-CN" class="qily-shell-pending qily-home-layout-pending">
 <head>
+<!-- QILY-HOME-NO-FOUC-20261029: early paint guard for JS structural home conversion. -->
+<style id="qilyHomeNoFoucCritical">
+@keyframes qilyHomeLayoutFailsafe{to{visibility:visible}}
+html.qily-home-layout-pending body.qily-home-v3 > main{
+  visibility:hidden;
+  animation:qilyHomeLayoutFailsafe 0s steps(1,end) 2.5s forwards;
+}
+</style>
 <!-- QILY-R2-FIRST-PAINT:START -->
 <style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document,html.qily-shell-pending,html.qily-r2-first-paint-pending,html.qily-first-paint-pending{min-height:100%;background:transparent!important}html.qily-stale-document body,html.qily-shell-pending body,html.qily-r2-first-paint-pending body,html.qily-first-paint-pending body{visibility:visible!important;opacity:1!important;filter:none!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD='20260824-readable-floor-plus2-v4';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>
 <!-- QILY-R2-FIRST-PAINT:END -->
@@ -102,8 +110,8 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <link id="qilyAircraftHeroStylesheetV1" rel="stylesheet" href="/styles/qily-aircraft-brand-hero-v1.css?v=20260918-aircraft-hero-v2">
 <link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=20261025-dual-site-narrow-mobile-15px-v4">
 <link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=20261024-intl-3chips-single-row-v1">
-<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=20260901-owner-profile-v3&portrait=20261026-vertical-roles-v2">
-<script id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=20260901-home-first-paint-v6"></script>
+<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=20261029-full-illustration-v1">
+<script id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=20261029-no-layout-flash-v1"></script>
 <script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=20260901-owner-profile-v3"></script>
 <link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure&rail=20261008-nav-gap-v1">
 <script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="/site-visual-runtime-r8.js?v=20261010-r8-runtime-v4-header-metrics"></script>
