@@ -51,6 +51,35 @@ python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py" --cn-only
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
 
+# Ensure two new independent OPL lessons, the glossary entries and the
+# same-origin search manifest all enter the actual mainland release.
+# Do not accept a 384-brief page alone as proof that knowledge assets synced.
+python3 - "$CN_ROOT" <<'PYCNOPL'
+import json, pathlib, sys
+cn = pathlib.Path(sys.argv[1])
+manifest = json.loads((cn / "archive/content-manifest.json").read_text(encoding="utf-8"))
+items = manifest.get("items", [])
+glossary = (cn / "archive/knowledge/terminology/index.html").read_text(encoding="utf-8")
+for slug, code, chinese in (
+    ("owner", "OWNER", "主理人"),
+    ("baseline", "BASELINE", "基线"),
+):
+    source = f"knowledge/terminology/{slug}.html"
+    route = f"/archive/knowledge/terminology/{slug}/"
+    matches = [row for row in items if row.get("source") == source and row.get("url") == route]
+    assert len(matches) == 1, f"CN OPL is not in same-origin search manifest: {code}"
+    assert code.lower() in matches[0].get("title", "").lower(), f"CN OPL title is not searchable: {code}"
+    local = cn / route.lstrip("/") / "index.html"
+    assert local.is_file(), f"CN OPL page missing: {code}"
+    content = local.read_text(encoding="utf-8")
+    assert code in content and chinese in content, f"CN OPL explanation missing: {code}"
+    assert f'id="term-{slug}"' in glossary, f"CN glossary card missing: {code}"
+    assert route in glossary, f"CN glossary local OPL link missing: {code}"
+    assert "qilylean.com/knowledge/terminology/" not in content, f"CN OPL uses international canonical: {code}"
+print("PASS: BASELINE/OWNER localized glossary, 2 standalone lessons, and searchable CN content manifest.")
+PYCNOPL
+
+
 # The current public-content contract owns complete source mains and layouts.
 # Legacy front-shelf wording/layout checks below apply only to legacy releases.
 if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
