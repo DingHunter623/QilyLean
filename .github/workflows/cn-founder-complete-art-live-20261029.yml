@@ -1,0 +1,93 @@
+name: CN founder complete illustration live containment
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cn-founder-complete-art-live-20261029.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: qilylean-cn-owner-complete-art-live
+  cancel-in-progress: false
+jobs:
+  apply-verified-owner-image-geometry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm source contracts
+        run: |
+          set -euo pipefail
+          grep -Fq 'QILY-OWNER-FULL-ART-20261029' styles/qily-home-owner-profile-v1.css
+          grep -Fq 'QILY-CN-OWNER-FULL-ART-20261029' cn-site/index.html
+          test -s qilylean/ding-qili-anime-20261028.webp
+      - name: Initialize secure production channel
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+      - name: Atomic active-release style patch and real-origin acceptance
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          SITE=/var/www/qilylean-cn
+          exec 9>"$SITE/.content-deploy.lock"
+          flock -w 120 9
+          CURRENT="$(readlink -f "$SITE/current")"
+          case "$CURRENT" in "$SITE"/releases/*) ;; *) echo "Unrecognized release"; exit 1;; esac
+          INDEX="$CURRENT/index.html"
+          test -s "$INDEX"
+          BACKUP="/tmp/qily-cn-owner-complete-art-$(date +%s)-$$.html"
+          cp -p "$INDEX" "$BACKUP"
+          export QILY_CN_LIVE_INDEX="$INDEX"
+          python3 - <<'PY'
+          import os, pathlib, re
+          path=pathlib.Path(os.environ['QILY_CN_LIVE_INDEX'])
+          s=path.read_text(encoding='utf-8')
+          marker='QILY-CN-OWNER-FULL-ART-LIVE-20261029'
+          if marker in s:
+              print('Owner full artwork style already present')
+              raise SystemExit(0)
+          if 'qily-home-collaboration__portrait' not in s or 'ding-qili-anime-20261028.webp' not in s:
+              raise SystemExit('Unexpected homepage or old image, refusing patch')
+          css='''<!-- QILY-CN-OWNER-FULL-ART-LIVE-20261029 -->
+          <style id="qilyCnOwnerFullArtLive20261029">
+          @media(min-width:821px){
+          html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration{display:grid!important;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr)!important;align-items:center!important;gap:clamp(18px,2.6vw,34px)!important;max-width:1220px!important;margin-inline:auto!important}
+          html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{align-self:center!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important}
+          html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:auto!important;object-fit:contain!important;object-position:center center!important}
+          html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__roles{align-self:center!important;grid-template-rows:auto auto!important;align-content:center!important;height:auto!important}
+          }
+          @media(max-width:820px){html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait img{display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;object-fit:contain!important}}
+          </style>
+          '''
+          if '</head>' not in s:
+              raise SystemExit('Invalid document; head closure missing')
+          updated=s.replace('</head>',css+'</head>',1)
+          temp=path.with_name('.index-owner-complete-art.tmp')
+          temp.write_text(updated,encoding='utf-8')
+          temp.chmod(path.stat().st_mode & 0o777)
+          temp.replace(path)
+          PY
+          if ! curl --fail --silent --show-error --connect-timeout 10 --max-time 30 --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/ -o /tmp/qily-cn-full-art-verify.html ||
+             ! grep -Fq 'QILY-CN-OWNER-FULL-ART-LIVE-20261029' /tmp/qily-cn-full-art-verify.html ||
+             ! grep -Fq 'ding-qili-anime-20261028.webp' /tmp/qily-cn-full-art-verify.html; then
+             cp -p "$BACKUP" "$INDEX"
+             echo 'Rollback: live page failed acceptance'
+             exit 1
+          fi
+          echo 'CN owner full-art release verified at HTTPS origin: PASS'
+          REMOTE
