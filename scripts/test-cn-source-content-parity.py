@@ -26,6 +26,25 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertNotIn('font-weight:950', label.group(0))
 
 
+    def test_cn_section_gold_antialias_parity_is_scope_limited(self):
+        """Test shared rendering only; card labels and geometry stay untouched."""
+        root = Path(__file__).resolve().parents[1]
+        css = (root / 'cn-site/assets/cn-sitewide-visual-parity-v1.css').read_text(encoding='utf-8')
+        scoped = css.split('QILY-CN-SECTION-GOLD-RASTER-PARITY-20261028', 1)[-1]
+        self.assertIn('body[data-qily-site="cn"] main', scoped)
+        self.assertIn('-webkit-font-smoothing:antialiased!important;', scoped)
+        for target in ('.qily-asset-heading>small', '.qily-ia-kicker',
+                       '.qily-system-axis__title', '.module-eyebrow',
+                       '.qily-home-capability-building__kicker', '.qily-home-conversion-kicker'):
+            self.assertIn(target, scoped)
+        self.assertIn('body[data-qily-site="cn"] main :is(', scoped)
+        declaration = scoped.split('body[data-qily-site="cn"] main :is(', 1)[1].split('){', 1)[1].split('}', 1)[0]
+        self.assertNotIn('font-weight:', declaration)
+        self.assertNotIn('font-size:', declaration)
+        self.assertNotIn('grid-', declaration)
+        generator = (root / 'cn-site/scripts/enforce-fullsite-axis.py').read_text(encoding='utf-8')
+        self.assertIn('&raster=20261028-section-gold-v1', generator)
+
     def test_cn_semantic_kicker_weight_is_regular_and_cache_busted(self):
         """Guard source-approved light-gold semantic labels against bold regressions."""
         root = Path(__file__).resolve().parents[1]

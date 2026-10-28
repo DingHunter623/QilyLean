@@ -64,6 +64,32 @@ async function snapshot(page){
      scrollWidth:document.documentElement.scrollWidth,width:innerWidth};
  });
 }
+// Compare only heading glyph rendering. Preserve each class's original font
+// size, weight, letter spacing and color (including intentional bold headings).
+test('CN gold section eyebrows render with international smoothing without geometry changes',async({page})=>{
+ test.setTimeout(180000);
+ const selector='main :is(.qily-ia-kicker,.qily-home-conversion-kicker,.qily-home-capability-building__kicker,.qily-asset-heading>small,.qily-system-axis__title,.module-eyebrow,.hero-eyebrow,.kicker)';
+ for(const width of [1440,390]){
+  await page.setViewportSize({width,height:900});
+  const readings=[];
+  for(const url of [intBase+'/',cnBase+'/']){
+   await page.goto(freshCnUrl(url),{waitUntil:'domcontentloaded',timeout:60000});
+   await page.evaluate(()=>document.fonts.ready);
+   if(url.startsWith(intBase))await page.waitForTimeout(1700);
+   readings.push(await page.evaluate(selector=>[...document.querySelectorAll(selector)].filter(el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return r.width>0&&s.display!=='none'}).map(el=>{const s=getComputedStyle(el);return {text:el.textContent.trim(),weight:s.fontWeight,size:s.fontSize,smoothing:s.webkitFontSmoothing,color:s.color,line:s.lineHeight};}),selector));
+  }
+  const refs=new Map(readings[0].map(x=>[x.text,x]));
+  let count=0;
+  for(const cn of readings[1]){
+   const intl=refs.get(cn.text);
+   if(!intl)continue;
+   count++;
+   expect(cn,cn.text+' '+width).toEqual(intl);
+  }
+  expect(count,'Expected matching gold section labels').toBeGreaterThan(9);
+ }
+});
+
 test('China homepage desktop hero follows international typography and 3-chip row',async({page})=>{
  test.setTimeout(180000);
  fs.mkdirSync('test-results',{recursive:true});

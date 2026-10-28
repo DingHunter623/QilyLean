@@ -331,3 +331,33 @@ html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source
 /* Match the canonical hero's inherited rasterization, including business labels. */
 html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero,
 html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__chips span{-webkit-font-smoothing:antialiased!important}
+
+/* QILY-CN-SECTION-GOLD-RASTER-PARITY-20261028
+ * Live COM vs CN Chromium comparison (1440px, 390px) found exact matching
+ * font size, weight, color, line height and tracking, but CN inherited
+ * -webkit-font-smoothing:auto where COM uses antialiased.
+ * Touch semantic section-level gold labels ONLY. Do not modify typography
+ * metrics or card micro-labels, content, grid, header or page geometry.
+ */
+html:root:root:root:root:root body[data-qily-site="cn"] main :is(
+  .qily-home-conversion-hero__kicker,
+  .qily-home-conversion-kicker,
+  .qily-ia-kicker,
+  .module-eyebrow,.eyebrow,.hero-eyebrow,.bridge-hero-eyebrow,
+  .section-kicker,.module-kicker,.kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-capability-building__kicker,.qily-home-brand-extension__kicker,
+  .qily-asset-heading>small,.qily-asset-kicker,
+  .qily-system-axis__title,.qily-home-conversion-heading>small,
+  .qily-ia-heading>small,.qily-north-kicker
+){
+  -webkit-font-smoothing:antialiased!important;
+}
+/* The About hero has one independent legacy font-family override.
+ * Match the international semantic label; leave sizes and geometry alone.
+ */
+html:root:root:root:root:root:root body[data-qily-site="cn"]
+main#main:has(.qily-about-career)>section.page-hero .hero-eyebrow{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",
+              "PingFang SC","Microsoft YaHei",Arial,sans-serif!important;
+}

@@ -5,7 +5,7 @@ import re
 CN = Path(__file__).resolve().parents[1]
 AXIS_HREF = "/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10"
 AXIS_LINK = f'<link id="qilyContentAxisV1" rel="stylesheet" href="{AXIS_HREF}">'
-VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1&kicker=21px-v2"
+VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1&kicker=21px-v2&raster=20261028-section-gold-v1"
 VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_HREF}">'
 # The home hero receives a fresh, home-only CSS URL for its typography.
 # Other CN routes retain their settled visual cache and layout.
