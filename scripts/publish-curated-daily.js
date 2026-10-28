@@ -10,6 +10,7 @@ const steps = [
   ['publish-npi-four-stage-series-runner.js'],
   ['publish-early-career-history.js'],
   ['remove-daily-directory-consultation.js'],
+  ['publish-baseline-owner-terminology.js'],
   ['publish-pph-terminology.js'],
   ['sync-daily-terminology.js'],
   ['sync-daily-terminology.js', '--check'],
