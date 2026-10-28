@@ -14,8 +14,27 @@ const VERSION='20261023-cn-public-footer-source-v1';
 const ACTIONS=['top','previous','search','current'];
 const LABELS=['回到顶部','上一网页','本站搜索','分享当前'];
 const CSS_HREF='/assets/cn-footer-actions-v1.css?v='+VERSION;
-const JS_SRC='/assets/cn-footer-actions-v1.js?v='+VERSION;
-const runtime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
+const JS_SRC='/assets/cn-footer-actions-v1.js?v='+VERSION+'&share=20261028-cn-copy-first-v1';
+const originalRuntime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
+/* China-only functional adaptation of the approved international share sequence.
+ * Avoid modifying the international runtime or the shared dock VI.
+ * The source and complete source-fragment boundaries are checked to fail closed
+ * if an upstream runtime changes, rather than silently retaining the old bug.
+ */
+function replaceRuntimeSection(input,from,to,replacement){
+  const a=input.indexOf(from),b=input.indexOf(to,a);
+  if(a<0||b<=a||input.indexOf(from,a+1)!==-1)throw new Error('CN share runtime source contract changed: '+from);
+  return input.slice(0,a)+replacement+input.slice(b);
+}
+const robustClipboard=String.raw`function legacyCopy(text){return new Promise(function(resolve,reject){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.focus();area.select();var ok=false;try{ok=d.execCommand('copy')===true;}catch(error){}area.remove();if(ok)resolve();else reject(new Error('Clipboard copy failed'));});}
+function copyText(text){return navigator.clipboard&&w.isSecureContext?navigator.clipboard.writeText(text).catch(function(){return legacyCopy(text);}):legacyCopy(text);}
+`;
+const copyFirstShare=String.raw`function shareCurrent(){var title=d.title||'QilyLean｜启力精益',url=w.location.href,text=title+'\n'+url;copyText(text).then(function(){toast('标题与网址已复制，可直接粘贴分享');if(navigator.share){return navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError'){toast('已复制，可直接粘贴分享');return;}toast('已复制，可粘贴到微信、微博等应用');});}}).catch(function(){toast('复制失败，请手动复制地址栏网址');if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){});});}
+`;
+let runtime=replaceRuntimeSection(originalRuntime,'function legacyCopy(text){','function toast(message){',robustClipboard);
+runtime=replaceRuntimeSection(runtime,'function shareCurrent(){','function openContactPage(){',copyFirstShare);
+if(!runtime.includes("copyText(text).then(function(){toast('标题与网址已复制"))throw new Error('CN copy-first share contract missing');
+
 const cssArray=runtime.match(/style\.textContent=(\[[\s\S]*?\])\.join\(''\);/);
 if(!cssArray)throw new Error('Canonical public action CSS unavailable.');
 const actionCss=vm.runInNewContext(cssArray[1],Object.create(null),{timeout:1000}).join('');
