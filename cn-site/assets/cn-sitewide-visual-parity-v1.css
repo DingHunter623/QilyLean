@@ -326,4 +326,4 @@ html:root:root:root:root:root:root:root:root body[data-qily-site="cn"] main :is(
 /* QILY-CN-SEMANTIC-KICKER-PRODUCTION-RELEASE-20261027: publish cached 27-page VI parity through the existing stale-run recovery contract; no visual geometry changes. */
 
 /* QILY-CN-HOME-H1-FONT-SMOOTHING-PARITY-20261028: one computed property only. */
-html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__copy h1{-webkit-font-smoothing:antialiased!important}
+html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__copy :is(h1,.qily-home-conversion-hero__lead){-webkit-font-smoothing:antialiased!important}
