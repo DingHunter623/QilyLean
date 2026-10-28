@@ -378,8 +378,8 @@ test('CN public homepage and release URL retain the three approved VI modules',a
     };
    });
    expect(m,tag+' page has all three modules').not.toBeNull();
-   expect(m.trustHeading).toBe('把“能力展示、职业成果、项目证据、AI辅助”放回各自正确的位置');
-   expect(m.trustLead).toContain('明确职业履历、项目证据、资料来源与AI辅助使用边界');
+   expect(m.trustHeading).toBe('专业能力有依据，项目成果可核验');
+   expect(m.trustLead).toContain('资料来源、成果核验口径及AI辅助使用方式');
    expect(m.trustCards).toHaveLength(1);
    expect(Math.abs(m.trustCards[0].width-m.trustGrid.width),'single card full reading width').toBeLessThanOrEqual(3);
    expect(m.proofCards).toHaveLength(2);
