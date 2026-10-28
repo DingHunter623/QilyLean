@@ -99,6 +99,22 @@ if(copied<0||native<=copied||!section.includes('标题与网址已复制，正�
 if(!runtime.includes('navigator.clipboard.writeText(text)')||!runtime.includes("d.execCommand('copy')===true"))throw Error('Clipboard fallback and result validation missing');
 console.log('PASS: CN share copies URL before native share and displays honest feedback.');
 PYCNSHARE
+
+# Generated China pages must reference the new immutable share runtime identity.
+node - "$CN_ROOT" <<'PYCNSHARECACHE'
+const fs=require('fs'),path=require('path'),root=process.argv[2];
+const expected='/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1&share=20261028-cn-copy-first-v1';
+function files(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?files(path.join(dir,entry.name)):entry.name.endsWith('.html')?[path.join(dir,entry.name)]:[]);}
+let count=0;
+for(const filename of files(root)){
+  const html=fs.readFileSync(filename,'utf8');
+  if(!html.includes('/assets/cn-footer-actions-v1.js?v='))continue;
+  if(!html.includes(expected))throw Error('CN page still caches old share runtime: '+path.relative(root,filename));
+  count++;
+}
+if(count<25)throw Error('CN shared dock scope unexpectedly small: '+count);
+console.log('PASS: '+count+' CN pages carry the current copy-first share cache identity.');
+PYCNSHARECACHE
   python3 "$REPO_ROOT/scripts/materialize-cn-intent-prefetch.py"
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
