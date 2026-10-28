@@ -139,7 +139,7 @@
       +'<div class="qily-home-conversion-inner">'
       +'<div class="qily-home-conversion-heading"><span class="qily-home-conversion-kicker">OWNER & COLLABORATION｜主理人与合作能力</span><h2 id="qily-home-collaboration-title">核心工程判断由QilyLean主理，专业资源按项目边界协同</h2><p>QilyLean负责核心工程判断与项目主线，专项资源按明确边界协同实施与验收。</p></div>'
       +'<div class="qily-home-collaboration">'
-      +'<figure class="qily-home-collaboration__portrait"><img src="/qilylean/ding-qili-anime-20261028.webp?v=20261028-founder-anime-v1" alt="QilyLean主理人动漫品牌形象：以飞机模型、精益生产和数智化工厂为主题" loading="lazy" decoding="async"></figure>'
+      +'<figure class="qily-home-collaboration__portrait"><img src="/qilylean/ding-qili-anime-20261028.webp?v=20261028-founder-anime-v1" alt="QilyLean主理人动漫品牌形象：以飞机模型、精益生产和数智化工厂为主题" width="1344" height="1152" loading="lazy" decoding="async"></figure>'
       +'<div class="qily-home-collaboration__roles">'
       +'<article class="qily-home-role"><h3>QilyLean主理</h3><p>负责问题定义、现场诊断、工程数据、方案设计、Pilot逻辑、标准固化、交付文件与技术验收，确保项目主线和工程口径一致。</p></article>'
       +'<article class="qily-home-role"><h3>专家／供应商协同</h3><p>涉及设备、自动化、软件、施工、材料或专项技术时，按范围引入适配资源；接口、责任、费用、交付与验收通过书面边界管理。</p></article>'
