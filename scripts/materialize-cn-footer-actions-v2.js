@@ -316,5 +316,5 @@ function main(){
   if(check&&changed)throw new Error('Public four-action footer stale: '+changed+' assets/pages.');
   console.log((check?'CHECK':'APPLY')+' PASS: CN canonical four-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
 }
-module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,actionCss,regionCss,filings,nav,materialize};
+module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,runtime,actionCss,regionCss,filings,nav,materialize};
 if(require.main===module)main();
