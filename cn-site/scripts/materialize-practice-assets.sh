@@ -84,6 +84,21 @@ PYCNOPL
 # Legacy front-shelf wording/layout checks below apply only to legacy releases.
 if [[ -f "$CN_ROOT/scripts/materialize-source-content-parity.py" ]]; then
   node "$REPO_ROOT/scripts/materialize-cn-footer-actions-v2.js"
+
+  node --check "$CN_ROOT/assets/cn-footer-actions-v1.js"
+  node - "$CN_ROOT/assets/cn-footer-actions-v1.js" <<'PYCNSHARE'
+const fs=require('fs');
+const runtime=fs.readFileSync(process.argv[2],'utf8');
+const a=runtime.indexOf('function shareCurrent(){');
+const b=runtime.indexOf('function openContactPage(){',a);
+if(a<0||b<a)throw Error('China share handler missing');
+const section=runtime.slice(a,b);
+const copied=section.indexOf('copyText(text).then(');
+const native=section.indexOf('navigator.share(');
+if(copied<0||native<=copied||!section.includes('标题与网址已复制，正在打开系统分享')||!section.includes('复制失败，请手动复制地址栏网址'))throw Error('Copy-first and truthful feedback contract is missing');
+if(!runtime.includes('navigator.clipboard.writeText(text)')||!runtime.includes("d.execCommand('copy')===true"))throw Error('Clipboard fallback and result validation missing');
+console.log('PASS: CN share copies URL before native share and displays honest feedback.');
+PYCNSHARE
   python3 "$REPO_ROOT/scripts/materialize-cn-intent-prefetch.py"
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
