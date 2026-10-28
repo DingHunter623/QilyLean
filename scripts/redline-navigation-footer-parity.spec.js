@@ -392,9 +392,11 @@ test('China footer searches locally, shares current URL and follows real history
 test('all China generated pages receive final VI and four-action first paint',async()=>{
  // The generator owns the cache version; a stale test literal must not reject
  // pages that correctly receive its current stylesheet during materialization.
- const authority=fs.readFileSync(path.join(process.cwd(),'cn-site/scripts/enforce-fullsite-axis.py'),'utf8').match(/^VI_HREF\s*=\s*"([^"]+)"/m);
+ const authoritySource=fs.readFileSync(path.join(process.cwd(),'cn-site/scripts/enforce-fullsite-axis.py'),'utf8');
+ const authority=authoritySource.match(/^VI_HREF\s*=\s*"([^"]+)"/m);
  expect(authority,'canonical China VI stylesheet must be declared').not.toBeNull();
- const expectedHref=authority[1];
+ const homeAuthority=authoritySource.match(/^HOME_VI_HREF\s*=\s*VI_HREF\s*\+\s*"([^"]+)"/m);
+ expect(homeAuthority,'canonical China homepage VI stylesheet must be declared').not.toBeNull();
  let checked=0;
  function walk(dir){
   for(const e of fs.readdirSync(dir,{withFileTypes:true})){
@@ -404,6 +406,7 @@ test('all China generated pages receive final VI and four-action first paint',as
     const s=fs.readFileSync(f,'utf8');
     if(!s.includes('/assets/site.css'))continue;
     checked++;
+    const expectedHref=authority[1]+(f===path.join(process.cwd(),'cn-site/index.html')?homeAuthority[1]:'');
     const styles=s.match(/<link\b[^>]*\bid=["']qilyCnSitewideVisualParityV1["'][^>]*>/g)||[];
     expect(styles,f+' canonical China VI stylesheet count').toHaveLength(1);
     expect(styles[0],f+' canonical China VI stylesheet version').toContain('href="'+expectedHref+'"');

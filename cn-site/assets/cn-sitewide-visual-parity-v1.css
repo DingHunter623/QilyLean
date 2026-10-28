@@ -327,3 +327,7 @@ html:root:root:root:root:root:root:root:root body[data-qily-site="cn"] main :is(
 
 /* QILY-CN-HOME-H1-FONT-SMOOTHING-PARITY-20261028: one computed property only. */
 html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__copy :is(h1,.qily-home-conversion-hero__lead){-webkit-font-smoothing:antialiased!important}
+
+/* Match the canonical hero's inherited rasterization, including business labels. */
+html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero,
+html:root:root:root:root:root:root body[data-qily-site="cn"] main[data-cn-source-content="index.html"] .qily-home-conversion-hero__chips span{-webkit-font-smoothing:antialiased!important}
