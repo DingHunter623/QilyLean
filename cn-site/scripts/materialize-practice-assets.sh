@@ -120,6 +120,34 @@ PYCNSHARECACHE
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
   # Apply the authorized About navigation hierarchy to generated, untracked CN mirror pages.
   node "$REPO_ROOT/scripts/materialize-about-nav-footer-v1.js" --cn-only
+  # Prevent a partial rollback: China Trust, the local curated archive, and
+  # BASELINE/OWNER content must describe the same international SSOT snapshot.
+  python3 - "$REPO_ROOT" "$CN_ROOT" <<'PYCNTRUST'
+import json, pathlib, re, sys
+root, cn = map(pathlib.Path, sys.argv[1:3])
+central = json.loads((root / 'qilylean/site-data.json').read_text(encoding='utf-8'))
+trust = (cn / 'trust/index.html').read_text(encoding='utf-8')
+source_trust = (root / 'trust/index.html').read_text(encoding='utf-8')
+expected = {'terminology': central['terminology']['total'],
+            'briefs': central['briefs']['total'],
+            'latest-date': central['briefs']['latestDate'],
+            'earliest-date': central['briefs']['earliestDate']}
+def stat(doc, field):
+    found = re.search(r'<strong\b[^>]*data-trust-stat=["\']'+re.escape(field)+r'["\'][^>]*>([^<]+)</strong>', doc)
+    assert found, f'CN Trust missing statistic: {field}'
+    return found.group(1).strip()
+for field, value in expected.items():
+    assert stat(source_trust, field) == str(value), f'International Trust/SSOT mismatch: {field}'
+    assert stat(trust, field) == str(value), f'China Trust stale or rolled back: {field}'
+latest = central['briefs']['latestDate']
+assert (cn / 'briefs/archive' / latest / 'index.html').is_file(), 'Latest curated brief absent in CN release'
+assert f'/briefs/archive/{latest}/' in trust, 'China Trust latest brief link not local or current'
+term = (cn / 'archive/knowledge/terminology/index.html').read_text(encoding='utf-8')
+for slug in ('owner', 'baseline'):
+    assert f'id="term-{slug}"' in term, f'China terminology item missing: {slug}'
+    assert f'/archive/knowledge/terminology/{slug}/' in term, f'China OPL link missing: {slug}'
+print('PASS: same-release China Trust / source SSOT totals, dates, latest brief and two local OPLs.')
+PYCNTRUST
   python3 "$CN_ROOT/scripts/validate-source-content-parity.py"
   exit 0
 fi

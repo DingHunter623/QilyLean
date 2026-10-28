@@ -827,6 +827,43 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # Fast, same-origin gate before the complete media-byte audit: never
+          # accept a new brief alongside an old Trust card or missing OPL.
+          python3 - <<'PYCNPRODSSOT'
+          import json, os, pathlib, re, urllib.request
+          root = pathlib.Path('qilylean/site-data.json')
+          data = json.loads(root.read_text(encoding='utf-8'))
+          origin = 'https://qilylean.cn'
+          opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+          def fetch(path):
+              req=urllib.request.Request(origin+path,headers={'Cache-Control':'no-cache','Accept-Encoding':'identity'})
+              with opener.open(req,timeout=35) as response:
+                  assert response.status==200 and response.url.startswith(origin+'/'), ('Wrong CN response',path)
+                  return response.read(16*1024*1024).decode('utf-8')
+          release=json.loads(fetch('/meta/cn-content-release.json?release='+os.environ['GITHUB_SHA']))
+          assert release['sourceCommit']==os.environ['GITHUB_SHA'], 'Stale China production source release'
+          page=fetch('/trust/?release='+os.environ['GITHUB_SHA'])
+          for key, expected in [('terminology',data['terminology']['total']),
+                                ('briefs',data['briefs']['total']),
+                                ('latest-date',data['briefs']['latestDate'])]:
+              value=re.search(r'<strong\b[^>]*data-trust-stat=["\']'+re.escape(key)+r'["\'][^>]*>([^<]+)</strong>',page)
+              assert value and value.group(1).strip()==str(expected), f'China Trust is stale: {key}'
+          latest=data['briefs']['latestDate']
+          assert f'/briefs/archive/{latest}/' in page, 'China Trust latest brief link stale'
+          assert '知识可以传播' in fetch('/briefs/archive/'+latest+'/?release='+os.environ['GITHUB_SHA']), 'Latest brief missing'
+          manifest=json.loads(fetch('/archive/content-manifest.json?release='+os.environ['GITHUB_SHA']))
+          rows=manifest['items']
+          glossary=fetch('/archive/knowledge/terminology/?release='+os.environ['GITHUB_SHA'])
+          for code in ('owner','baseline'):
+              path='/archive/knowledge/terminology/'+code+'/'
+              assert any(row.get('url')==path and code in row.get('title','').lower() for row in rows), f'CN search missing {code}'
+              assert f'id="term-{code}"' in glossary and path in glossary, f'CN terminology missing {code}'
+              lesson=fetch(path+'?release='+os.environ['GITHUB_SHA'])
+              assert code.upper() in lesson, f'CN OPL missing {code}'
+          share=fetch('/assets/cn-footer-actions-v1.js?release='+os.environ['GITHUB_SHA'])
+          assert '标题与网址已复制，正在打开系统分享' in share and 'copyText(text).then(' in share, 'CN sharing runtime not deployed'
+          print(f'PASS: live CN release {os.environ["GITHUB_SHA"][:12]}, {data["terminology"]["total"]} terminology, {data["briefs"]["total"]} briefs, latest {latest}, 2 local OPLs and copy-first share.')
+          PYCNPRODSSOT
           # This compares actual served main DOM, CSS and every declared media
           # byte with the freshly generated manifest, not implementation tokens.
           python3 cn-site/scripts/validate-source-content-parity.py --production --origin https://qilylean.cn
