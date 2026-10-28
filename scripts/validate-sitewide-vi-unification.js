@@ -265,7 +265,11 @@ assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared four-a
 assert(cnFooterCss.includes('display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;'), 'Four shared controls must use left-aligned intrinsic widths.');
 assert(cnFooterCss.includes('font:500 14px/1.3'), 'CN filing font must remain readable below the controls.');
 assert(cnFooterCss.includes('@media(max-width:760px)'), 'CN responsive footer not declared.');
-assert(cnFooterJs===read('site-dock-share-runtime-v1.js'), 'China must deploy the exact shared action runtime.');
+// Mainland share uses the international copy-first semantics. The only approved
+// byte-level runtime differences are derived and verified by the CN generator;
+// geometry/order, source asset and all other actions remain shared.
+const approvedCnFooterRuntime=require('./materialize-cn-footer-actions-v2.js').runtime;
+assert(cnFooterJs===approvedCnFooterRuntime, 'China must deploy the exactly approved generated copy-first runtime.');
 assert(cnFooterCss.includes('QILY-CN-FIVE-ACTIONS-PARITY-V1'), 'CN shared four-action footer VI missing.');
 assert(cnFooterJs.includes("var CN_ORDER=['top','previous','search','current'];"), 'CN footer must expose exactly four actions.');
 assert(cnFooterJs.includes("['回到顶部']"), 'CN top action must be labelled 回到顶部.');
