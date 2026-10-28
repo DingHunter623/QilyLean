@@ -7,12 +7,11 @@ AXIS_HREF = "/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10"
 AXIS_LINK = f'<link id="qilyContentAxisV1" rel="stylesheet" href="{AXIS_HREF}">'
 VI_HREF = "/assets/cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1&kicker=21px-v2"
 VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{VI_HREF}">'
-# The home hero golden label receives a fresh, home-only CSS URL. The
-# destination CSS file remains unchanged; other CN routes retain their
-# settled visual cache and layout.
+# The home hero receives a fresh, home-only CSS URL for its typography.
+# Other CN routes retain their settled visual cache and layout.
 # QILY-CN-HOME-HERO-KICKER-PUBLISH-PRIORITY-20261028: release only when updated home CSS URL is served.
 # QILY-CN-FONT-RASTER-PARITY-20261028: first hero uses international antialiased WebKit smoothing via generated inline style.
-HOME_VI_HREF = VI_HREF + "&home=20261028-gold-regular-v1"
+HOME_VI_HREF = VI_HREF + "&home=20261028-brief-closure-v2"
 HOME_VI_LINK = f'<link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="{HOME_VI_HREF}">'
 ABOUT = (CN / 'about/index.html').read_text(encoding='utf-8')
 CANONICAL_HEADER = re.search(r'<header\b[\s\S]*?</header>', ABOUT, re.I).group(0)
