@@ -763,7 +763,7 @@ def preserve_cn_owner_section(content, existing):
         raise RuntimeError('CN owner card layout cannot be stabilized')
     portrait = re.compile(r'/qilylean/ding-qili-ai-avatar-560\.webp(?:\?[^"\s]*)?')
     if portrait.search(section):
-        img_path = media_url('/qilylean/ding-qili-ai-avatar-560.webp', 'index.html')
+        img_path = media_url('/qilylean/ding-qili-anime-20261028.webp', 'index.html')
         if not img_path:
             raise RuntimeError('Cannot localize approved owner portrait')
         section = portrait.sub(img_path, section)
