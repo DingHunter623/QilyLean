@@ -1,4 +1,4 @@
-/* QilyLean dual-site traffic statistics v1.0 | 2026-10-29
+/* QilyLean traffic statistics | international pageview counter v2.0 | 2026-10-29
  * Public aggregate counters via CounterAPI.com. The site does not display visitor identities.
  * Counts begin at rollout; historical pageviews are not fabricated or backfilled.
  */
@@ -136,8 +136,176 @@
     refreshActive();
   }
 
+
+  // International-site counter: the previous CounterAPI.com integration no longer
+  // returns usable values in production. Use a public read/hit endpoint instead.
+  // Only the international runtime is changed here; China uses its separate /assets copy.
+  var INTL_COUNTER_BASE = 'https://countapi.mileshilliard.com/api/v1';
+  var INTL_COUNTER_KEY = 'qilylean_com_sitewide_pageviews_20261029';
+
+  function intlCounterUrl(action) {
+    return INTL_COUNTER_BASE + '/' + action + '/' + encodeURIComponent(INTL_COUNTER_KEY);
+  }
+
+  function requestIntlCounter(action) {
+    if (typeof w.fetch !== 'function') return Promise.reject(new Error('Fetch is unavailable'));
+    var url = intlCounterUrl(action);
+    var requestOptions = {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-store',
+      credentials: 'omit',
+      keepalive: action === 'hit'
+    };
+    return new Promise(function (resolve, reject) {
+      var settled = false;
+      var timer = w.setTimeout(function () {
+        if (settled) return;
+        settled = true;
+        reject(new Error('Counter request timed out'));
+      }, 8000);
+
+      w.fetch(url, requestOptions).then(function (response) {
+        if (!response || !response.ok) throw new Error('Counter service returned a non-success response');
+        return response.json();
+      }).then(function (payload) {
+        var value = payload && payload.value;
+        if (value === undefined || value === null || !isFinite(Number(value))) {
+          throw new Error('Counter response did not contain a numeric value');
+        }
+        if (settled) return;
+        settled = true;
+        w.clearTimeout(timer);
+        resolve(Number(value));
+      }).catch(function (error) {
+        if (settled) return;
+        settled = true;
+        w.clearTimeout(timer);
+        reject(error);
+      });
+    });
+  }
+
+  function renderIntlCount(value) {
+    var target = getTarget('intl-total');
+    if (!target) return;
+    target.textContent = formatCount(value);
+    target.setAttribute('data-qily-traffic-state', 'ready');
+  }
+
+  function markIntlCountUnavailable() {
+    var target = getTarget('intl-total');
+    if (!target) return;
+    if (target.getAttribute('data-qily-traffic-state') !== 'ready') {
+      target.textContent = '暂不可用';
+    }
+    target.setAttribute('data-qily-traffic-state', 'stale');
+  }
+
+  function readIntlCount() {
+    return requestIntlCounter('get').then(function (value) {
+      renderIntlCount(value);
+      return value;
+    }).catch(function () {
+      markIntlCountUnavailable();
+      return null;
+    });
+  }
+
+  function trackIntlPageview() {
+    // One increment per loaded public HTML page. The hit response also supplies
+    // the number shown on the About page, avoiding a separate read race.
+    return requestIntlCounter('hit').then(function (value) {
+      renderIntlCount(value);
+      return value;
+    }).catch(function () {
+      // If the hit response was lost after being recorded, a read can still
+      // recover the current total without risking a second increment.
+      return readIntlCount();
+    });
+  }
+
+  function ensureIntlPanelStyles() {
+    if (d.getElementById('qily-traffic-intl-single-v2')) return;
+    var style = d.createElement('style');
+    style.id = 'qily-traffic-intl-single-v2';
+    style.textContent = [
+      '#traffic .qily-traffic-grid[data-qily-traffic-single="true"]{grid-template-columns:minmax(0,1fr)!important;max-width:760px!important;margin-inline:auto!important;}',
+      '#traffic .qily-traffic-site[hidden],#traffic .qily-traffic-metric[hidden]{display:none!important;}',
+      '#traffic .qily-traffic-metrics[data-qily-traffic-single-metric="true"]{grid-template-columns:minmax(0,1fr)!important;}',
+      '#traffic .qily-traffic-number[data-qily-traffic-count="intl-total"]{font-size:clamp(2.2rem,4.5vw,3.1rem)!important;font-weight:650!important;line-height:1.12!important;letter-spacing:-.03em!important;}',
+      '#traffic .qily-traffic-live.qily-traffic-scope::before{background:#ffe39b!important;}',
+      '@media(max-width:760px){#traffic .qily-traffic-grid[data-qily-traffic-single="true"]{max-width:none!important;}}'
+    ].join('');
+    (d.head || d.documentElement).appendChild(style);
+  }
+
+  function applyInternationalOnlyPanel() {
+    var section = d.querySelector('[data-qily-traffic-stats="v1"]');
+    if (!section) return;
+    ensureIntlPanelStyles();
+
+    var title = section.querySelector('#qily-traffic-title');
+    if (title) title.textContent = '6. 国际站访问统计';
+    var intro = section.querySelector('.qily-traffic-intro');
+    if (intro) intro.textContent = '仅展示 QilyLean.com 国际站全站累计页面浏览量，数据随公开页面访问持续更新。';
+
+    var grid = section.querySelector('.qily-traffic-grid');
+    if (grid) grid.setAttribute('data-qily-traffic-single', 'true');
+
+    var intlTarget = getTarget('intl-total');
+    var intlCard = intlTarget && intlTarget.closest('.qily-traffic-site');
+    var cnTarget = getTarget('cn-total');
+    var cnCard = cnTarget && cnTarget.closest('.qily-traffic-site');
+    if (cnCard) {
+      cnCard.hidden = true;
+      cnCard.setAttribute('aria-hidden', 'true');
+    }
+
+    if (intlCard) {
+      var activeMetric = intlCard.querySelector('[data-qily-traffic-count="intl-active"]');
+      var activeRow = activeMetric && activeMetric.closest('.qily-traffic-metric');
+      if (activeRow) activeRow.hidden = true;
+      var metrics = intlCard.querySelector('.qily-traffic-metrics');
+      if (metrics) metrics.setAttribute('data-qily-traffic-single-metric', 'true');
+      var label = intlTarget && intlTarget.nextElementSibling;
+      if (label) label.textContent = '累计页面浏览量 · 国际站全站';
+      var badge = intlCard.querySelector('.qily-traffic-live');
+      if (badge) {
+        badge.textContent = '全站累计';
+        badge.classList.add('qily-traffic-scope');
+      }
+    }
+
+    var note = section.querySelector('.qily-traffic-note');
+    if (note) {
+      note.textContent = '统计自本次接入后开始累计，不回填历史浏览量。覆盖国际站全站公开页面；该数字是累计页面浏览量，不代表独立访客数，仅作网站访问趋势参考。计数服务：';
+      var link = d.createElement('a');
+      link.href = 'https://countapi.mileshilliard.com/';
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      link.textContent = 'CountAPI';
+      note.appendChild(link);
+      note.appendChild(d.createTextNode('。'));
+    }
+  }
+
   function init() {
     if (!d.body) return;
+    if (isInternational) {
+      applyInternationalOnlyPanel();
+      trackIntlPageview();
+      if (d.querySelector('[data-qily-traffic-stats="v1"]')) {
+        w.setInterval(function () {
+          if (!d.hidden) readIntlCount();
+        }, 60000);
+        d.addEventListener('visibilitychange', function () {
+          if (!d.hidden) readIntlCount();
+        });
+      }
+      return;
+    }
+    // Preserve the current China-site behavior; its deployment remains out of scope.
     ensureTracker();
     loadCounterApi();
     if (!d.querySelector('[data-qily-traffic-stats="v1"]')) return;
