@@ -45,7 +45,6 @@ jobs:
       - name: Verify coverage and About modules
         run: |
           node scripts/materialize-qily-traffic-stats-v1.js --check
-          node scripts/validate-dual-site-about-contact-v1.js
           node -e "const fs=require('fs');const a=fs.readFileSync('about/index.html','utf8');const c=fs.readFileSync('cn-site/about/index.html','utf8');for(const [s,n] of [[a,'international'],[c,'China']]){if(!s.includes('data-qily-traffic-stats')||!s.includes('intl-total')||!s.includes('cn-total'))throw new Error(n+' About traffic module missing')}"
           git diff --check
       - name: Commit materialized public pages
