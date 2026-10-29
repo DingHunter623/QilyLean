@@ -48,8 +48,30 @@ function expectedTag(kind) {
   return '<script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261029-traffic-stats-v1"></script>';
 }
 
-function insertTag(source, tag) {
+function isCanonicalPlacement(source, tag, kind) {
+  const tagIndex = source.indexOf(tag);
+  const headEnd = source.toLowerCase().indexOf('</head>');
+  if (tagIndex < 0 || headEnd < 0 || tagIndex > headEnd) return false;
+  if (kind === 'cn') return true;
+  const runtimeIndex = source.indexOf('data-qily-dock-share-runtime="v1"');
+  if (runtimeIndex >= 0) return tagIndex < runtimeIndex;
+  const formalIndex = source.indexOf('id="qilyViV4Formal"');
+  if (formalIndex >= 0) return tagIndex < formalIndex;
+  return true;
+}
+
+function insertTag(source, tag, kind) {
   const withoutOldTags = source.replace(/<script\b[^>]*\bdata-qily-traffic-loader(?:=["'][^"']*["'])?[^>]*><\/script>/gi, '');
+  if (kind === 'intl') {
+    const runtimeTag = /<script\b[^>]*\bdata-qily-dock-share-runtime=["']v1["'][^>]*><\/script>/i;
+    if (runtimeTag.test(withoutOldTags)) {
+      return withoutOldTags.replace(runtimeTag, function (match) { return tag + '\n' + match; });
+    }
+    const formalTag = /<link\b[^>]*\bid=["']qilyViV4Formal["'][^>]*>/i;
+    if (formalTag.test(withoutOldTags)) {
+      return withoutOldTags.replace(formalTag, function (match) { return tag + '\n' + match; });
+    }
+  }
   const headClose = /<\/head\s*>/i;
   if (headClose.test(withoutOldTags)) {
     return withoutOldTags.replace(headClose, '\n  ' + tag + '\n</head>');
@@ -75,13 +97,13 @@ allHtml.forEach(function (absolutePath) {
   eligible += 1;
   const tag = expectedTag(kind);
   const found = source.match(/<script\b[^>]*\bdata-qily-traffic-loader(?:=["'][^"']*["'])?[^>]*><\/script>/gi) || [];
-  const correct = found.length === 1 && found[0] === tag;
+  const correct = found.length === 1 && found[0] === tag && isCanonicalPlacement(source, tag, kind);
   if (CHECK_ONLY) {
     if (!correct) errors.push(relativePath + ': expected exactly one canonical traffic loader');
     return;
   }
   if (correct) return;
-  const next = insertTag(source, tag);
+  const next = insertTag(source, tag, kind);
   fs.writeFileSync(absolutePath, next, 'utf8');
   updated += 1;
 });
