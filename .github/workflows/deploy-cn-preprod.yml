@@ -4,6 +4,7 @@ name: Deploy QilyLean CN knowledge site
 # QILY-CN-FRESH-BUNDLE-V1 | 2026-09-20 | Never reuse a stale /tmp release archive
 # QILY-CN-UNDERLINE-VI-20261024 | bounded asset pull, audited checksum fallback; one-time stale-job recovery
 # QILY-CN-W43-RECOVERY-20261025 | supersede stale transfer so verified W43 mobile fix can reach production
+# QILY-CN-ANALYTICS-V2-RECOVERY-20261029 | replace stale CN transfer with current verified traffic VI/Kline package
 
 on:
   pull_request:
