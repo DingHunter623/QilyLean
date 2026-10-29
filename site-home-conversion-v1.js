@@ -183,12 +183,8 @@
     aircraft.setAttribute('aria-label','QilyLean品牌延伸视觉资产');
     var img=aircraft.querySelector('img');
     if(img){img.loading='lazy';img.fetchPriority='low';}
-    var wrap=node(''
-      +'<section class="qily-home-brand-extension" id="qily-home-brand-extension" aria-labelledby="qily-home-brand-extension-title">'
-      +'<div class="qily-home-brand-extension__inner">'
-      +'<div class="qily-home-brand-extension__head"><span class="qily-home-conversion-kicker">QILYLEAN BRAND｜启力精益品牌视觉</span><h2 id="qily-home-brand-extension-title">以制造工程为翼，让专业能力抵达更多工厂</h2><p>新工厂／新产线规划、精益改善、目视化交付、数字化工厂、APP软件开发与官网建设，共同构成QilyLean面向制造现场的六项专业能力。</p></div>'
-      +'</div></section>');
-    wrap.querySelector('.qily-home-brand-extension__inner').appendChild(aircraft);
+    var wrap=node("<section class=\"qily-home-brand-extension\" id=\"qily-home-brand-extension\" aria-labelledby=\"qily-home-brand-extension-title\"><div class=\"qily-home-brand-extension__inner\"><div class=\"qily-home-brand-extension__head\"><span class=\"qily-home-conversion-kicker\">QILYLEAN BRAND｜启力精益品牌视觉</span><h2 id=\"qily-home-brand-extension-title\">以制造工程为翼，让专业能力抵达更多工厂</h2><p>新工厂／新产线规划、精益改善、目视化交付、数字化工厂、APP软件开发与官网建设，共同构成QilyLean面向制造现场的六项专业能力。</p></div><div class=\"qily-brand-motion-gallery\" role=\"group\" aria-label=\"飞机品牌静态形象与飞行视频\"><div class=\"qily-brand-motion-gallery__panel\"><h3 class=\"qily-brand-motion-gallery__label\"><span>01 / BRAND VISION</span>以制造工程为翼</h3><div class=\"qily-brand-motion-gallery__image-slot\"></div></div><div class=\"qily-brand-motion-gallery__panel\"><h3 class=\"qily-brand-motion-gallery__label\"><span>02 / BRAND IN MOTION</span>让专业能力抵达更多工厂</h3><figure class=\"qily-brand-motion-gallery__video-frame\"><video class=\"qily-brand-motion-gallery__video\" controls autoplay muted loop playsinline preload=\"metadata\" poster=\"/assets/aircraft/aircraft-international-20261019-912.webp\" aria-label=\"QilyLean飞机模型飞翔视频：让专业能力抵达更多工厂\"><source src=\"/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B.mp4\" type=\"video/mp4\">当前浏览器不支持播放此视频。</video><figcaption>原始高清视频 · 可播放、暂停、全屏观看</figcaption></figure></div></div></div></section>");
+    wrap.querySelector('.qily-brand-motion-gallery__image-slot').appendChild(aircraft);
     return wrap;
   }
 
