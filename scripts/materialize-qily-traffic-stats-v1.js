@@ -61,7 +61,7 @@ function isCanonicalPlacement(source, tag, kind) {
 }
 
 function insertTag(source, tag, kind) {
-  const withoutOldTags = source.replace(/<script\b[^>]*\bdata-qily-traffic-loader(?:=["'][^"']*["'])?[^>]*><\/script>/gi, '');
+  const withoutOldTags = source.replace(/^[\t ]*<script\b[^>]*\bdata-qily-traffic-loader(?:=["'][^"']*["'])?[^>]*><\/script>[\t ]*(?:\r?\n)?/gim, '');
   if (kind === 'intl') {
     const runtimeTag = /<script\b[^>]*\bdata-qily-dock-share-runtime=["']v1["'][^>]*><\/script>/i;
     if (runtimeTag.test(withoutOldTags)) {
