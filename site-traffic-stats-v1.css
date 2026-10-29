@@ -318,3 +318,69 @@ html:root:root body.qily-about-intl main .article-body>.qily-traffic-heading .qi
  font-weight:400!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important;
 }
 html:root:root body.qily-about-intl main .article-body>#traffic.qily-traffic-section{margin:0!important}
+
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V5 | reader-friendly analytics
+ * The LARGE OUTER WRAPPER is deliberately backgroundless. Keep the metrics
+ * and candle chart as two distinct, moderately lit deep-teal data cards.
+ * Scope strictly to international About; China and the counters are untouched.
+ */
+html:root:root body.qily-about-intl main .article-body #traffic.qily-traffic-section{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-body{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:visible!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-site{
+  background:#195864!important;
+  background-color:#195864!important;
+  border:1px solid rgba(202,161,95,.50)!important;
+  border-radius:14px!important;
+  padding:clamp(16px,2.2vw,22px)!important;
+  box-shadow:0 6px 20px rgba(15,75,90,.10)!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline{
+  background:#195864!important;
+  background-color:#195864!important;
+  border:1px solid rgba(202,161,95,.50)!important;
+  border-radius:14px!important;
+  box-shadow:0 6px 20px rgba(15,75,90,.10)!important;
+  margin-top:18px!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-note{
+  color:#3d6062!important;
+  -webkit-text-fill-color:#3d6062!important;
+  margin:16px 0 0!important;
+  line-height:1.65!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-note a{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  text-decoration-color:#0f4b5a!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
+  width:100%!important;
+  max-width:760px!important;
+  margin:0 auto!important;
+}
+@media(max-width:760px){
+  html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
+    max-width:100%!important;
+  }
+}

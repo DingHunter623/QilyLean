@@ -55,10 +55,17 @@ for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 
   expect(info.traffic.backgroundImage).toBe('none');
   expect(info.traffic.borderTopWidth).toBe('0px');
   expect(info.head.style.backgroundImage).toBe('none');
-  expect(info.body.style.backgroundImage).toContain('linear-gradient');
+  expect(info.body.style.backgroundImage).toBe('none');
+  expect(info.body.style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
+  expect(info.body.style.borderTopWidth).toBe('0px');
+  await expect(page.locator('#traffic .qily-traffic-site')).toHaveCSS('background-color','rgb(25, 88, 100)');
+  await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(25, 88, 100)');
+  await expect(page.locator('#traffic .qily-traffic-note')).toHaveCSS('color','rgb(61, 96, 98)');
   expect(info.body.rect.top).toBeGreaterThanOrEqual(info.head.rect.bottom);
   expect(info.gridParent).toContain('qily-traffic-body');
   expect(info.klineParent).toContain('qily-traffic-body');
+  await expect(page.locator('#traffic svg [data-qily-kline-label="high-pv"]')).not.toHaveCount(0);
+  await expect(page.locator('#traffic svg [data-qily-kline-label="daily-pv"]')).not.toHaveCount(0);
   expect(info.scrollWidth).toBeLessThanOrEqual(info.viewport+2);
   fs.mkdirSync(path.join(ROOT,'test-results'),{recursive:true});
   await page.locator('#traffic').screenshot({path:path.join(ROOT,'test-results','intl-about-traffic-vi-'+width+'.png')});

@@ -94,7 +94,7 @@
     actions.appendChild(fourteen);
     header.appendChild(actions);
     shell.appendChild(header);
-    shell.appendChild(el('p','qily-traffic-kline__info','实际分时PV构成K线：开/收＝首末6小时时段；高/低＝四时段最大/最小值。下方柱状＝全天PV。'));
+    shell.appendChild(el('p','qily-traffic-kline__info','K线顶部数字＝当日最高6小时时段PV；下方柱顶数字＝当天真实PV。开/收为首末时段，高/低为四时段最大/最小值。'));
     chartBox = el('div', 'qily-traffic-kline__scroll');
     chartBox.setAttribute('role', 'region');
     chartBox.setAttribute('aria-label','可横向浏览的国际站日流量K线图');
@@ -236,9 +236,18 @@
         svg('rect',{x:x-10,y:Math.min(openY,closeY)-.8,width:20,
           height:Math.max(3.5,Math.abs(closeY-openY)+1.6),rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
+        // Direct labels make the graph readable without hover, including phones.
+        // The K-line label is the day's highest recorded 6h PV, not a daily total.
+        svg('text',{x:x,y:Math.max(23,y(p.high)-9),'text-anchor':'middle',
+          fill:'#ffe39b','font-size':12,'font-weight':700,
+          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.high));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
-          fill:'#709C9D','fill-opacity':'.95'},group);
+          fill:'#85b6b4','fill-opacity':'.98'},group);
+        // Volume labels are observed daily PV, excluding presentation base.
+        svg('text',{x:x,y:Math.max(volumeTop-9,volumeBottom-h-7),'text-anchor':'middle',
+          fill:'#f4f9f6','font-size':12,'font-weight':700,
+          'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
         svg('title',{},group,p.date+'｜日PV '+p.volume+'；开 '+p.open+'，高 '+p.high+'，低 '+p.low+'，收 '+p.close+'（6小时PV）');
       }
       svg('text',{x:x,y:281,'text-anchor':'middle',fill:'#dceae3','font-size':11},root,label);
