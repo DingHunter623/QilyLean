@@ -42,6 +42,8 @@ jobs:
           node --check scripts/materialize-qily-traffic-stats-v1.js
       - name: Materialize the non-blocking loader on public site pages
         run: node scripts/materialize-qily-traffic-stats-v1.js
+      - name: Preserve the canonical first-paint shell
+        run: node scripts/materialize-public-shell-first-paint-v1.js
       - name: Verify coverage and About modules
         run: |
           node scripts/materialize-qily-traffic-stats-v1.js --check
