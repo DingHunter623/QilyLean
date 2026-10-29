@@ -25,7 +25,7 @@ const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20261024-intl-3chips-single-row-v1';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const OWNER_PROFILE_CSS_VERSION='20261029-founder-top-align-v2';
-const BRAND_MOTION_CSS_VERSION='20261029-aircraft-film-contrast-v2';
+const BRAND_MOTION_CSS_VERSION='20261029-aircraft-film-contrast-v3';
 const readabilityVersionMatch=readabilityPublisher.match(/const VERSION = '([^']+)'/);
 if(!readabilityVersionMatch)throw new Error('Readability publisher cache version is missing');
 const VISUAL_READABILITY_VERSION=readabilityVersionMatch[1];
@@ -126,7 +126,7 @@ assert(homeJs.includes('qily-home-brand-extension'),'Aircraft brand-extension re
 assert(homeJs.includes('QILYLEAN BRAND｜启力精益品牌视觉'),'Public-facing aircraft brand kicker missing');
 assert(html.includes('<link id="qilyBrandMotionDualSiteV1" rel="stylesheet" href="/styles/qily-brand-motion-dual-site-v1.css?v='+BRAND_MOTION_CSS_VERSION+'">'),'International aircraft video caption VI stylesheet is not directly materialized');
 assert(cnHtml.includes('<link id="qilyBrandMotionDualSiteV1" rel="stylesheet" href="/assets/qily-brand-motion-dual-site-v1.css?v='+BRAND_MOTION_CSS_VERSION+'">'),'China aircraft video caption VI stylesheet is not directly materialized');
-assert(brandMotionCss.includes('QILYLEAN-BRAND-MOTION-CAPTION-CONTRAST-V2'),'High-contrast aircraft video caption VI contract missing');
+assert(brandMotionCss.includes('QILYLEAN-BRAND-MOTION-CAPTION-CONTRAST-V3'),'High-contrast aircraft video caption VI contract missing');
 assert(brandMotionCss.includes('background:#0F4B5A!important')&&brandMotionCss.includes('color:#F2F6F5!important')&&brandMotionCss.includes('border-top:2px solid #D8B36A!important'),'Aircraft video caption must use governed deep-teal/light-text/gold VI colors');
 assert(cnBrandMotionCss===brandMotionCss,'International and China aircraft video caption styles must remain identical');
 assert(cnHtml.includes('qily-brand-motion-gallery__video-frame')&&cnHtml.includes('让专业能力抵达更多工厂'),'China homepage aircraft video showcase missing');
