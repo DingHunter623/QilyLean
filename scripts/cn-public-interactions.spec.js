@@ -563,7 +563,20 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(cnCard).toHaveCount(1);
       await expect(cnCard).toContainText('制造知识与实践分享');
       await expect(cnCard.locator('a[href^="https://qilylean.com"]')).toHaveCount(0);
-      await expect(cnCard.locator('img[src^="/assets/qily-cn-"]')).toHaveCount(2);
+      const qr=cnCard.locator('.term-opl-qr');
+      await expect(qr).toHaveCount(2);
+      await expect(qr.nth(0)).toHaveAttribute('href','/');
+      await expect(qr.nth(0).locator('img')).toHaveAttribute('src','/assets/qily-cn-home-code.svg');
+      await expect(qr.nth(0).locator('img')).toHaveAttribute('alt','扫码访问中国站知识首页');
+      await expect(qr.nth(0)).toContainText('扫码访问中国站');
+      await expect(qr.nth(1).locator('img.wx-qr-image')).toHaveAttribute('src',/^\\/assets\\/contact\\/qilylean-wechat-qr\\.png\\?v=/);
+      await expect(qr.nth(1).locator('img')).toHaveAttribute('alt','QilyLean微信二维码');
+      await expect(qr.nth(1)).toContainText('扫码微信交流');
+      expect(
+        fs.readFileSync(path.join(ROOT,'qilylean','wechat-qrcode-20260826.png'))
+          .equals(fs.readFileSync(path.join(CN,'assets','contact','qilylean-wechat-qr.png'))),
+        'CN OPL must reuse the byte-identical international WeChat QR asset'
+      ).toBe(true);
       await cnCard.scrollIntoViewIfNeeded();
       await expect.poll(()=>cnCard.locator('img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
       await modal.locator('[data-opl-print]').click();
