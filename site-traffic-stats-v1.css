@@ -149,3 +149,54 @@
     font-size: .74rem;
   }
 }
+/* QILY-TRAFFIC-VI-CONTRAST-V2 | 2026-10-29
+ * Shared two-site VI. Guard against legacy global text color / WebKit fill
+ * overrides without changing neighboring sections or the metrics backend.
+ */
+html:root:root body #traffic.qily-traffic-section{
+  background:linear-gradient(135deg,#073c47 0%,#0b343d 58%,#101f22 100%)!important;
+  border-color:rgba(232,192,113,.48)!important;
+  color:#f1f6f2!important;
+  -webkit-text-fill-color:#f1f6f2!important;
+  opacity:1!important;visibility:visible!important;
+  filter:none!important;mix-blend-mode:normal!important;
+}
+html:root:root body #traffic .qily-traffic-site{
+  background:rgba(1,21,27,.44)!important;
+  border-color:rgba(232,192,113,.33)!important;
+}
+html:root:root body #traffic :is(.qily-traffic-kicker,h2#qily-traffic-title,.qily-traffic-number){
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+}
+html:root:root body #traffic :is(.qily-traffic-intro,.qily-traffic-label,.qily-traffic-note){
+  color:#e0ebe5!important;
+  -webkit-text-fill-color:#e0ebe5!important;
+}
+html:root:root body #traffic .qily-traffic-site-label{
+  color:#f1dca9!important;
+  -webkit-text-fill-color:#f1dca9!important;
+}
+html:root:root body #traffic .qily-traffic-site h3{
+  color:#fff4d8!important;
+  -webkit-text-fill-color:#fff4d8!important;
+}
+html:root:root body #traffic .qily-traffic-live{
+  color:#c9eadb!important;
+  -webkit-text-fill-color:#c9eadb!important;
+  border-color:rgba(201,234,219,.42)!important;
+}
+html:root:root body #traffic .qily-traffic-note a{
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+}
+html:root:root body #traffic :is(.qily-traffic-kicker,h2#qily-traffic-title,.qily-traffic-intro,.qily-traffic-site-label,.qily-traffic-site h3,.qily-traffic-live,.qily-traffic-number,.qily-traffic-label,.qily-traffic-note,.qily-traffic-note a){
+  opacity:1!important;visibility:visible!important;
+  filter:none!important;mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html:root:root body #traffic .qily-traffic-number{
+  font-weight:650!important;
+  font-variant-numeric:tabular-nums!important;
+}
