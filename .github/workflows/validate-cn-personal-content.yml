@@ -432,6 +432,12 @@ jobs:
           })().catch(error=>{console.error(error);process.exitCode=1;});
           NODE
 
+      - name: Browser-verify OPL QR and international VI parity
+        env:
+          QILY_CN_BASE: http://127.0.0.1:4174
+          QILY_GLOBAL_BASE: http://127.0.0.1:4175
+        run: npx playwright test scripts/cn-public-interactions.spec.js --grep "SMED lesson preserves cross-site QR VI" --reporter=line --workers=1
+
       - name: Verify shared resource order and footer geometry
         if: steps.source-parity.outputs.enabled == 'true'
         env:
