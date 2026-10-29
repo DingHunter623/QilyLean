@@ -501,6 +501,9 @@ test('China brand gallery presents the complete still in 01 before the full-qual
  for(const width of [390,1588]){
   await page.setViewportSize({width,height:900});
   await visit(page,cnBase+'/',{home:true});
+  // Decode the deliberately lazy full-resolution image before judging visibility.
+  await page.locator('#qily-home-brand-extension .qily-aircraft-brand-hero img').scrollIntoViewIfNeeded();
+  await page.waitForFunction(()=>{const img=document.querySelector('#qily-home-brand-extension .qily-aircraft-brand-hero img');return !!(img&&img.complete&&img.naturalWidth>0);},null,{timeout:30000});
   const m=await page.evaluate(()=>{
    const gallery=document.querySelector('#qily-home-brand-extension .qily-brand-motion-gallery');
    if(!gallery)return null;
