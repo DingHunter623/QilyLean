@@ -17,7 +17,7 @@ aircraftAssets.validate();
 const approvedAircraft=aircraftAssets.artwork('international');
 const pngPath=path.join(root,approvedAircraft.source);
 const HOME_VERSION='20261025-dual-site-narrow-mobile-15px-v4';
-const HOME_JS_VERSION='20261029-no-layout-flash-v1';
+const HOME_JS_VERSION='20261029-brand-flight-video-v1';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20261024-intl-3chips-single-row-v1';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
