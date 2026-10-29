@@ -17,7 +17,7 @@
 .qily-brand-motion-gallery__video-frame figcaption{margin:0!important;padding:9px 13px!important;color:#e8f3f2!important;-webkit-text-fill-color:#e8f3f2!important;background:#0f4b5a!important;font-size:15px!important;line-height:1.5!important;text-align:center}
 @media(max-width:768px){.qily-home-brand-extension{padding:22px 10px 35px!important}.qily-brand-motion-gallery__label{margin-bottom:9px!important}.qily-brand-motion-gallery__video-frame,.qily-home-brand-extension .qily-brand-motion-gallery .qily-aircraft-brand-hero figure{border-radius:10px!important}}
 
-/* QILYLEAN-BRAND-MOTION-CAPTION-CONTRAST-V3 | shared VI: deep teal + light text + gold accent */
+/* QILYLEAN-BRAND-MOTION-CAPTION-CONTRAST-V4 | shared VI: deep teal + light text + gold accent */
 #qily-home-brand-extension .qily-brand-motion-gallery__video-frame > figcaption,
 #qily-home-brand-extension .qily-brand-motion-gallery__video-frame > figcaption *{
   color:#F2F6F5!important;
@@ -43,6 +43,6 @@
 @media(max-width:768px){
   #qily-home-brand-extension .qily-brand-motion-gallery__video-frame > figcaption{
     padding:10px 12px!important;
-    font-size:13px!important;
+    font-size:15px!important;
   }
 }
