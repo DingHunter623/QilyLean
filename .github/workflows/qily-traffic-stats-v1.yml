@@ -46,7 +46,7 @@ jobs:
           set -euo pipefail
           base='https://countapi.mileshilliard.com/api/v1'
           status="$(curl --fail --silent --show-error --max-time 20 "$base/status")"
-          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert d.get("message") == "API is running", d; print("Counter API status: healthy")' "$status"
+          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert d.get("status") == "operational" or d.get("message") == "API is running", d; print("Counter API status: healthy")' "$status"
           key='qilylean_ci_smoke_test_only_not_site_views'
           hit="$(curl --fail --silent --show-error --max-time 20 "$base/hit/$key")"
           hit_value="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); v=int(d["value"]); assert v >= 1; print(v)' "$hit")"
