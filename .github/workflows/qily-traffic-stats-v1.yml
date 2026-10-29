@@ -66,6 +66,23 @@ jobs:
           npx playwright install --with-deps chromium
           npx playwright test scripts/intl-traffic-kline.spec.js --workers=1 --reporter=line
 
+      - name: Archive phone and desktop Kline visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: intl-daily-kline-visual-${{ github.run_id }}
+          path: |
+            test-results/intl-kline-390.png
+            test-results/intl-kline-1440.png
+          retention-days: 14
+          if-no-files-found: ignore
+
+      - name: Clean isolated browser screenshots before any Git commit
+        if: always()
+        shell: bash
+        run: |
+          rm -f test-results/intl-kline-390.png test-results/intl-kline-1440.png
+
       - name: Materialize the non-blocking loader on public site pages
         run: node scripts/materialize-qily-traffic-stats-v1.js
       - name: Verify coverage and About modules
