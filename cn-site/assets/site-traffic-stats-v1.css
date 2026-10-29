@@ -1,0 +1,151 @@
+/* QilyLean dual-site traffic statistics v1.0 | scoped, responsive, deep background + soft gold */
+.qily-traffic-section,
+.qily-traffic-section * {
+  box-sizing: border-box;
+}
+.qily-traffic-section {
+  width: 100%;
+  min-width: 0;
+  margin: 2rem 0 0;
+  padding: clamp(1rem, 2.5vw, 1.6rem);
+  border: 1px solid rgba(202, 161, 95, .35);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #073c47 0%, #0d343b 56%, #111f20 100%);
+  color: #eef4f0;
+  box-shadow: 0 14px 34px rgba(7, 60, 71, .12);
+  overflow: hidden;
+}
+.qily-traffic-kicker {
+  display: block;
+  color: #ffe39b;
+  font-size: .76rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  line-height: 1.5;
+}
+.qily-traffic-section h2 {
+  margin: .35rem 0 .55rem;
+  color: #ffe39b !important;
+  font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+  line-height: 1.35;
+}
+.qily-traffic-intro {
+  max-width: 72ch;
+  margin: 0 0 1.15rem;
+  color: #d5e2dc;
+  font-size: .9rem;
+  line-height: 1.65;
+}
+.qily-traffic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.qily-traffic-site {
+  min-width: 0;
+  padding: 1rem;
+  border: 1px solid rgba(255, 227, 155, .22);
+  border-radius: 14px;
+  background: rgba(2, 17, 19, .3);
+}
+.qily-traffic-site-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .9rem;
+}
+.qily-traffic-site-label {
+  display: block;
+  color: #d9c98e;
+  font-size: .76rem;
+  line-height: 1.5;
+}
+.qily-traffic-site h3 {
+  margin: .2rem 0 0;
+  color: #fff8e6 !important;
+  font-size: 1.05rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.qily-traffic-live {
+  flex: 0 0 auto;
+  padding: .18rem .5rem;
+  border: 1px solid rgba(185, 223, 200, .22);
+  border-radius: 999px;
+  color: #b9dfc8;
+  font-size: .72rem;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.qily-traffic-live::before {
+  display: inline-block;
+  width: .38rem;
+  height: .38rem;
+  margin-right: .35rem;
+  border-radius: 50%;
+  background: #88cfa3;
+  content: "";
+  vertical-align: .03em;
+}
+.qily-traffic-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+}
+.qily-traffic-metric {
+  min-width: 0;
+  padding-top: .8rem;
+  border-top: 1px solid rgba(255, 255, 255, .13);
+}
+.qily-traffic-number {
+  display: block;
+  min-height: 1.25em;
+  color: #ffe39b;
+  font-size: clamp(1.35rem, 2.8vw, 1.95rem);
+  font-weight: 750;
+  line-height: 1.2;
+  letter-spacing: -.02em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.qily-traffic-number[data-qily-traffic-state="stale"] {
+  opacity: .8;
+}
+.qily-traffic-label {
+  display: block;
+  margin-top: .4rem;
+  color: #d3dfd9;
+  font-size: .78rem;
+  line-height: 1.5;
+}
+.qily-traffic-note {
+  margin: .95rem 0 0;
+  color: #b9c9c2;
+  font-size: .76rem;
+  line-height: 1.7;
+}
+.qily-traffic-note a {
+  color: #ffe39b;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+@media (max-width: 760px) {
+  .qily-traffic-grid {
+    grid-template-columns: 1fr;
+  }
+  .qily-traffic-section {
+    padding: 1rem;
+  }
+}
+@media (max-width: 380px) {
+  .qily-traffic-metrics {
+    gap: .55rem;
+  }
+  .qily-traffic-number {
+    font-size: 1.25rem;
+  }
+  .qily-traffic-label {
+    font-size: .74rem;
+  }
+}
