@@ -40,6 +40,21 @@ jobs:
           node --check site-traffic-stats-v1.js
           node --check cn-site/assets/site-traffic-stats-v1.js
           node --check scripts/materialize-qily-traffic-stats-v1.js
+      - name: Smoke-test the public counter API using a separate health-check key
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://countapi.mileshilliard.com/api/v1'
+          status="$(curl --fail --silent --show-error --max-time 20 "$base/status")"
+          python3 -c 'import json,sys; d=json.loads(sys.argv[1]); assert d.get("message") == "API is running", d; print("Counter API status: healthy")' "$status"
+          key='qilylean_ci_smoke_test_only_not_site_views'
+          hit="$(curl --fail --silent --show-error --max-time 20 "$base/hit/$key")"
+          hit_value="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); v=int(d["value"]); assert v >= 1; print(v)' "$hit")"
+          readback="$(curl --fail --silent --show-error --max-time 20 "$base/get/$key")"
+          read_value="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(int(d["value"]))' "$readback")"
+          test "$read_value" -ge "$hit_value"
+          echo "Counter API read/write smoke test passed (isolated health key)."
+
       - name: Materialize the non-blocking loader on public site pages
         run: node scripts/materialize-qily-traffic-stats-v1.js
       - name: Verify coverage and About modules
