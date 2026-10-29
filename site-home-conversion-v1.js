@@ -177,6 +177,97 @@
     return wrap;
   }
 
+  /* Image-first progressive media scheduling (international home only).
+   * The full-resolution artwork retains its original <picture> and PNG backup.
+   * The video file is untouched; its poster and playback activate only after
+   * the artwork can be decoded, and the player approaches the viewport.
+   */
+  function coordinateBrandMedia(aircraft,wrap){
+    var image=aircraft.querySelector('picture img');
+    var picture=aircraft.querySelector('picture');
+    var video=wrap.querySelector('.qily-brand-motion-gallery__video');
+    if(!image||!picture||!video)return;
+    var originalPoster=video.getAttribute('poster')||'';
+    video.removeAttribute('autoplay');
+    video.autoplay=false;
+    video.preload='none';
+    video.removeAttribute('poster');
+    var armed=false, fallbackTried=false, observed=false;
+
+    function enableVideo(){
+      if(armed)return;
+      armed=true;
+      if(originalPoster)video.setAttribute('poster',originalPoster);
+      function startWhenNearby(){
+        if(observed)return;
+        observed=true;
+        video.preload='metadata';
+        try{video.load();}catch(error){}
+        if(!d.hidden){
+          try{var playing=video.play();if(playing&&playing.catch)playing.catch(function(){});}catch(error){}
+        }
+      }
+      if('IntersectionObserver' in w){
+        var watchVideo=new w.IntersectionObserver(function(entries){
+          if(!entries.some(function(entry){return entry.isIntersecting;}))return;
+          watchVideo.disconnect();
+          startWhenNearby();
+        },{rootMargin:'180px 0px'});
+        watchVideo.observe(video);
+      }else{
+        startWhenNearby();
+      }
+    }
+
+    function handleReady(){
+      if(!image.naturalWidth)return;
+      if(image.decode){
+        try{
+          var result=image.decode();
+          if(result&&result.then){result.then(enableVideo,enableVideo);return;}
+        }catch(error){}
+      }
+      enableVideo();
+    }
+
+    function handleError(){
+      if(fallbackTried){enableVideo();return;}
+      fallbackTried=true;
+      // Failed WebP candidate on a weak/mobile connection: retry the original
+      // uncompressed 2736px PNG rather than showing a permanent broken icon.
+      var sources=picture.querySelectorAll('source');
+      for(var i=0;i<sources.length;i++)sources[i].remove();
+      image.removeAttribute('srcset');
+      var fallback=image.getAttribute('src')||'';
+      if(fallback){
+        image.src=fallback+(fallback.indexOf('?')===-1?'?':'&')+'qily-original-retry=1';
+      }else{
+        enableVideo();
+      }
+    }
+
+    image.addEventListener('load',handleReady);
+    image.addEventListener('error',handleError);
+    function prioritizeImage(){
+      image.fetchPriority='high';
+      image.loading='eager';
+      if(image.complete&&image.naturalWidth>0)handleReady();
+    }
+    if(image.complete&&image.naturalWidth>0)handleReady();
+    // Do not force multi-megabyte assets at initial homepage paint.
+    // Begin high-priority fetch only when the branding module approaches.
+    if('IntersectionObserver' in w){
+      var watchImage=new w.IntersectionObserver(function(entries){
+        if(!entries.some(function(entry){return entry.isIntersecting;}))return;
+        watchImage.disconnect();
+        prioritizeImage();
+      },{rootMargin:'1100px 0px'});
+      watchImage.observe(aircraft);
+    }else{
+      prioritizeImage();
+    }
+  }
+
   function buildBrandExtension(aircraft){
     if(!aircraft)return null;
     aircraft.setAttribute('data-qily-home-aircraft-relocated','true');
@@ -185,6 +276,7 @@
     if(img){img.loading='lazy';img.fetchPriority='low';}
     var wrap=node("<section class=\"qily-home-brand-extension\" id=\"qily-home-brand-extension\" aria-labelledby=\"qily-home-brand-extension-title\"><div class=\"qily-home-brand-extension__inner\"><div class=\"qily-home-brand-extension__head\"><span class=\"qily-home-conversion-kicker\">QILYLEAN BRAND｜启力精益品牌视觉</span><h2 id=\"qily-home-brand-extension-title\">以制造工程为翼，让专业能力抵达更多工厂</h2><p>新工厂／新产线规划、精益改善、目视化交付、数字化工厂、APP软件开发与官网建设，共同构成QilyLean面向制造现场的六项专业能力。</p></div><div class=\"qily-brand-motion-gallery\" role=\"group\" aria-label=\"飞机品牌静态形象与飞行视频\"><div class=\"qily-brand-motion-gallery__panel\"><h3 class=\"qily-brand-motion-gallery__label\"><span>01 / BRAND VISION</span>以制造工程为翼</h3><div class=\"qily-brand-motion-gallery__image-slot\"></div></div><div class=\"qily-brand-motion-gallery__panel\"><h3 class=\"qily-brand-motion-gallery__label\"><span>02 / BRAND IN MOTION</span>让专业能力抵达更多工厂</h3><figure class=\"qily-brand-motion-gallery__video-frame\"><video class=\"qily-brand-motion-gallery__video\" controls autoplay muted loop playsinline preload=\"metadata\" poster=\"/assets/aircraft/aircraft-international-20261019-912.webp\" aria-label=\"QilyLean飞机模型飞翔视频：让专业能力抵达更多工厂\"><source src=\"/%E9%A3%9E%E6%9C%BA%E6%A8%A1%E5%9E%8B.mp4\" type=\"video/mp4\">当前浏览器不支持播放此视频。</video><figcaption>原始高清视频 · 可播放、暂停、全屏观看</figcaption></figure></div></div></div></section>");
     wrap.querySelector('.qily-brand-motion-gallery__image-slot').appendChild(aircraft);
+    coordinateBrandMedia(aircraft,wrap);
     return wrap;
   }
 
