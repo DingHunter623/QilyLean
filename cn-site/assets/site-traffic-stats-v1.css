@@ -200,3 +200,15 @@ html:root:root body #traffic .qily-traffic-number{
   font-weight:650!important;
   font-variant-numeric:tabular-nums!important;
 }
+
+/* CN-specific first paint layout: same single-card VI as the international site */
+html:root:root body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
+grid-template-columns:minmax(0,1fr)!important;max-width:760px!important;margin-inline:auto!important}
+html:root:root body #traffic .qily-traffic-site[hidden],
+html:root:root body #traffic .qily-traffic-metric[hidden]{display:none!important}
+html:root:root body #traffic .qily-traffic-metrics[data-qily-traffic-single-metric="true"]{
+grid-template-columns:minmax(0,1fr)!important}
+html:root:root body #traffic .qily-traffic-number[data-qily-traffic-count="cn-total"]{
+font-size:clamp(2.2rem,4.5vw,3.1rem)!important;font-weight:650!important;line-height:1.12!important;letter-spacing:-.03em!important}
+html:root:root body #traffic .qily-traffic-live.qily-traffic-scope::before{background:#ffe39b!important}
+@media(max-width:760px){html:root:root body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{max-width:none!important}}
