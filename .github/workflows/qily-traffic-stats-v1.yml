@@ -10,6 +10,7 @@ on:
       - 'cn-site/**'
       - 'site-traffic-stats-v1.js'
       - 'site-traffic-daily-kline-v1.js'
+      - 'scripts/intl-traffic-kline.spec.js'
       - 'site-traffic-stats-v1.css'
       - 'cn-site/assets/site-traffic-stats-v1.js'
       - 'cn-site/assets/site-traffic-stats-v1.css'
@@ -27,7 +28,7 @@ concurrency:
 jobs:
   materialize:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +41,7 @@ jobs:
         run: |
           node --check site-traffic-stats-v1.js
           node --check site-traffic-daily-kline-v1.js
+          node --check scripts/intl-traffic-kline.spec.js
           node --check cn-site/assets/site-traffic-stats-v1.js
           node --check scripts/materialize-qily-traffic-stats-v1.js
       - name: Smoke-test the public counter API using a separate health-check key
@@ -56,6 +58,13 @@ jobs:
           read_value="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(int(d["value"]))' "$readback")"
           test "$read_value" -ge "$hit_value"
           echo "Counter API read/write smoke test passed (isolated health key)."
+
+      - name: Browser regression - true PV candlestick and mobile VI
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          npx playwright test scripts/intl-traffic-kline.spec.js --workers=1 --reporter=line
 
       - name: Materialize the non-blocking loader on public site pages
         run: node scripts/materialize-qily-traffic-stats-v1.js

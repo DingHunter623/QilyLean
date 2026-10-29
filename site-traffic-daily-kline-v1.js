@@ -178,9 +178,15 @@
         var error=four.some(function(p){return p.error;});
         var has=four.some(function(p){return p.exists;});
         var vals=four.map(function(p){return p.value;});
+        // Today's candle cannot include future 6-hour intervals:
+        // missing future values must never count as an observed daily low.
+        var observedSlots=day===dayClock()
+          ? vals.slice(0,Math.floor(new Date(Date.now()+8*3600000).getUTCHours()/6)+1)
+          : vals;
         return {date:day,slots:vals,error:error,has:has,
-          open:vals[0],high:Math.max.apply(Math,vals),low:Math.min.apply(Math,vals),
-          close:vals[day===dayClock()?Math.floor(new Date(Date.now()+8*3600000).getUTCHours()/6):3],
+          open:observedSlots[0],high:Math.max.apply(Math,observedSlots),
+          low:Math.min.apply(Math,observedSlots),
+          close:observedSlots[observedSlots.length-1],
           volume:vals.reduce(function(a,b){return a+b;},0)};
       });
       draw();
