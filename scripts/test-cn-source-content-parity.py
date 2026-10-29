@@ -177,6 +177,29 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('资料来源、成果核验口径及AI辅助使用方式', cn_main)
         self.assertNotIn('签约主体、客户资料、成果证据', cn_main)
 
+    def test_cn_aircraft_image_precedes_flight_video_in_both_generated_and_release_html(self):
+        _, generated = self.settled_home()
+        released = (parity.CN / 'index.html').read_text(encoding='utf-8')
+        for label, content in (('source-generated homepage', generated), ('CN release homepage', released)):
+            with self.subTest(source=label):
+                start = content.find('id="qily-home-brand-extension"')
+                self.assertGreaterEqual(start, 0, 'Brand extension missing from ' + label)
+                vision = content.find('01 / BRAND VISION', start)
+                image = content.find('<section class="qily-aircraft-brand-hero"', start)
+                motion = content.find('02 / BRAND IN MOTION', start)
+                video = content.find('<figure class="qily-brand-motion-gallery__video-frame"', start)
+                self.assertTrue(all(position >= 0 for position in (vision, image, motion, video)),
+                                'Vision image or motion video missing from ' + label)
+                self.assertLess(vision, image, 'Static aircraft image must follow section 01 heading')
+                self.assertLess(image, motion, 'Static aircraft image must precede section 02')
+                self.assertLess(motion, video, 'Flight video must follow section 02 heading')
+                if label == 'source-generated homepage':
+                    image_slot = content.find('class="qily-brand-motion-gallery__image-slot"', start)
+                    self.assertGreaterEqual(image_slot, 0, 'Canonical image slot missing')
+                    self.assertLess(image_slot, image, 'Static aircraft image must be nested in the image slot')
+                    slot_end = content.find('</div>', image)
+                    self.assertGreater(slot_end, image, 'Image slot must close after the static aircraft image')
+
     def test_actual_home_has_canonical_runtime_modules_in_order(self):
         _, fragment = self.settled_home()
         identifiers = [attrs.get('id') for tag, attrs in validator.Nodes(fragment).nodes if tag == 'section']

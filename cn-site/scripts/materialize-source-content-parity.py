@@ -383,10 +383,14 @@ def source_fragment(raw, name):
             image.attrs['fetchpriority'] = literal_template(brand_body, r'img\.fetchPriority\s*=')
         brand = builder('buildBrandExtension', r'var wrap=node\(')
         inner = by_class(brand, 'qily-home-brand-extension__inner')
-        if inner is None:
-            raise RuntimeError('Canonical brand-extension container changed')
+        image_slot = by_class(brand, 'qily-brand-motion-gallery__image-slot')
+        if inner is None or image_slot is None:
+            raise RuntimeError('Canonical brand-extension image slot missing')
+        # Match the browser runtime exactly: the still belongs inside panel 01,
+        # before the separate motion/video panel 02. Appending to inner would
+        # place the image after the entire gallery and break the semantic order.
         detach(aircraft)
-        inner.children.append(aircraft)
+        image_slot.children.append(aircraft)
         after(extended, brand)
     if '/' + HOME_RUNTIMES[1] in raw:
         profile_body = runtime_function((ROOT / HOME_RUNTIMES[1]).read_text(), 'apply')
