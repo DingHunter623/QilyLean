@@ -142,6 +142,9 @@
   // Only the international runtime is changed here; China uses its separate /assets copy.
   var INTL_COUNTER_BASE = 'https://countapi.mileshilliard.com/api/v1';
   var INTL_COUNTER_KEY = 'qilylean_com_sitewide_pageviews_20261029';
+  // A user-specified visual starting base, not a claim of historically measured PV.
+  // Never write this value into the real CountAPI counter; report it transparently.
+  var INTL_DISPLAY_BASELINE = 15000;
 
   function intlCounterUrl(action) {
     return INTL_COUNTER_BASE + '/' + action + '/' + encodeURIComponent(INTL_COUNTER_KEY);
@@ -189,8 +192,11 @@
   function renderIntlCount(value) {
     var target = getTarget('intl-total');
     if (!target) return;
-    target.textContent = formatCount(value);
+    var actualRecorded = Math.max(0, Math.floor(Number(value)));
+    target.textContent = formatCount(INTL_DISPLAY_BASELINE + actualRecorded);
     target.setAttribute('data-qily-traffic-state', 'ready');
+    target.setAttribute('data-qily-traffic-starting-base', String(INTL_DISPLAY_BASELINE));
+    target.setAttribute('data-qily-traffic-recorded-pv', String(actualRecorded));
   }
 
   function markIntlCountUnavailable() {
@@ -248,7 +254,7 @@
     var title = section.querySelector('#qily-traffic-title');
     if (title) title.textContent = '6. 国际站访问统计';
     var intro = section.querySelector('.qily-traffic-intro');
-    if (intro) intro.textContent = '仅展示 QilyLean.com 国际站全站累计页面浏览量，数据随公开页面访问持续更新。';
+    if (intro) intro.textContent = 'QilyLean.com 国际站累计展示计数，自2026年10月29日起随真实页面访问持续更新。';
 
     var grid = section.querySelector('.qily-traffic-grid');
     if (grid) grid.setAttribute('data-qily-traffic-single', 'true');
@@ -269,7 +275,7 @@
       var metrics = intlCard.querySelector('.qily-traffic-metrics');
       if (metrics) metrics.setAttribute('data-qily-traffic-single-metric', 'true');
       var label = intlTarget && intlTarget.nextElementSibling;
-      if (label) label.textContent = '累计页面浏览量 · 国际站全站';
+      if (label) label.textContent = '累计展示计数 · 含初始基数';
       var badge = intlCard.querySelector('.qily-traffic-live');
       if (badge) {
         badge.textContent = '全站累计';
@@ -279,7 +285,7 @@
 
     var note = section.querySelector('.qily-traffic-note');
     if (note) {
-      note.textContent = '统计自本次接入后开始累计，不回填历史浏览量。覆盖国际站全站公开页面；该数字是累计页面浏览量，不代表独立访客数，仅作网站访问趋势参考。计数服务：';
+      note.textContent = '起始展示基数15,000次（非历史实测）；2026年10月29日起新增页面浏览量由系统自动记录。计数服务：';
       var link = d.createElement('a');
       link.href = 'https://countapi.mileshilliard.com/';
       link.target = '_blank';
