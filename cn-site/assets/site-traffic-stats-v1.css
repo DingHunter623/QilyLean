@@ -238,3 +238,6 @@ html:root:root:root body #traffic .qily-traffic-kline__status{font-size:14px!imp
 html:root:root:root body #traffic .qily-traffic-kline__legend{font-size:14px!important;line-height:1.6!important;color:#526f70!important;-webkit-text-fill-color:#526f70!important}
 html:root:root:root body #traffic .qily-traffic-kline__foot{font-size:13px!important;line-height:1.65!important;color:#526f70!important;-webkit-text-fill-color:#526f70!important}
 html:root:root:root body #traffic .qily-traffic-kline__scroll{scrollbar-color:#caa15f #e6efec!important}
+
+/* Keep the CN section heading readable after removing the dark outer fill. */
+html:root:root:root body #traffic .qily-traffic-heading h2#qily-traffic-title{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:20px!important;font-weight:800!important;line-height:1.45!important}
