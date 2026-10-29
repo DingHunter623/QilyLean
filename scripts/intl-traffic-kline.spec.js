@@ -53,8 +53,8 @@ for(const width of [390,1440])test('International daily Kline chart uses real PV
   await expect(page.locator('.qily-traffic-kline__foot')).toContainText('不含15,000次初始展示基数');
   await expect(page.locator('[data-qily-traffic-count="intl-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('日PV 2');
-  await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]')).toHaveText('2');
-  await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]')).toHaveText('2');
+  await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveText('2');
+  await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toContainText('柱顶数字＝当天真实PV');
   await page.getByRole('button',{name:'近14日'}).click();
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');

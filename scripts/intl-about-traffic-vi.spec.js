@@ -58,7 +58,7 @@ for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 
   expect(info.body.style.backgroundImage).toBe('none');
   expect(info.body.style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(info.body.style.borderTopWidth).toBe('0px');
-  await expect(page.locator('#traffic .qily-traffic-site')).toHaveCSS('background-color','rgb(25, 88, 100)');
+  await expect(page.locator('#traffic .qily-traffic-site:not([hidden])')).toHaveCSS('background-color','rgb(25, 88, 100)');
   await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(25, 88, 100)');
   await expect(page.locator('#traffic .qily-traffic-note')).toHaveCSS('color','rgb(61, 96, 98)');
   expect(info.body.rect.top).toBeGreaterThanOrEqual(info.head.rect.bottom);
