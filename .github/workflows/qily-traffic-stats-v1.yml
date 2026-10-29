@@ -11,6 +11,7 @@ on:
       - 'site-traffic-stats-v1.js'
       - 'site-traffic-daily-kline-v1.js'
       - 'scripts/intl-traffic-kline.spec.js'
+      - 'scripts/intl-about-traffic-vi.spec.js'
       - 'scripts/cn-traffic-kline.spec.js'
       - 'site-traffic-stats-v1.css'
       - 'cn-site/assets/site-traffic-stats-v1.js'
@@ -43,6 +44,7 @@ jobs:
           node --check site-traffic-stats-v1.js
           node --check site-traffic-daily-kline-v1.js
           node --check scripts/intl-traffic-kline.spec.js
+          node --check scripts/intl-about-traffic-vi.spec.js
           node --check cn-site/assets/site-traffic-daily-kline-v1.js
           node --check scripts/cn-traffic-kline.spec.js
           node --check cn-site/assets/site-traffic-stats-v1.js
@@ -67,7 +69,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/intl-traffic-kline.spec.js scripts/cn-traffic-kline.spec.js --workers=1 --reporter=line
+          npx playwright test scripts/intl-traffic-kline.spec.js scripts/cn-traffic-kline.spec.js scripts/intl-about-traffic-vi.spec.js --workers=1 --reporter=line
 
       - name: Archive phone and desktop Kline visual evidence
         if: always()
@@ -77,6 +79,8 @@ jobs:
           path: |
             test-results/intl-kline-390.png
             test-results/intl-kline-1440.png
+            test-results/intl-about-traffic-vi-390.png
+            test-results/intl-about-traffic-vi-1440.png
             test-results/cn-kline-390.png
             test-results/cn-kline-1440.png
           retention-days: 14
@@ -86,7 +90,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          rm -f test-results/intl-kline-390.png test-results/intl-kline-1440.png test-results/cn-kline-390.png test-results/cn-kline-1440.png
+          rm -f test-results/intl-kline-390.png test-results/intl-kline-1440.png test-results/intl-about-traffic-vi-390.png test-results/intl-about-traffic-vi-1440.png test-results/cn-kline-390.png test-results/cn-kline-1440.png
 
       - name: Materialize the non-blocking loader on public site pages
         run: node scripts/materialize-qily-traffic-stats-v1.js

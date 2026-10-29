@@ -200,3 +200,102 @@ html:root:root body #traffic .qily-traffic-number{
   font-weight:650!important;
   font-variant-numeric:tabular-nums!important;
 }
+
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V3 | only qilylean.com /about
+ * Title 6 exactly matches the approved bare white-background Article H2 #record.
+ * Deep background begins at the metrics body, not at the section title.
+ * Preserve counters, Kline, typography contrast, and responsive width.
+ */
+html:root:root body.qily-about-intl main .article-body #traffic.qily-traffic-section{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:26px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+  overflow:visible!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-heading{
+  display:block!important;
+  margin:0 0 15px!important;
+  padding:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-align:left!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-heading h2#qily-traffic-title{
+  margin:0 0 9px!important;
+  padding:0!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:20px!important;
+  font-weight:800!important;
+  line-height:1.45!important;
+  letter-spacing:normal!important;
+  background:none!important;
+  border:0!important;
+  text-align:left!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-heading .qily-traffic-kicker{
+  display:block!important;
+  margin:0 0 4px!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  letter-spacing:.065em!important;
+  line-height:1.55!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-heading .qily-traffic-intro{
+  margin:0!important;
+  max-width:100%!important;
+  color:#3d6062!important;
+  -webkit-text-fill-color:#3d6062!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1.65!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-body{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding:clamp(1rem,2.5vw,1.6rem)!important;
+  border:1px solid rgba(232,192,113,.48)!important;
+  border-radius:18px!important;
+  background:linear-gradient(135deg,#073c47 0%,#0b343d 58%,#101f22 100%)!important;
+  color:#f1f6f2!important;
+  -webkit-text-fill-color:#f1f6f2!important;
+  box-shadow:0 14px 34px rgba(7,60,71,.12)!important;
+  overflow:hidden!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-body>.qily-traffic-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  width:100%!important;
+  max-width:760px!important;
+  margin-inline:auto!important;
+}
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-site[hidden],
+html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-metric[hidden]{
+  display:none!important;
+}
+@media(max-width:760px){
+  html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-body{
+    padding:1rem!important;
+  }
+  html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-body>.qily-traffic-grid{
+    max-width:100%!important;
+  }
+}
