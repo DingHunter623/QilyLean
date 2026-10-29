@@ -43,9 +43,9 @@ function siteKind(relativePath, source) {
 
 function expectedTag(kind) {
   if (kind === 'cn') {
-    return '<script defer data-qily-traffic-loader="v1" src="/assets/site-traffic-stats-v1.js?v=20261029-cn-real-pv-kline-v2"></script>';
+    return '<script defer data-qily-traffic-loader="v1" src="/assets/site-traffic-stats-v1.js?v=20261030-cn-light-analytics-v3"></script>';
   }
-  return '<script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261029-traffic-stats-v1"></script>';
+  return '<script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261030-light-analytics-v2"></script>';
 }
 
 function isCanonicalPlacement(source, tag, kind) {

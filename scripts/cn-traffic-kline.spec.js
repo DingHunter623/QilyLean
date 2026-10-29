@@ -49,6 +49,9 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV ca
   await expect(page.locator('.qily-traffic-kline__status')).toContainText('已采集');
   await expect(page.locator('.qily-traffic-note')).toContainText('10,000次（非历史实测）');
   await expect(page.locator('.qily-traffic-kline__foot')).toContainText('不含10,000次初始展示基数');
+  await expect(page.locator('.qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
+  await expect(page.locator('[data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','14');
+  await expect(page.locator('[data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','14');
   await expect(page.locator('[data-qily-traffic-count="cn-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('[data-qily-traffic-count="intl-total"]').locator('xpath=ancestor::article')).toBeHidden();
   await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('日PV 2');
@@ -56,7 +59,7 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV ca
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('.qily-traffic-kline__status')).toContainText('已采集');
   const vi=await page.locator('#traffic .qily-traffic-kline__head h3').evaluate(el=>getComputedStyle(el).color);
-  expect(vi).toBe('rgb(255, 227, 155)');
+  expect(vi).toBe('rgb(15, 75, 90)');
   const layout=await page.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:innerWidth}));
   expect(layout.width).toBeLessThanOrEqual(layout.viewport+2);
   expect(errors).toEqual([]);

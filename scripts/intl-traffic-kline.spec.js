@@ -56,13 +56,16 @@ for(const width of [390,1440])test('International daily Kline chart uses real PV
   await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toContainText('柱顶数字＝当天真实PV');
+  await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
+  await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','14');
+  await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','14');
   await page.getByRole('button',{name:'近14日'}).click();
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('.qily-traffic-kline__status')).toContainText('已采集');
   const computed=await page.locator('#traffic .qily-traffic-kline__head h3').evaluate(el=>({
     color:getComputedStyle(el).color,fill:getComputedStyle(el).webkitTextFillColor
   }));
-  expect(computed.color).toBe('rgb(255, 227, 155)');
+  expect(computed.color).toBe('rgb(15, 75, 90)');
   const overflow=await page.evaluate(()=>({document:document.documentElement.scrollWidth,viewport:innerWidth}));
   expect(overflow.document).toBeLessThanOrEqual(overflow.viewport+2);
   expect(errors).toEqual([]);

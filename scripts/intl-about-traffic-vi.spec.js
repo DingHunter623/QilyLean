@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 const fs=require('fs'),path=require('path');
 const ROOT=path.resolve(__dirname,'..');
 const HTML=fs.readFileSync(path.join(ROOT,'about/index.html'),'utf8');
-for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 and statistics stay dark '+width,async({page})=>{
+for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 and statistics use light cards '+width,async({page})=>{
   await page.setViewportSize({width,height:900});
   await page.route('https://countapi.mileshilliard.com/**',route=>{
     const name=new URL(route.request().url()).pathname;
@@ -53,14 +53,17 @@ for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 
   for(const prop of ['color','fill','fontSize','fontWeight','lineHeight'])expect(info.title.style[prop]).toBe(info.record.style[prop]);
   expect(Math.abs(info.title.rect.left-info.record.rect.left)).toBeLessThanOrEqual(2);
   expect(info.traffic.backgroundImage).toBe('none');
+  expect(info.traffic.backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(info.traffic.borderTopWidth).toBe('0px');
   expect(info.head.style.backgroundImage).toBe('none');
   expect(info.body.style.backgroundImage).toBe('none');
   expect(info.body.style.backgroundColor).toBe('rgba(0, 0, 0, 0)');
   expect(info.body.style.borderTopWidth).toBe('0px');
-  await expect(page.locator('#traffic .qily-traffic-site:not([hidden])')).toHaveCSS('background-color','rgb(25, 88, 100)');
-  await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(25, 88, 100)');
-  await expect(page.locator('#traffic .qily-traffic-note')).toHaveCSS('color','rgb(61, 96, 98)');
+  await expect(page.locator('#traffic .qily-traffic-site:not([hidden])')).toHaveCSS('background-color','rgb(244, 249, 247)');
+  await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
+  await expect(page.locator('#traffic .qily-traffic-note')).toHaveCSS('color','rgb(82, 111, 112)');
+  await expect(page.locator('.article-body>.qily-traffic-heading .qily-traffic-kicker')).toHaveCSS('font-size','14px');
+  await expect(page.locator('.article-body>.qily-traffic-heading .qily-traffic-intro')).toHaveCSS('font-size','17px');
   expect(info.body.rect.top).toBeGreaterThanOrEqual(info.head.rect.bottom);
   expect(info.gridParent).toContain('qily-traffic-body');
   expect(info.klineParent).toContain('qily-traffic-body');
