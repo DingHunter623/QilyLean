@@ -39,7 +39,7 @@ for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 
     function rect(el){const b=el.getBoundingClientRect();return {x:b.x,left:b.left,top:b.top,bottom:b.bottom,width:b.width};}
     function style(el){const s=getComputedStyle(el);return {color:s.color,fill:s.webkitTextFillColor,fontSize:s.fontSize,fontWeight:s.fontWeight,lineHeight:s.lineHeight,backgroundImage:s.backgroundImage,backgroundColor:s.backgroundColor,borderTopWidth:s.borderTopWidth};}
     const record=document.querySelector('#record'),title=document.querySelector('#qily-traffic-title'),
-      traffic=document.querySelector('#traffic'),head=document.querySelector('#traffic .qily-traffic-heading'),
+      traffic=document.querySelector('#traffic'),head=document.querySelector('.article-body>.qily-traffic-heading'),
       body=document.querySelector('#traffic .qily-traffic-body'),grid=document.querySelector('#traffic .qily-traffic-grid'),
       kline=document.querySelector('#traffic .qily-traffic-kline');
     return {

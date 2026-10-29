@@ -299,3 +299,22 @@ html:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-me
     max-width:100%!important;
   }
 }
+
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V4
+ * Title #qily-traffic-title is a direct sibling of #record; both inherit
+ * EXACTLY the same article-body>h2 VI rules across all viewports.
+ */
+html:root:root body.qily-about-intl main .article-body>.qily-traffic-heading[data-qily-traffic-heading="intl-v3"]{
+ display:block!important;margin:0 0 16px!important;padding:0!important;border:0!important;
+ background:transparent!important;background-image:none!important;box-shadow:none!important;
+}
+html:root:root body.qily-about-intl main .article-body>.qily-traffic-heading .qily-traffic-kicker{
+ display:block!important;margin:0 0 4px!important;font-size:13px!important;font-weight:600!important;
+ line-height:1.55!important;letter-spacing:.065em!important;
+ color:#365f62!important;-webkit-text-fill-color:#365f62!important;
+}
+html:root:root body.qily-about-intl main .article-body>.qily-traffic-heading .qily-traffic-intro{
+ margin:0!important;max-width:100%!important;font-size:16px!important;line-height:1.65!important;
+ font-weight:400!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important;
+}
+html:root:root body.qily-about-intl main .article-body>#traffic.qily-traffic-section{margin:0!important}
