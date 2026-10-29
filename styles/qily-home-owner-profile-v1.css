@@ -202,7 +202,7 @@ html:root:root:root body #qily-home-collaboration .qily-home-collaboration__port
   html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration{
     display:grid!important;
     grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr)!important;
-    align-items:center!important;
+    align-items:flex-start!important;
     gap:clamp(18px,2.6vw,34px)!important;
     width:100%!important;
     max-width:1220px!important;
@@ -210,7 +210,7 @@ html:root:root:root body #qily-home-collaboration .qily-home-collaboration__port
   }
   html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__portrait{
     display:block!important;
-    align-self:center!important;
+    align-self:flex-start!important;
     width:100%!important;
     height:auto!important;
     min-height:0!important;
@@ -230,10 +230,10 @@ html:root:root:root body #qily-home-collaboration .qily-home-collaboration__port
     object-position:center center!important;
   }
   html:root:root:root:root body #qily-home-collaboration .qily-home-collaboration__roles{
-    align-self:center!important;
+    align-self:flex-start!important;
     grid-template-columns:minmax(0,1fr)!important;
     grid-template-rows:auto auto!important;
-    align-content:center!important;
+    align-content:flex-start!important;
     height:auto!important;
     min-width:0!important;
   }
