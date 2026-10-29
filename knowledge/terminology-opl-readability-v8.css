@@ -168,6 +168,8 @@ html body .term-opl-contact-card .term-opl-qr>span{
   justify-content:center!important;
   margin:0!important;
   padding:0!important;
+  font-size:11px!important;
+  font-weight:900!important;
   line-height:1.25!important;
   text-align:center!important;
 }
@@ -348,7 +350,6 @@ html body .term-opl-block h3 > .term-opl-num *{
     font-size:15.5px!important;
     line-height:1.62!important;
   }
-  html body .term-opl-qr{gap:5px!important}
   html body .term-opl-qr img,
   html body .term-opl-qr .wx-qr-image{
     box-sizing:border-box!important;
