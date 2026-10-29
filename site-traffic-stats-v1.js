@@ -150,9 +150,9 @@
     return INTL_COUNTER_BASE + '/' + action + '/' + encodeURIComponent(INTL_COUNTER_KEY);
   }
 
-  function requestIntlCounter(action) {
+  function requestIntlCounter(action, overrideKey) {
     if (typeof w.fetch !== 'function') return Promise.reject(new Error('Fetch is unavailable'));
-    var url = intlCounterUrl(action);
+    var url = overrideKey ? INTL_COUNTER_BASE + '/' + action + '/' + encodeURIComponent(overrideKey) : intlCounterUrl(action);
     var requestOptions = {
       method: 'GET',
       mode: 'cors',
@@ -223,6 +223,9 @@
     // the number shown on the About page, avoiding a separate read race.
     return requestIntlCounter('hit').then(function (value) {
       renderIntlCount(value);
+      // Record only successful measured pageviews, separately from the 15,000
+      // presentation baseline. Every international page contributes one 6h hit.
+      trackIntlTimeBucket();
       return value;
     }).catch(function () {
       // If the hit response was lost after being recorded, a read can still
@@ -296,10 +299,47 @@
     }
   }
 
+
+  function shanghaiClock() {
+    // Beijing reporting time (UTC+08), independent of visitor time zone.
+    var clock = new Date(Date.now() + 8 * 3600000);
+    return {
+      date: clock.toISOString().slice(0, 10),
+      slot: Math.floor(clock.getUTCHours() / 6)
+    };
+  }
+
+  function trackIntlTimeBucket() {
+    var clock = shanghaiClock();
+    if (clock.date < '2026-10-29') return;
+    var key = 'qilylean_com_pv6h_v1_' + clock.date.replace(/-/g, '') + '_s' + clock.slot;
+    // No retry: replaying /hit after an ambiguous network failure double-counts.
+    requestIntlCounter('hit', key).then(function (count) {
+      try {
+        w.dispatchEvent(new CustomEvent('qily:pv6h-updated', {
+          detail: { date: clock.date, slot: clock.slot, value: count }
+        }));
+      } catch (ignored) {}
+    }).catch(function () {
+      // Keep the global pageview counter authoritative if a bucket is unavailable.
+    });
+  }
+
+  function loadIntlDailyKline() {
+    if (!d.querySelector('#traffic[data-qily-traffic-stats="v1"]')) return;
+    if (d.querySelector('script[data-qily-daily-kline="v1"]')) return;
+    var script = d.createElement('script');
+    script.async = true;
+    script.src = '/site-traffic-daily-kline-v1.js?v=20261029-kline-v1';
+    script.setAttribute('data-qily-daily-kline', 'v1');
+    (d.head || d.documentElement).appendChild(script);
+  }
+
   function init() {
     if (!d.body) return;
     if (isInternational) {
       applyInternationalOnlyPanel();
+      loadIntlDailyKline();
       trackIntlPageview();
       if (d.querySelector('[data-qily-traffic-stats="v1"]')) {
         w.setInterval(function () {

@@ -9,6 +9,7 @@ on:
       - 'about/**'
       - 'cn-site/**'
       - 'site-traffic-stats-v1.js'
+      - 'site-traffic-daily-kline-v1.js'
       - 'site-traffic-stats-v1.css'
       - 'cn-site/assets/site-traffic-stats-v1.js'
       - 'cn-site/assets/site-traffic-stats-v1.css'
@@ -38,6 +39,7 @@ jobs:
       - name: Validate tracking runtimes and materializer
         run: |
           node --check site-traffic-stats-v1.js
+          node --check site-traffic-daily-kline-v1.js
           node --check cn-site/assets/site-traffic-stats-v1.js
           node --check scripts/materialize-qily-traffic-stats-v1.js
       - name: Smoke-test the public counter API using a separate health-check key
