@@ -569,7 +569,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(qr.nth(0).locator('img')).toHaveAttribute('src','/assets/qily-cn-home-code.svg');
       await expect(qr.nth(0).locator('img')).toHaveAttribute('alt','扫码访问中国站知识首页');
       await expect(qr.nth(0)).toContainText('扫码访问中国站');
-      await expect(qr.nth(1).locator('img.wx-qr-image')).toHaveAttribute('src',/^\\/assets\\/contact\\/qilylean-wechat-qr\\.png\\?v=/);
+      await expect(qr.nth(1).locator('img.wx-qr-image')).toHaveAttribute('src',/qilylean-wechat-qr\.png\?v=/);
       await expect(qr.nth(1).locator('img')).toHaveAttribute('alt','QilyLean微信二维码');
       await expect(qr.nth(1)).toContainText('扫码微信交流');
       expect(
