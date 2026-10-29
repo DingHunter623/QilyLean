@@ -550,7 +550,7 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(page.locator('#engineering')).toBeVisible();
     });
 
-    test('SMED deep link opens its lesson and returns to the full list',async({page})=>{
+    test('SMED lesson preserves cross-site QR VI and returns to the full list',async({page,context})=>{
       await open(page,TERM+'?opl=SMED#engineering');
       const modal=page.locator('#termOplModal');
       await expect(modal).toBeVisible();
@@ -563,7 +563,66 @@ for(const device of [{name:'desktop',width:1440,height:900},{name:'mobile',width
       await expect(cnCard).toHaveCount(1);
       await expect(cnCard).toContainText('制造知识与实践分享');
       await expect(cnCard.locator('a[href^="https://qilylean.com"]')).toHaveCount(0);
-      await expect(cnCard.locator('img[src^="/assets/qily-cn-"]')).toHaveCount(2);
+      const qr=cnCard.locator('.term-opl-qr');
+      await expect(qr).toHaveCount(2);
+      await expect(qr.nth(0)).toHaveAttribute('href','/');
+      await expect(qr.nth(0).locator('img')).toHaveAttribute('src','/assets/qily-cn-home-code.svg');
+      await expect(qr.nth(0).locator('img')).toHaveAttribute('alt','扫码访问中国站知识首页');
+      await expect(qr.nth(0)).toContainText('扫码访问中国站');
+      await expect(qr.nth(1).locator('img.wx-qr-image')).toHaveAttribute('src',/qilylean-wechat-qr\.png\?v=/);
+      await expect(qr.nth(1).locator('img')).toHaveAttribute('alt','QilyLean微信二维码');
+      await expect(qr.nth(1)).toContainText('扫码微信交流');
+      await expect(cnCard.locator('img[src*="qily-cn-knowledge-code.svg"]')).toHaveCount(0);
+      expect(
+        fs.readFileSync(path.join(ROOT,'qilylean','wechat-qrcode-20260826.png'))
+          .equals(fs.readFileSync(path.join(CN,'assets','contact','qilylean-wechat-qr.png'))),
+        'CN OPL must reuse the byte-identical international WeChat QR asset'
+      ).toBe(true);
+      const source=await context.newPage();
+      try{
+        const globalBase=process.env.QILY_GLOBAL_BASE||'http://127.0.0.1:4175';
+        const sourceResponse=await source.goto(globalBase+'/knowledge/terminology.html?opl=SMED',{waitUntil:'domcontentloaded'});
+        expect(sourceResponse&&sourceResponse.ok(),'International OPL source must load').toBeTruthy();
+        const sourceModal=source.locator('#termOplModal');
+        await expect(sourceModal).toBeVisible();
+        const sourceCard=sourceModal.locator('.term-opl-contact-card');
+        await expect(sourceCard.locator('.term-opl-qr')).toHaveCount(2);
+        await cnCard.scrollIntoViewIfNeeded();
+        await sourceCard.scrollIntoViewIfNeeded();
+        const geometry=async card=>card.evaluate(node=>{
+          const css=getComputedStyle(node);
+          const round=x=>Math.round(x*100)/100;
+          const qr=[...node.querySelectorAll('.term-opl-qr')].map(item=>{
+            const image=item.querySelector('img');
+            const imageCss=getComputedStyle(image);
+            const rect=image.getBoundingClientRect();
+            const itemCss=getComputedStyle(item);
+            const captionCss=getComputedStyle(item.querySelector('span'));
+            return {
+              width:round(rect.width),height:round(rect.height),
+              borderWidth:imageCss.borderWidth,borderColor:imageCss.borderColor,
+              borderRadius:imageCss.borderRadius,padding:imageCss.padding,
+              objectFit:imageCss.objectFit,gap:itemCss.gap,
+              captionFont:captionCss.fontSize,captionLineHeight:captionCss.lineHeight
+            };
+          });
+          return {
+            display:css.display,
+            gridColumns:css.gridTemplateColumns.trim().split(' ').filter(Boolean).length,
+            columnGap:css.columnGap,rowGap:css.rowGap,
+            paddingLeft:css.paddingLeft,paddingRight:css.paddingRight,
+            borderColor:css.borderColor,borderRadius:css.borderRadius,
+            background:css.backgroundColor,qr
+          };
+        });
+        const [intlGeometry,cnGeometry]=await Promise.all([geometry(sourceCard),geometry(cnCard)]);
+        for(const key of ['display','gridColumns','columnGap','rowGap','paddingLeft','paddingRight','borderColor','borderRadius','background']){
+          expect(cnGeometry[key],'CN OPL '+key+' matches international VI').toEqual(intlGeometry[key]);
+        }
+        expect(cnGeometry.qr,'CN QR image geometry matches international VI').toEqual(intlGeometry.qr);
+      }finally{
+        await source.close();
+      }
       await cnCard.scrollIntoViewIfNeeded();
       await expect.poll(()=>cnCard.locator('img').evaluateAll(images=>images.every(img=>img.complete&&img.naturalWidth>0))).toBe(true);
       await modal.locator('[data-opl-print]').click();

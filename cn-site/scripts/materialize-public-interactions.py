@@ -107,7 +107,7 @@ def terminology_runtime(raw: str) -> str:
         "    '<section class=\"term-opl-contact-card qily-cn-opl-knowledge-card\" aria-label=\"QilyLean制造知识与实践分享\">'+\n"
         "      '<div class=\"term-opl-contact-copy\"><h3>QilyLean｜启力精益 · 制造知识与实践分享</h3><p>精益生产管理 · 工业工程IE · PQCD改善 · 数智化工厂规划 · 目视化实践</p><p class=\"term-opl-contact-lines\">本站：<a href=\"/\">qilylean.cn</a><br>知识索引：<a href=\"/knowledge/\">制造管理知识索引</a><br>精选简报：<a href=\"/briefs/\">公开工程实践与经验分享</a></p></div>'+\n"
         "      '<a class=\"term-opl-qr\" href=\"/\"><img src=\"/assets/qily-cn-home-code.svg\" alt=\"扫码访问中国站知识首页\" decoding=\"async\" loading=\"lazy\"><span>扫码访问中国站</span></a>'+\n"
-        "      '<a class=\"term-opl-qr\" href=\"/knowledge/\"><img src=\"/assets/qily-cn-knowledge-code.svg\" alt=\"扫码浏览知识索引\" decoding=\"async\" loading=\"lazy\"><span>扫码浏览知识索引</span></a>'+\n"
+        f"      '<div class=\"term-opl-qr\"><img class=\"wx-qr-image\" src=\"{asset_url('contact/qilylean-wechat-qr.png')}\" alt=\"QilyLean微信二维码\" decoding=\"async\" loading=\"lazy\"><span>扫码微信交流</span></div>'+\n"
         "    '</section>'+\n"
     )
     lesson, replaced = re.subn(
