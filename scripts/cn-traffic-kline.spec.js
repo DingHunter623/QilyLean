@@ -16,7 +16,7 @@ const html=[
 '</div><p class="qily-traffic-note">起始展示基数10,000次（非历史实测）</p></section></main>',
 '<script defer src="/assets/site-traffic-stats-v1.js"></script></body></html>'
 ].join('');
-for(const width of [390,1440])test('QilyLean.cn count and independent real-PV candlestick '+width+'px',async({page})=>{
+for(const width of [390,1440])test('QilyLean.cn count and independent real-PV daily traffic trend '+width+'px',async({page})=>{
   await page.setViewportSize({width,height:900});
   const requests=[],errors=[];
   page.on('pageerror',error=>errors.push(error.message));
@@ -55,12 +55,16 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV ca
   await expect(page.locator('.qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveText('累计展示量');
   await expect(page.locator('.qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveCSS('font-size','20px');
   await expect(page.locator('.qily-traffic-kline__legend')).toHaveCSS('font-size','20px');
+  await expect(page.locator('.qily-traffic-kline__legend')).toHaveCSS('line-height','35px');
+  await expect(page.locator('.qily-traffic-kline__legend')).not.toContainText('开盘');
+  await expect(page.locator('.qily-traffic-kline__legend')).not.toContainText('收盘');
+  await expect(page.locator('.qily-traffic-kline__head h3')).toHaveText('DAILY PV · 每日访问量趋势');
   await expect(page.locator('.qily-traffic-kline__actions button').first()).toHaveCSS('font-size','20px');
-  await expect(page.locator('[data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','18');
-  await expect(page.locator('[data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','18');
+  await expect(page.locator('[data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','20');
+  await expect(page.locator('[data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','20');
   await expect(page.locator('[data-qily-traffic-count="cn-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('[data-qily-traffic-count="intl-total"]').locator('xpath=ancestor::article')).toBeHidden();
-  await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('日PV 2');
+  await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('每日总访问量 2');
   await page.getByRole('button',{name:'近14日'}).click();
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('.qily-traffic-kline__status')).toHaveCount(0);
