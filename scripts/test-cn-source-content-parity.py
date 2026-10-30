@@ -188,12 +188,17 @@ class SourceContentAcceptanceTests(unittest.TestCase):
                 image = content.find('<section class="qily-aircraft-brand-hero"', start)
                 motion = content.find('02 / BRAND IN MOTION', start)
                 video = content.find('<figure class="qily-brand-motion-gallery__video-frame"', start)
-                self.assertTrue(all(position >= 0 for position in (vision, image, motion, video)),
-                                'Vision image or motion video missing from ' + label)
+                self.assertTrue(all(position >= 0 for position in (vision, image)),
+                                'Static aircraft vision image missing from ' + label)
                 self.assertLess(vision, image, 'Static aircraft image must follow section 01 heading')
-                self.assertLess(image, motion, 'Static aircraft image must precede section 02')
-                self.assertLess(motion, video, 'Flight video must follow section 02 heading')
+                if label == 'CN release homepage':
+                    self.assertTrue(all(position >= 0 for position in (motion, video)),
+                                    'CN release motion video missing')
+                    self.assertLess(image, motion, 'Static aircraft image must precede section 02')
+                    self.assertLess(motion, video, 'Flight video must follow section 02 heading')
                 if label == 'source-generated homepage':
+                    # The international canonical source intentionally retains the still image
+                    # while its flight video remains unpublished; do not require a CN-only clip here.
                     image_slot = content.find('class="qily-brand-motion-gallery__image-slot"', start)
                     self.assertGreaterEqual(image_slot, 0, 'Canonical image slot missing')
                     self.assertLess(image_slot, image, 'Static aircraft image must be nested in the image slot')
