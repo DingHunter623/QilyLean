@@ -203,8 +203,8 @@
       return;
     }
     var availableWidth=Math.max(300,chartBox.clientWidth||host.clientWidth||360);
-    var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=396;
-    var left=132,right=28,top=42,bottom=198,volumeTop=278,volumeBottom=326;
+    var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=460;
+    var left=132,right=28,top=84,bottom=250,volumeTop=350,volumeBottom=398;
     var usable=width-left-right, step=usable/days.length;
     var valid=days.filter(function(p){return p.has&&!p.error;});
     var maxCount=Math.max.apply(Math,valid.map(function(p){return p.peak;}));
@@ -218,10 +218,10 @@
     for(var t=0;t<=4;t++){
       var val=Math.round(maxY*t/4),yy=y(maxY*t/4);
       svg('line',{x1:left,y1:yy,x2:width-right,y2:yy,stroke:'#d3e1dd','stroke-opacity':'.9','stroke-dasharray':'3 5'},root);
-      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':20},root,String(val));
+      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':20,'data-qily-kline-tick':t===4?'top':String(t)},root,String(val));
     }
     svg('text',{x:0,y:24,'text-anchor':'start',fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'six-hour'},root,'6小时访问量');
-    svg('text',{x:0,y:250,'text-anchor':'start',fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'daily-total'},root,'每日总访问量');
+    svg('text',{x:0,y:290,'text-anchor':'start',fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'daily-total'},root,'每日总访问量');
     svg('line',{x1:left,y1:volumeBottom,x2:width-right,y2:volumeBottom,stroke:'#708a8d'},root);
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);
@@ -238,7 +238,7 @@
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
         // Direct labels make the graph readable without hover, including phones.
         // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
-        svg('text',{x:x,y:Math.max(46,y(p.peak)-12),'text-anchor':'middle',
+        svg('text',{x:x,y:Math.max(top+4,y(p.peak)-12),'text-anchor':'middle',
           fill:'#8a6331','font-size':20,'font-weight':750,
           'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
@@ -250,7 +250,7 @@
           'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
         svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
       }
-      svg('text',{x:x,y:358,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
+      svg('text',{x:x,y:430,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
     });
     var realSum=valid.reduce(function(sum,p){return sum+p.volume;},0);
     var last=valid[valid.length-1];

@@ -73,13 +73,22 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV da
       sixX:six.getAttribute('x'),dailyX:daily.getAttribute('x'),dailyY:daily.getAttribute('y'),
       titleGap:Number(daily.getAttribute('y'))-Number(six.getAttribute('y')),height:svg.viewBox.baseVal.height};
   });
+  const spacing=await page.locator('.qily-traffic-kline__svg').evaluate(svg=>{
+    const six=svg.querySelector('[data-qily-kline-axis="six-hour"]').getBBox();
+    const sixTop=svg.querySelector('[data-qily-kline-tick="top"]').getBBox();
+    const daily=svg.querySelector('[data-qily-kline-axis="daily-total"]').getBBox();
+    const dailyPV=svg.querySelector('[data-qily-kline-label="daily-pv"]').getBBox();
+    return {sixHourGap:sixTop.y-(six.y+six.height),dailyGap:dailyPV.y-(daily.y+daily.height)};
+  });
+  expect(spacing.sixHourGap).toBeGreaterThanOrEqual(32);
+  expect(spacing.dailyGap).toBeGreaterThanOrEqual(24);
   expect(Math.abs(alignment.headingLeft-alignment.scrollLeft)).toBeLessThan(1.5);
   expect(Math.abs(alignment.scrollLeft-alignment.chartLeft)).toBeLessThan(1.5);
   expect(alignment.sixX).toBe('0');
   expect(alignment.dailyX).toBe('0');
-  expect(alignment.dailyY).toBe('250');
-  expect(alignment.titleGap).toBeGreaterThanOrEqual(220);
-  expect(alignment.height).toBe(396);
+  expect(alignment.dailyY).toBe('290');
+  expect(alignment.titleGap).toBeGreaterThanOrEqual(260);
+  expect(alignment.height).toBe(460);
   expect(axisClearance.axisRight).toBeLessThan(axisClearance.labelLeft);
   await expect(page.locator('[data-qily-traffic-count="cn-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('[data-qily-traffic-count="intl-total"]').locator('xpath=ancestor::article')).toBeHidden();

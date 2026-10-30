@@ -318,7 +318,7 @@
     if (d.querySelector('script[data-qily-daily-kline="v1"]')) return;
     var script = d.createElement('script');
     script.async = true;
-    script.src = '/site-traffic-daily-kline-v1.js?v=20261030-traffic-layout-v5';
+    script.src = '/site-traffic-daily-kline-v1.js?v=20261030-traffic-spacing-v6';
     script.setAttribute('data-qily-daily-kline', 'v1');
     (d.head || d.documentElement).appendChild(script);
   }
