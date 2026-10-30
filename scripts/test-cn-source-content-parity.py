@@ -177,21 +177,22 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('资料来源、成果核验口径及AI辅助使用方式', cn_main)
         self.assertNotIn('签约主体、客户资料、成果证据', cn_main)
 
-    def test_cn_aircraft_image_precedes_flight_video_in_release_html(self):
-        # The international source fragment intentionally omits the dynamically
-        # materialized brand extension; validate the actual CN release HTML only.
-        released = (parity.CN / 'index.html').read_text(encoding='utf-8')
+    def test_cn_aircraft_materializes_approved_still_without_retired_video(self):
+        # Validate the same settled source adapter used by the CN release build.
+        # The checked-in front shelf can precede materialization; production DOM
+        # and full-resolution image loading are also checked by the browser gate.
+        _, fragment = self.settled_home()
+        released = parity.render(parity.Tree(parity.public_home_copy(fragment)).root, 'index.html')
         start = released.find('id="qily-home-brand-extension"')
-        self.assertGreaterEqual(start, 0, 'Brand extension missing from CN release homepage')
-        vision = released.find('01 / BRAND VISION', start)
-        image = released.find('<section class="qily-aircraft-brand-hero"', start)
-        motion = released.find('02 / BRAND IN MOTION', start)
-        video = released.find('<figure class="qily-brand-motion-gallery__video-frame"', start)
-        self.assertTrue(all(position >= 0 for position in (vision, image, motion, video)),
-                        'CN release aircraft image or video missing')
-        self.assertLess(vision, image, 'Static aircraft image must follow section 01 heading')
-        self.assertLess(image, motion, 'Static aircraft image must precede section 02')
-        self.assertLess(motion, video, 'Flight video must follow section 02 heading')
+        self.assertGreaterEqual(start, 0, 'Brand extension missing from CN release')
+        gallery = released[start:]
+        vision = gallery.find('BRAND VISION')
+        image = gallery.find('<section class="qily-aircraft-brand-hero"')
+        self.assertGreaterEqual(vision, 0, 'Approved still heading missing')
+        self.assertGreater(image, vision, 'Full-quality still follows its heading')
+        self.assertEqual(gallery.count('class="qily-brand-motion-gallery__panel"'), 1)
+        self.assertNotIn('<video', gallery, 'Retired aircraft video must not return')
+        self.assertNotIn('BRAND IN MOTION', gallery)
 
     def test_actual_home_has_canonical_runtime_modules_in_order(self):
         _, fragment = self.settled_home()

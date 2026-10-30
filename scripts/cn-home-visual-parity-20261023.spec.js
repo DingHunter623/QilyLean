@@ -442,13 +442,22 @@ test('CN public homepage and release URL retain the three approved VI modules',a
  }
 });
 
-test('Both homepages present full-width stacked owner roles beside uncropped portrait',async({page})=>{
- test.setTimeout(120000);
- for(const url of [intBase+'/',cnBase+'/']){
+// A CN release validates its own media; the default suite still covers both sites.
+const ownerSites=process.env.QILY_CN_RELEASE_ONLY==='1'
+ ? [{name:'China',url:cnBase+'/'}]
+ : [{name:'International',url:intBase+'/'},{name:'China',url:cnBase+'/'}];
+for(const {name,url} of ownerSites){
+ test(name+' homepage presents full-width stacked owner roles beside uncropped portrait',async({page})=>{
+  test.setTimeout(120000);
   await page.setViewportSize({width:1588,height:1000});
   await page.goto(freshCnUrl(url),{waitUntil:'networkidle'});
   await page.evaluate(()=>document.querySelectorAll('main details').forEach(d=>d.open=true));
   if(url.startsWith(intBase))await page.waitForTimeout(1650);
+  const portrait=page.locator('#qily-home-collaboration .qily-home-collaboration__portrait img');
+  await portrait.scrollIntoViewIfNeeded();
+  await expect.poll(()=>portrait.evaluate(img=>img.complete&&img.naturalWidth>0&&img.naturalHeight>0),{
+   message:url+' original portrait finishes loading',timeout:30000
+  }).toBe(true);
   const p=await page.evaluate(()=>{
    const root=document.querySelector('#qily-home-collaboration .qily-home-collaboration');
    if(!root)return null;
@@ -494,12 +503,12 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
    expect(b.height).toBeGreaterThanOrEqual(43);
    await page.screenshot({path:'test-results/cn-owner-public-bio-visual-parity.png'});
   }
- }
-});
+ });
+}
 
 // Production semantic-order poka-yoke: screenshot-driven regression from 2026-10-29.
 // This is intentionally scoped to .cn; the approved international layout is frozen.
-test('China brand gallery keeps the approved still while the unverified flight video remains withdrawn',async({page})=>{
+test('China brand gallery retains the complete approved still without the retired video',async({page})=>{
  for(const width of [390,1588]){
   await page.setViewportSize({width,height:900});
   await visit(page,cnBase+'/',{home:true});
@@ -510,19 +519,30 @@ test('China brand gallery keeps the approved still while the unverified flight v
    const gallery=document.querySelector('#qily-home-brand-extension .qily-brand-motion-gallery');
    if(!gallery)return null;
    const panels=[...gallery.querySelectorAll(':scope > .qily-brand-motion-gallery__panel')];
-   const imagePanel=panels.find(p=>p.querySelector('.qily-aircraft-brand-hero img'));
-   const image=imagePanel?.querySelector('.qily-aircraft-brand-hero img');
+   const image=panels[0]?.querySelector('.qily-aircraft-brand-hero img');
+   const videoCount=gallery.querySelectorAll('video').length;
    const labels=panels.map(p=>p.querySelector('h3')?.textContent?.trim()||'');
    const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-   return {count:panels.length,labels,image:image?{...rect(image),loaded:image.complete&&image.naturalWidth>0,fit:getComputedStyle(image).objectFit}:null,
-    videoCount:gallery.querySelectorAll('video.qily-brand-motion-gallery__video').length};
+   return {count:panels.length,labels,videoCount,panel:panels[0]?rect(panels[0]):null,
+    image:image?{...rect(image),loaded:image.complete&&image.naturalWidth>0,naturalWidth:image.naturalWidth,naturalHeight:image.naturalHeight,currentSrc:image.currentSrc,fit:getComputedStyle(image).objectFit}:null,
+    overflow:document.documentElement.scrollWidth};
   });
-  expect(m,'approved static aircraft still present at '+width+'px').toBeTruthy();
-  expect(m.count).toBe(1);
-  expect(m.labels[0]).toContain('01 / BRAND VISION');
+  expect(m,'brand motion gallery present at '+width+'px').toBeTruthy();
+  expect(m.count,'approved gallery contains only the static aircraft panel').toBe(1);
+  expect(m.labels[0]).toBe('BRAND VISION以制造工程为翼');
+  expect(m.videoCount,'retired aircraft video must remain absent').toBe(0);
   expect(m.image?.loaded,'original China brand still loaded').toBe(true);
   expect(m.image?.fit,'static aircraft image remains uncropped').toBe('contain');
-  expect(m.videoCount,'unverified flight video remains withdrawn').toBe(0);
+  // srcset naturalWidth is density-corrected; verify the selected original bytes.
+  expect(m.image.currentSrc).toMatch(/aircraft-.*-(?:912|1824|2736)\.webp/);
+  const asset=await page.request.get(m.image.currentSrc);
+  expect(asset.status()).toBe(200);
+  const local=path.join(__dirname,'..','cn-site',decodeURIComponent(new URL(m.image.currentSrc).pathname));
+  expect(await asset.body(),'approved full-quality aircraft bytes').toEqual(fs.readFileSync(local));
+  expect(Math.abs(m.image.width/m.image.height-m.image.naturalWidth/m.image.naturalHeight),'static aircraft retains its original aspect ratio').toBeLessThanOrEqual(0.02);
+  expect(m.image.height,'complete aircraft remains visible').toBeGreaterThan(100);
+  expect(m.image.width,'aircraft respects the approved panel width').toBeLessThanOrEqual(m.panel.width+2);
+  expect(m.overflow,'aircraft gallery does not overflow the viewport').toBeLessThanOrEqual(width+1);
  }
 });
 

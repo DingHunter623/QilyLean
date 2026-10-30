@@ -5,7 +5,7 @@ const MAIN=fs.readFileSync(path.join(ROOT,'cn-site/assets/site-traffic-stats-v1.
 const KLINE=fs.readFileSync(path.join(ROOT,'cn-site/assets/site-traffic-daily-kline-v1.js'),'utf8');
 const CSS=fs.readFileSync(path.join(ROOT,'cn-site/assets/site-traffic-stats-v1.css'),'utf8');
 const html=[
-'<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/assets/site-traffic-stats-v1.css"></head><body><main>',
+'<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:18px;line-height:1.72}</style><link rel="stylesheet" href="/assets/site-traffic-stats-v1.css"></head><body><main>',
 '<section id="traffic" class="qily-traffic-section" data-qily-traffic-stats="v1" aria-labelledby="qily-traffic-title">',
 '<div class="qily-traffic-heading"><span class="qily-traffic-kicker">SITE ANALYTICS</span><h2 id="qily-traffic-title">6. 中国站访问统计</h2><p class="qily-traffic-intro">中国站展示计数</p></div>',
 '<div class="qily-traffic-grid" data-qily-traffic-single="true">',
@@ -16,8 +16,9 @@ const html=[
 '</div><p class="qily-traffic-note">起始展示基数10,000次（非历史实测）</p></section></main>',
 '<script defer src="/assets/site-traffic-stats-v1.js"></script></body></html>'
 ].join('');
-for(const width of [390,1440])test('QilyLean.cn count and independent real-PV daily traffic trend '+width+'px',async({page})=>{
+for(const width of [320,390,820,1440])test('QilyLean.cn count and independent real-PV daily traffic trend '+width+'px',async({page})=>{
   await page.setViewportSize({width,height:900});
+  await page.clock.install();
   const requests=[],errors=[];
   page.on('pageerror',error=>errors.push(error.message));
   await page.route('https://qilylean.cn/**',route=>{
@@ -96,6 +97,11 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV da
   await page.getByRole('button',{name:'近14日'}).click();
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');
   await expect(page.locator('.qily-traffic-kline__status')).toHaveCount(0);
+  await page.getByRole('button',{name:'近7日'}).click();
+  await expect(page.getByRole('button',{name:'近7日'})).toHaveAttribute('aria-pressed','true');
+  const reads=requests.filter(p=>p.includes('/get/qilylean_cn_sitewide_pageviews_20261029')).length;
+  await page.clock.fastForward(60000);
+  await expect.poll(()=>requests.filter(p=>p.includes('/get/qilylean_cn_sitewide_pageviews_20261029')).length).toBeGreaterThan(reads);
   const vi=await page.locator('#traffic .qily-traffic-kline__head h3').evaluate(el=>getComputedStyle(el).color);
   expect(vi).toBe('rgb(15, 75, 90)');
   const layout=await page.evaluate(()=>({width:document.documentElement.scrollWidth,viewport:innerWidth}));
