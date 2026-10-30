@@ -1,0 +1,109 @@
+name: One-time CN founder portrait restoration
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cn-founder-portrait-restore-live-20261030.yml'
+permissions:
+  contents: read
+concurrency:
+  group: qilylean-cn-owner-portrait-restore-20261030
+  cancel-in-progress: false
+jobs:
+  restore-portrait:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate the previously approved professional portrait
+        run: |
+          set -euo pipefail
+          test -s qilylean/ding-qili-ai-avatar-560.webp
+          file qilylean/ding-qili-ai-avatar-560.webp
+          sha256sum qilylean/ding-qili-ai-avatar-560.webp
+      - name: Configure China production SSH
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+      - name: Apply reversible image-only restoration to the active release
+        timeout-minutes: 8
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn)
+          scp -q "${OPTS[@]}" qilylean/ding-qili-ai-avatar-560.webp "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-founder-portrait-restore-20261030.webp"
+          ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          SITE=/var/www/qilylean-cn
+          exec 9>"$SITE/.content-deploy.lock"
+          flock -w 90 9
+          CURRENT="$(readlink -f "$SITE/current")"
+          case "$CURRENT" in "$SITE"/releases/*) ;; *) echo "Unexpected site root"; exit 1;; esac
+          test -s "$CURRENT/index.html"
+          test -s /tmp/qily-cn-founder-portrait-restore-20261030.webp
+          IMAGE="$CURRENT/assets/public-media/qilylean/ding-qili-ai-avatar-560.webp"
+          mkdir -p "$CURRENT/assets/public-media/qilylean"
+          install -m 644 /tmp/qily-cn-founder-portrait-restore-20261030.webp "$IMAGE.tmp"
+          mv -f "$IMAGE.tmp" "$IMAGE"
+          BACKUP="/tmp/qily-cn-founder-portrait-index-before-restore-20261030.html"
+          cp -p "$CURRENT/index.html" "$BACKUP"
+          export QILY_CN_CURRENT="$CURRENT"
+          python3 - <<'PY'
+          from pathlib import Path
+          import os, re, stat
+          current = Path(os.environ["QILY_CN_CURRENT"])
+          path = current / "index.html"
+          original = path.read_text(encoding="utf-8")
+          image_url = "/assets/public-media/qilylean/ding-qili-ai-avatar-560.webp?v=20261030-founder-portrait-restore-v1"
+          pattern = re.compile(
+              r'(<figure\\s+class="qily-home-collaboration__portrait"\\s*>\\s*<img\\b)([^>]*)>',
+              re.I,
+          )
+          def restore(match):
+              attrs = match.group(2)
+              for key, value in (
+                  ("src", image_url),
+                  ("alt", "QilyLean主理人制造工程与精益改善职业形象"),
+                  ("width", "560"),
+                  ("height", "700"),
+              ):
+                  attr = re.compile(r'(\\s+' + key + r'=")[^"]*(")', re.I)
+                  if attr.search(attrs):
+                      attrs = attr.sub(lambda item: item.group(1) + value + item.group(2), attrs, count=1)
+                  else:
+                      attrs += f' {key}="{value}"'
+              return match.group(1) + attrs + ">"
+          changed, count = pattern.subn(restore, original, count=1)
+          if count != 1:
+              raise SystemExit(f"Expected one owner portrait element, found {count}")
+          owner = re.search(r'<figure class="qily-home-collaboration__portrait">.*?</figure>', changed, re.S)
+          if not owner or "ding-qili-ai-avatar-560.webp" not in owner.group(0):
+              raise SystemExit("Restored portrait URL not found in owner module")
+          if "ding-qili-anime-20261028.webp" in owner.group(0):
+              raise SystemExit("Retired anime portrait remains in owner module")
+          tmp = path.with_name(".index-founder-portrait-restore.tmp")
+          tmp.write_text(changed, encoding="utf-8")
+          tmp.chmod(stat.S_IMODE(path.stat().st_mode))
+          os.replace(tmp, path)
+          print("Previous professional portrait restored in active China release")
+          PY
+          if ! curl --silent --show-error --fail --connect-timeout 10 --max-time 30 --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/ -o /tmp/qily-cn-founder-portrait-page-test.html || ! grep -Fq 'ding-qili-ai-avatar-560.webp' /tmp/qily-cn-founder-portrait-page-test.html; then
+            cp -p "$BACKUP" "$CURRENT/index.html"
+            echo "Public homepage verification failed; original page restored"
+            exit 1
+          fi
+          curl --fail --silent --show-error --connect-timeout 10 --max-time 30 --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/assets/public-media/qilylean/ding-qili-ai-avatar-560.webp -o /tmp/qily-cn-founder-portrait-public-verify.webp
+          cmp /tmp/qily-cn-founder-portrait-public-verify.webp "$IMAGE"
+          echo "CN FOUNDER PREVIOUS PORTRAIT PATCH AND REAL LOCAL ORIGIN VERIFICATION: PASS"
+          REMOTE
