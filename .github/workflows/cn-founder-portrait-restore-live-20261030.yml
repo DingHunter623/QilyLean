@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/cn-founder-portrait-restore-live-20261030.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
@@ -42,7 +43,16 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn)
-          scp -q "${OPTS[@]}" qilylean/ding-qili-ai-avatar-560.webp "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-founder-portrait-restore-20261030.webp"
+          uploaded=false
+          for attempt in 1 2 3; do
+            if timeout 120s scp -q "${OPTS[@]}" qilylean/ding-qili-ai-avatar-560.webp "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-founder-portrait-restore-20261030.webp"; then
+              uploaded=true
+              break
+            fi
+            echo "SCP retry ${attempt}/3; waiting for the production SSH channel"
+            sleep 8
+          done
+          test "$uploaded" = true
           ssh "${OPTS[@]}" "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
           set -euo pipefail
           SITE=/var/www/qilylean-cn
