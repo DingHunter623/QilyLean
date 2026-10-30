@@ -1,0 +1,26 @@
+name: CN production queue sentinel (no publish)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/cn-production-queue-sentinel.yml'
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Queue a no-op behind the active CN release to replace one redundant pending deploy'
+        type: boolean
+        default: true
+concurrency:
+  # Deliberately share the production serialization group.
+  # cancel-in-progress=false keeps the active atomic release running while this
+  # no-op replaces an older redundant pending deployment.
+  group: qilylean-cn-production-v12
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preserve the active production release and supersede a duplicate pending run
+        run: echo "No-op queue sentinel. No files, assets, or production services are modified."
