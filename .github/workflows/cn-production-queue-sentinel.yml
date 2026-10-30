@@ -15,7 +15,7 @@ concurrency:
   # cancel-in-progress=false keeps the active atomic release running while this
   # no-op replaces an older redundant pending deployment.
   group: qilylean-cn-production-v12
-  cancel-in-progress: false
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
