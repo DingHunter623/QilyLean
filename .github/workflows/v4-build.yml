@@ -112,6 +112,7 @@ jobs:
           node scripts/site-system-v4-validate.js
           node scripts/site-regression-guard-aircraft-hero.js
           node scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/validate-tea-culture-visual-closure-v1.js
           node scripts/validate-translation-single-runtime-v1.js
           npm run test:seo
           git diff --check
