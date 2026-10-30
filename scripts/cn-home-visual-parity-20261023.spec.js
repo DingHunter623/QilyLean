@@ -457,7 +457,7 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
    const photo=figure.querySelector('img');
    const cards=[...columns.querySelectorAll(':scope > .qily-home-role')];
    const rect=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-   return {root:rect(root),columns:rect(columns),figure:rect(figure),photo:rect(photo),fit:getComputedStyle(photo).objectFit,natural:{width:photo.naturalWidth,height:photo.naturalHeight},cards:cards.map(rect),overflow:document.documentElement.scrollWidth};
+   return {root:rect(root),columns:rect(columns),figure:rect(figure),photo:rect(photo),src:photo.getAttribute('src'),fit:getComputedStyle(photo).objectFit,natural:{width:photo.naturalWidth,height:photo.naturalHeight},cards:cards.map(rect),overflow:document.documentElement.scrollWidth};
   });
   expect(p,url+' owner section exists').toBeTruthy();
   expect(p.cards).toHaveLength(2);
@@ -469,6 +469,8 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
   // must remain visible. The portrait is naturally sized, NOT stretched to
   // the combined role-card height. Historical equal-height/cover tests would
   // roll the verified China page back to a stale release.
+  expect(p.src,url+' uses the restored previous professional portrait').toContain('ding-qili-ai-avatar-560.webp');
+  expect(p.src,url+' excludes the retired anime portrait').not.toContain('ding-qili-anime-20261028.webp');
   expect(p.natural.width,url+' original full-resolution portrait loads').toBeGreaterThan(300);
   expect(p.natural.height,url+' original full-resolution portrait loads').toBeGreaterThan(300);
   expect(p.figure.height,url+' full-art portrait remains visible').toBeGreaterThan(180);
@@ -497,37 +499,30 @@ test('Both homepages present full-width stacked owner roles beside uncropped por
 
 // Production semantic-order poka-yoke: screenshot-driven regression from 2026-10-29.
 // This is intentionally scoped to .cn; the approved international layout is frozen.
-test('China brand gallery presents the complete still in 01 before the full-quality video in 02',async({page})=>{
+test('China brand gallery keeps the approved still while the unverified flight video remains withdrawn',async({page})=>{
  for(const width of [390,1588]){
   await page.setViewportSize({width,height:900});
   await visit(page,cnBase+'/',{home:true});
-  // Decode the deliberately lazy full-resolution image before judging visibility.
+  // Decode the deliberately lazy full-resolution still before judging visibility.
   await page.locator('#qily-home-brand-extension .qily-aircraft-brand-hero img').scrollIntoViewIfNeeded();
   await page.waitForFunction(()=>{const img=document.querySelector('#qily-home-brand-extension .qily-aircraft-brand-hero img');return !!(img&&img.complete&&img.naturalWidth>0);},null,{timeout:30000});
   const m=await page.evaluate(()=>{
    const gallery=document.querySelector('#qily-home-brand-extension .qily-brand-motion-gallery');
    if(!gallery)return null;
    const panels=[...gallery.querySelectorAll(':scope > .qily-brand-motion-gallery__panel')];
-   const image=panels[0]?.querySelector('.qily-aircraft-brand-hero img');
-   const video=panels[1]?.querySelector('video.qily-brand-motion-gallery__video');
+   const imagePanel=panels.find(p=>p.querySelector('.qily-aircraft-brand-hero img'));
+   const image=imagePanel?.querySelector('.qily-aircraft-brand-hero img');
    const labels=panels.map(p=>p.querySelector('h3')?.textContent?.trim()||'');
    const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-   return {count:panels.length,labels,image: image?{...rect(image),loaded:image.complete&&image.naturalWidth>0,fit:getComputedStyle(image).objectFit}:null,
-    video:video?{...rect(video),source:video.querySelector('source')?.getAttribute('src')||'',fit:getComputedStyle(video).objectFit,controls:video.controls}:null,
-    domOrder:!!(image&&video&&(image.compareDocumentPosition(video)&Node.DOCUMENT_POSITION_FOLLOWING))};
+   return {count:panels.length,labels,image:image?{...rect(image),loaded:image.complete&&image.naturalWidth>0,fit:getComputedStyle(image).objectFit}:null,
+    videoCount:gallery.querySelectorAll('video.qily-brand-motion-gallery__video').length};
   });
-  expect(m,'brand motion gallery present at '+width+'px').toBeTruthy();
-  expect(m.count).toBe(2);
+  expect(m,'approved static aircraft still present at '+width+'px').toBeTruthy();
+  expect(m.count).toBe(1);
   expect(m.labels[0]).toContain('01 / BRAND VISION');
-  expect(m.labels[1]).toContain('02 / BRAND IN MOTION');
   expect(m.image?.loaded,'original China brand still loaded').toBe(true);
   expect(m.image?.fit,'static aircraft image remains uncropped').toBe('contain');
-  expect(m.video?.fit,'flight video remains uncropped').toBe('contain');
-  expect(m.video?.controls,'flight video controls remain enabled').toBe(true);
-  expect(m.video?.source).toContain('.mp4');
-  expect(m.domOrder,'still image must precede video in DOM').toBe(true);
-  expect(m.video.top,'02 motion follows 01 image vertically').toBeGreaterThanOrEqual(m.image.bottom-2);
-  expect(Math.abs(m.video.width-m.image.width),'still and video share the same content width').toBeLessThanOrEqual(8);
+  expect(m.videoCount,'unverified flight video remains withdrawn').toBe(0);
  }
 });
 

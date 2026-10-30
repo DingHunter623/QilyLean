@@ -24,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261025-source-content-parity-v7-qhome-legal-action-parity'
+VERSION = '20261030-source-content-parity-v8-founder-portrait-restore'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -765,12 +765,29 @@ def preserve_cn_owner_section(content, existing):
         section = section.replace(role_open, role_fixed, 1)
     elif role_fixed not in section:
         raise RuntimeError('CN owner card layout cannot be stabilized')
-    portrait = re.compile(r'/qilylean/ding-qili-anime-20261028\.webp(?:\?[^"\s]*)?')
-    if portrait.search(section):
-        img_path = media_url('/qilylean/ding-qili-anime-20261028.webp', 'index.html')
-        if not img_path:
-            raise RuntimeError('Cannot localize approved owner portrait')
-        section = portrait.sub(img_path, section)
+    # Always pin the public China owner card to the previously approved
+    # professional portrait; never inherit a newer unapproved illustration.
+    portrait = re.compile(
+        r'(<figure\b[^>]*class="qily-home-collaboration__portrait"[^>]*>\s*'
+        r'<img\b[^>]*\bsrc=")[^"]*(")',
+        re.I,
+    )
+    if not portrait.search(section):
+        raise RuntimeError('CN owner portrait element missing; refusing publication')
+    img_path = media_url('/qilylean/ding-qili-ai-avatar-560.webp', 'index.html')
+    if not img_path:
+        raise RuntimeError('Cannot localize restored owner portrait')
+    section, portrait_count = portrait.subn(
+        lambda match: match.group(1) + img_path + match.group(2), section
+    )
+    if portrait_count != 1:
+        raise RuntimeError('Expected exactly one CN owner portrait, got ' + str(portrait_count))
+    section = re.sub(
+        r'(<figure\b[^>]*class="qily-home-collaboration__portrait"[^>]*>\s*'
+        r'<img\b[^>]*\balt=")[^"]*(")',
+        r'\1QilyLean主理人制造工程与精益改善职业形象\2',
+        section, count=1, flags=re.I,
+    )
     # Replace the international owner section *in place*, outside the collapsed
     # extended-content <details>. The CN public biography and its card geometry
     # are preserved unchanged; only transactional copy remains filtered.

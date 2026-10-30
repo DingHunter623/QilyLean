@@ -302,6 +302,10 @@ def verify_semantics(value, row):
         require(extended is not None and owner.start() < extended.start(),
                 'CN owner must appear before the collapsed extended section')
         owner_html = owner.group(0)
+        require('ding-qili-ai-avatar-560.webp' in owner_html,
+                'CN owner portrait must use the restored professional image')
+        require('ding-qili-anime-20261028.webp' not in owner_html,
+                'Retired anime portrait remains in CN owner module')
         require(owner_html.count('class="qily-home-role"') == 2 and
                 'grid-template-columns:minmax(0,1fr)!important' in owner_html,
                 'CN owner card layout regressed')
