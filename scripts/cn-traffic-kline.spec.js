@@ -53,9 +53,9 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV ca
   await expect(page.locator('.qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('.qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
   await expect(page.locator('.qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveText('累计展示量');
-  await expect(page.locator('.qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveCSS('font-size','18.5px');
-  await expect(page.locator('.qily-traffic-kline__legend')).toHaveCSS('font-size','18.5px');
-  await expect(page.locator('.qily-traffic-kline__actions button').first()).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('.qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveCSS('font-size','20px');
+  await expect(page.locator('.qily-traffic-kline__legend')).toHaveCSS('font-size','20px');
+  await expect(page.locator('.qily-traffic-kline__actions button').first()).toHaveCSS('font-size','20px');
   await expect(page.locator('[data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','18');
   await expect(page.locator('[data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','18');
   await expect(page.locator('[data-qily-traffic-count="cn-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');

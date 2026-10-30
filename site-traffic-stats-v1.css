@@ -479,3 +479,23 @@ html:root:root:root:root body #traffic .qily-traffic-kline__actions button{font-
 html:root:root:root:root body #traffic .qily-traffic-kline__svg text{font-size:18px!important;font-family:inherit!important}
 html:root:root:root:root body #traffic .qily-traffic-kline__scroll{width:100%!important;max-width:100%!important;overflow-x:auto!important}
 html:root:root:root:root body #traffic .qily-traffic-kline{padding:clamp(18px,2.4vw,26px)!important}
+
+/* QILY-TRAFFIC-TYPOGRAPHY-20261030-R9 | Intl body: 18px / 1.7 */
+html:root:root:root:root body.qily-about-intl main .article-body > .qily-traffic-heading .qily-traffic-kicker{font-size:20px!important;line-height:1.75!important;font-weight:650!important;letter-spacing:.03em!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-site-label,
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-live,
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-label,
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__legend{font-size:20px!important;line-height:1.75!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__head h3{font-size:23px!important;line-height:1.45!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__actions button{font-size:20px!important;line-height:1.75!important;min-height:48px!important;padding:9px 18px!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__svg text{font-size:20px!important;font-family:inherit!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__legend>span{display:inline-flex!important;align-items:flex-start!important;gap:8px!important;line-height:1.75!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__swatch{flex:0 0 12px!important;width:12px!important;height:12px!important;margin:8px 0 0!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline__legend{gap:14px 28px!important;margin-top:18px!important}
+html:root:root:root:root body.qily-about-intl main .article-body #traffic .qily-traffic-kline{padding:clamp(20px,2.4vw,28px)!important}
+html:root:root:root:root body #traffic .qily-traffic-site-label,
+html:root:root:root:root body #traffic .qily-traffic-live,
+html:root:root:root:root body #traffic .qily-traffic-label,
+html:root:root:root:root body #traffic .qily-traffic-kline__legend{font-size:20px!important;line-height:1.75!important}
+html:root:root:root:root body #traffic .qily-traffic-kline__actions button{font-size:20px!important;line-height:1.75!important;min-height:48px!important}
+html:root:root:root:root body #traffic .qily-traffic-kline__svg text{font-size:20px!important}

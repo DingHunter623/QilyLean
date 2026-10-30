@@ -57,21 +57,21 @@
     var s = el('style');
     s.id = 'qily-traffic-kline-style';
     s.textContent = [
-      '#traffic .qily-traffic-kline{margin-top:20px;padding:clamp(14px,2.2vw,22px);border:1px solid #cfe0dd;border-radius:15px;background:#f4f9f7;color:#365f62!important;-webkit-text-fill-color:#365f62!important;box-shadow:0 6px 18px rgba(15,75,90,.06);max-width:100%;min-width:0}',
-      '#traffic .qily-traffic-kline__head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}',
+      '#traffic .qily-traffic-kline{margin-top:22px;padding:clamp(20px,2.4vw,28px);border:1px solid #cfe0dd;border-radius:15px;background:#f4f9f7;color:#365f62!important;-webkit-text-fill-color:#365f62!important;box-shadow:0 6px 18px rgba(15,75,90,.06);max-width:100%;min-width:0}',
+      '#traffic .qily-traffic-kline__head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}',
       '#traffic .qily-traffic-kline__head h3{margin:0!important;font-size:23px!important;font-weight:750!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}',
-      '#traffic .qily-traffic-kline__actions{display:flex;gap:7px}',
-      '#traffic .qily-traffic-kline__actions button{padding:8px 16px;min-height:44px;cursor:pointer;border:1px solid #cfe0dd;border-radius:9px;background:#eaf2ef;color:#365f62!important;-webkit-text-fill-color:#365f62!important;font:inherit;font-size:18.5px!important;line-height:1.25}',
+      '#traffic .qily-traffic-kline__actions{display:flex;gap:10px}',
+      '#traffic .qily-traffic-kline__actions button{padding:8px 16px;min-height:44px;cursor:pointer;border:1px solid #cfe0dd;border-radius:9px;background:#eaf2ef;color:#365f62!important;-webkit-text-fill-color:#365f62!important;font:inherit;font-size:20px!important;line-height:1.75}',
       '#traffic .qily-traffic-kline__actions button[aria-pressed="true"]{background:#0f4b5a!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-weight:750}',
       '#traffic .qily-traffic-kline__actions button:focus-visible{outline:2px solid #caa15f;outline-offset:2px}',
       '#traffic .qily-traffic-kline__info{display:none!important}',
-      '#traffic .qily-traffic-kline__scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:4px 0;scrollbar-color:#caa15f #e6efec}',
+      '#traffic .qily-traffic-kline__scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:10px 0 6px;scrollbar-color:#caa15f #e6efec}',
       '#traffic .qily-traffic-kline__svg{display:block;width:auto;height:auto;max-width:none;background:transparent;overflow:visible;font-family:inherit}',
       '#traffic .qily-traffic-kline__status{display:none!important}',
-      '#traffic .qily-traffic-kline__legend{display:flex;align-items:center;flex-wrap:wrap;gap:10px 22px;margin-top:14px;font-size:18.5px!important;line-height:1.55;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
-      '#traffic .qily-traffic-kline__swatch{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:2px;vertical-align:-1px}',
+      '#traffic .qily-traffic-kline__legend{display:flex;align-items:flex-start;flex-wrap:wrap;gap:14px 28px;margin-top:18px;font-size:20px!important;line-height:1.75;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
+      '#traffic .qily-traffic-kline__legend>span{display:inline-flex;align-items:flex-start;gap:8px;line-height:1.75}#traffic .qily-traffic-kline__swatch{display:inline-block;flex:0 0 12px;width:12px;height:12px;margin:8px 0 0;border-radius:2px}',
       '#traffic .qily-traffic-kline__foot{display:none!important}',
-      '@media(max-width:620px){#traffic .qily-traffic-kline{padding:14px 12px}#traffic .qily-traffic-kline__head{align-items:flex-start}}'
+      '@media(max-width:620px){#traffic .qily-traffic-kline{padding:18px 14px}#traffic .qily-traffic-kline__head{align-items:flex-start}#traffic .qily-traffic-kline__legend{gap:12px 20px}}'
     ].join('');
     (d.head || d.documentElement).appendChild(s);
   }
@@ -80,7 +80,7 @@
     shell = el('section', 'qily-traffic-kline');
     shell.setAttribute('aria-label', '国际站每日访问趋势图');
     var header = el('div', 'qily-traffic-kline__head');
-    header.appendChild(el('h3', '', 'DAILY PV · 日流量 K 线'));
+    header.appendChild(el('h3', '', 'DAILY PV · 每日访问量趋势'));
     var actions = el('div', 'qily-traffic-kline__actions');
     actions.setAttribute('aria-label', '选择统计区间');
     seven = el('button', '', '近7日');
@@ -96,7 +96,7 @@
     shell.appendChild(header);
     chartBox = el('div', 'qily-traffic-kline__scroll');
     chartBox.setAttribute('role', 'region');
-    chartBox.setAttribute('aria-label','可横向浏览的国际站日流量K线图');
+    chartBox.setAttribute('aria-label','可横向浏览的国际站每日访问量趋势图');
     chartBox.tabIndex = 0;
     shell.appendChild(chartBox);
     statusBox = el('p', 'qily-traffic-kline__status', '正在读取分时访问数据…');
@@ -105,9 +105,9 @@
     statusBox.setAttribute('aria-hidden','true');
     var legend = el('div','qily-traffic-kline__legend');
     [
-      ['#c49a4e','金色：收盘时段不低于开盘'],
-      ['#178b94','蓝绿色：收盘时段低于开盘'],
-      ['#78a7a5','柱形：每日访问量']
+      ['#c49a4e','金色：末时段访问量 ≥ 首时段'],
+      ['#178b94','蓝绿色：末时段访问量 < 首时段'],
+      ['#78a7a5','柱形：每日总访问量']
     ].forEach(function (v) {
       var item=el('span');var mark=el('span','qily-traffic-kline__swatch');mark.style.backgroundColor=v[0];item.appendChild(mark);item.appendChild(d.createTextNode(v[1]));legend.appendChild(item);
     });
@@ -183,9 +183,9 @@
           ? vals.slice(0,Math.floor(new Date(Date.now()+8*3600000).getUTCHours()/6)+1)
           : vals;
         return {date:day,slots:vals,error:error,has:has,
-          open:observedSlots[0],high:Math.max.apply(Math,observedSlots),
-          low:Math.min.apply(Math,observedSlots),
-          close:observedSlots[observedSlots.length-1],
+          firstSlot:observedSlots[0],peak:Math.max.apply(Math,observedSlots),
+          trough:Math.min.apply(Math,observedSlots),
+          lastSlot:observedSlots[observedSlots.length-1],
           volume:vals.reduce(function(a,b){return a+b;},0)};
       });
       draw();
@@ -199,29 +199,29 @@
     var count=days.filter(function(p){return p.has&&!p.error;}).length;
     var failed=days.some(function(p){return p.error;});
     if(!count) {
-      statusBox.textContent=failed?'部分分时统计暂不可读取，请稍后刷新。':'尚无可绘制的真实分时PV，首批访问会逐步形成K线。';
+      statusBox.textContent=failed?'部分分时统计暂不可读取，请稍后刷新。':'尚无可绘制的真实分时访问量，首批访问会逐步形成趋势图。';
       return;
     }
     var availableWidth=Math.max(300,chartBox.clientWidth||host.clientWidth||360);
-    var width=Math.max(availableWidth,days.length*(availableWidth<520?48:62)+110),height=330;
-    var left=78,right=24,top=28,bottom=192,volumeTop=226,volumeBottom=270;
+    var width=Math.max(availableWidth,days.length*(availableWidth<520?54:68)+120),height=360;
+    var left=92,right=28,top=42,bottom=198,volumeTop=238,volumeBottom=286;
     var usable=width-left-right, step=usable/days.length;
     var valid=days.filter(function(p){return p.has&&!p.error;});
-    var maxCount=Math.max.apply(Math,valid.map(function(p){return p.high;}));
+    var maxCount=Math.max.apply(Math,valid.map(function(p){return p.peak;}));
     var maxY=Math.max(4,Math.ceil(maxCount*1.18));
     var maxV=Math.max(1,Math.max.apply(Math,valid.map(function(p){return p.volume;})));
     var root=svg('svg',{viewBox:'0 0 '+width+' '+height,width:width,height:height,
-      role:'img','aria-label':'近'+range+'日国际站访问趋势图，展示时段PV和日PV',
+      role:'img','aria-label':'近'+range+'日国际站访问量趋势图，展示6小时访问量与每日总访问量',
       class:'qily-traffic-kline__svg'},chartBox);
-    svg('title',{},root,'国际站日访问趋势图');
+    svg('title',{},root,'国际站每日访问量趋势图');
     function y(val){return bottom-(val/maxY)*(bottom-top);}
     for(var t=0;t<=4;t++){
       var val=Math.round(maxY*t/4),yy=y(maxY*t/4);
       svg('line',{x1:left,y1:yy,x2:width-right,y2:yy,stroke:'#d3e1dd','stroke-opacity':'.9','stroke-dasharray':'3 5'},root);
-      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':18},root,String(val));
+      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':20},root,String(val));
     }
-    svg('text',{x:2,y:18,fill:'#8a6331','font-size':18},root,'时段PV');
-    svg('text',{x:2,y:222,fill:'#8a6331','font-size':18},root,'日PV');
+    svg('text',{x:left,y:24,fill:'#8a6331','font-size':20,'font-weight':650},root,'6小时访问量');
+    svg('text',{x:left,y:232,fill:'#8a6331','font-size':20,'font-weight':650},root,'每日总访问量');
     svg('line',{x1:left,y1:volumeBottom,x2:width-right,y2:volumeBottom,stroke:'#708a8d'},root);
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);
@@ -230,27 +230,27 @@
         svg('line',{x1:x-6,y1:bottom-4,x2:x+6,y2:bottom-4,stroke:'#769397','stroke-dasharray':'2 3'},group);
         svg('title',{},group,p.date+(p.error?' 部分时段读取失败':' 尚无采集记录'));
       } else {
-        var closeY=y(p.close),openY=y(p.open);
-        var col=p.close>=p.open?'#c49a4e':'#178b94';
-        svg('line',{x1:x,y1:y(p.high),x2:x,y2:y(p.low),stroke:col,'stroke-width':2.4},group);
-        svg('rect',{x:x-10,y:Math.min(openY,closeY)-.8,width:20,
-          height:Math.max(3.5,Math.abs(closeY-openY)+1.6),rx:1.8,
+        var lastY=y(p.lastSlot),firstY=y(p.firstSlot);
+        var col=p.lastSlot>=p.firstSlot?'#c49a4e':'#178b94';
+        svg('line',{x1:x,y1:y(p.peak),x2:x,y2:y(p.trough),stroke:col,'stroke-width':2.4},group);
+        svg('rect',{x:x-10,y:Math.min(firstY,lastY)-.8,width:20,
+          height:Math.max(3.5,Math.abs(lastY-firstY)+1.6),rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
         // Direct labels make the graph readable without hover, including phones.
         // The K-line label is the day's highest recorded 6h PV, not a daily total.
-        svg('text',{x:x,y:Math.max(30,y(p.high)-10),'text-anchor':'middle',
-          fill:'#8a6331','font-size':18,'font-weight':750,
-          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.high));
+        svg('text',{x:x,y:Math.max(46,y(p.peak)-12),'text-anchor':'middle',
+          fill:'#8a6331','font-size':20,'font-weight':750,
+          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
           fill:'#78a7a5','fill-opacity':'.98'},group);
         // Volume labels are observed daily PV, excluding presentation base.
-        svg('text',{x:x,y:Math.max(volumeTop-10,volumeBottom-h-8),'text-anchor':'middle',
-          fill:'#0f4b5a','font-size':18,'font-weight':750,
+        svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',
+          fill:'#0f4b5a','font-size':20,'font-weight':750,
           'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
-        svg('title',{},group,p.date+'｜日PV '+p.volume+'；开 '+p.open+'，高 '+p.high+'，低 '+p.low+'，收 '+p.close+'（6小时PV）');
+        svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot');
       }
-      svg('text',{x:x,y:281,'text-anchor':'middle',fill:'#526f70','font-size':18},root,label);
+      svg('text',{x:x,y:318,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
     });
     var realSum=valid.reduce(function(sum,p){return sum+p.volume;},0);
     var last=valid[valid.length-1];

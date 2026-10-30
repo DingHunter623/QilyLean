@@ -66,10 +66,10 @@ for(const width of [390,1440])test('Intl About title 6 white VI matches title 5 
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline__foot')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline__status')).toHaveCount(0);
-  await expect(page.locator('.article-body>.qily-traffic-heading .qily-traffic-kicker')).toHaveCSS('font-size','18.5px');
-  await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label').first()).toHaveCSS('font-size','18.5px');
-  await expect(page.locator('#traffic .qily-traffic-kline__legend')).toHaveCSS('font-size','18.5px');
-  await expect(page.locator('#traffic .qily-traffic-kline__actions button').first()).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('.article-body>.qily-traffic-heading .qily-traffic-kicker')).toHaveCSS('font-size','20px');
+  await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label').first()).toHaveCSS('font-size','20px');
+  await expect(page.locator('#traffic .qily-traffic-kline__legend')).toHaveCSS('font-size','20px');
+  await expect(page.locator('#traffic .qily-traffic-kline__actions button').first()).toHaveCSS('font-size','20px');
   expect(info.body.rect.top).toBeGreaterThanOrEqual(info.head.rect.bottom);
   expect(info.gridParent).toContain('qily-traffic-body');
   expect(info.klineParent).toContain('qily-traffic-body');
