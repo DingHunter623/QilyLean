@@ -203,8 +203,8 @@
       return;
     }
     var availableWidth=Math.max(300,chartBox.clientWidth||host.clientWidth||360);
-    var width=Math.max(availableWidth,days.length*(availableWidth<520?54:68)+120),height=360;
-    var left=92,right=28,top=42,bottom=198,volumeTop=238,volumeBottom=286;
+    var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=360;
+    var left=132,right=28,top=42,bottom=198,volumeTop=238,volumeBottom=286;
     var usable=width-left-right, step=usable/days.length;
     var valid=days.filter(function(p){return p.has&&!p.error;});
     var maxCount=Math.max.apply(Math,valid.map(function(p){return p.peak;}));
@@ -220,8 +220,8 @@
       svg('line',{x1:left,y1:yy,x2:width-right,y2:yy,stroke:'#d3e1dd','stroke-opacity':'.9','stroke-dasharray':'3 5'},root);
       svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':20},root,String(val));
     }
-    svg('text',{x:left,y:24,fill:'#8a6331','font-size':20,'font-weight':650},root,'6小时访问量');
-    svg('text',{x:left,y:232,fill:'#8a6331','font-size':20,'font-weight':650},root,'每日总访问量');
+    svg('text',{x:0,y:24,fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'six-hour'},root,'6小时访问量');
+    svg('text',{x:0,y:232,fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'daily-total'},root,'每日总访问量');
     svg('line',{x1:left,y1:volumeBottom,x2:width-right,y2:volumeBottom,stroke:'#708a8d'},root);
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);

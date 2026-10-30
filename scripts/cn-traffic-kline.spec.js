@@ -62,6 +62,8 @@ for(const width of [390,1440])test('QilyLean.cn count and independent real-PV da
   await expect(page.locator('.qily-traffic-kline__actions button').first()).toHaveCSS('font-size','20px');
   await expect(page.locator('[data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','20');
   await expect(page.locator('[data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','20');
+  const axisClearance=await page.locator('.qily-traffic-kline__svg').evaluate(svg=>{const axis=svg.querySelector('[data-qily-kline-axis="daily-total"]');const label=svg.querySelector('[data-qily-kline-label="daily-pv"]');const a=axis.getBBox(),b=label.getBBox();return {axisRight:a.x+a.width,labelLeft:b.x};});
+  expect(axisClearance.axisRight).toBeLessThan(axisClearance.labelLeft);
   await expect(page.locator('[data-qily-traffic-count="cn-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('[data-qily-traffic-count="intl-total"]').locator('xpath=ancestor::article')).toBeHidden();
   await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('每日总访问量 2');

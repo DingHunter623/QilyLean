@@ -57,6 +57,8 @@ for(const width of [390,1440])test('International daily traffic trend chart uses
   await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('每日总访问量 2');
   await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
+  const axisClearance=await page.locator('.qily-traffic-kline__svg').evaluate(svg=>{const axis=svg.querySelector('[data-qily-kline-axis="daily-total"]');const label=svg.querySelector('[data-qily-kline-label="daily-pv"]');const a=axis.getBBox(),b=label.getBBox();return {axisRight:a.x+a.width,labelLeft:b.x};});
+  expect(axisClearance.axisRight).toBeLessThan(axisClearance.labelLeft);
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
   await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label').first()).toHaveCSS('font-size','20px');
