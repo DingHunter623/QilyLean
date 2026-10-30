@@ -14,6 +14,8 @@ on:
       - 'scripts/test-cn-release-transfer.py'
       - 'scripts/test-cn-source-content-parity.py'
       - 'scripts/guard-approved-cn-contact-vi.py'
+      - 'scripts/cn-traffic-kline.spec.js'
+      - 'scripts/cn-traffic-production.spec.js'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -43,6 +45,8 @@ on:
       - 'scripts/test-cn-source-content-parity.py'
       - 'scripts/guard-approved-cn-contact-vi.py'
       - 'scripts/public-resources-refresh.spec.js'
+      - 'scripts/cn-traffic-kline.spec.js'
+      - 'scripts/cn-traffic-production.spec.js'
 
       - 'about/**'
       - 'site-navigation.js'
@@ -903,18 +907,21 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Verify production VI and interactions across both domains
+      - name: Verify CN production VI with immutable international references
         if: steps.source-parity.outputs.enabled == 'true'
         timeout-minutes: 30
         shell: bash
         env:
           QILY_INT_BASE: https://qilylean.com
           QILY_CN_BASE: https://qilylean.cn
+          QILY_CN_RELEASE_ONLY: '1'
+          QILY_CN_PRODUCTION: '1'
+          VERIFY_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js scripts/dual-site-mobile-axis-20261025.spec.js --reporter=line --workers=1 --trace=on
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js scripts/dual-site-mobile-axis-20261025.spec.js scripts/cn-traffic-kline.spec.js scripts/cn-traffic-production.spec.js --reporter=line --workers=1 --trace=on
 
       - name: Upload production VI evidence
         if: always() && steps.source-parity.outputs.enabled == 'true'
