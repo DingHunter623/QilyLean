@@ -572,6 +572,7 @@ test('About semantic labels preserve the approved 21px dual-site VI on desktop a
 // Only first-party, site-controlled styles belong in the R8 ordering contract.
 // Third-party translation UI styles may load afterwards independently.
 test('International resource directory uses final R8 cascade at first paint without a delayed bar',async({page})=>{
+ test.skip(process.env.QILY_CN_RELEASE_ONLY==='1','International-only first-paint behavior is outside the CN release; default dual-site CI retains this gate.');
  test.setTimeout(60000);
  await page.setViewportSize({width:1588,height:960});
  await page.goto(intBase+'/links/',{waitUntil:'domcontentloaded'});
