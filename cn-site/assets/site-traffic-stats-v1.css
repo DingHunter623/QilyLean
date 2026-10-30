@@ -500,3 +500,5 @@ html:root:root:root:root body #traffic .qily-traffic-label,
 html:root:root:root:root body #traffic .qily-traffic-kline__legend{font-size:20px!important;line-height:1.75!important}
 html:root:root:root:root body #traffic .qily-traffic-kline__actions button{font-size:20px!important;line-height:1.75!important;min-height:48px!important}
 html:root:root:root:root body #traffic .qily-traffic-kline__svg text{font-size:20px!important}
+
+/* QILY-CN-TRAFFIC-RELEASE-RECOVERY-20261030: approved international About parity; production queue supersession only. */
