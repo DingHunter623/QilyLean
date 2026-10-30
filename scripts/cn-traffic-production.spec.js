@@ -24,10 +24,11 @@ async function previewRoutes(page){
   });
 }
 async function ready(page,origin,site){
-  await page.goto(origin+'/about/',{waitUntil:'domcontentloaded',timeout:45000});
+  const response=await page.goto(origin+'/about/',{waitUntil:'domcontentloaded',timeout:45000});
   await expect(page.locator('[data-qily-traffic-count="'+site+'-total"]')).toHaveAttribute('data-qily-traffic-state','ready',{timeout:30000});
   await expect(page.locator('#traffic .qily-traffic-kline__svg')).toBeVisible({timeout:30000});
   await page.waitForTimeout(1700); // The approved international final R8 cascade settles within 1400ms.
+  return response;
 }
 async function measure(page){
   return page.evaluate(()=>{
@@ -44,13 +45,14 @@ for(const width of (process.env.QILY_CN_TRAFFIC_WIDTHS||'320,390,820,1440').spli
   test.setTimeout(150000);
   await page.setViewportSize({width,height:980});
   if(preview)await previewRoutes(page);
-  const calls=[],payloads=[],pending=[];
+  const calls=[],payloads=[],pending=[],loadedResources=new Map();
   page.on('request',req=>{if(req.url().includes('countapi.mileshilliard.com'))calls.push(req.url());});
   page.on('response',res=>{
+    if(res.url().startsWith(cn+'/assets/site-traffic-'))loadedResources.set(res.url(),res);
     if(!res.url().includes('countapi.mileshilliard.com'))return;
     pending.push(res.json().then(data=>payloads.push({url:res.url(),status:res.status(),value:data.value})).catch(()=>{}));
   });
-  await ready(page,cn,'cn');
+  const documentResponse=await ready(page,cn,'cn');
   await expect(page.locator('#qily-traffic-title')).toHaveText('6. 中国站访问统计');
   await expect(page.locator('#traffic .qily-traffic-site:not([hidden])')).toHaveCount(1);
   const total=page.locator('[data-qily-traffic-count="cn-total"]');
@@ -98,10 +100,37 @@ for(const width of (process.env.QILY_CN_TRAFFIC_WIDTHS||'320,390,820,1440').spli
   if(!preview&&width===1440){
     const resources=await page.locator('script[src],link[rel="stylesheet"][href]').evaluateAll(nodes=>nodes.map(el=>el.src||el.href).filter(url=>/\/assets\/site-traffic-(?:stats|daily-kline)-v1\.(?:css|js)/.test(url)));
     expect(resources).toHaveLength(3);
-    for(const url of resources){expect(new URL(url).searchParams.has('v')).toBe(true);const res=await request.get(url,{headers:{'Cache-Control':'no-cache'}});expect(res.status()).toBe(200);expect(res.headers()['cache-control']||'').not.toContain('immutable');const file=path.join(ROOT,'cn-site',new URL(url).pathname);expect(digest(await res.body()),url+' exact source bytes').toBe(digest(fs.readFileSync(file)));}
+    // Immutable static caching is safe only at the exact committed revision URL.
+    // The HTML must revalidate so returning browsers discover new revision URLs.
+    expect(documentResponse.headers()['cache-control']||'','About HTML discovers current resource versions').toMatch(/no-cache|no-store|must-revalidate/);
+    const sources=fs.readFileSync(path.join(ROOT,'cn-site/about/index.html'),'utf8')+'\n'+fs.readFileSync(path.join(ROOT,'cn-site/assets/site-traffic-stats-v1.js'),'utf8');
+    const expected=[...sources.matchAll(/\/assets\/site-traffic-(?:stats|daily-kline)-v1\.(?:css|js)\?v=[^"'\s]+/g)].map(m=>new URL(m[0],cn).href);
+    expect(expected).toHaveLength(3);
+    expect([...resources].sort(),'HTML and loader use the exact committed cache revisions').toEqual(expected.sort());
+    const cacheEvidence=[];
+    for(const url of resources){
+      expect(new URL(url).searchParams.get('v'),'nonempty unique resource revision').toBeTruthy();
+      const file=path.join(ROOT,'cn-site',new URL(url).pathname),sourceHash=digest(fs.readFileSync(file));
+      const browserResponse=loadedResources.get(url);
+      expect(browserResponse,'browser loaded the current version '+url).toBeTruthy();
+      expect(browserResponse.status()).toBe(200);
+      const browserHash=digest(await browserResponse.body());
+      expect(browserHash,url+' browser-used exact source bytes').toBe(sourceHash);
+      const res=await request.get(url,{headers:{'Cache-Control':'no-cache'},timeout:45000});
+      expect(res.status()).toBe(200);
+      const freshHash=digest(await res.body());
+      expect(freshHash,url+' independent fresh exact source bytes').toBe(sourceHash);
+      cacheEvidence.push({url,cacheControl:res.headers()['cache-control'],sourceHash,browserHash,freshHash});
+    }
+    fs.writeFileSync(testInfo.outputPath('resource-cache.json'),JSON.stringify({htmlCache:documentResponse.headers()['cache-control'],resources:cacheEvidence},null,2));
     if(process.env.VERIFY_SHA){const release=await request.get(cn+'/meta/cn-content-release.json');expect((await release.json()).sourceCommit).toBe(process.env.VERIFY_SHA);}
   }
-  await page.locator('#traffic').screenshot({path:testInfo.outputPath('cn-statistics-'+width+'.png')});
+  // Keep the fixed site navigation/footer outside the component evidence image.
+  const traffic=page.locator('#traffic');
+  const moduleHeight=Math.ceil(await traffic.evaluate(el=>el.getBoundingClientRect().height));
+  await page.setViewportSize({width,height:Math.max(980,moduleHeight+360)});
+  await page.evaluate(()=>window.scrollTo(0,window.scrollY+document.querySelector('#traffic').getBoundingClientRect().top-200));
+  await traffic.screenshot({path:testInfo.outputPath('cn-statistics-'+width+'.png')});
   if(width===390){const before=calls.length;await page.reload({waitUntil:'domcontentloaded'});await expect(total).toHaveAttribute('data-qily-traffic-state','ready',{timeout:30000});await expect(page.locator('#traffic svg')).toBeVisible({timeout:30000});expect(calls.length).toBeGreaterThan(before);}
   console.log('CN_TRAFFIC_ACCEPTANCE',JSON.stringify({width,preview,recorded,display:10000+recorded,realDays:labels,geometry:{left:first.left,documentWidth:first.scrollWidth,chart:first.chart}}));
 });
