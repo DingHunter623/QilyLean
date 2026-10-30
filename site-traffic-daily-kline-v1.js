@@ -1,5 +1,5 @@
-/* QilyLean international daily PV candlesticks v1.0 | Beijing time UTC+08.
- * OHLC = the first/maximum/minimum/last observed 6-hour bucket PV of each day.
+/* QilyLean international daily PV trend v1.1 | Beijing time UTC+08.
+ * Each day records the first, highest, lowest and last observed 6-hour PV.
  * Volume = total of all four buckets. No historical interpolation and no use of
  * the independently disclosed 15,000 presentation starting baseline.
  */
@@ -65,8 +65,8 @@
       '#traffic .qily-traffic-kline__actions button[aria-pressed="true"]{background:#0f4b5a!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-weight:750}',
       '#traffic .qily-traffic-kline__actions button:focus-visible{outline:2px solid #caa15f;outline-offset:2px}',
       '#traffic .qily-traffic-kline__info{display:none!important}',
-      '#traffic .qily-traffic-kline__scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:10px 0 6px;scrollbar-color:#caa15f #e6efec}',
-      '#traffic .qily-traffic-kline__svg{display:block;width:auto;height:auto;max-width:none;background:transparent;overflow:visible;font-family:inherit}',
+      '#traffic .qily-traffic-kline__scroll{display:block!important;width:100%!important;max-width:100%!important;margin:0!important;padding:10px 0 6px!important;text-align:left!important;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-color:#caa15f #e6efec}',
+      '#traffic .qily-traffic-kline__svg{display:block!important;width:auto!important;height:auto!important;max-width:none!important;margin:0!important;margin-left:0!important;margin-right:0!important;background:transparent;overflow:visible;font-family:inherit}',
       '#traffic .qily-traffic-kline__status{display:none!important}',
       '#traffic .qily-traffic-kline__legend{display:flex;align-items:flex-start;flex-wrap:wrap;gap:14px 28px;margin-top:18px;font-size:20px!important;line-height:1.75;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
       '#traffic .qily-traffic-kline__legend>span{display:inline-flex;align-items:flex-start;gap:8px;line-height:1.75}#traffic .qily-traffic-kline__swatch{display:inline-block;flex:0 0 12px;width:12px;height:12px;margin:8px 0 0;border-radius:2px}',
@@ -177,7 +177,7 @@
         var error=four.some(function(p){return p.error;});
         var has=four.some(function(p){return p.exists;});
         var vals=four.map(function(p){return p.value;});
-        // Today's candle cannot include future 6-hour intervals:
+        // Today's trend must not include future 6-hour intervals:
         // missing future values must never count as an observed daily low.
         var observedSlots=day===dayClock()
           ? vals.slice(0,Math.floor(new Date(Date.now()+8*3600000).getUTCHours()/6)+1)
@@ -203,8 +203,8 @@
       return;
     }
     var availableWidth=Math.max(300,chartBox.clientWidth||host.clientWidth||360);
-    var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=360;
-    var left=132,right=28,top=42,bottom=198,volumeTop=238,volumeBottom=286;
+    var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=396;
+    var left=132,right=28,top=42,bottom=198,volumeTop=278,volumeBottom=326;
     var usable=width-left-right, step=usable/days.length;
     var valid=days.filter(function(p){return p.has&&!p.error;});
     var maxCount=Math.max.apply(Math,valid.map(function(p){return p.peak;}));
@@ -220,8 +220,8 @@
       svg('line',{x1:left,y1:yy,x2:width-right,y2:yy,stroke:'#d3e1dd','stroke-opacity':'.9','stroke-dasharray':'3 5'},root);
       svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':20},root,String(val));
     }
-    svg('text',{x:0,y:24,fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'six-hour'},root,'6小时访问量');
-    svg('text',{x:0,y:232,fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'daily-total'},root,'每日总访问量');
+    svg('text',{x:0,y:24,'text-anchor':'start',fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'six-hour'},root,'6小时访问量');
+    svg('text',{x:0,y:250,'text-anchor':'start',fill:'#8a6331','font-size':20,'font-weight':650,'data-qily-kline-axis':'daily-total'},root,'每日总访问量');
     svg('line',{x1:left,y1:volumeBottom,x2:width-right,y2:volumeBottom,stroke:'#708a8d'},root);
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);
@@ -237,7 +237,7 @@
           height:Math.max(3.5,Math.abs(lastY-firstY)+1.6),rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
         // Direct labels make the graph readable without hover, including phones.
-        // The K-line label is the day's highest recorded 6h PV, not a daily total.
+        // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
         svg('text',{x:x,y:Math.max(46,y(p.peak)-12),'text-anchor':'middle',
           fill:'#8a6331','font-size':20,'font-weight':750,
           'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
@@ -250,7 +250,7 @@
           'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
         svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
       }
-      svg('text',{x:x,y:318,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
+      svg('text',{x:x,y:358,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
     });
     var realSum=valid.reduce(function(sum,p){return sum+p.volume;},0);
     var last=valid[valid.length-1];

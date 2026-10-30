@@ -58,6 +58,23 @@ for(const width of [390,1440])test('International daily traffic trend chart uses
   await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
   const axisClearance=await page.locator('.qily-traffic-kline__svg').evaluate(svg=>{const axis=svg.querySelector('[data-qily-kline-axis="daily-total"]');const label=svg.querySelector('[data-qily-kline-label="daily-pv"]');const a=axis.getBBox(),b=label.getBBox();return {axisRight:a.x+a.width,labelLeft:b.x};});
+  const alignment=await page.locator('.qily-traffic-kline__svg').evaluate(svg=>{
+    const card=svg.closest('.qily-traffic-kline');
+    const heading=card.querySelector('.qily-traffic-kline__head h3').getBoundingClientRect();
+    const scroll=svg.parentElement.getBoundingClientRect(),chart=svg.getBoundingClientRect();
+    const six=svg.querySelector('[data-qily-kline-axis="six-hour"]');
+    const daily=svg.querySelector('[data-qily-kline-axis="daily-total"]');
+    return {headingLeft:heading.left,scrollLeft:scroll.left,chartLeft:chart.left,
+      sixX:six.getAttribute('x'),dailyX:daily.getAttribute('x'),dailyY:daily.getAttribute('y'),
+      titleGap:Number(daily.getAttribute('y'))-Number(six.getAttribute('y')),height:svg.viewBox.baseVal.height};
+  });
+  expect(Math.abs(alignment.headingLeft-alignment.scrollLeft)).toBeLessThan(1.5);
+  expect(Math.abs(alignment.scrollLeft-alignment.chartLeft)).toBeLessThan(1.5);
+  expect(alignment.sixX).toBe('0');
+  expect(alignment.dailyX).toBe('0');
+  expect(alignment.dailyY).toBe('250');
+  expect(alignment.titleGap).toBeGreaterThanOrEqual(220);
+  expect(alignment.height).toBe(396);
   expect(axisClearance.axisRight).toBeLessThan(axisClearance.labelLeft);
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
