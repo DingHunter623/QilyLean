@@ -102,7 +102,7 @@ for(const width of (process.env.QILY_CN_TRAFFIC_WIDTHS||'320,390,820,1440').spli
     expect(resources).toHaveLength(3);
     // Immutable static caching is safe only at the exact committed revision URL.
     // The HTML must revalidate so returning browsers discover new revision URLs.
-    expect(documentResponse.headers()['cache-control']||'','About HTML discovers current resource versions').toMatch(/no-cache|no-store|must-revalidate/);
+    expect(documentResponse.headers()['cache-control']||'','About HTML discovers current resource versions').toMatch(/no-cache|no-store/);
     const sources=fs.readFileSync(path.join(ROOT,'cn-site/about/index.html'),'utf8')+'\n'+fs.readFileSync(path.join(ROOT,'cn-site/assets/site-traffic-stats-v1.js'),'utf8');
     const expected=[...sources.matchAll(/\/assets\/site-traffic-(?:stats|daily-kline)-v1\.(?:css|js)\?v=[^"'\s]+/g)].map(m=>new URL(m[0],cn).href);
     expect(expected).toHaveLength(3);
