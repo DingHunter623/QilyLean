@@ -1,43 +1,48 @@
 #!/usr/bin/env node
 'use strict';
-
-const fs = require('fs');
-const path = require('path');
-const assert = require('assert');
-
-const root = path.resolve(__dirname, '..');
-const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
-const tea = read('links/anxi-tea/index.html');
-const resource = read('links/index.html');
-
-const images = [...tea.matchAll(/<img\b[^>]*>/gi)].map((match) => match[0]);
-const captions = [...tea.matchAll(/<figcaption\b[^>]*>/gi)].map((match) => match[0]);
-const sections = [...tea.matchAll(/<section\b[^>]*>/gi)];
-
-assert(tea.includes('qily-tea-culture-page'), 'Tea page scope class missing');
-assert(resource.includes('qily-resource-collaboration-page'), 'Resource page scope class missing');
-assert(sections.length === 8, 'Tea page section structure changed unexpectedly');
-assert(images.length >= 18, 'Tea page image set is incomplete');
-assert(images.every((img) => /\balt=["'][^"']+["']/i.test(img)), 'Every tea page image must keep descriptive alt text');
-assert(images.every((img) => /\bwidth=["']\d+["']/i.test(img) && /\bheight=["']\d+["']/i.test(img)), 'Every tea page image must reserve intrinsic dimensions');
-assert(images.slice(1).every((img) => /\bloading=["']lazy["']/i.test(img)), 'Non-hero images must remain lazy-loaded');
-assert(captions.length >= 10 && captions.every((tag) => /data-qily-dark-surface=["']true["']/i.test(tag)), 'Photo captions must retain dark-overlay contrast ownership');
-
-assert(tea.includes('id="craft" data-qily-dark-surface="true"'), 'Craft section must declare its dark surface');
-assert(tea.includes('id="tasting" data-qily-dark-surface="true"'), 'Tasting section must declare its dark surface');
-assert(tea.includes('id="contact" data-qily-dark-surface="true"'), 'Contact section must declare its dark surface');
-assert(tea.includes('background-color:#0d261b!important'), 'Deep tea/contact surfaces must override the global even-section background');
-assert(tea.includes('background-color:#10251a!important'), 'Lifestyle band must retain its dark surface');
-assert(tea.includes('width:min(1180px'), 'Tea page content must follow the sitewide 1180px axis');
-assert(tea.includes('header.topbar:not(.qily-global-header)'), 'Tea page must suppress the pre-shell navigation rail flash');
-assert(resource.includes('header.topbar:not(.qily-global-header)'), 'Resource directory must suppress the pre-shell navigation rail flash');
-
-assert(resource.includes('data-qily-dark-surface="true"'), 'Tea resource feature must declare its dark gradient surface');
-assert(resource.includes('color:#e8eee8!important'), 'Tea resource feature copy must remain high contrast');
-assert(tea.includes('Qily259') && tea.includes('/assets/contact/qilylean-wechat-qr.png'), 'Tea contact must retain the approved WeChat ID and QR code');
-assert(tea.includes('/assets/tea/02-2026-spring-tea.jpg'), 'Approved spring-tea image must remain in the collection');
-
-const priceText = /(?:¥|￥|\bRMB\b|\bCNY\b|单价|售价|价格|\d+(?:\.\d+)?\s*元)/i;
-assert(!priceText.test(tea), 'Tea page markup must not introduce price or currency copy');
-
-console.log('[Tea Visual Closure] PASS: 8 sections, ' + images.length + ' images, ' + captions.length + ' readable photo captions, 1180px axis, dark-surface ownership, WeChat contact and price-free page copy.');
+const fs=require('fs'),path=require('path'),assert=require('assert');
+const root=path.resolve(__dirname,'..');
+const read=file=>fs.readFileSync(path.join(root,file),'utf8');
+const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),css=read('tea-resource-visual-closure-v2.css');
+const images=[...tea.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
+const captions=[...tea.matchAll(/<figcaption\b[^>]*>/gi)].map(m=>m[0]);
+const sections=[...tea.matchAll(/<section\b[^>]*>/gi)];
+const electricalAt=resource.indexOf('id="electricalRecommendations"');
+const teaAt=resource.indexOf('id="teaCultureResourcePlacement"');
+const navigationAt=resource.indexOf('id="navigationPartnerLinks"');
+const wrapper=resource.match(/<section class="resource-service resource-tea-placement"[^>]*>[\s\S]*?<\/section>/i);
+assert(tea.includes('qily-tea-culture-page'),'Tea page scope missing');
+assert(resource.includes('qily-resource-collaboration-page'),'Resource page scope missing');
+assert(sections.length===8,'Tea page section count changed');
+assert(images.length>=18,'Tea page image set incomplete');
+assert(images.every(img=>/\balt=["'][^"']+["']/i.test(img)),'Every image requires descriptive alt text');
+assert(images.every(img=>/\bwidth=["']\d+["']/i.test(img)&&/\bheight=["']\d+["']/i.test(img)),'Every image must reserve intrinsic dimensions');
+assert(!/loading=["']lazy["']/i.test(images[0])&&/fetchpriority=["']high["']/i.test(images[0]),'Hero must be eager/high priority');
+assert(images.slice(1).every(img=>/\bloading=["']lazy["']/i.test(img)),'Non-hero images must remain lazy');
+assert(captions.length>=10&&captions.every(tag=>/data-qily-dark-surface=["']true["']/i.test(tag)),'Captions must retain dark-surface ownership');
+assert(tea.includes('<h1>安溪铁观音</h1>'),'Readable semantic H1 missing');
+assert(tea.includes('<h2>一叶承山韵，<em>一盏见匠心。</em></h2>'),'Poetic intro heading missing');
+assert(tea.includes('id="craft" data-qily-dark-surface="true"'),'Craft section dark-surface owner missing');
+assert(tea.includes('id="tasting" data-qily-dark-surface="true"'),'Tasting section dark-surface owner missing');
+assert(tea.includes('id="contact" data-qily-dark-surface="true"'),'Contact section dark-surface owner missing');
+assert(tea.includes('Qily259')&&tea.includes('/assets/contact/qilylean-wechat-qr.png'),'Approved WeChat ID/QR missing');
+assert(tea.includes('/assets/tea/11-anxi-tea-garden.jpg'),'Original Anxi tea-garden photograph missing');
+assert(tea.includes('/assets/tea/02-2026-spring-tea.jpg'),'Approved spring-tea image missing');
+assert(resource.includes('id="qilyTeaResourceVisualClosureV2"'),'Shared visual stylesheet not linked');
+assert(electricalAt>=0&&teaAt>electricalAt&&navigationAt>teaAt,'Tea card placement must be after electrical references and before hao123');
+assert(wrapper&&wrapper[0].includes('class="resource-feature"')&&wrapper[0].includes('class="resource-stage"'),'Feature and status strip must share isolated wrapper');
+assert((resource.match(/class="resource-feature"/g)||[]).length===1,'Exactly one feature card expected');
+assert((resource.match(/class="resource-stage"/g)||[]).length===1,'Exactly one resource status strip expected');
+assert(resource.includes('width="1536" height="1024"'),'Homepage image intrinsic dimensions missing');
+assert(/object-fit:contain!important/.test(css),'Images must be uncropped');
+assert(/max-height:min\(64vh,560px\)!important/.test(css),'Hero max-height missing');
+assert(/max-height:520px!important/.test(css),'Lifestyle image max-height missing');
+assert(/font-size:18px!important/.test(css)&&/font-size:16px!important/.test(css),'Readable font floors missing');
+assert(css.includes('header .qily-primary-nav-scroll-rail')&&css.includes('display:none!important'),'Navigation rail flash guard missing');
+assert(css.includes('.resource-tea-placement'),'Moved feature must be protected from all:revert');
+assert(!/object-fit:\s*cover\s*!important/.test(css),'Cover crop must not be used');
+const priceText=/(?:¥|￥|\bRMB\b|\bCNY\b|单价|售价|价格|\d+(?:\.\d+)?\s*元)/i;
+assert(!priceText.test(tea),'Tea page must remain price-free');
+const undersized=[...css.matchAll(/font-size:\s*([\d.]+)px!important/gi)].map(m=>Number(m[1])).filter(n=>n<16);
+assert(undersized.length===0,'New closure CSS must not introduce type below 16px');
+console.log('[Tea Visual Closure V2] PASS: semantic H1, 8 sections, '+images.length+' images, uncropped media, 16px+ support text, 18px body, resource placement/isolation and rail flash guard.');

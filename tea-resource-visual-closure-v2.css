@@ -1,0 +1,151 @@
+/* QilyLean tea/resource visual closure V2. Original image files remain unchanged. */
+:root{--qily-tea-deep:#0d261b;--qily-tea-forest:#173c2b;--qily-tea-paper:#f4f0e5;--qily-tea-cream:#f8f5ec;--qily-tea-ink:#243b32;--qily-tea-muted:#536257;--qily-tea-gold:#d6bd86;--qily-tea-line:rgba(35,58,42,.18)}
+html:root:root:root body.qily-resource-collaboration-page header .qily-primary-nav-scroll-rail,
+html:root:root:root body.qily-tea-culture-page header .qily-primary-nav-scroll-rail{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+
+/* /links/ — isolate the moved card from the directory's all:revert reset. */
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-tea-placement{margin:26px 0 22px!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature{display:grid!important;grid-template-columns:minmax(0,42%) minmax(0,1fr)!important;align-items:center!important;gap:clamp(22px,3vw,36px)!important;min-width:0!important;margin:0!important;padding:22px!important;border:1px solid var(--qily-tea-gold)!important;border-radius:10px!important;background:linear-gradient(125deg,#102c20 0%,#183b2a 100%)!important;box-shadow:0 16px 34px rgba(12,34,24,.14)!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__media{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:3/2!important;overflow:hidden!important;border-radius:6px!important;background:#0d261b!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__media img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;transition:none!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__media:hover img{transform:none!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__copy{min-width:0!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__eyebrow{display:inline-block!important;margin:0 0 10px!important;color:#e2c98f!important;-webkit-text-fill-color:#e2c98f!important;font-size:16px!important;font-weight:750!important;line-height:1.45!important;letter-spacing:.12em!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__copy h3{margin:0!important;color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;font-size:30px!important;font-weight:850!important;line-height:1.3!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__copy p{max-width:760px!important;margin:14px 0!important;color:#f0f3ed!important;-webkit-text-fill-color:#f0f3ed!important;font-size:18px!important;line-height:1.8!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__meta{display:flex!important;flex-wrap:wrap!important;gap:8px 18px!important;margin:14px 0 18px!important;color:#e5cf9d!important;-webkit-text-fill-color:#e5cf9d!important;font-size:17px!important;line-height:1.6!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature .resource-action{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:46px!important;padding:9px 18px!important;border:1px solid #e2c98f!important;border-radius:8px!important;color:#172b22!important;-webkit-text-fill-color:#172b22!important;background:#e2c98f!important;font-size:17px!important;font-weight:850!important;line-height:1.45!important;text-decoration:none!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-stage{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;gap:18px!important;margin:14px 0 0!important;padding:18px 22px!important;border-left:4px solid var(--qily-tea-gold)!important;border-radius:0 0 8px 8px!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important;background:#0f4b5a!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-stage strong{display:block!important;color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;font-size:20px!important;font-weight:850!important;line-height:1.4!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-stage p{margin:5px 0 0!important;color:#edf4f1!important;-webkit-text-fill-color:#edf4f1!important;font-size:17px!important;line-height:1.65!important}
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-stage .resource-action{min-height:46px!important;padding:9px 18px!important;border-radius:8px!important;color:#172b22!important;-webkit-text-fill-color:#172b22!important;background:#e2c98f!important;font-size:17px!important}
+
+/* /links/anxi-tea/ — readable type scale, restrained image display, full-frame imagery. */
+html:root:root:root body.qily-tea-culture-page{color:var(--qily-tea-ink)!important;background:var(--qily-tea-paper)!important;font-size:18px!important;line-height:1.72!important}
+html:root:root:root body.qily-tea-culture-page main.tea-page{width:100%!important;max-width:100%!important;overflow:visible!important;background:var(--qily-tea-paper)!important}
+html:root:root:root body.qily-tea-culture-page .topbar{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;padding:12px clamp(18px,4vw,56px)!important;background:#fff!important;border-bottom:1px solid #d5e4e3!important}
+html:root:root:root body.qily-tea-culture-page .brand{color:#0f4b5a!important;font-size:20px!important;font-weight:900!important;text-decoration:none!important;white-space:nowrap!important}
+html:root:root:root body.qily-tea-culture-page .nav{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:flex-end!important;gap:8px 16px!important}
+html:root:root:root body.qily-tea-culture-page .nav a{color:#29443b!important;font-size:16px!important;font-weight:750!important;text-decoration:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-breadcrumb{width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;margin:12px auto 0!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:16px!important;line-height:1.6!important}
+html:root:root:root body.qily-tea-culture-page .tea-breadcrumb a{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:16px!important}
+html:root:root:root body.qily-tea-culture-page .tea-page-heading{width:min(1180px,calc(100% - 36px))!important;margin:0 auto!important;padding:24px 20px 18px!important;text-align:center!important}
+html:root:root:root body.qily-tea-culture-page .tea-page-heading__kicker{display:block!important;margin:0 0 8px!important;color:#8a7045!important;-webkit-text-fill-color:#8a7045!important;font-size:16px!important;font-weight:800!important;line-height:1.45!important;letter-spacing:.14em!important}
+html:root:root:root body.qily-tea-culture-page .tea-page-heading h1{margin:0!important;color:#0d261b!important;-webkit-text-fill-color:#0d261b!important;font-family:"Noto Serif SC","Songti SC","STSong",serif!important;font-size:clamp(36px,3.4vw,48px)!important;font-weight:800!important;line-height:1.25!important;letter-spacing:.035em!important}
+html:root:root:root body.qily-tea-culture-page .tea-page-heading p{margin:8px 0 0!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:22px!important;line-height:1.55!important}
+html:root:root:root body.qily-tea-culture-page .tea-hero{display:flex!important;flex-direction:column!important;align-items:center!important;width:min(1180px,calc(100% - 36px))!important;max-width:1180px!important;margin:0 auto!important;padding:0!important;overflow:hidden!important;border-radius:8px!important;background:#0d261b!important}
+html:root:root:root body.qily-tea-culture-page .tea-hero img{display:block!important;width:auto!important;height:auto!important;max-width:100%!important;max-height:min(64vh,560px)!important;margin:0 auto!important;object-fit:contain!important;object-position:center!important}
+html:root:root:root body.qily-tea-culture-page .tea-hero__caption{position:static!important;display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:10px 18px!important;width:100%!important;padding:12px 20px!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important;background:#0d261b!important;font-size:16px!important;line-height:1.5!important;letter-spacing:.08em!important;text-shadow:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-intro{width:min(1040px,calc(100% - 36px))!important;max-width:1040px!important;margin:0 auto!important;padding:42px 20px 48px!important;text-align:center!important;background:var(--qily-tea-paper)!important}
+html:root:root:root body.qily-tea-culture-page .tea-intro .tea-kicker{color:#8a7045!important;-webkit-text-fill-color:#8a7045!important;font-size:16px!important;font-weight:800!important;line-height:1.45!important;letter-spacing:.14em!important}
+html:root:root:root body.qily-tea-culture-page .tea-intro h2{margin:10px 0 14px!important;color:#0d261b!important;-webkit-text-fill-color:#0d261b!important;font-family:"Noto Serif SC","Songti SC","STSong",serif!important;font-size:clamp(28px,3vw,36px)!important;font-weight:750!important;line-height:1.3!important}
+html:root:root:root body.qily-tea-culture-page .tea-intro h2 em{color:#8b6d3f!important;-webkit-text-fill-color:#8b6d3f!important;font-style:normal!important;font-size:inherit!important}
+html:root:root:root body.qily-tea-culture-page .tea-intro p{max-width:820px!important;margin:0 auto!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:18px!important;line-height:1.9!important}
+html:root:root:root body.qily-tea-culture-page .tea-facts{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin-top:26px!important}
+html:root:root:root body.qily-tea-culture-page .tea-fact{min-width:0!important;padding:14px 16px!important;border-top:1px solid var(--qily-tea-gold)!important;border-bottom:1px solid var(--qily-tea-line)!important;color:#354b3c!important;-webkit-text-fill-color:#354b3c!important;font-size:17px!important;line-height:1.6!important}
+html:root:root:root body.qily-tea-culture-page .tea-fact strong{display:block!important;margin-bottom:4px!important;color:#80643b!important;-webkit-text-fill-color:#80643b!important;font-size:16px!important;line-height:1.45!important;letter-spacing:.08em!important}
+html:root:root:root body.qily-tea-culture-page .tea-section{padding:64px 24px!important}
+html:root:root:root body.qily-tea-culture-page .tea-section--paper{color:var(--qily-tea-ink)!important;background:var(--qily-tea-cream)!important}
+html:root:root:root body.qily-tea-culture-page .tea-section--deep{color:#f4f0e5!important;background:linear-gradient(135deg,#0d261b 0%,#183d2b 100%)!important}
+html:root:root:root body.qily-tea-culture-page .tea-section__inner{width:min(1180px,100%)!important;max-width:1180px!important;margin:0 auto!important}
+html:root:root:root body.qily-tea-culture-page .tea-section__head{max-width:820px!important;margin:0 auto 30px!important;text-align:center!important}
+html:root:root:root body.qily-tea-culture-page .tea-section__head .en{display:block!important;margin:0 0 9px!important;color:#8a7045!important;-webkit-text-fill-color:#8a7045!important;font-size:16px!important;font-weight:800!important;line-height:1.5!important;letter-spacing:.12em!important}
+html:root:root:root body.qily-tea-culture-page .tea-section--deep .tea-section__head .en{color:#e2c98f!important;-webkit-text-fill-color:#e2c98f!important}
+html:root:root:root body.qily-tea-culture-page .tea-section__head h2{margin:0!important;color:#0d261b!important;-webkit-text-fill-color:#0d261b!important;font-family:"Noto Serif SC","Songti SC","STSong",serif!important;font-size:clamp(28px,3.2vw,36px)!important;font-weight:750!important;line-height:1.3!important}
+html:root:root:root body.qily-tea-culture-page .tea-section--deep .tea-section__head h2{color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important}
+html:root:root:root body.qily-tea-culture-page .tea-section__head p{max-width:760px!important;margin:12px auto 0!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:18px!important;line-height:1.8!important}
+html:root:root:root body.qily-tea-culture-page .tea-section--deep .tea-section__head p{color:#e0e8df!important;-webkit-text-fill-color:#e0e8df!important}
+html:root:root:root body.qily-tea-culture-page .tea-grid{display:grid!important;align-items:start!important;gap:18px!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo{display:flex!important;flex-direction:column!important;min-width:0!important;margin:0!important;overflow:hidden!important;border:1px solid rgba(35,58,42,.16)!important;border-radius:8px!important;background:#fff!important;box-shadow:0 8px 22px rgba(13,38,27,.08)!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo img{display:block!important;width:100%!important;height:clamp(300px,28vw,400px)!important;object-fit:contain!important;object-position:center!important;background:#e9e5d9!important;transition:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo:hover img{transform:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo figcaption{position:static!important;display:block!important;padding:13px 16px 15px!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important;background:#0d261b!important;background-image:none!important;text-shadow:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo figcaption strong{display:block!important;color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;font-family:"Noto Serif SC","Songti SC",serif!important;font-size:20px!important;font-weight:750!important;line-height:1.4!important}
+html:root:root:root body.qily-tea-culture-page .tea-photo figcaption span{display:block!important;margin-top:4px!important;color:#e7eee6!important;-webkit-text-fill-color:#e7eee6!important;font-size:16px!important;line-height:1.55!important}
+html:root:root:root body.qily-tea-culture-page .tea-origin-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html:root:root:root body.qily-tea-culture-page .tea-craft-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:stretch!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card{display:flex!important;flex-direction:column!important;min-width:0!important;overflow:hidden!important;border:1px solid rgba(35,58,42,.16)!important;border-radius:8px!important;background:#fff!important;box-shadow:0 8px 22px rgba(13,38,27,.08)!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__image{display:flex!important;align-items:center!important;justify-content:center!important;height:330px!important;overflow:hidden!important;background:#e9e5d9!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__image img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important;transition:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card:hover .tea-product-card__image img{transform:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__copy{padding:18px 20px 22px!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__copy small{color:#80643b!important;-webkit-text-fill-color:#80643b!important;font-size:16px!important;line-height:1.45!important;letter-spacing:.08em!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__copy h3{margin:8px 0 6px!important;color:#1c3526!important;-webkit-text-fill-color:#1c3526!important;font-family:"Noto Serif SC","Songti SC",serif!important;font-size:24px!important;line-height:1.35!important}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__copy p{margin:0!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:18px!important;line-height:1.75!important}
+html:root:root:root body.qily-tea-culture-page .tea-flower-note{display:grid!important;grid-template-columns:220px minmax(0,1fr)!important;gap:20px!important;align-items:center!important;margin-top:20px!important;padding:16px!important;border:1px solid rgba(199,167,108,.55)!important;border-radius:8px!important;background:#eee8d9!important}
+html:root:root:root body.qily-tea-culture-page .tea-flower-note img{display:block!important;width:100%!important;height:220px!important;object-fit:contain!important;background:#e9e5d9!important}
+html:root:root:root body.qily-tea-culture-page .tea-flower-note strong{display:block!important;color:#2c4732!important;-webkit-text-fill-color:#2c4732!important;font-family:"Noto Serif SC","Songti SC",serif!important;font-size:22px!important;line-height:1.4!important}
+html:root:root:root body.qily-tea-culture-page .tea-flower-note p{margin:8px 0 0!important;color:#536257!important;-webkit-text-fill-color:#536257!important;font-size:18px!important;line-height:1.75!important}
+html:root:root:root body.qily-tea-culture-page .tea-lifestyle{display:flex!important;flex-direction:column!important;align-items:center!important;width:100%!important;padding:20px 18px 0!important;background:#0d261b!important}
+html:root:root:root body.qily-tea-culture-page .tea-lifestyle img{display:block!important;width:auto!important;height:auto!important;max-width:min(1180px,100%)!important;max-height:520px!important;margin:0 auto!important;object-fit:contain!important;object-position:center!important}
+html:root:root:root body.qily-tea-culture-page .tea-lifestyle__caption{width:min(1180px,100%)!important;padding:14px 20px!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important;background:#0d261b!important;text-align:center!important;font-family:"Noto Serif SC","Songti SC",serif!important;font-size:20px!important;line-height:1.5!important;letter-spacing:.08em!important}
+html:root:root:root body.qily-tea-culture-page .tea-ritual-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html:root:root:root body.qily-tea-culture-page .tea-ritual-grid .tea-photo:first-child{grid-column:span 2!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact{padding:64px 24px!important;background:linear-gradient(135deg,#0d261b 0%,#183d2b 100%)!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__inner{display:grid!important;grid-template-columns:minmax(0,1fr) 250px!important;align-items:center!important;gap:32px!important;width:min(1080px,100%)!important;max-width:1080px!important;margin:0 auto!important;padding:34px!important;border:1px solid rgba(214,189,134,.7)!important;border-radius:10px!important;background:rgba(255,255,255,.055)!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__kicker{color:#e2c98f!important;-webkit-text-fill-color:#e2c98f!important;font-size:16px!important;font-weight:800!important;line-height:1.5!important;letter-spacing:.14em!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact h2{margin:10px 0 14px!important;color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;font-family:"Noto Serif SC","Songti SC",serif!important;font-size:clamp(30px,3.2vw,38px)!important;font-weight:750!important;line-height:1.3!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__copy p{max-width:640px!important;margin:0!important;color:#e7eee6!important;-webkit-text-fill-color:#e7eee6!important;font-size:18px!important;line-height:1.8!important}
+html:root:root:root body.qily-tea-culture-page .tea-origin-label{margin-top:20px!important;color:#f4f0e5!important;-webkit-text-fill-color:#f4f0e5!important;font-size:18px!important;line-height:1.65!important}
+html:root:root:root body.qily-tea-culture-page .tea-origin-label strong{color:#e2c98f!important;-webkit-text-fill-color:#e2c98f!important;font-size:18px!important}
+html:root:root:root body.qily-tea-culture-page .tea-wechat{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:12px!important;margin-top:18px!important}
+html:root:root:root body.qily-tea-culture-page .tea-wechat__id{color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;font-size:22px!important;font-weight:850!important;line-height:1.5!important;letter-spacing:.04em!important}
+html:root:root:root body.qily-tea-culture-page .tea-copy-btn{min-height:44px!important;padding:8px 16px!important;border:1px solid #e2c98f!important;border-radius:8px!important;color:#fff5df!important;-webkit-text-fill-color:#fff5df!important;background:#0f4b5a!important;font-size:17px!important;font-weight:800!important;cursor:pointer!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__qr{width:240px!important;max-width:100%!important;padding:14px!important;border-radius:6px!important;background:#fff!important;text-align:center!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__qr img{display:block!important;width:100%!important;height:auto!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:block!important;margin-top:10px!important;color:#243b32!important;-webkit-text-fill-color:#243b32!important;font-size:17px!important;font-weight:800!important;line-height:1.55!important}
+html:root:root:root body.qily-tea-culture-page .tea-note{margin-top:18px!important;color:#e0e8df!important;-webkit-text-fill-color:#e0e8df!important;font-size:16px!important;line-height:1.65!important}
+html:root:root:root body.qily-tea-culture-page .tea-footer{display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:14px!important;padding:22px 28px 82px!important;color:#e7eee6!important;-webkit-text-fill-color:#e7eee6!important;background:#091a12!important;font-size:16px!important;line-height:1.6!important}
+html:root:root:root body.qily-tea-culture-page .tea-footer a,
+html:root:root:root body.qily-tea-culture-page .tea-backtop{color:#e2c98f!important;-webkit-text-fill-color:#e2c98f!important;font-size:16px!important;text-decoration:none!important}
+
+@media(max-width:960px){
+  html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-range-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-ritual-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-craft-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact__inner{grid-template-columns:minmax(0,1fr) 220px!important;gap:24px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact__qr{width:210px!important}
+}
+@media(max-width:640px){
+  html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-tea-placement{margin:22px 0 18px!important}
+  html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature{grid-template-columns:minmax(0,1fr)!important;gap:18px!important;padding:16px!important}
+  html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature__copy h3{font-size:26px!important}
+  html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-stage{grid-template-columns:minmax(0,1fr)!important;align-items:start!important;gap:12px!important;padding:16px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-breadcrumb,
+  html:root:root:root body.qily-tea-culture-page .tea-page-heading{width:calc(100% - 24px)!important}
+  html:root:root:root body.qily-tea-culture-page .tea-page-heading{padding:18px 12px 14px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-page-heading h1{font-size:34px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-page-heading p{font-size:20px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-hero{width:calc(100% - 24px)!important}
+  html:root:root:root body.qily-tea-culture-page .tea-hero img{max-height:min(56svh,440px)!important}
+  html:root:root:root body.qily-tea-culture-page .tea-hero__caption{justify-content:flex-start!important;padding:11px 14px!important;font-size:16px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-intro{width:calc(100% - 24px)!important;padding:32px 12px 38px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-intro h2{font-size:28px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-facts{grid-template-columns:minmax(0,1fr)!important;gap:8px!important;margin-top:20px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-section{padding:44px 14px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-section__inner{width:100%!important}
+  html:root:root:root body.qily-tea-culture-page .tea-section__head{margin-bottom:22px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-section__head h2{font-size:28px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-craft-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-range-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-ritual-grid{grid-template-columns:minmax(0,1fr)!important}
+  html:root:root:root body.qily-tea-culture-page .tea-ritual-grid .tea-photo:first-child{grid-column:auto!important}
+  html:root:root:root body.qily-tea-culture-page .tea-photo img{height:360px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-product-card__image{height:320px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-flower-note{grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-flower-note img{height:220px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-lifestyle{padding:14px 12px 0!important}
+  html:root:root:root body.qily-tea-culture-page .tea-lifestyle img{max-height:380px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact{padding:44px 14px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact__inner{grid-template-columns:minmax(0,1fr)!important;gap:22px!important;padding:20px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact h2{font-size:30px!important}
+  html:root:root:root body.qily-tea-culture-page .tea-contact__qr{width:min(240px,100%)!important;margin:0 auto!important}
+  html:root:root:root body.qily-tea-culture-page .tea-footer{align-items:flex-start!important;flex-direction:column!important;padding:20px 16px 78px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html:root:root:root body.qily-tea-culture-page .tea-photo img,
+  html:root:root:root body.qily-tea-culture-page .tea-product-card__image img{transition:none!important}
+}
