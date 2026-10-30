@@ -855,7 +855,15 @@ jobs:
               assert value and value.group(1).strip()==str(expected), f'China Trust is stale: {key}'
           latest=data['briefs']['latestDate']
           assert f'/briefs/archive/{latest}/' in page, 'China Trust latest brief link stale'
-          assert '知识可以传播' in fetch('/briefs/archive/'+latest+'/?release='+os.environ['GITHUB_SHA']), 'Latest brief missing'
+          # Validate the actual latest title from the curated-brief SSOT, not a
+          # historically hardcoded 2026-10-27 phrase. Every future brief must
+          # be fully present in the CN local article, not merely linked out.
+          index=json.loads(pathlib.Path('qilylean/daily/index.json').read_text(encoding='utf-8'))
+          current=next((item for item in index if item.get('date')==latest),None)
+          assert current and current.get('title'), 'Latest curated source metadata missing'
+          latest_page=fetch('/briefs/archive/'+latest+'/?release='+os.environ['GITHUB_SHA'])
+          assert current['title'] in latest_page, 'Latest CN locally mirrored brief title missing'
+          assert 'data-qily-brief-parity="v1"' in latest_page, 'Latest CN brief lost governed visual parity'
           manifest=json.loads(fetch('/archive/content-manifest.json?release='+os.environ['GITHUB_SHA']))
           rows=manifest['items']
           glossary=fetch('/archive/knowledge/terminology/?release='+os.environ['GITHUB_SHA'])
