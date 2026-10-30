@@ -226,6 +226,10 @@ def main() -> None:
         '<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->')
     fragment, count = re.subn(r"<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->", lambda _: bridge, fragment)
     if count != 1: raise ValueError("Reciprocal bridge source missing")
+    # The international resource showcase includes commercial onboarding; it
+    # must not enter the China personal-site enterprise directory.
+    # Preserve the source showcase unchanged and exclude only this named section.
+    fragment = re.sub(r'<section class="resource-service resource-tea-placement"[\s\S]*?</section>', "", fragment, count=1)
     if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
         raise ValueError("Unexpected non-public directory content")
     fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'

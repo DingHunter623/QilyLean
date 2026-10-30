@@ -37,15 +37,15 @@ assert(pphPublisher.includes('knowledge/terminology/pph.html'), 'permanent PPH s
 assert(pphPublisher.includes('Unsafe acronym suffix matching'), 'permanent PPH source must harden terminology acronym matching.');
 assert(publication.includes("['publish-pph-terminology.js']"), 'curated publication SSOT must materialize PPH before terminology/search metadata synchronization.');
 
-// A source-only PR may still carry the previously generated 192-count snapshot until
+// A source-only PR may still carry the previously generated 194-count snapshot until
 // the publication job runs. The protected source guarantees the next build becomes
-// 193; after materialization pphStatic=true and the generated values themselves must
-// already be 193. This prevents both false red PRs and silent rollback to 192.
-assert(effectiveTerminologyTotal === 193 && effectiveLessonTotal === 193, 'effective terminology and lesson totals must resolve to 193 with the protected PPH source.');
-assert(effectiveSearchTerminologyTotal === 193, 'effective search terminology total must resolve to 193 with the protected PPH source.');
+// 195; after materialization pphStatic=true and the generated values themselves must
+// already be 195. This prevents false red PRs and rollback to 194.
+assert(effectiveTerminologyTotal === 195 && effectiveLessonTotal === 195, 'effective terminology and lesson totals must resolve to 195 with the protected PPH source.');
+assert(effectiveSearchTerminologyTotal === 195, 'effective search terminology total must resolve to 195 with the protected PPH source.');
 if (pphStatic) {
-  assert(siteData.terminology.total === 193 && siteData.terminology.lessonTotal === 193, 'once PPH is static, site-data must be materialized as 193/193.');
-  assert(siteData.search.terminologyTotal === 193, 'once PPH is static, generated search metadata must be 193.');
+  assert(siteData.terminology.total === 195 && siteData.terminology.lessonTotal === 195, 'once PPH is static, site-data must be materialized as 195/195.');
+  assert(siteData.search.terminologyTotal === 195, 'once PPH is static, generated search metadata must be 193.');
 }
 
 assert(/<h1>PPH｜每小时件数<\/h1>/.test(pphLesson), 'independent PPH OPL page must exist.');
