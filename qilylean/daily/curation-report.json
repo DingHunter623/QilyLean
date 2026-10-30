@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-10-27T00:00:00.000Z",
-  "total_before": 384,
-  "total_after": 384,
+  "generated_at": "2026-10-31T00:00:00.000Z",
+  "total_before": 385,
+  "total_after": 385,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -11,7 +11,8 @@
     "2026-08-12",
     "2026-08-14",
     "2026-08-25",
-    "2026-10-27"
+    "2026-10-27",
+    "2026-10-31"
   ],
   "decisions": [
     {
@@ -4981,12 +4982,18 @@
     },
     {
       "week": "2026-10-26",
-      "candidates": 1,
+      "candidates": 2,
       "kept": [
         {
           "date": "2026-10-27",
           "title": "知识可以传播，价值源于转化：从专业认知到制造生产力",
           "score": 10240,
+          "protected": true
+        },
+        {
+          "date": "2026-10-31",
+          "title": "从重复劳动到持续创造价值：精益改善的第一性原理",
+          "score": 10211,
           "protected": true
         }
       ],

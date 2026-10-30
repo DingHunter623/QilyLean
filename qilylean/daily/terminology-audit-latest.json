@@ -1,20 +1,20 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-10-27",
-  "briefPath": "qilylean/daily/2026-10-27.html",
-  "checkedAt": "2026-10-27T00:00:00.000Z",
+  "briefDate": "2026-10-31",
+  "briefPath": "qilylean/daily/2026-10-31.html",
+  "checkedAt": "2026-10-31T00:00:00.000Z",
   "candidates": [
     {
-      "term": "APS",
+      "term": "CT",
       "explanation": "",
       "explicit": false,
-      "source": "APS"
+      "source": "CT"
     },
     {
-      "term": "ERP",
+      "term": "ECRS",
       "explanation": "",
       "explicit": false,
-      "source": "MES/ERP"
+      "source": "ECRS"
     },
     {
       "term": "FPY",
@@ -29,24 +29,6 @@
       "source": "IE"
     },
     {
-      "term": "MES",
-      "explanation": "",
-      "explicit": false,
-      "source": "MES/ERP"
-    },
-    {
-      "term": "OEE",
-      "explanation": "",
-      "explicit": false,
-      "source": "OEE"
-    },
-    {
-      "term": "OTD",
-      "explanation": "",
-      "explicit": false,
-      "source": "OTD"
-    },
-    {
       "term": "PDCA",
       "explanation": "",
       "explicit": false,
@@ -54,9 +36,9 @@
     },
     {
       "term": "PQCD",
-      "explanation": "",
-      "explicit": false,
-      "source": "PQCD"
+      "explanation": "生产率、质量、成本、交付",
+      "explicit": true,
+      "source": "PQCD（生产率、质量、成本、交付）"
     },
     {
       "term": "SMED",
@@ -71,25 +53,29 @@
       "source": "SOP"
     },
     {
-      "term": "UPPH",
+      "term": "UPH",
       "explanation": "",
       "explicit": false,
-      "source": "UPPH"
+      "source": "UPH"
+    },
+    {
+      "term": "WIP",
+      "explanation": "",
+      "explicit": false,
+      "source": "WIP"
     }
   ],
   "coveredTerms": [
-    "APS",
-    "ERP",
+    "CT",
+    "ECRS",
     "FPY",
     "IE",
-    "MES",
-    "OEE",
-    "OTD",
     "PDCA",
     "PQCD",
     "SMED",
     "SOP",
-    "UPPH"
+    "UPH",
+    "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
@@ -97,9 +83,9 @@
   "featuredTerms": [
     "Lean",
     "IE",
-    "SMED",
-    "OEE",
-    "APS"
+    "PDCA",
+    "ECRS",
+    "标准作业"
   ],
   "status": "passed"
 }
