@@ -59,7 +59,7 @@ for(const width of [390,1440])test('International daily Kline chart uses real PV
   await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic .qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
-  await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label').first()).toHaveCSS('font-size','18.5px');
   await expect(page.locator('#traffic .qily-traffic-kline__legend')).toHaveCSS('font-size','18.5px');
   await expect(page.locator('#traffic .qily-traffic-kline__actions button').first()).toHaveCSS('font-size','18.5px');
   await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','18');
