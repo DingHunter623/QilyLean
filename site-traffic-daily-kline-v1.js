@@ -248,7 +248,7 @@
         svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',
           fill:'#0f4b5a','font-size':20,'font-weight':750,
           'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
-        svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot');
+        svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
       }
       svg('text',{x:x,y:318,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
     });
