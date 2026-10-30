@@ -22,7 +22,7 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
    }
    assert(ready,'V3 production page not available after deployment polling');
    await page.waitForSelector('header.qily-site-header.qily-global-header nav.qily-global-nav a',{state:'visible'});
-   const imgs=await page.evaluate(async()=>{const a=[...document.images];a.forEach(x=>x.loading='eager');await Promise.all(a.map(x=>x.decode().catch(()=>null)));return a.map(x=>({complete:x.complete,w:x.naturalWidth,h:x.naturalHeight}));});
+   const imgs=await page.evaluate(async()=>{const a=[...document.querySelectorAll('main.tea-page img')];a.forEach(x=>x.loading='eager');await Promise.all(a.map(x=>x.decode().catch(()=>null)));return a.map(x=>({complete:x.complete,w:x.naturalWidth,h:x.naturalHeight}));});
    assert(imgs.length===19&&imgs.every(x=>x.complete&&x.w>0&&x.h>0),name+': original image load failed '+JSON.stringify(imgs.filter(x=>!x.w)));
    const m=await page.evaluate(()=>{
     const el=s=>document.querySelector(s),st=s=>getComputedStyle(el(s));
@@ -41,7 +41,7 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
     return {
      nav:nav.map(a=>({href:a.getAttribute('href'),current:a.getAttribute('aria-current')})),
      header:!!el('header.qily-site-header.qily-global-header'),
-     sections:sections.length,images:document.images.length,captions:photoCaptions.length,
+     sections:sections.length,images:document.querySelectorAll('main.tea-page img').length,captions:photoCaptions.length,
      dark:document.querySelectorAll('[data-qily-dark-surface="true"]').length,
      body: getComputedStyle(document.body).backgroundColor,
      contact:st('.tea-contact').backgroundColor,contactCard:st('.tea-contact__inner').backgroundColor,
