@@ -125,8 +125,6 @@ function getTarget(name){return d.querySelector('[data-qily-traffic-count="'+nam
 
     var title = section.querySelector('#qily-traffic-title');
     if (title) title.textContent = '6. 中国站访问统计';
-    var intro = section.querySelector('.qily-traffic-intro');
-    if (intro) intro.textContent = 'QilyLean.cn 中国站累计展示计数，自2026年10月29日起随真实页面访问持续更新。';
 
     var grid = section.querySelector('.qily-traffic-grid');
     if (grid) grid.setAttribute('data-qily-traffic-single', 'true');
@@ -147,7 +145,7 @@ function getTarget(name){return d.querySelector('[data-qily-traffic-count="'+nam
       var metrics = cnCard.querySelector('.qily-traffic-metrics');
       if (metrics) metrics.setAttribute('data-qily-traffic-single-metric', 'true');
       var label = cnTarget && cnTarget.nextElementSibling;
-      if (label) label.textContent = '累计展示计数 · 含初始基数';
+      if (label) label.textContent = '累计展示量';
       var badge = cnCard.querySelector('.qily-traffic-live');
       if (badge) {
         badge.textContent = '全站累计';
@@ -155,17 +153,7 @@ function getTarget(name){return d.querySelector('[data-qily-traffic-count="'+nam
       }
     }
 
-    var note = section.querySelector('.qily-traffic-note');
-    if (note) {
-      note.textContent = '起始展示基数10,000次（非历史实测）；2026年10月29日起新增中国站页面浏览量由系统自动记录。计数服务：';
-      var link = d.createElement('a');
-      link.href = 'https://countapi.mileshilliard.com/';
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = 'CountAPI';
-      note.appendChild(link);
-      note.appendChild(d.createTextNode('。'));
-    }
+
   }
 
 
@@ -199,7 +187,7 @@ function getTarget(name){return d.querySelector('[data-qily-traffic-count="'+nam
     if (d.querySelector('script[data-qily-daily-kline="v1"]')) return;
     var script = d.createElement('script');
     script.async = true;
-    script.src = '/assets/site-traffic-daily-kline-v1.js?v=20261030-cn-light-data-labels-v2';
+    script.src = '/assets/site-traffic-daily-kline-v1.js?v=20261030-cn-body-type-no-admin-notes-v4';
     script.setAttribute('data-qily-daily-kline', 'v1');
     (d.head || d.documentElement).appendChild(script);
   }

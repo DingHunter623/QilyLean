@@ -256,8 +256,6 @@
 
     var title = section.querySelector('#qily-traffic-title');
     if (title) title.textContent = '6. 国际站访问统计';
-    var intro = section.querySelector('.qily-traffic-intro');
-    if (intro) intro.textContent = 'QilyLean.com 国际站累计展示计数，自2026年10月29日起随真实页面访问持续更新。';
 
     var grid = section.querySelector('.qily-traffic-grid');
     if (grid) grid.setAttribute('data-qily-traffic-single', 'true');
@@ -278,7 +276,7 @@
       var metrics = intlCard.querySelector('.qily-traffic-metrics');
       if (metrics) metrics.setAttribute('data-qily-traffic-single-metric', 'true');
       var label = intlTarget && intlTarget.nextElementSibling;
-      if (label) label.textContent = '累计展示计数 · 含初始基数';
+      if (label) label.textContent = '累计展示量';
       var badge = intlCard.querySelector('.qily-traffic-live');
       if (badge) {
         badge.textContent = '全站累计';
@@ -286,17 +284,7 @@
       }
     }
 
-    var note = section.querySelector('.qily-traffic-note');
-    if (note) {
-      note.textContent = '起始展示基数15,000次（非历史实测）；2026年10月29日起新增页面浏览量由系统自动记录。计数服务：';
-      var link = d.createElement('a');
-      link.href = 'https://countapi.mileshilliard.com/';
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      link.textContent = 'CountAPI';
-      note.appendChild(link);
-      note.appendChild(d.createTextNode('。'));
-    }
+
   }
 
 
@@ -330,7 +318,7 @@
     if (d.querySelector('script[data-qily-daily-kline="v1"]')) return;
     var script = d.createElement('script');
     script.async = true;
-    script.src = '/site-traffic-daily-kline-v1.js?v=20261030-light-data-labels-v2';
+    script.src = '/site-traffic-daily-kline-v1.js?v=20261030-body-type-no-admin-notes-v3';
     script.setAttribute('data-qily-daily-kline', 'v1');
     (d.head || d.documentElement).appendChild(script);
   }

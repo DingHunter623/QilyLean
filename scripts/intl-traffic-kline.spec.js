@@ -46,22 +46,27 @@ for(const width of [390,1440])test('International daily Kline chart uses real PV
   await page.goto('https://qilylean.com/about/',{waitUntil:'domcontentloaded'});
   await expect(page.locator('[data-qily-traffic-count="intl-total"]')).toHaveText('15,143',{timeout:20000});
   await expect(page.locator('.qily-traffic-kline__svg')).toBeVisible({timeout:20000});
-  await expect(page.locator('.qily-traffic-kline__status')).toContainText('已采集');
+  await expect(page.locator('.qily-traffic-kline__status')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-grid')).toHaveAttribute('data-qily-traffic-single','true');
   await expect(page.locator('[data-qily-traffic-count="cn-total"]').locator('xpath=ancestor::article')).toBeHidden();
-  await expect(page.locator('.qily-traffic-note')).toContainText('15,000次（非历史实测）');
-  await expect(page.locator('.qily-traffic-kline__foot')).toContainText('不含15,000次初始展示基数');
+  await expect(page.locator('.qily-traffic-note')).toBeHidden();
+  await expect(page.locator('.qily-traffic-intro')).toBeHidden();
+  await expect(page.locator('.qily-traffic-kline__foot')).toHaveCount(0);
+  await expect(page.locator('.qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('[data-qily-traffic-count="intl-total"]')).toHaveAttribute('data-qily-traffic-recorded-pv','143');
   await expect(page.locator('.qily-traffic-kline__scroll svg g title').last()).toContainText('日PV 2');
   await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveText('2');
   await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveText('2');
-  await expect(page.locator('#traffic .qily-traffic-kline__info')).toContainText('柱顶数字＝当天真实PV');
+  await expect(page.locator('#traffic .qily-traffic-kline__info')).toHaveCount(0);
   await expect(page.locator('#traffic .qily-traffic-kline')).toHaveCSS('background-color','rgb(244, 249, 247)');
-  await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','14');
-  await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','14');
+  await expect(page.locator('#traffic .qily-traffic-site:not([hidden]) .qily-traffic-label')).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('#traffic .qily-traffic-kline__legend')).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('#traffic .qily-traffic-kline__actions button').first()).toHaveCSS('font-size','18.5px');
+  await expect(page.locator('#traffic [data-qily-kline-label="high-pv"]').first()).toHaveAttribute('font-size','18');
+  await expect(page.locator('#traffic [data-qily-kline-label="daily-pv"]').first()).toHaveAttribute('font-size','18');
   await page.getByRole('button',{name:'近14日'}).click();
   await expect(page.getByRole('button',{name:'近14日'})).toHaveAttribute('aria-pressed','true');
-  await expect(page.locator('.qily-traffic-kline__status')).toContainText('已采集');
+  await expect(page.locator('.qily-traffic-kline__status')).toHaveCount(0);
   const computed=await page.locator('#traffic .qily-traffic-kline__head h3').evaluate(el=>({
     color:getComputedStyle(el).color,fill:getComputedStyle(el).webkitTextFillColor
   }));

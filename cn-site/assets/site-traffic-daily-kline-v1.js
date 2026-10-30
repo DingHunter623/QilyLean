@@ -59,18 +59,18 @@
     s.textContent = [
       '#traffic .qily-traffic-kline{margin-top:20px;padding:clamp(14px,2.2vw,22px);border:1px solid #cfe0dd;border-radius:15px;background:#f4f9f7;color:#365f62!important;-webkit-text-fill-color:#365f62!important;box-shadow:0 6px 18px rgba(15,75,90,.06);max-width:100%;min-width:0}',
       '#traffic .qily-traffic-kline__head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}',
-      '#traffic .qily-traffic-kline__head h3{margin:0!important;font-size:clamp(18px,2vw,21px)!important;font-weight:750!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}',
+      '#traffic .qily-traffic-kline__head h3{margin:0!important;font-size:23px!important;font-weight:750!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}',
       '#traffic .qily-traffic-kline__actions{display:flex;gap:7px}',
-      '#traffic .qily-traffic-kline__actions button{padding:6px 12px;min-height:36px;cursor:pointer;border:1px solid #cfe0dd;border-radius:8px;background:#eaf2ef;color:#365f62!important;-webkit-text-fill-color:#365f62!important;font:inherit;font-size:14px;line-height:1.2}',
+      '#traffic .qily-traffic-kline__actions button{padding:8px 16px;min-height:44px;cursor:pointer;border:1px solid #cfe0dd;border-radius:9px;background:#eaf2ef;color:#365f62!important;-webkit-text-fill-color:#365f62!important;font:inherit;font-size:18.5px!important;line-height:1.25}',
       '#traffic .qily-traffic-kline__actions button[aria-pressed="true"]{background:#0f4b5a!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-weight:750}',
       '#traffic .qily-traffic-kline__actions button:focus-visible{outline:2px solid #caa15f;outline-offset:2px}',
-      '#traffic .qily-traffic-kline__info{margin:9px 0 8px!important;font-size:15px!important;line-height:1.65!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important}',
+      '#traffic .qily-traffic-kline__info{display:none!important}',
       '#traffic .qily-traffic-kline__scroll{max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding:4px 0;scrollbar-color:#caa15f #e6efec}',
-      '#traffic .qily-traffic-kline__svg{display:block;max-width:none;background:transparent;overflow:visible}',
-      '#traffic .qily-traffic-kline__status{margin:8px 0 0!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important;font-size:14px!important;line-height:1.6!important}',
-      '#traffic .qily-traffic-kline__legend{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px;margin-top:12px;font-size:14px;line-height:1.6;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
+      '#traffic .qily-traffic-kline__svg{display:block;width:auto;height:auto;max-width:none;background:transparent;overflow:visible;font-family:inherit}',
+      '#traffic .qily-traffic-kline__status{display:none!important}',
+      '#traffic .qily-traffic-kline__legend{display:flex;align-items:center;flex-wrap:wrap;gap:10px 22px;margin-top:14px;font-size:18.5px!important;line-height:1.55;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
       '#traffic .qily-traffic-kline__swatch{display:inline-block;width:10px;height:10px;margin-right:6px;border-radius:2px;vertical-align:-1px}',
-      '#traffic .qily-traffic-kline__foot{margin:10px 0 0!important;font-size:13px!important;line-height:1.65!important;color:#526f70!important;-webkit-text-fill-color:#526f70!important}',
+      '#traffic .qily-traffic-kline__foot{display:none!important}',
       '@media(max-width:620px){#traffic .qily-traffic-kline{padding:14px 12px}#traffic .qily-traffic-kline__head{align-items:flex-start}}'
     ].join('');
     (d.head || d.documentElement).appendChild(s);
@@ -78,7 +78,7 @@
   function mount() {
     style();
     shell = el('section', 'qily-traffic-kline');
-    shell.setAttribute('aria-label', '中国站每日真实页面浏览量 K 线趋势');
+    shell.setAttribute('aria-label', '中国站每日访问趋势图');
     var header = el('div', 'qily-traffic-kline__head');
     header.appendChild(el('h3', '', 'DAILY PV · 日流量 K 线'));
     var actions = el('div', 'qily-traffic-kline__actions');
@@ -94,25 +94,24 @@
     actions.appendChild(fourteen);
     header.appendChild(actions);
     shell.appendChild(header);
-    shell.appendChild(el('p','qily-traffic-kline__info','实际分时PV构成K线：开/收＝首末6小时时段；高/低＝四时段最大/最小值。下方柱状＝全天PV。'));
     chartBox = el('div', 'qily-traffic-kline__scroll');
     chartBox.setAttribute('role', 'region');
     chartBox.setAttribute('aria-label','可横向浏览的中国站日流量K线图');
     chartBox.tabIndex = 0;
     shell.appendChild(chartBox);
     statusBox = el('p', 'qily-traffic-kline__status', '正在读取分时访问数据…');
-    statusBox.setAttribute('aria-live','polite');
-    shell.appendChild(statusBox);
+    statusBox.setAttribute('aria-live','off');
+    statusBox.hidden = true;
+    statusBox.setAttribute('aria-hidden','true');
     var legend = el('div','qily-traffic-kline__legend');
     [
-      ['#D8B36A','收盘时段PV ≥ 开盘时段PV'],
-      ['#65C8C5','收盘时段PV < 开盘时段PV'],
-      ['#709C9D','下方柱图：当日累计PV']
+      ['#c49a4e','金色：收盘时段不低于开盘'],
+      ['#178b94','蓝绿色：收盘时段低于开盘'],
+      ['#78a7a5','柱形：每日访问量']
     ].forEach(function (v) {
       var item=el('span');var mark=el('span','qily-traffic-kline__swatch');mark.style.backgroundColor=v[0];item.appendChild(mark);item.appendChild(d.createTextNode(v[1]));legend.appendChild(item);
     });
     shell.appendChild(legend);
-    shell.appendChild(el('p','qily-traffic-kline__foot','北京时间（UTC+8）；自2026-10-29起采集，历史空白不回填。仅包含真实采集的页面浏览量，不含10,000次初始展示基数。数据可能因第三方计数接口中断而缺失。'));
     var grid=host.querySelector('.qily-traffic-grid');
     if (grid && grid.parentNode) grid.parentNode.insertBefore(shell,grid.nextSibling);
     else host.appendChild(shell);
@@ -203,25 +202,26 @@
       statusBox.textContent=failed?'部分分时统计暂不可读取，请稍后刷新。':'尚无可绘制的真实分时PV，首批访问会逐步形成K线。';
       return;
     }
-    var width=Math.max(330,days.length*55+70),height=302;
-    var left=49,right=18,top=20,bottom=184,volumeTop=218,volumeBottom=258;
+    var availableWidth=Math.max(300,chartBox.clientWidth||host.clientWidth||360);
+    var width=Math.max(availableWidth,days.length*(availableWidth<520?48:62)+110),height=330;
+    var left=78,right=24,top=28,bottom=192,volumeTop=226,volumeBottom=270;
     var usable=width-left-right, step=usable/days.length;
     var valid=days.filter(function(p){return p.has&&!p.error;});
     var maxCount=Math.max.apply(Math,valid.map(function(p){return p.high;}));
     var maxY=Math.max(4,Math.ceil(maxCount*1.18));
     var maxV=Math.max(1,Math.max.apply(Math,valid.map(function(p){return p.volume;})));
     var root=svg('svg',{viewBox:'0 0 '+width+' '+height,width:width,height:height,
-      role:'img','aria-label':'近'+range+'日中国站分时浏览量K线，底部柱状为每天真实PV',
+      role:'img','aria-label':'近'+range+'日中国站访问趋势图，展示时段PV和日PV',
       class:'qily-traffic-kline__svg'},chartBox);
-    svg('title',{},root,'中国站日流量 K 线（真实采集，自2026年10月29日起）');
+    svg('title',{},root,'中国站日访问趋势图');
     function y(val){return bottom-(val/maxY)*(bottom-top);}
     for(var t=0;t<=4;t++){
       var val=Math.round(maxY*t/4),yy=y(maxY*t/4);
       svg('line',{x1:left,y1:yy,x2:width-right,y2:yy,stroke:'#d3e1dd','stroke-opacity':'.9','stroke-dasharray':'3 5'},root);
-      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':12},root,String(val));
+      svg('text',{x:left-7,y:yy+4,'text-anchor':'end',fill:'#526f70','font-size':18},root,String(val));
     }
-    svg('text',{x:2,y:12,fill:'#8a6331','font-size':12},root,'PV/6h');
-    svg('text',{x:2,y:214,fill:'#e4d3a5','font-size':11},root,'日PV');
+    svg('text',{x:2,y:18,fill:'#8a6331','font-size':18},root,'时段PV');
+    svg('text',{x:2,y:222,fill:'#8a6331','font-size':18},root,'日PV');
     svg('line',{x1:left,y1:volumeBottom,x2:width-right,y2:volumeBottom,stroke:'#708a8d'},root);
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);
@@ -237,15 +237,15 @@
           height:Math.max(3.5,Math.abs(closeY-openY)+1.6),rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
         // Direct label: highest PV recorded in this day's 6-hour slot series.
-        svg('text',{x:x,y:Math.max(23,y(p.high)-9),'text-anchor':'middle',fill:'#8a6331','font-size':14,'font-weight':750,'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.high));
+        svg('text',{x:x,y:Math.max(30,y(p.high)-10),'text-anchor':'middle',fill:'#8a6331','font-size':18,'font-weight':750,'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.high));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
           fill:'#78a7a5','fill-opacity':'.95'},group);
         // Direct label: true daily PV, excluding the initial display baseline.
-        svg('text',{x:x,y:Math.max(volumeTop-9,volumeBottom-h-7),'text-anchor':'middle',fill:'#0f4b5a','font-size':14,'font-weight':750,'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
+        svg('text',{x:x,y:Math.max(volumeTop-10,volumeBottom-h-8),'text-anchor':'middle',fill:'#0f4b5a','font-size':18,'font-weight':750,'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
         svg('title',{},group,p.date+'｜日PV '+p.volume+'；开 '+p.open+'，高 '+p.high+'，低 '+p.low+'，收 '+p.close+'（6小时PV）');
       }
-      svg('text',{x:x,y:281,'text-anchor':'middle',fill:'#526f70','font-size':12},root,label);
+      svg('text',{x:x,y:281,'text-anchor':'middle',fill:'#526f70','font-size':18},root,label);
     });
     var realSum=valid.reduce(function(sum,p){return sum+p.volume;},0);
     var last=valid[valid.length-1];
