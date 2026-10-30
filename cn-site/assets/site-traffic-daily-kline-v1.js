@@ -236,13 +236,18 @@
         svg('rect',{x:x-10,y:Math.min(firstY,lastY)-.8,width:20,
           height:Math.max(3.5,Math.abs(lastY-firstY)+1.6),rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
-        // Direct label: highest PV recorded in this day's 6-hour slot series.
-        svg('text',{x:x,y:Math.max(top+4,y(p.peak)-12),'text-anchor':'middle',fill:'#8a6331','font-size':20,'font-weight':750,'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
+        // Direct labels make the graph readable without hover, including phones.
+        // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
+        svg('text',{x:x,y:Math.max(top+4,y(p.peak)-12),'text-anchor':'middle',
+          fill:'#8a6331','font-size':20,'font-weight':750,
+          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
-          fill:'#78a7a5','fill-opacity':'.95'},group);
-        // Direct label: true daily PV, excluding the initial display baseline.
-        svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',fill:'#0f4b5a','font-size':20,'font-weight':750,'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
+          fill:'#78a7a5','fill-opacity':'.98'},group);
+        // Volume labels are observed daily PV, excluding presentation base.
+        svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',
+          fill:'#0f4b5a','font-size':20,'font-weight':750,
+          'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
         svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
       }
       svg('text',{x:x,y:430,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);

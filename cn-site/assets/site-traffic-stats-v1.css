@@ -1,3 +1,4 @@
+/* QILY-CN-ABOUT-TRAFFIC-APPROVED-INTL-VI | imported from internationally approved VI, scoped to CN only. */
 /* QilyLean dual-site traffic statistics v1.0 | scoped, responsive, deep background + soft gold */
 .qily-traffic-section,
 .qily-traffic-section * {
@@ -201,24 +202,196 @@ html:root:root body #traffic .qily-traffic-number{
   font-variant-numeric:tabular-nums!important;
 }
 
-/* CN-specific first paint layout: same single-card VI as the international site */
-html:root:root body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
-grid-template-columns:minmax(0,1fr)!important;max-width:760px!important;margin-inline:auto!important}
-html:root:root body #traffic .qily-traffic-site[hidden],
-html:root:root body #traffic .qily-traffic-metric[hidden]{display:none!important}
-html:root:root body #traffic .qily-traffic-metrics[data-qily-traffic-single-metric="true"]{
-grid-template-columns:minmax(0,1fr)!important}
-html:root:root body #traffic .qily-traffic-number[data-qily-traffic-count="cn-total"]{
-font-size:clamp(2.2rem,4.5vw,3.1rem)!important;font-weight:650!important;line-height:1.12!important;letter-spacing:-.03em!important}
-html:root:root body #traffic .qily-traffic-live.qily-traffic-scope::before{background:#ffe39b!important}
-@media(max-width:760px){html:root:root body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{max-width:none!important}}
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V3 | only qilylean.com /about
+ * Title 6 exactly matches the approved bare white-background Article H2 #record.
+ * Deep background begins at the metrics body, not at the section title.
+ * Preserve counters, Kline, typography contrast, and responsive width.
+ */
+html:root:root body[data-qily-site="cn"] main .article-body #traffic.qily-traffic-section{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:26px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+  overflow:visible!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-heading{
+  display:block!important;
+  margin:0 0 15px!important;
+  padding:0!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-align:left!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-heading h2#qily-traffic-title{
+  margin:0 0 9px!important;
+  padding:0!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:20px!important;
+  font-weight:800!important;
+  line-height:1.45!important;
+  letter-spacing:normal!important;
+  background:none!important;
+  border:0!important;
+  text-align:left!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-heading .qily-traffic-kicker{
+  display:block!important;
+  margin:0 0 4px!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  letter-spacing:.065em!important;
+  line-height:1.55!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-heading .qily-traffic-intro{
+  margin:0!important;
+  max-width:100%!important;
+  color:#3d6062!important;
+  -webkit-text-fill-color:#3d6062!important;
+  font-size:16px!important;
+  font-weight:400!important;
+  line-height:1.65!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding:clamp(1rem,2.5vw,1.6rem)!important;
+  border:1px solid rgba(232,192,113,.48)!important;
+  border-radius:18px!important;
+  background:linear-gradient(135deg,#073c47 0%,#0b343d 58%,#101f22 100%)!important;
+  color:#f1f6f2!important;
+  -webkit-text-fill-color:#f1f6f2!important;
+  box-shadow:0 14px 34px rgba(7,60,71,.12)!important;
+  overflow:hidden!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body>.qily-traffic-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  width:100%!important;
+  max-width:760px!important;
+  margin-inline:auto!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site[hidden],
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-metric[hidden]{
+  display:none!important;
+}
+@media(max-width:760px){
+  html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body{
+    padding:1rem!important;
+  }
+  html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body>.qily-traffic-grid{
+    max-width:100%!important;
+  }
+}
+
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V4
+ * Title #qily-traffic-title is a direct sibling of #record; both inherit
+ * EXACTLY the same article-body>h2 VI rules across all viewports.
+ */
+html:root:root body[data-qily-site="cn"] main .article-body>.qily-traffic-heading[data-qily-traffic-heading="cn-v3"]{
+ display:block!important;margin:0 0 16px!important;padding:0!important;border:0!important;
+ background:transparent!important;background-image:none!important;box-shadow:none!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body>.qily-traffic-heading .qily-traffic-kicker{
+ display:block!important;margin:0 0 4px!important;font-size:13px!important;font-weight:600!important;
+ line-height:1.55!important;letter-spacing:.065em!important;
+ color:#365f62!important;-webkit-text-fill-color:#365f62!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body>.qily-traffic-heading .qily-traffic-intro{
+ margin:0!important;max-width:100%!important;font-size:16px!important;line-height:1.65!important;
+ font-weight:400!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body>#traffic.qily-traffic-section{margin:0!important}
+
+/* QILY-INTL-ABOUT-TRAFFIC-VI-V5 | reader-friendly analytics
+ * The LARGE OUTER WRAPPER is deliberately backgroundless. Keep the metrics
+ * and candle chart as two distinct, moderately lit deep-teal data cards.
+ * Scope strictly to international About; China and the counters are untouched.
+ */
+html:root:root body[data-qily-site="cn"] main .article-body #traffic.qily-traffic-section{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body{
+  background:transparent!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+  margin:0!important;
+  overflow:visible!important;
+  color:#365f62!important;
+  -webkit-text-fill-color:#365f62!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site{
+  background:#195864!important;
+  background-color:#195864!important;
+  border:1px solid rgba(202,161,95,.50)!important;
+  border-radius:14px!important;
+  padding:clamp(16px,2.2vw,22px)!important;
+  box-shadow:0 6px 20px rgba(15,75,90,.10)!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline{
+  background:#195864!important;
+  background-color:#195864!important;
+  border:1px solid rgba(202,161,95,.50)!important;
+  border-radius:14px!important;
+  box-shadow:0 6px 20px rgba(15,75,90,.10)!important;
+  margin-top:18px!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-note{
+  color:#3d6062!important;
+  -webkit-text-fill-color:#3d6062!important;
+  margin:16px 0 0!important;
+  line-height:1.65!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-note a{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  text-decoration-color:#0f4b5a!important;
+}
+html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
+  width:100%!important;
+  max-width:760px!important;
+  margin:0 auto!important;
+}
+@media(max-width:760px){
+  html:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{
+    max-width:100%!important;
+  }
+}
 
 
-/* QILY-CN-TRAFFIC-READABILITY-20261030 */
+/* QILY-TRAFFIC-READABILITY-20261030 */
 html:root:root:root body #traffic.qily-traffic-section{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
-html:root:root:root body #traffic .qily-traffic-body{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important}
-html:root:root:root body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{width:100%!important;max-width:none!important;margin:0!important}
-html:root:root:root body #traffic .qily-traffic-site{background:#f4f9f7!important;background-color:#f4f9f7!important;border:1px solid #cfe0dd!important;border-radius:14px!important;box-shadow:0 6px 18px rgba(15,75,90,.06)!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-grid[data-qily-traffic-single="true"]{width:100%!important;max-width:none!important;margin:0!important}
+html:root:root:root body #traffic .qily-traffic-site,html:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site{background:#f4f9f7!important;background-color:#f4f9f7!important;border:1px solid #cfe0dd!important;border-radius:14px!important;box-shadow:0 6px 18px rgba(15,75,90,.06)!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
 html:root:root:root body #traffic .qily-traffic-site h3{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:21px!important;font-weight:750!important}
 html:root:root:root body #traffic .qily-traffic-site-label{color:#8a6331!important;-webkit-text-fill-color:#8a6331!important;font-size:14px!important}
 html:root:root:root body #traffic .qily-traffic-live{background:#eaf3ef!important;background-color:#eaf3ef!important;border-color:#c8ded6!important;color:#28634f!important;-webkit-text-fill-color:#28634f!important;font-size:13px!important}
@@ -226,7 +399,8 @@ html:root:root:root body #traffic .qily-traffic-live::before{background:#4a9b73!
 html:root:root:root body #traffic .qily-traffic-number{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-weight:750!important}
 html:root:root:root body #traffic .qily-traffic-label{color:#526f70!important;-webkit-text-fill-color:#526f70!important;font-size:15px!important}
 html:root:root:root body #traffic .qily-traffic-note{color:#526f70!important;-webkit-text-fill-color:#526f70!important;font-size:14px!important;line-height:1.7!important}
-html:root:root:root body .qily-traffic-heading{margin:32px 0 16px!important}
+html:root:root:root body #traffic .qily-traffic-heading{margin:32px 0 16px!important}
+html:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading[data-qily-traffic-heading="cn-v3"]{margin-top:32px!important;margin-bottom:16px!important}
 html:root:root:root body #traffic .qily-traffic-intro{font-size:17px!important;line-height:1.65!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important}
 html:root:root:root body #traffic .qily-traffic-kicker{font-size:14px!important;line-height:1.55!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important;letter-spacing:.065em!important}
 html:root:root:root body #traffic .qily-traffic-kline{background:#f4f9f7!important;background-color:#f4f9f7!important;border-color:#cfe0dd!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important;box-shadow:0 6px 18px rgba(15,75,90,.06)!important}
@@ -239,30 +413,51 @@ html:root:root:root body #traffic .qily-traffic-kline__legend{font-size:14px!imp
 html:root:root:root body #traffic .qily-traffic-kline__foot{font-size:13px!important;line-height:1.65!important;color:#526f70!important;-webkit-text-fill-color:#526f70!important}
 html:root:root:root body #traffic .qily-traffic-kline__scroll{scrollbar-color:#caa15f #e6efec!important}
 
-/* Keep the CN section heading readable after removing the dark outer fill. */
-html:root:root:root body #traffic .qily-traffic-heading h2#qily-traffic-title{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:20px!important;font-weight:800!important;line-height:1.45!important}
+/* QILY-INTL-ABOUT-TRAFFIC-HEADING-ALIGNMENT-20261030 */
+html:root:root:root body[data-qily-site="cn"] main .article-body > h2#qily-traffic-title{margin-top:32px!important;margin-bottom:.35rem!important}
+html:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading[data-qily-traffic-heading="cn-v3"] .qily-traffic-kicker{font-size:14px!important;font-weight:600!important;letter-spacing:.065em!important;line-height:1.55!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading[data-qily-traffic-heading="cn-v3"] .qily-traffic-intro{font-size:17px!important;line-height:1.65!important;font-weight:400!important;color:#3d6062!important;-webkit-text-fill-color:#3d6062!important}
 
 
-/* QILY-CN-TRAFFIC-PUBLIC-TYPE-20261030 */
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-heading .qily-traffic-kicker{font-size:18.5px!important;line-height:1.55!important;font-weight:600!important;letter-spacing:.04em!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-intro,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-note,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__info,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__foot,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__status{display:none!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-site-label,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-live,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-label,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__legend{font-size:18.5px!important;line-height:1.55!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-site-label{font-weight:650!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-site h3{font-size:24px!important;line-height:1.35!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-number{font-size:clamp(38px,4.2vw,48px)!important;line-height:1.12!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-label{font-weight:600!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__head h3{font-size:23px!important;line-height:1.35!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__actions button{font-size:18.5px!important;min-height:44px!important;padding:8px 16px!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__svg text{font-size:18px!important;font-family:inherit!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__scroll{width:100%!important;max-width:100%!important;overflow-x:auto!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline{padding:clamp(18px,2.4vw,26px)!important}
+/* QILY-INTL-TRAFFIC-READABILITY-OVERRIDE | specificity guard against legacy dark VI */
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic.qily-traffic-section{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-body{margin:0!important;padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;background-color:transparent!important;background-image:none!important;box-shadow:none!important;overflow:visible!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site{background:#f4f9f7!important;background-color:#f4f9f7!important;border:1px solid #cfe0dd!important;box-shadow:0 6px 18px rgba(15,75,90,.06)!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site h3{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site-label{color:#8a6331!important;-webkit-text-fill-color:#8a6331!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-live{background:#eaf3ef!important;background-color:#eaf3ef!important;border-color:#c8ded6!important;color:#28634f!important;-webkit-text-fill-color:#28634f!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-number{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-label,html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-note{color:#526f70!important;-webkit-text-fill-color:#526f70!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline{background:#f4f9f7!important;background-color:#f4f9f7!important;border-color:#cfe0dd!important;box-shadow:0 6px 18px rgba(15,75,90,.06)!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__head h3{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__actions button{background:#eaf2ef!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important;border-color:#cfe0dd!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__actions button[aria-pressed="true"]{background:#0f4b5a!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__info{color:#3d6062!important;-webkit-text-fill-color:#3d6062!important;font-size:15px!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__status{color:#365f62!important;-webkit-text-fill-color:#365f62!important;font-size:14px!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__legend,html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__foot{color:#526f70!important;-webkit-text-fill-color:#526f70!important}
+
+
+/* QILY-TRAFFIC-PUBLIC-TYPE-20261030 */
+html:root:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading .qily-traffic-kicker{font-size:18.5px!important;line-height:1.55!important;font-weight:600!important;letter-spacing:.04em!important;color:#365f62!important;-webkit-text-fill-color:#365f62!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading .qily-traffic-intro,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-intro,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-note,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__info,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__foot,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__status{display:none!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site-label,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-live,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-label,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__legend{font-size:18.5px!important;line-height:1.55!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site-label{font-weight:650!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site h3{font-size:24px!important;line-height:1.35!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-number{font-size:clamp(38px,4.2vw,48px)!important;line-height:1.12!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-label{font-weight:600!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__head h3{font-size:23px!important;line-height:1.35!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__actions button{font-size:18.5px!important;min-height:44px!important;padding:8px 16px!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__svg text{font-size:18px!important;font-family:inherit!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__scroll{width:100%!important;max-width:100%!important;overflow-x:auto!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline{padding:clamp(18px,2.4vw,26px)!important}
 
 
 /* QILY-TRAFFIC-PUBLIC-TYPE-GENERIC-20261030 | shared selectors for both production sites and browser fixtures */
@@ -286,19 +481,19 @@ html:root:root:root:root body #traffic .qily-traffic-kline__svg text{font-size:1
 html:root:root:root:root body #traffic .qily-traffic-kline__scroll{width:100%!important;max-width:100%!important;overflow-x:auto!important}
 html:root:root:root:root body #traffic .qily-traffic-kline{padding:clamp(18px,2.4vw,26px)!important}
 
-/* QILY-CN-TRAFFIC-TYPOGRAPHY-20261030-R6 | CN body: 18px / 1.75 */
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-heading .qily-traffic-kicker,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-site-label,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-live,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-label,
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__legend{font-size:20px!important;line-height:1.75!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__head h3{font-size:23px!important;line-height:1.45!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__actions button{font-size:20px!important;line-height:1.75!important;min-height:48px!important;padding:9px 18px!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__svg text{font-size:20px!important;font-family:inherit!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__legend>span{display:inline-flex!important;align-items:flex-start!important;gap:8px!important;line-height:1.75!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__swatch{flex:0 0 12px!important;width:12px!important;height:12px!important;margin:8px 0 0!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline__legend{gap:14px 28px!important;margin-top:18px!important}
-html:root:root:root:root body[data-qily-site="cn"] main #traffic .qily-traffic-kline{padding:clamp(20px,2.4vw,28px)!important}
+/* QILY-TRAFFIC-TYPOGRAPHY-20261030-R9 | Intl body: 18px / 1.7 */
+html:root:root:root:root body[data-qily-site="cn"] main .article-body > .qily-traffic-heading .qily-traffic-kicker{font-size:20px!important;line-height:1.75!important;font-weight:650!important;letter-spacing:.03em!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-site-label,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-live,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-label,
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__legend{font-size:20px!important;line-height:1.75!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__head h3{font-size:23px!important;line-height:1.45!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__actions button{font-size:20px!important;line-height:1.75!important;min-height:48px!important;padding:9px 18px!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__svg text{font-size:20px!important;font-family:inherit!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__legend>span{display:inline-flex!important;align-items:flex-start!important;gap:8px!important;line-height:1.75!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__swatch{flex:0 0 12px!important;width:12px!important;height:12px!important;margin:8px 0 0!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline__legend{gap:14px 28px!important;margin-top:18px!important}
+html:root:root:root:root body[data-qily-site="cn"] main .article-body #traffic .qily-traffic-kline{padding:clamp(20px,2.4vw,28px)!important}
 html:root:root:root:root body #traffic .qily-traffic-site-label,
 html:root:root:root:root body #traffic .qily-traffic-live,
 html:root:root:root:root body #traffic .qily-traffic-label,
