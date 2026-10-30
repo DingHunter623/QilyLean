@@ -509,6 +509,12 @@ for(const {name,url} of ownerSites){
 // Production semantic-order poka-yoke: screenshot-driven regression from 2026-10-29.
 // This is intentionally scoped to .cn; the approved international layout is frozen.
 test('China brand gallery retains the complete approved still without the retired video',async({page})=>{
+ test.setTimeout(120000);
+ const originals=new Map();
+ // Verify the image actually decoded by the browser, without downloading it twice.
+ page.on('response',response=>{
+  if(/\/aircraft-.*-(?:912|1824|2736)\.webp(?:\?|$)/.test(response.url()))originals.set(response.url(),response);
+ });
  for(const width of [390,1588]){
   await page.setViewportSize({width,height:900});
   await visit(page,cnBase+'/',{home:true});
@@ -535,7 +541,8 @@ test('China brand gallery retains the complete approved still without the retire
   expect(m.image?.fit,'static aircraft image remains uncropped').toBe('contain');
   // srcset naturalWidth is density-corrected; verify the selected original bytes.
   expect(m.image.currentSrc).toMatch(/aircraft-.*-(?:912|1824|2736)\.webp/);
-  const asset=await page.request.get(m.image.currentSrc);
+  const asset=originals.get(m.image.currentSrc);
+  expect(asset,'browser response for the selected original aircraft image').toBeTruthy();
   expect(asset.status()).toBe(200);
   const local=path.join(__dirname,'..','cn-site',decodeURIComponent(new URL(m.image.currentSrc).pathname));
   expect(await asset.body(),'approved full-quality aircraft bytes').toEqual(fs.readFileSync(local));
