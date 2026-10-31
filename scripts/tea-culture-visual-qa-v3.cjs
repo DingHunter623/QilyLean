@@ -23,7 +23,12 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      await page.waitForFunction(token=>{
       const link=document.querySelector('#qilyTeaResourceVisualClosureV3');
       const contact=document.querySelector('.tea-contact');
-      return !!link&&link.href.includes(token)&&!!contact&&getComputedStyle(contact).backgroundColor==='rgb(238, 247, 245)';
+      const wechat=document.querySelector('.tea-wechat__id');
+      const qrLabel=document.querySelector('.tea-contact__qr span');
+      return !!link&&link.href.includes(token)&&!!contact&&getComputedStyle(contact).backgroundColor==='rgb(238, 247, 245)'
+       &&!document.querySelector('.tea-facts')&&!document.querySelector('.tea-copy-btn')
+       &&!!wechat&&wechat.textContent.trim()==='微信：Qily259'
+       &&!!qrLabel&&qrLabel.textContent.trim()==='扫码添加微信';
      },cache,{timeout:9000});
      ready=true;
     }catch(_){await page.waitForTimeout(5000);}
