@@ -316,7 +316,7 @@ assert(resourcePublic.includes('data-qily-stable-order="top,previous,search,curr
 assert(!resourcePublic.includes('class="cn-bridge-brand" href="https://qilylean.cn/"'), 'Resource collaboration logo must not jump to China site.');
 assert(!resourcePublic.includes('data-action="home"'), 'Resource collaboration footer must not restore an international Home dock action.');
 assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the international homepage.');
-assert(resourcePublic.includes('/site-dock-share-runtime-v1.js'), 'Resource collaboration must use the canonical four-action runtime.');
+assert(resourcePublic.includes('/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1'), 'Resource collaboration must use the canonical four-action runtime.');
 for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(resourcePublic.includes('href="'+route+'"'), 'Resource collaboration China-parity navigation missing '+route);
 
 const linksPage=read('links/index.html');

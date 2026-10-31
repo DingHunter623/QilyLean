@@ -14,7 +14,7 @@ const root = path.resolve(__dirname, '..');
 const navigationVersion = '/site-navigation.js?v=20260820-resource-collab-dock-home-v31';
 const dockVersion = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
 const consistencyVersion = '/site-ui-consistency-v1.js?v=20260820-dock-share-functional-v11';
-const shareRuntimeVersion = '/site-dock-share-runtime-v1.js?v=20260820-dock-share-runtime-v1';
+const shareRuntimeVersion = '/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1';
 
 function read(relative) { return fs.readFileSync(path.join(root, relative), 'utf8'); }
 function assert(condition, message) { if (!condition) throw new Error(message); }

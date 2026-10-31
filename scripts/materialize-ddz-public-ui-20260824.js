@@ -130,8 +130,8 @@ page=page.replace(/\s*<script\b[^>]*id=["']qilyDdzFastSiteShellV155["'][^>]*><\/
 page=page.replace(/<\/head>/i,`  ${FAST_SHELL}\n</head>`);
 
 /* Keep one authoritative six-action Dock runtime. It self-contains its critical Dock styles. */
-if(!page.includes('/site-dock-share-runtime-v1.js?')){
-  page=page.replace(/<\/head>/i,'  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1"></script>\n</head>');
+if(!page.includes('/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')){
+  page=page.replace(/<\/head>/i,'  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>\n</head>');
 }
 
 /* Preserve V154 iPhone/WeChat virtual-landscape compatibility while the V155 route stays light. */
@@ -182,7 +182,7 @@ if(page.includes("loadStyle('css/style.css')")||page.includes("loadStyle('css/mo
 if(page.includes("const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];")) throw new Error('DDZ historical multi-JS chain is still public');
 if(!page.includes(FAST_SHELL)) throw new Error('DDZ V155 fast Header shell is missing');
 if(!page.includes(IOS_VIRTUAL_FALLBACK)) throw new Error('DDZ V154 iOS virtual-landscape fallback is missing');
-if(!page.includes('/site-dock-share-runtime-v1.js?')) throw new Error('Canonical QilyLean Dock runtime is missing');
+if(!page.includes('/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')) throw new Error('Canonical QilyLean Dock runtime is missing');
 if(page.includes('/site-navigation.js?')) throw new Error('Heavy general navigation runtime must stay unloaded on DDZ V155');
 if(page.includes('/site-translation-safe-runtime-v1.js?')) throw new Error('Google Translate runtime must not compete with DDZ initial load');
 if(page.includes('qilyTranslationPublicUiV1')) throw new Error('Google Translate CSS must be deferred by the fast shell');
