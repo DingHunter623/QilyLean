@@ -156,7 +156,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      header:!!el('header.qily-site-header.qily-global-header'),
      sections:sections.length,images:document.querySelectorAll('main.tea-page img').length,captions:photoCaptions.length,
      summaryCards:document.querySelectorAll('.tea-facts,.tea-fact').length,
-     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,wechatText:el('.tea-wechat__id').textContent.trim()},
+     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,qrCaption:el('.tea-contact__qr span').textContent.trim(),wechatText:el('.tea-wechat__id').textContent.trim()},
      contactLayout,
      dark:document.querySelectorAll('[data-qily-dark-surface="true"]').length,
      body:getComputedStyle(document.body).backgroundColor,
@@ -174,7 +174,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
    assert(m.summaryCards===0,name+': duplicate summary cards must be absent');
-   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===0&&m.contactActions.wechatText==='微信：Qily259',name+': contact content does not match the redline');
+   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===1&&m.contactActions.qrCaption==='扫码添加微信'&&m.contactActions.wechatText==='微信：Qily259',name+': contact content does not match the redline');
    if(name==='mobile')assert(m.contactLayout.columns===1,name+': contact modules must stack on mobile');
    else assert(m.contactLayout.columns===2&&Math.abs(m.contactLayout.copyWidth-m.contactLayout.qrWidth)<=2,name+': contact and QR modules must have equal widths '+JSON.stringify(m.contactLayout));
    const expectedTracks=name==='desktop'?{origin:3,craft:2,range:2,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
