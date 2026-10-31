@@ -13,6 +13,17 @@ probe() {
   rm -f "$headers"
 }
 echo "===== DNS ====="
+if command -v node >/dev/null 2>&1; then
+  node - <<'NODE'
+const dns = require('dns').promises;
+(async () => {
+  for (const host of ['qilylean.com', 'qilylean.cn']) {
+    try { console.log('NS ' + host + ': ' + (await dns.resolveNs(host)).join(', ')); }
+    catch (e) { console.log('NS ' + host + ': lookup failed (' + e.code + ')'); }
+  }
+})();
+NODE
+fi
 for host in qilylean.com www.qilylean.com qilylean.cn www.qilylean.cn; do
   echo "-- $host"
   getent ahostsv4 "$host" 2>/dev/null | awk '!seen[$1]++ {print $1}' | head -n 4 || true
