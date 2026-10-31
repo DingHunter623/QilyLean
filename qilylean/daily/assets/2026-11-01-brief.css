@@ -1,0 +1,65 @@
+@import url("/qilylean/daily/brief-layout-standard.css");
+/* 2026-11-01 | Kaizen + PDCA issue components only; shared VI owns the content axis and type scale. */
+html body.qily-knowledge-brief-page .k60-thesis{margin:16px 0;padding:16px 20px;border-left:4px solid #c8a25a;border-radius:0 10px 10px 0;background:#f3f9f6}
+html body.qily-knowledge-brief-page .k60-thesis>strong{display:block;color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-thesis p{margin:7px 0 0}
+html body.qily-knowledge-brief-page .k60-figure{margin:20px 0 24px}
+html body.qily-knowledge-brief-page .k60-figure figcaption{margin-top:10px;color:#526c67;line-height:1.6}
+html body.qily-knowledge-brief-page .k60-visual{padding:18px;border:1px solid #c9ddd8;border-radius:12px;background:#f7fbfa}
+html body.qily-knowledge-brief-page .k60-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+html body.qily-knowledge-brief-page .k60-option{min-width:0;padding:17px;border:1px solid #d5e0df;border-radius:10px;background:#fff}
+html body.qily-knowledge-brief-page .k60-option.k60-practical{border-color:#0f4b5a;background:#0f4b5a;color:#fff}
+html body.qily-knowledge-brief-page .k60-eyebrow{display:block;margin-bottom:6px;color:#8a7044}
+html body.qily-knowledge-brief-page .k60-practical .k60-eyebrow{color:#ffe39b}
+html body.qily-knowledge-brief-page .k60-option strong{display:block;color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-practical strong{color:#fff}
+html body.qily-knowledge-brief-page .k60-option p{margin:7px 0;color:#526c67}
+html body.qily-knowledge-brief-page .k60-practical p{color:#e7f2ef}
+html body.qily-knowledge-brief-page .k60-status{display:inline-block;margin-top:4px;padding:5px 9px;border-radius:6px;background:#edf3f1;color:#385b56}
+html body.qily-knowledge-brief-page .k60-practical .k60-status{background:rgba(255,255,255,.12);color:#ffe39b}
+html body.qily-knowledge-brief-page .k60-bridge{display:flex;align-items:center;justify-content:center;margin:13px 0;color:#8a6a31;font-weight:850}
+html body.qily-knowledge-brief-page .k60-bridge span{padding:5px 15px;border-radius:999px;background:#fff3d9;border:1px solid #e6cf9c}
+html body.qily-knowledge-brief-page .k60-pdca{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+html body.qily-knowledge-brief-page .k60-step{min-width:0;padding:13px 11px;border:1px solid #c9ddd8;border-top:3px solid #c8a25a;border-radius:9px;background:#fff}
+html body.qily-knowledge-brief-page .k60-step b{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin-bottom:7px;border-radius:50%;background:#0f4b5a;color:#fff}
+html body.qily-knowledge-brief-page .k60-step strong,html body.qily-knowledge-brief-page .k60-step span{display:block}
+html body.qily-knowledge-brief-page .k60-step strong{color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-step span{margin-top:5px;color:#526c67}
+html body.qily-knowledge-brief-page .k60-kaizen{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:11px;padding:12px 15px;border-radius:8px;background:#e8f3f0;color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-kaizen span{color:#42645e}
+html body.qily-knowledge-brief-page .k60-guardrail{margin:18px 0;padding:15px 18px;border-left:4px solid #c8a25a;border-radius:0 9px 9px 0;background:#fff8e9}
+html body.qily-knowledge-brief-page .k60-guardrail strong{color:#765a22}
+html body.qily-knowledge-brief-page .k60-guardrail p{margin:7px 0 0}
+html body.qily-knowledge-brief-page .k60-pdca-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+html body.qily-knowledge-brief-page .k60-pdca-detail>div{padding:14px;border:1px solid #c9ddd8;border-radius:9px;background:#f7fbfa}
+html body.qily-knowledge-brief-page .k60-pdca-detail b{display:block;color:#96743a}
+html body.qily-knowledge-brief-page .k60-pdca-detail strong{display:block;margin:5px 0;color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-pdca-detail p{margin:0;color:#42605b}
+html body.qily-knowledge-brief-page .k60-note{padding-top:10px;border-top:1px solid #d7e4e0;color:#526c67}
+html body.qily-knowledge-brief-page .k60-equation{display:flex;align-items:stretch;gap:10px;margin:16px 0}
+html body.qily-knowledge-brief-page .k60-equation>div:not(.k60-symbol){flex:1;min-width:0;padding:14px;border:1px solid #c9ddd8;border-radius:9px;background:#f5faf8;text-align:center}
+html body.qily-knowledge-brief-page .k60-equation strong,html body.qily-knowledge-brief-page .k60-equation span{display:block}
+html body.qily-knowledge-brief-page .k60-equation strong{color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-equation span{margin-top:5px;color:#526c67}
+html body.qily-knowledge-brief-page .k60-symbol{align-self:center;color:#c8a25a;font-weight:900}
+html body.qily-knowledge-brief-page .k60-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}
+html body.qily-knowledge-brief-page .k60-flow>div{min-width:0;padding:13px;border:1px solid #c9ddd8;border-top:3px solid #c8a25a;border-radius:9px;background:#f8fbfa}
+html body.qily-knowledge-brief-page .k60-flow b,html body.qily-knowledge-brief-page .k60-flow span{display:block}
+html body.qily-knowledge-brief-page .k60-flow b{color:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-flow span{margin-top:6px;color:#526c67}
+html body.qily-knowledge-brief-page .k60-boundary-list{padding-left:1.4em}
+html body.qily-knowledge-brief-page .k60-boundary-list li{margin:8px 0}
+html body.qily-knowledge-brief-page .k60-conclusion{margin:18px 0;padding:20px 22px;border:1px solid #0a3945;border-radius:11px;background:#0f4b5a}
+html body.qily-knowledge-brief-page .k60-conclusion :is(h2,p){color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body.qily-knowledge-brief-page .k60-conclusion h2{margin:0 0 10px}
+html body.qily-knowledge-brief-page .k60-conclusion strong{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
+@media(max-width:900px){html body.qily-knowledge-brief-page .k60-pdca,html body.qily-knowledge-brief-page .k60-flow{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+ html body.qily-knowledge-brief-page .k60-visual{padding:12px}
+ html body.qily-knowledge-brief-page .k60-compare,html body.qily-knowledge-brief-page .k60-pdca-detail,html body.qily-knowledge-brief-page .k60-equation,html body.qily-knowledge-brief-page .k60-flow{grid-template-columns:1fr;display:grid}
+ html body.qily-knowledge-brief-page .k60-pdca{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html body.qily-knowledge-brief-page .k60-symbol{text-align:center}
+ html body.qily-knowledge-brief-page .k60-kaizen{align-items:flex-start;flex-direction:column;gap:4px}
+ html body.qily-knowledge-brief-page .k60-thesis{padding:13px 15px}
+ html body.qily-knowledge-brief-page .k60-conclusion{padding:17px}
+}
