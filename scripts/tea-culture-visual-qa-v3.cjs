@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v8';
+const cache='20261031-tea-vi-axis-gallery-contrast-v9';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
@@ -39,9 +39,32 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(imgs.length===19&&imgs.every(x=>x.complete&&x.w>0&&x.h>0),name+': original image load failed '+JSON.stringify(imgs.filter(x=>!x.w)));
    const tagline=await page.locator('.tea-contact__tagline').textContent();
    assert(tagline.trim()==='让一杯茶，成为彼此认识与交流的开始。',name+': tagline line missing');
+   assert(await page.locator('.tea-facts,.tea-fact').count()===0,name+': repeated origin/tea summary tiles remain');
+   assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===0,name+': redundant copy button or QR caption remains');
+   assert((await page.locator('.tea-wechat__id').textContent()).trim()==='微信：Qily259',name+': direct WeChat ID label mismatch');
+   await page.waitForFunction(()=>window.__qilyTeaImageLightboxV1===true&&!!document.querySelector('#qilyTeaImageLightbox'),null,{timeout:15000});
+   const allPageImages=page.locator('main.tea-page img');
+   assert(await allPageImages.count()===19,name+': every content and contact image must participate in lightbox');
+   for(let imageIndex=0;imageIndex<await allPageImages.count();imageIndex++){
+    const target=allPageImages.nth(imageIndex);
+    await target.scrollIntoViewIfNeeded();
+    const expected=await target.evaluate(img=>({src:img.currentSrc||img.src,alt:img.alt,width:img.naturalWidth,height:img.naturalHeight}));
+    const scrollBefore=await page.evaluate(()=>window.scrollY);
+    await target.click();
+    const lightbox=page.locator('#qilyTeaImageLightbox');
+    await lightbox.waitFor({state:'visible',timeout:7000});
+    const shown=await lightbox.locator('.qily-tea-lightbox__image').evaluate(img=>({src:img.currentSrc||img.src,alt:img.alt,width:img.naturalWidth,height:img.naturalHeight}));
+    assert(shown.src===expected.src&&shown.width===expected.width&&shown.height===expected.height,name+': image '+imageIndex+' did not show its original source dimensions');
+    const closeRect=await lightbox.locator('.qily-tea-lightbox__close').boundingBox();
+    assert(closeRect&&closeRect.y<80&&closeRect.x+closeRect.width>width-80,name+': close × must remain at the top-right corner');
+    if(imageIndex===0)await page.keyboard.press('Escape');else await lightbox.locator('.qily-tea-lightbox__close').click();
+    await lightbox.waitFor({state:'hidden',timeout:5000});
+    const scrollAfter=await page.evaluate(()=>window.scrollY);
+    assert(Math.abs(scrollAfter-scrollBefore)<=2,name+': closing image '+imageIndex+' changed the original page scroll position');
+   }
    await page.context().grantPermissions(['clipboard-read','clipboard-write'],{origin:new URL(base).origin});
    await page.waitForFunction(()=>typeof window.__qilyCopyWechatAndPrompt==='function',null,{timeout:30000});
-   for(const selector of ['.tea-fact__wechat','.tea-wechat__id','.tea-copy-btn']){
+   for(const selector of ['.tea-wechat__id']){
     const action=page.locator(selector);
     assert(await action.count()===1,name+': missing or duplicate WeChat action '+selector);
     await action.click();
@@ -112,6 +135,8 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     const media1179=matchMedia('(max-width:1179px)').matches;
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
     const axis=axisSelectors.map(selector=>({selector,width:el(selector).getBoundingClientRect().width,left:el(selector).getBoundingClientRect().left}));
+    const contactGrid=el('.tea-contact__inner'),contactCopy=el('.tea-contact__copy').getBoundingClientRect(),contactQr=el('.tea-contact__qr').getBoundingClientRect();
+    const contactLayout={columns:getComputedStyle(contactGrid).gridTemplateColumns.split(/\\s+/).length,template:getComputedStyle(contactGrid).gridTemplateColumns,copyWidth:contactCopy.width,qrWidth:contactQr.width};
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
     const pairs=[
      ['contact-copy',st('.tea-contact__copy p').color,st('.tea-contact__inner').backgroundColor],
@@ -125,6 +150,9 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      nav:nav.map(a=>({href:a.getAttribute('href'),current:a.getAttribute('aria-current')})),
      header:!!el('header.qily-site-header.qily-global-header'),
      sections:sections.length,images:document.querySelectorAll('main.tea-page img').length,captions:photoCaptions.length,
+     summaryCards:document.querySelectorAll('.tea-facts,.tea-fact').length,
+     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,wechatText:el('.tea-wechat__id').textContent.trim()},
+     contactLayout,
      dark:document.querySelectorAll('[data-qily-dark-surface="true"]').length,
      body:getComputedStyle(document.body).backgroundColor,
      contact:st('.tea-contact').backgroundColor,contactCard:st('.tea-contact__inner').backgroundColor,
@@ -140,6 +168,10 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav.length===10&&m.nav.every((a,i)=>a.href===navExpected[i]),name+': global navigation differs from canonical order');
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
+   assert(m.summaryCards===0,name+': duplicate summary cards must be absent');
+   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===0&&m.contactActions.wechatText==='微信：Qily259',name+': contact content does not match the redline');
+   if(name==='mobile')assert(m.contactLayout.columns===1,name+': contact modules must stack on mobile');
+   else assert(m.contactLayout.columns===2&&Math.abs(m.contactLayout.copyWidth-m.contactLayout.qrWidth)<=2,name+': contact and QR modules must have equal widths '+JSON.stringify(m.contactLayout));
    const expectedTracks=name==='desktop'?{origin:3,craft:2,range:2,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
    Object.keys(expectedTracks).forEach(key=>assert(m.grids[key].tracks===expectedTracks[key],name+': '+key+' grid track count mismatch '+m.grids[key].tracks+'; viewport='+m.viewport.width+'; template='+m.grids[key].template+'; media1179='+m.media1179+'; stylesheet='+JSON.stringify(m.teaStylesheet)));
    const expectedRows={
@@ -160,7 +192,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.dark===0,name+': legacy dark-surface marker remains');
    assert(m.body==='rgb(255, 255, 255)'&&m.contact==='rgb(238, 247, 245)'&&m.contactCard==='rgb(255, 255, 255)',name+': page/contact surface palette mismatch');
    assert(m.returnBg==='rgb(15, 75, 90)'&&m.returnFg==='rgb(255, 255, 255)',name+': return button contrast mismatch');
-   assert(m.fonts[0]==='20px'&&m.fonts[1]==='20px'&&m.fonts[2]==='20px'&&parseFloat(m.fonts[3])>=30,name+': text-size floor mismatch '+m.fonts.join(','));
+   assert(m.fonts[0]===(name==='mobile'?'20px':'22px')&&m.fonts[1]==='20px'&&m.fonts[2]==='20px'&&parseFloat(m.fonts[3])>=30,name+': text-size floor mismatch '+m.fonts.join(','));
    const approved=['rgb(255, 255, 255)','rgb(238, 247, 245)','rgb(247, 251, 250)'];
    assert(m.large.every(c=>approved.includes(c)),name+': non-standard large-area background '+JSON.stringify(m.large));
    assert(m.fits.every(v=>v==='contain'),name+': image cropping detected '+m.fits.join(','));
