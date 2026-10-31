@@ -10,6 +10,15 @@ const header=tea.match(/<header class="topbar qily-site-header qily-global-heade
 const nav=header&&header[0].match(/<nav class="nav site-nav qily-global-nav"[^>]*>([\s\S]*?)<\/nav>/i);
 const navHrefs=nav?[...nav[1].matchAll(/href="([^"]+)"/g)].map(m=>m[1]):[];
 const expectedNav=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
+
+const sectionBlock=id=>{const a=tea.indexOf('id="'+id+'"'),b=tea.indexOf('</section>',a);assert(a>=0&&b>a,'Missing section '+id);return tea.slice(a,b);};
+const imageNames=block=>[...block.matchAll(/<img[^>]+src="[^"]*\/([^/"?]+)"/g)].map(m=>m[1]);
+assert(JSON.stringify(imageNames(sectionBlock('origin')))==JSON.stringify(['11-anxi-tea-garden.jpg','14-fresh-leaves-basket.jpg']),'Origin must contain only the tea garden followed by the basket of fresh leaves.');
+assert(JSON.stringify(imageNames(sectionBlock('craft')))==JSON.stringify(['12-tea-picking-shoot.jpg','13-tea-processing.jpg','15-tea-processing-shape.jpg','16-finished-tea-tray.jpg','17-dry-tea-detail.jpg']),'Craft flow must follow picking, processing, shaping and finished dry tea.');
+assert(JSON.stringify(imageNames(sectionBlock('tasting')).slice(-2))==JSON.stringify(['06-brew-osmanthus-tea.jpg','18-tea-brewing.jpg']),'Tasting must show water pouring before the finished tea soup.');
+assert(['一、ORIGIN / 茶源','二、CRAFT / 制茶','三、TEA COLLECTION / 茶品','四、TEA RITUAL / 品鉴'].every(x=>tea.includes('>'+x+'</span>')),'Section headings must use Chinese sequence numbers.');
+assert([...tea.matchAll(/<small>(\d{2}) · /g)].map(m=>m[1]).join(',')==='01,02,03,04','Tea product sequence numbers must remain 01–04.');
+
 const electrical=resource.indexOf('id="electricalRecommendations"'),teaCard=resource.indexOf('id="teaCultureResourcePlacement"'),navigation=resource.indexOf('id="navigationPartnerLinks"');
 const wrapper=resource.match(/<section class="resource-service resource-tea-placement"[^>]*>[\s\S]*?<\/section>/i);
 assert(tea.includes('qily-tea-culture-page')&&resource.includes('qily-resource-collaboration-page'),'Page scope classes missing');
@@ -18,7 +27,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v9';
+const cache='20261031-tea-vi-axis-gallery-contrast-v10';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -29,8 +38,8 @@ assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).leng
 assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified visual governance layer missing');
 assert(css.includes('@media(max-width:1179px)'),'Tablet and narrow-desktop grid breakpoint must be explicit');
 assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
-assert(/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo craft gallery must be 2×2');
-assert(/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo origin gallery must remain one row on desktop');
+assert(css.includes('/* QilyLean tea process-flow redline V10')&&/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo craft gallery must use three plus two centered tracks');
+assert(css.includes('/* QilyLean tea process-flow redline V10')&&/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Two-photo origin gallery must use two columns on desktop');
 assert((tea.match(/<article class="tea-product-card">/g)||[]).length===4,'Tea collection must contain exactly four image cards');
 assert(/\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo tea collection must use a 2x2 desktop gallery');
 assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');
@@ -57,9 +66,9 @@ assert(!tea.includes('class="tea-facts"')&&!tea.includes('class="tea-fact"'),'Re
 assert(tea.includes('class="tea-contact__tagline">让一杯茶，成为彼此认识与交流的开始。</span>'),'Contact tagline must have a separate visual line.');
 assert(/<button[^>]*class="tea-wechat__id"[^>]*data-qily-wechat-copy="Qily259"[^>]*>微信：Qily259<\/button>/.test(tea),'Single direct WeChat ID action must remain visible and clickable.');
 assert(!tea.includes('tea-copy-btn')&&!tea.includes('复制微信号</button>'),'Redundant copy button must be removed.');
-assert(tea.includes('<span>扫码添加微信</span>')&&!tea.includes('扫码添加微信 · Qily259'),'QR caption must keep the action text but remove the separator and duplicated WeChat ID.');
+assert(!tea.includes('扫码添加微信')&&!/<div class="tea-contact__qr">[\s\S]*?<span/.test(tea),'QR helper caption must be removed completely.');
 assert(tea.includes('tea-image-lightbox-v1.js?v=20261031-tea-lightbox-v1'),'Full-page image lightbox script must be loaded.');
-assert(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))!important')&&css.includes('.tea-contact__qr{'),'Contact and QR must be laid out as two equal modules.');
+assert(/grid-template-columns:minmax\(0,1\.85fr\) minmax\(280px,\.9fr\)!important/.test(css)&&/\.tea-note\{[\s\S]*?white-space:nowrap!important/.test(css),'Contact copy must be wider than the right-aligned QR and keep the desktop note on one line.');
 assert(css.includes('.qily-tea-lightbox__close')&&css.includes('z-index:2147483646!important'),'Original-image lightbox and topmost close control styles must exist.');
 assert(navigationCore.includes('window.__qilyCopyWechatAndPrompt=copyWechatAndPrompt')&&navigationCore.includes("'[data-qily-wechat-copy]'"),'Tea page must reuse the sitewide WeChat copy/open prompt.');
 assert(css.includes('.tea-contact__tagline')&&css.includes('.tea-fact__wechat:is(:hover,:focus-visible)')&&css.includes('.tea-wechat__id:focus-visible'),'Contact readability and keyboard focus styles missing.');
@@ -86,4 +95,4 @@ assert(ratio('#3f5e5d','#ffffff')>=4.5&&ratio('#3f5e5d','#eef7f5')>=4.5,'Body co
 assert(ratio('#315f64','#ffffff')>=4.5,'Directory metadata must meet WCAG AA on its white card');
 assert(ratio('#80643b','#ffffff')>=4.5&&ratio('#80643b','#eef7f5')>=4.5,'Kicker text must meet WCAG AA');
 assert(ratio('#ffffff','#0f4b5a')>=4.5,'Action controls must meet WCAG AA');
-console.log('[Tea Visual Closure V4] PASS: shared global header, 10 nav links, 8 sections, 19 images, light VI surfaces, 20px copy, WCAG AA contrast, uncropped media and clear return action.');
+console.log('[Tea Visual Closure V5] PASS: Chinese section sequence, product 01–04 numbering, origin-to-craft image flow, brewing order, asymmetric contact panel, 8 sections and 19 original images.');

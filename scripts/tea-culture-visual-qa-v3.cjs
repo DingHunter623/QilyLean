@@ -2,11 +2,11 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v9';
+const cache='20261031-tea-vi-axis-gallery-contrast-v10';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
-const assert=(ok,msg)=>{if(!ok)throw new Error('[Tea V4 QA] '+msg);};
+const assert=(ok,msg)=>{if(!ok)throw new Error('[Tea V5 QA] '+msg);};
 const rgb=v=>{const m=String(v||'').match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);if(!m)throw new Error('Bad color '+v);return m.slice(1,4).map(n=>+n/255).map(c=>c<=.04045?c/12.92:Math.pow((c+.055)/1.055,2.4));};
 const lum=v=>{const c=rgb(v);return .2126*c[0]+.7152*c[1]+.0722*c[2];};
 const ratio=(a,b)=>{const x=lum(a),y=lum(b);return(Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
@@ -28,7 +28,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
       return !!link&&link.href.includes(token)&&!!contact&&getComputedStyle(contact).backgroundColor==='rgb(238, 247, 245)'
        &&!document.querySelector('.tea-facts')&&!document.querySelector('.tea-copy-btn')
        &&!!wechat&&wechat.textContent.trim()==='微信：Qily259'
-       &&!!qrLabel&&qrLabel.textContent.trim()==='扫码添加微信';
+       &&!qrLabel;
      },cache,{timeout:9000});
      ready=true;
     }catch(_){await page.waitForTimeout(5000);}
@@ -44,8 +44,23 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(imgs.length===19&&imgs.every(x=>x.complete&&x.w>0&&x.h>0),name+': original image load failed '+JSON.stringify(imgs.filter(x=>!x.w)));
    const tagline=await page.locator('.tea-contact__tagline').textContent();
    assert(tagline.trim()==='让一杯茶，成为彼此认识与交流的开始。',name+': tagline line missing');
+   const flowOrder=await page.evaluate(()=>{
+    const names=selector=>[...document.querySelectorAll(selector)].map(img=>new URL(img.src).pathname.split('/').pop());
+    return {
+     origin:names('.tea-origin-grid img'),
+     craft:names('.tea-craft-grid img'),
+     tasting:names('#tasting .tea-ritual-grid img'),
+     headings:[...document.querySelectorAll('.tea-section__head .en')].map(x=>x.textContent.trim()),
+     productNumbers:[...document.querySelectorAll('.tea-product-card__copy small')].map(x=>x.textContent.trim().slice(0,2))
+    };
+   });
+   assert(flowOrder.origin.join('|')==='11-anxi-tea-garden.jpg|14-fresh-leaves-basket.jpg',name+': origin must be garden then basket only '+JSON.stringify(flowOrder.origin));
+   assert(flowOrder.craft.join('|')==='12-tea-picking-shoot.jpg|13-tea-processing.jpg|15-tea-processing-shape.jpg|16-finished-tea-tray.jpg|17-dry-tea-detail.jpg',name+': craft photos must follow the real process sequence '+JSON.stringify(flowOrder.craft));
+   assert(flowOrder.tasting.slice(-2).join('|')==='06-brew-osmanthus-tea.jpg|18-tea-brewing.jpg',name+': brewing photo must precede the finished tea soup '+JSON.stringify(flowOrder.tasting));
+   assert(flowOrder.headings.join('|')==='一、ORIGIN / 茶源|二、CRAFT / 制茶|三、TEA COLLECTION / 茶品|四、TEA RITUAL / 品鉴',name+': chapter headings must use Chinese sequence numbers');
+   assert(flowOrder.productNumbers.join('|')==='01|02|03|04',name+': tea product numbering must remain 01–04');
    assert(await page.locator('.tea-facts,.tea-fact').count()===0,name+': repeated origin/tea summary tiles remain');
-   assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===1&&(await page.locator('.tea-contact__qr span').textContent()).trim()==='扫码添加微信',name+': contact copy control or QR caption does not match the redline');
+   assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===0,name+': redundant QR caption or copy control remains');
    assert((await page.locator('.tea-wechat__id').textContent()).trim()==='微信：Qily259',name+': direct WeChat ID label mismatch');
    await page.waitForFunction(()=>window.__qilyTeaImageLightboxV1===true&&!!document.querySelector('#qilyTeaImageLightbox'),null,{timeout:15000});
    const allPageImages=page.locator('main.tea-page img');
@@ -141,7 +156,8 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
     const axis=axisSelectors.map(selector=>({selector,width:el(selector).getBoundingClientRect().width,left:el(selector).getBoundingClientRect().left}));
     const contactGrid=el('.tea-contact__inner'),contactCopy=el('.tea-contact__copy').getBoundingClientRect(),contactQr=el('.tea-contact__qr').getBoundingClientRect();
-    const contactLayout={columns:getComputedStyle(contactGrid).gridTemplateColumns.split(/\s+/).length,template:getComputedStyle(contactGrid).gridTemplateColumns,copyWidth:contactCopy.width,qrWidth:contactQr.width};
+    const contactNote=el('.tea-note'),noteStyle=getComputedStyle(contactNote);
+    const contactLayout={columns:getComputedStyle(contactGrid).gridTemplateColumns.split(/\s+/).length,template:getComputedStyle(contactGrid).gridTemplateColumns,copyWidth:contactCopy.width,qrWidth:contactQr.width,noteWhiteSpace:noteStyle.whiteSpace,noteHeight:contactNote.getBoundingClientRect().height,noteLineHeight:parseFloat(noteStyle.lineHeight)};
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
     const pairs=[
      ['contact-copy',st('.tea-contact__copy p').color,st('.tea-contact__inner').backgroundColor],
@@ -156,7 +172,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      header:!!el('header.qily-site-header.qily-global-header'),
      sections:sections.length,images:document.querySelectorAll('main.tea-page img').length,captions:photoCaptions.length,
      summaryCards:document.querySelectorAll('.tea-facts,.tea-fact').length,
-     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,qrCaption:el('.tea-contact__qr span').textContent.trim(),wechatText:el('.tea-wechat__id').textContent.trim()},
+     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,qrCaption:el('.tea-contact__qr span')?.textContent.trim()||'',wechatText:el('.tea-wechat__id').textContent.trim()},
      contactLayout,
      dark:document.querySelectorAll('[data-qily-dark-surface="true"]').length,
      body:getComputedStyle(document.body).backgroundColor,
@@ -174,15 +190,16 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
    assert(m.summaryCards===0,name+': duplicate summary cards must be absent');
-   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===1&&m.contactActions.qrCaption==='扫码添加微信'&&m.contactActions.wechatText==='微信：Qily259',name+': contact content does not match the redline');
+   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===0&&m.contactActions.qrCaption===''&&m.contactActions.wechatText==='微信：Qily259',name+': QR caption must be removed while the WeChat ID remains');
    if(name==='mobile')assert(m.contactLayout.columns===1,name+': contact modules must stack on mobile');
-   else assert(m.contactLayout.columns===2&&Math.abs(m.contactLayout.copyWidth-m.contactLayout.qrWidth)<=2,name+': contact and QR modules must have equal widths '+JSON.stringify(m.contactLayout));
-   const expectedTracks=name==='desktop'?{origin:3,craft:2,range:2,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
+   else assert(m.contactLayout.columns===2&&m.contactLayout.copyWidth>m.contactLayout.qrWidth*1.4,name+': contact copy panel must be wider than the QR panel '+JSON.stringify(m.contactLayout));
+   if(name==='desktop')assert(m.contactLayout.noteWhiteSpace==='nowrap'&&m.contactLayout.noteHeight<=m.contactLayout.noteLineHeight*1.2,name+': desktop contact note must remain on one line '+JSON.stringify(m.contactLayout));
+   const expectedTracks=name==='desktop'?{origin:2,craft:6,range:2,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
    Object.keys(expectedTracks).forEach(key=>assert(m.grids[key].tracks===expectedTracks[key],name+': '+key+' grid track count mismatch '+m.grids[key].tracks+'; viewport='+m.viewport.width+'; template='+m.grids[key].template+'; media1179='+m.media1179+'; stylesheet='+JSON.stringify(m.teaStylesheet)));
    const expectedRows={
-    desktop:{origin:[3],craft:[2,2],range:[2,2],ritual:[3,2]},
-    tablet:{origin:[2,1],craft:[2,2],range:[2,2],ritual:[2,2,1]},
-    mobile:{origin:[1,1,1],craft:[1,1,1,1],range:[1,1,1,1],ritual:[1,1,1,1,1]}
+    desktop:{origin:[2],craft:[3,2],range:[2,2],ritual:[3,2]},
+    tablet:{origin:[2],craft:[2,2,1],range:[2,2],ritual:[2,2,1]},
+    mobile:{origin:[1,1],craft:[1,1,1,1,1],range:[1,1,1,1],ritual:[1,1,1,1,1]}
    }[name];
    Object.keys(expectedRows).forEach(key=>{
     assert(JSON.stringify(rowsFor(m.grids[key]))===JSON.stringify(expectedRows[key]),name+': '+key+' row distribution mismatch '+JSON.stringify(rowsFor(m.grids[key])));
@@ -191,7 +208,9 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     if(key!=='range')assert(m.grids[key].cards.every(c=>Math.abs(c.imageRatio-c.naturalRatio)<0.03),name+': '+key+' source image aspect ratio changed');
    });
    if(name==='desktop')assert(Math.abs(m.grids.ritual.rows[1].centerDelta)<2,name+': last two tasting images must be centered as a pair');
+   if(name==='desktop')assert(Math.abs(m.grids.craft.rows[1].centerDelta)<2,name+': last two craft images must be centered as a pair');
    if(name==='tablet')assert(Math.abs(m.grids.ritual.rows[2].centerDelta)<2,name+': final tablet tasting image must be centered');
+   if(name==='tablet')assert(Math.abs(m.grids.craft.rows[2].centerDelta)<2,name+': final tablet craft image must be centered');
    const expectedAxis=Math.min(1180,m.viewport.bodyClientWidth-36);
    assert(m.axis.every(x=>Math.abs(x.width-expectedAxis)<=1.5),name+': content blocks do not share the 1180px public axis; expected='+expectedAxis+'; viewport='+JSON.stringify(m.viewport)+'; axis='+JSON.stringify(m.axis));
    assert(m.dark===0,name+': legacy dark-surface marker remains');
