@@ -40,7 +40,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    const tagline=await page.locator('.tea-contact__tagline').textContent();
    assert(tagline.trim()==='让一杯茶，成为彼此认识与交流的开始。',name+': tagline line missing');
    assert(await page.locator('.tea-facts,.tea-fact').count()===0,name+': repeated origin/tea summary tiles remain');
-   assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===0,name+': redundant copy button or QR caption remains');
+   assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===1&&(await page.locator('.tea-contact__qr span').textContent()).trim()==='扫码添加微信',name+': contact copy control or QR caption does not match the redline');
    assert((await page.locator('.tea-wechat__id').textContent()).trim()==='微信：Qily259',name+': direct WeChat ID label mismatch');
    await page.waitForFunction(()=>window.__qilyTeaImageLightboxV1===true&&!!document.querySelector('#qilyTeaImageLightbox'),null,{timeout:15000});
    const allPageImages=page.locator('main.tea-page img');
