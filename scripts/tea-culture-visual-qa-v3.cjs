@@ -72,9 +72,19 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      ritual:gridReport('#tasting .tea-ritual-grid','.tea-photo','img','figcaption')
     };
     const teaLink=el('#qilyTeaResourceVisualClosureV3'),ritualRules=[];
-    const collectRules=rules=>{for(const rule of Array.from(rules||[])){if(rule.cssRules)collectRules(rule.cssRules);else if(rule.selectorText&&rule.selectorText.includes('tea-ritual-grid'))ritualRules.push({selector:rule.selectorText,columns:rule.style.getPropertyValue('grid-template-columns'),priority:rule.style.getPropertyPriority('grid-template-columns'),matches:el('#tasting .tea-ritual-grid').matches(rule.selectorText)});}};
-    let sheetRuleCount=0,servedCss={ok:false,status:0,v4:false,media:false};
-    try{if(teaLink&&teaLink.sheet){sheetRuleCount=teaLink.sheet.cssRules.length;collectRules(teaLink.sheet.cssRules);}}catch(error){ritualRules.push({cssomError:String(error)});}
+    const ritualGrid=el('#tasting .tea-ritual-grid');
+    const collectRules=(rules,source,media=[])=>{for(const rule of Array.from(rules||[])){
+     if(rule.selectorText&&rule.style&&(rule.style.getPropertyValue('grid-template-columns')||rule.style.getPropertyValue('grid-template'))){
+      let matches=false;try{matches=ritualGrid.matches(rule.selectorText);}catch(_){}
+      if(matches||rule.selectorText.includes('tea-ritual-grid'))ritualRules.push({source,media,selector:rule.selectorText,columns:rule.style.getPropertyValue('grid-template-columns'),template:rule.style.getPropertyValue('grid-template'),priority:rule.style.getPropertyPriority('grid-template-columns'),matches});
+     }
+     if(rule.cssRules&&rule.cssRules.length){
+      const nextMedia=rule.conditionText?[...media,{condition:rule.conditionText,active:matchMedia(rule.conditionText).matches}]:media;
+      collectRules(rule.cssRules,source,nextMedia);
+     }
+    }};
+    let sheetRuleCount=0,servedCss={ok:false,status:0,v4:false,media:false},allSheetErrors=[];
+    for(const sheet of Array.from(document.styleSheets)){try{const rules=sheet.cssRules;if(sheet===teaLink.sheet)sheetRuleCount=rules.length;collectRules(rules,sheet.href||'inline');}catch(error){allSheetErrors.push({href:sheet.href,error:String(error)});}}
     try{const response=await fetch(teaLink.href,{cache:'no-store'});const text=await response.text();servedCss={ok:response.ok,status:response.status,v4:text.includes('QilyLean Tea Culture Visual Governance V4'),media:text.includes('@media(max-width:1179px)')};}catch(error){servedCss={ok:false,error:String(error)};}
     const media1179=matchMedia('(max-width:1179px)').matches;
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
@@ -97,7 +107,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      contact:st('.tea-contact').backgroundColor,contactCard:st('.tea-contact__inner').backgroundColor,
      returnBg:st('.tea-directory-return__link').backgroundColor,returnFg:st('.tea-directory-return__link').color,
      fonts:[st('.tea-contact__copy p').fontSize,st('.tea-section__head p').fontSize,st('.tea-photo figcaption span').fontSize,st('.tea-page-heading h1').fontSize],
-     large,pairs,grids,axis,media1179,teaStylesheet:{loaded:!!(teaLink&&teaLink.sheet),href:teaLink&&teaLink.href,sheetRuleCount,servedCss,ritualRules,gridInlineStyle:el('#tasting .tea-ritual-grid').getAttribute('style')},
+     large,pairs,grids,axis,media1179,teaStylesheet:{loaded:!!(teaLink&&teaLink.sheet),href:teaLink&&teaLink.href,sheetRuleCount,servedCss,ritualRules,allSheetErrors,gridInlineStyle:ritualGrid.getAttribute('style'),gridMatches:ritualGrid.matches('main.tea-page #tasting .tea-ritual-grid')},
      fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit,st('.tea-flower-note img').objectFit],
      overflow:document.documentElement.scrollWidth>innerWidth+1,
      viewport:{width:innerWidth,height:innerHeight}
