@@ -20,12 +20,14 @@ assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain')
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
 const cache='20261031-tea-vi-axis-gallery-contrast-v4';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
+assert(tea.indexOf('id="qilyTeaResourceVisualClosureV3"')>tea.indexOf('id="qilyViV4Formal"')&&resource.indexOf('id="qilyTeaResourceVisualClosureV3"')>resource.indexOf('id="qilyViV4Formal"'),'Page-specific tea rules must load after the shared global VI styles');
 
 const ritualStart=tea.indexOf('<div class="tea-grid tea-ritual-grid">');
 const ritualEnd=tea.indexOf('</div>',ritualStart);
 const ritualMarkup=ritualStart>=0&&ritualEnd>ritualStart?tea.slice(ritualStart,ritualEnd):'';
 assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).length===5,'Tasting gallery must retain five ordered photos');
 assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified visual governance layer missing');
+assert(css.includes('@media(max-width:1179px)'),'Tablet and narrow-desktop grid breakpoint must be explicit');
 assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
 assert(/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo craft gallery must be 2×2');
 assert(/\.tea-origin-grid,[\s\S]*?\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo galleries must remain one row on desktop');

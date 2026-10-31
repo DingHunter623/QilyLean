@@ -286,7 +286,7 @@ html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritua
 html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:nth-child(5){
   grid-column:4/span 2!important;
 }
-@media(max-width:960px){
+@media(max-width:1179px){
   html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
   html:root:root:root body.qily-tea-culture-page .tea-range-grid,
   html:root:root:root body.qily-tea-culture-page .tea-craft-grid{
