@@ -37,7 +37,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     return a.map(x=>({complete:x.complete,w:x.naturalWidth,h:x.naturalHeight,src:new URL(x.src).pathname}));
    });
    assert(imgs.length===19&&imgs.every(x=>x.complete&&x.w>0&&x.h>0),name+': original image load failed '+JSON.stringify(imgs.filter(x=>!x.w)));
-   const m=await page.evaluate(()=>{
+   const m=await page.evaluate(async()=>{
     const el=s=>document.querySelector(s),st=s=>getComputedStyle(el(s));
     const nav=[...document.querySelectorAll('header.qily-site-header nav.qily-global-nav>a')];
     const sections=[...document.querySelectorAll('main.tea-page section')];
