@@ -333,7 +333,7 @@ test('navigation core preserves the static menu while its action runtime is dela
     await context.route('**/*',async route=>{
       const url=new URL(route.request().url());
       if(url.origin!==new URL(base).origin)return route.abort();
-      if(url.pathname==='/site-dock-share-runtime-v1.js')await dockGate;
+      if(url.pathname==='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')await dockGate;
       return route.continue();
     });
     const page=await context.newPage();
