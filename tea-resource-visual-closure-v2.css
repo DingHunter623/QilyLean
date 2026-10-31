@@ -649,3 +649,20 @@ html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:non
     padding:16px!important;
   }
 }
+
+
+/* QilyLean tea contact micro-fix · static label + persistent ID underline · 2026-10-31 */
+html:root:root:root body.qily-tea-culture-page .tea-wechat__label{
+  display:inline-flex!important;align-items:center!important;min-height:48px!important;
+  margin:0!important;padding:0!important;color:var(--qily-tea-deep)!important;
+  -webkit-text-fill-color:var(--qily-tea-deep)!important;font-family:inherit!important;
+  font-size:26px!important;font-weight:900!important;line-height:1.5!important;
+  white-space:nowrap!important;cursor:default!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-wechat__id{
+  text-decoration-line:underline!important;text-decoration-color:var(--qily-tea-deep)!important;
+  text-decoration-thickness:1.5px!important;text-underline-offset:4px!important;
+}
+@media(max-width:640px){
+  html:root:root:root body.qily-tea-culture-page .tea-wechat__label{font-size:24px!important}
+}

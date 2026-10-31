@@ -24,10 +24,13 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
       const link=document.querySelector('#qilyTeaResourceVisualClosureV3');
       const contact=document.querySelector('.tea-contact');
       const wechat=document.querySelector('.tea-wechat__id');
+      const wechatLabel=document.querySelector('.tea-wechat__label');
       const qrLabel=document.querySelector('.tea-contact__qr span');
       return !!link&&link.href.includes(token)&&!!contact&&getComputedStyle(contact).backgroundColor==='rgb(238, 247, 245)'
        &&!document.querySelector('.tea-facts')&&!document.querySelector('.tea-copy-btn')
-       &&!!wechat&&wechat.textContent.trim()==='微信：Qily259'
+       &&!!wechat&&wechat.textContent.trim()==='Qily259'
+       &&!!wechatLabel&&wechatLabel.tagName==='SPAN'&&wechatLabel.textContent.trim()==='微信：'
+       &&getComputedStyle(wechat).textDecorationLine.includes('underline')
        &&!qrLabel;
      },cache,{timeout:9000});
      ready=true;
@@ -71,7 +74,9 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(flowOrder.productNumbers.join('|')==='01|02|03|04',name+': tea product numbering must remain 01–04');
    assert(await page.locator('.tea-facts,.tea-fact').count()===0,name+': repeated origin/tea summary tiles remain');
    assert(await page.locator('.tea-copy-btn').count()===0&&await page.locator('.tea-contact__qr span').count()===0,name+': redundant QR caption or copy control remains');
-   assert((await page.locator('.tea-wechat__id').textContent()).trim()==='微信：Qily259',name+': direct WeChat ID label mismatch');
+   assert((await page.locator('.tea-wechat__label').textContent()).trim()==='微信：'&&await page.locator('.tea-wechat__label').evaluate(el=>el.tagName)==='SPAN',name+': WeChat label must be static text, not part of the action.');
+   assert((await page.locator('.tea-wechat__id').textContent()).trim()==='Qily259',name+': clickable WeChat ID must contain only Qily259.');
+   assert(await page.locator('.tea-wechat__id').evaluate(el=>getComputedStyle(el).textDecorationLine.includes('underline')),name+': WeChat ID underline must remain visible without hover.');
    await page.waitForFunction(()=>window.__qilyTeaImageLightboxV1===true&&!!document.querySelector('#qilyTeaImageLightbox'),null,{timeout:15000});
    const allPageImages=page.locator('main.tea-page img');
    assert(await allPageImages.count()===19,name+': every content and contact image must participate in lightbox');
@@ -182,7 +187,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      header:!!el('header.qily-site-header.qily-global-header'),
      sections:sections.length,images:document.querySelectorAll('main.tea-page img').length,captions:photoCaptions.length,
      summaryCards:document.querySelectorAll('.tea-facts,.tea-fact').length,
-     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,qrCaption:el('.tea-contact__qr span')?.textContent.trim()||'',wechatText:el('.tea-wechat__id').textContent.trim()},
+     contactActions:{copyButtons:document.querySelectorAll('.tea-copy-btn').length,qrCaptions:document.querySelectorAll('.tea-contact__qr span').length,qrCaption:el('.tea-contact__qr span')?.textContent.trim()||'',wechatLabel:el('.tea-wechat__label')?.textContent.trim()||'',wechatLabelTag:el('.tea-wechat__label')?.tagName||'',wechatText:el('.tea-wechat__id').textContent.trim(),wechatUnderline:st('.tea-wechat__id').textDecorationLine},
      contactLayout,
      dark:document.querySelectorAll('[data-qily-dark-surface="true"]').length,
      body:getComputedStyle(document.body).backgroundColor,
@@ -200,7 +205,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
    assert(m.summaryCards===0,name+': duplicate summary cards must be absent');
-   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===0&&m.contactActions.qrCaption===''&&m.contactActions.wechatText==='微信：Qily259',name+': QR caption must be removed while the WeChat ID remains');
+   assert(m.contactActions.copyButtons===0&&m.contactActions.qrCaptions===0&&m.contactActions.qrCaption===''&&m.contactActions.wechatLabel==='微信：'&&m.contactActions.wechatLabelTag==='SPAN'&&m.contactActions.wechatText==='Qily259'&&m.contactActions.wechatUnderline.includes('underline'),name+': static WeChat label, underlined ID and QR caption state must be correct');
    if(name==='mobile')assert(m.contactLayout.columns===1,name+': contact modules must stack on mobile');
    else assert(m.contactLayout.columns===2&&m.contactLayout.copyWidth>m.contactLayout.qrWidth*1.4,name+': contact copy panel must be wider than the QR panel '+JSON.stringify(m.contactLayout));
    if(name==='desktop')assert(m.contactLayout.noteWhiteSpace==='nowrap'&&m.contactLayout.noteHeight<=m.contactLayout.noteLineHeight*1.2,name+': desktop contact note must remain on one line '+JSON.stringify(m.contactLayout));
