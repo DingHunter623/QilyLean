@@ -136,7 +136,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
     const axis=axisSelectors.map(selector=>({selector,width:el(selector).getBoundingClientRect().width,left:el(selector).getBoundingClientRect().left}));
     const contactGrid=el('.tea-contact__inner'),contactCopy=el('.tea-contact__copy').getBoundingClientRect(),contactQr=el('.tea-contact__qr').getBoundingClientRect();
-    const contactLayout={columns:getComputedStyle(contactGrid).gridTemplateColumns.split(/\\s+/).length,template:getComputedStyle(contactGrid).gridTemplateColumns,copyWidth:contactCopy.width,qrWidth:contactQr.width};
+    const contactLayout={columns:getComputedStyle(contactGrid).gridTemplateColumns.split(/\s+/).length,template:getComputedStyle(contactGrid).gridTemplateColumns,copyWidth:contactCopy.width,qrWidth:contactQr.width};
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
     const pairs=[
      ['contact-copy',st('.tea-contact__copy p').color,st('.tea-contact__inner').backgroundColor],
