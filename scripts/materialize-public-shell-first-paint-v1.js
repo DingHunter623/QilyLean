@@ -78,11 +78,13 @@ function materialize(source,relative){
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag+'\n';
   next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+'</head>');
-  // Resource directory: paint with the settled R8 stylesheet priority from the
-  // original HTML instead of moving the authority after 120/700/1400 ms.
-  // This removes a transient full-width dark-teal line seen during load.
-  // Other routes retain their existing first-paint contract unchanged.
+  // Resource directory: establish the rail's containing block before any
+  // runtime inserts it. R8 stylesheet order alone cannot anchor an absolute
+  // rail while the legacy .topbar still lacks the runtime header classes.
+  // Keep the existing final authority order and other routes unchanged.
   if(relative==='links/index.html'){
+    if(!next.includes('.topbar{'))throw new Error('Resource directory lost its initial header styles');
+    if(!next.includes('.topbar{position:relative;'))next=next.replace('.topbar{','.topbar{position:relative;');
     const r8=next.match(/\n?<link\b[^>]*\bid=["']qilyVisualAuthorityR8["'][^>]*>\n?/i);
     if(!r8)throw new Error('Resource directory lost its R8 style authority');
     const authorityLink=r8[0].trim();
