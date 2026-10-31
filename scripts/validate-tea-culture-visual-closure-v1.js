@@ -57,7 +57,7 @@ assert(!tea.includes('class="tea-facts"')&&!tea.includes('class="tea-fact"'),'Re
 assert(tea.includes('class="tea-contact__tagline">让一杯茶，成为彼此认识与交流的开始。</span>'),'Contact tagline must have a separate visual line.');
 assert(/<button[^>]*class="tea-wechat__id"[^>]*data-qily-wechat-copy="Qily259"[^>]*>微信：Qily259<\/button>/.test(tea),'Single direct WeChat ID action must remain visible and clickable.');
 assert(!tea.includes('tea-copy-btn')&&!tea.includes('复制微信号</button>'),'Redundant copy button must be removed.');
-assert(!tea.includes('扫码添加微信')&&!/<div class="tea-contact__qr">[\s\S]*?<span/.test(tea),'QR caption with duplicated WeChat ID must be removed.');
+assert(tea.includes('<span>扫码添加微信</span>')&&!tea.includes('扫码添加微信 · Qily259'),'QR caption must keep the action text but remove the separator and duplicated WeChat ID.');
 assert(tea.includes('tea-image-lightbox-v1.js?v=20261031-tea-lightbox-v1'),'Full-page image lightbox script must be loaded.');
 assert(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))!important')&&css.includes('.tea-contact__qr{'),'Contact and QR must be laid out as two equal modules.');
 assert(css.includes('.qily-tea-lightbox__close')&&css.includes('z-index:2147483646!important'),'Original-image lightbox and topmost close control styles must exist.');
