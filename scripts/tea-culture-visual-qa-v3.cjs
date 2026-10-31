@@ -131,7 +131,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      returnBg:st('.tea-directory-return__link').backgroundColor,returnFg:st('.tea-directory-return__link').color,
      fonts:[st('.tea-contact__copy p').fontSize,st('.tea-section__head p').fontSize,st('.tea-photo figcaption span').fontSize,st('.tea-page-heading h1').fontSize],
      large,pairs,grids,axis,media1179,teaStylesheet:{loaded:!!(teaLink&&teaLink.sheet),href:teaLink&&teaLink.href,sheetRuleCount,servedCss,ritualRules,allSheetErrors,gridInlineStyle:ritualGrid.getAttribute('style'),gridMatches:ritualGrid.matches('main.tea-page #tasting .tea-ritual-grid')},
-     fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit,st('.tea-flower-note img').objectFit],
+     fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit],
      overflow:document.documentElement.scrollWidth>innerWidth+1,
      viewport:{width:innerWidth,clientWidth:document.documentElement.clientWidth,bodyClientWidth:document.body.clientWidth,height:innerHeight}
     };
