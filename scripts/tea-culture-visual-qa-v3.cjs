@@ -42,8 +42,8 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     const nav=[...document.querySelectorAll('header.qily-site-header nav.qily-global-nav>a')];
     const sections=[...document.querySelectorAll('main.tea-page section')];
     const photoCaptions=[...document.querySelectorAll('.tea-photo figcaption')];
-    const gridReport=selector=>{
-     const grid=el(selector),cards=[...grid.querySelectorAll(':scope > .tea-photo')],rows=[];
+    const gridReport=(selector,cardSelector,imageSelector,captionSelector)=>{
+     const grid=el(selector),cards=[...grid.querySelectorAll(':scope > '+cardSelector)],rows=[];
      cards.forEach(card=>{
       const r=card.getBoundingClientRect();
       let row=rows.find(x=>Math.abs(x.top-r.top)<2);
@@ -53,19 +53,24 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      return {
       tracks:getComputedStyle(grid).gridTemplateColumns.split(/\s+/).length,
       cards:cards.map(card=>{
-       const image=card.querySelector('img'),caption=card.querySelector('figcaption');
+       const image=card.querySelector(imageSelector),caption=card.querySelector(captionSelector);
        const ir=image.getBoundingClientRect(),cr=caption.getBoundingClientRect(),r=card.getBoundingClientRect();
-       return {gridColumnStart:getComputedStyle(card).gridColumnStart,cardTop:r.top,cardBottom:r.bottom,imageTop:ir.top,imageRatio:ir.width/ir.height,naturalRatio:image.naturalWidth/image.naturalHeight,captionBottom:cr.bottom};
+       return {gridColumnStart:getComputedStyle(card).gridColumnStart,cardTop:r.top,cardBottom:r.bottom,imageTop:ir.top,imageRatio:ir.width/ir.height,naturalRatio:image.naturalWidth/image.naturalHeight,imageFit:getComputedStyle(image).objectFit,captionBottom:cr.bottom};
       }),
       rows:rows.map(row=>{
-       const tops=row.cards.map(card=>card.querySelector('img').getBoundingClientRect().top);
-       const bottoms=row.cards.map(card=>card.querySelector('figcaption').getBoundingClientRect().bottom);
+       const tops=row.cards.map(card=>card.querySelector(imageSelector).getBoundingClientRect().top);
+       const bottoms=row.cards.map(card=>card.querySelector(captionSelector).getBoundingClientRect().bottom);
        const centers=row.cards.map(card=>{const r=card.getBoundingClientRect();return r.left+r.width/2;});
        return {count:row.cards.length,imageTopDelta:Math.max(...tops)-Math.min(...tops),captionBottomDelta:Math.max(...bottoms)-Math.min(...bottoms),centerDelta:centers.reduce((a,b)=>a+b,0)/centers.length-(grid.getBoundingClientRect().left+grid.getBoundingClientRect().width/2)};
       })
      };
     };
-    const grids={origin:gridReport('.tea-origin-grid'),craft:gridReport('.tea-craft-grid'),range:gridReport('.tea-range-grid'),ritual:gridReport('#tasting .tea-ritual-grid')};
+    const grids={
+     origin:gridReport('.tea-origin-grid','.tea-photo','img','figcaption'),
+     craft:gridReport('.tea-craft-grid','.tea-photo','img','figcaption'),
+     range:gridReport('.tea-range-grid','.tea-product-card','.tea-product-card__image img','.tea-product-card__copy'),
+     ritual:gridReport('#tasting .tea-ritual-grid','.tea-photo','img','figcaption')
+    };
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
     const axis=axisSelectors.map(selector=>({selector,width:el(selector).getBoundingClientRect().width,left:el(selector).getBoundingClientRect().left}));
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
@@ -106,7 +111,8 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    Object.keys(expectedRows).forEach(key=>{
     assert(JSON.stringify(rowsFor(m.grids[key]))===JSON.stringify(expectedRows[key]),name+': '+key+' row distribution mismatch '+JSON.stringify(rowsFor(m.grids[key])));
     assert(m.grids[key].rows.every(r=>r.imageTopDelta<=1.5&&r.captionBottomDelta<=1.5),name+': '+key+' images must align at top and captions at bottom');
-    assert(m.grids[key].cards.every(c=>Math.abs(c.imageRatio-c.naturalRatio)<0.03),name+': '+key+' source image aspect ratio changed');
+    assert(m.grids[key].cards.every(c=>c.imageFit==='contain'),name+': '+key+' image must preserve full source content');
+    if(key!=='range')assert(m.grids[key].cards.every(c=>Math.abs(c.imageRatio-c.naturalRatio)<0.03),name+': '+key+' source image aspect ratio changed');
    });
    if(name==='desktop')assert(Math.abs(m.grids.ritual.rows[1].centerDelta)<2,name+': last two tasting images must be centered as a pair');
    if(name==='tablet')assert(Math.abs(m.grids.ritual.rows[2].centerDelta)<2,name+': final tablet tasting image must be centered');
