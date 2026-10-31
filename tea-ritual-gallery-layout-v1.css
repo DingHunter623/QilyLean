@@ -1,0 +1,42 @@
+/* QilyLean tea culture — tasting gallery editorial mosaic.
+   Preserve source aspect ratios and keep the complete photograph visible. */
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:start!important;
+  gap:24px!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid .tea-photo:first-child{
+  grid-column:span 2!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid .tea-photo{
+  min-width:0!important;
+  align-self:start!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid .tea-photo img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:100%!important;
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#fff!important;
+}
+@media(max-width:960px){
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:20px!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid .tea-photo:first-child{
+    grid-column:1/-1!important;
+  }
+}
+@media(max-width:640px){
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:18px!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid .tea-photo:first-child{
+    grid-column:1!important;
+  }
+}
