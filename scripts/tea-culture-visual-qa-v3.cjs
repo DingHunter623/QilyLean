@@ -51,6 +51,13 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     },null,{timeout:10000});
     const copied=await page.evaluate(()=>navigator.clipboard.readText());
     assert(copied==='Qily259',name+': '+selector+' did not copy Qily259');
+    const promptLayer=await page.evaluate(()=>{
+     const p=document.getElementById('qilyWechatCopyPrompt'),dock=document.getElementById('floatDock');
+     const pr=p.getBoundingClientRect(),dr=dock.getBoundingClientRect();
+     return {promptZ:+getComputedStyle(p).zIndex,dockZ:+getComputedStyle(dock).zIndex,promptBottom:pr.bottom,dockTop:dr.top};
+    });
+    assert(promptLayer.promptZ>promptLayer.dockZ,name+': WeChat prompt must render above the fixed bottom dock '+JSON.stringify(promptLayer));
+    if(name==='mobile')assert(promptLayer.promptBottom<promptLayer.dockTop-4,name+': mobile WeChat prompt must sit above, not overlap, the bottom dock '+JSON.stringify(promptLayer));
     await page.locator('#qilyWechatCopyPrompt').evaluate(el=>el.classList.remove('show'));
    }
    const m=await page.evaluate(async()=>{
