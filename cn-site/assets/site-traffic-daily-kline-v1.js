@@ -1,4 +1,4 @@
-/* QilyLean China daily PV trend v1.1 | Beijing time UTC+08.
+/* QilyLean China daily PV trend v1.2 | Beijing time UTC+08.
  * Each day records the first, highest, lowest and last observed 6-hour PV.
  * Volume = total of all four buckets. No historical interpolation and no use of
  * the independently disclosed 10,000 presentation starting baseline.
@@ -230,12 +230,13 @@
         svg('line',{x1:x-6,y1:bottom-4,x2:x+6,y2:bottom-4,stroke:'#769397','stroke-dasharray':'2 3'},group);
         svg('title',{},group,p.date+(p.error?' 部分时段读取失败':' 尚无采集记录'));
       } else {
-        var lastY=y(p.lastSlot),firstY=y(p.firstSlot);
         var col=p.lastSlot>=p.firstSlot?'#c49a4e':'#178b94';
-        svg('line',{x1:x,y1:y(p.peak),x2:x,y2:y(p.trough),stroke:col,'stroke-width':2.4},group);
-        svg('rect',{x:x-10,y:Math.min(firstY,lastY)-.8,width:20,
-          height:Math.max(3.5,Math.abs(lastY-firstY)+1.6),rx:1.8,
-          fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
+        var peakY=y(p.peak);
+        // Render a true zero-based column: every day's six-hour bar starts at the same baseline.
+        svg('rect',{x:x-10,y:peakY,width:20,
+          height:Math.max(3.5,bottom-peakY),rx:1.8,
+          fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1,
+          'data-qily-kline-bar':'six-hour'},group);
         // Direct labels make the graph readable without hover, including phones.
         // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
         svg('text',{x:x,y:Math.max(top+4,y(p.peak)-12),'text-anchor':'middle',
@@ -243,7 +244,7 @@
           'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
-          fill:'#78a7a5','fill-opacity':'.98'},group);
+          fill:'#78a7a5','fill-opacity':'.98','data-qily-kline-bar':'daily-total'},group);
         // Volume labels are observed daily PV, excluding presentation base.
         svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',
           fill:'#0f4b5a','font-size':20,'font-weight':750,

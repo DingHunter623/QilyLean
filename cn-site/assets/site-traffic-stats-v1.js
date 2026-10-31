@@ -187,7 +187,7 @@ function getTarget(name){return d.querySelector('[data-qily-traffic-count="'+nam
     if (d.querySelector('script[data-qily-daily-kline="v1"]')) return;
     var script = d.createElement('script');
     script.async = true;
-    script.src = '/assets/site-traffic-daily-kline-v1.js?v=20261030-cn-parity-approved-intl-v1';
+    script.src = '/assets/site-traffic-daily-kline-v1.js?v=20261031-cn-zero-baseline-v2';
     script.setAttribute('data-qily-daily-kline', 'v1');
     (d.head || d.documentElement).appendChild(script);
   }
