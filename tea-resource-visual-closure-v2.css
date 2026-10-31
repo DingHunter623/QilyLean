@@ -563,7 +563,7 @@ html:root:root:root body.qily-tea-culture-page .tea-contact__copy{
 }
 html:root:root:root body.qily-tea-culture-page .tea-note{
   white-space:nowrap!important;
-  font-size:16px!important;
+  font-size:20px!important;
   line-height:1.5!important;
 }
 html:root:root:root body.qily-tea-culture-page .tea-contact__qr{
@@ -604,7 +604,7 @@ html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:non
   }
   html:root:root:root body.qily-tea-culture-page .tea-note{
     white-space:normal!important;
-    font-size:15px!important;
+    font-size:20px!important;
   }
   html:root:root:root body.qily-tea-culture-page .tea-contact__qr{
     max-width:280px!important;
@@ -635,7 +635,7 @@ html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:non
   }
   html:root:root:root body.qily-tea-culture-page .tea-note{
     white-space:normal!important;
-    font-size:14px!important;
+    font-size:20px!important;
   }
   html:root:root:root body.qily-tea-culture-page .tea-contact__qr{
     justify-self:center!important;
