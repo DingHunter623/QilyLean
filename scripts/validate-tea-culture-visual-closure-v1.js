@@ -18,7 +18,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v7';
+const cache='20261031-tea-vi-axis-gallery-contrast-v8';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -30,7 +30,9 @@ assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified vis
 assert(css.includes('@media(max-width:1179px)'),'Tablet and narrow-desktop grid breakpoint must be explicit');
 assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
 assert(/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo craft gallery must be 2×2');
-assert(/\.tea-origin-grid,[\s\S]*?\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo galleries must remain one row on desktop');
+assert(/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo origin gallery must remain one row on desktop');
+assert((tea.match(/<article class="tea-product-card">/g)||[]).length===4,'Tea collection must contain exactly four image cards');
+assert(/\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo tea collection must use a 2x2 desktop gallery');
 assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');
 assert(css.includes('.tea-ritual-grid>.tea-photo:first-child,')&&css.includes('.tea-ritual-grid>.tea-photo:nth-child(4){')&&css.includes('grid-column:auto!important;'),'Tablet tasting gallery must reset first and fourth image placement');
 assert(css.includes('.tea-ritual-grid>.tea-photo:nth-child(5){')&&css.includes('grid-column:1/-1!important;'),'Tablet fifth tasting image must occupy a centered full row without creating implicit tracks');
