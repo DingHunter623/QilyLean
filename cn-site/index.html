@@ -317,7 +317,7 @@ width:100%!important;height:auto!important;max-height:none!important;min-height:
 (function(){function cp(v){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(v);return new Promise(function(r,j){var t=document.createElement('textarea');t.value=v;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');r();}catch(e){j(e);}finally{t.remove();}});}document.querySelectorAll('.qily-copy-action[data-qily-copy]').forEach(function(b){b.addEventListener('click',function(){var v=b.dataset.qilyCopy,l=b.dataset.qilyCopyLabel||'内容',f=b.nextElementSibling;cp(v).then(function(){if(f){f.textContent='已复制'+l;f.classList.add('is-visible');setTimeout(function(){f.classList.remove('is-visible');},1800);}if(confirm(l+' '+v+' 已复制。是否现在打开网页？'))window.open(v,'_blank','noopener,noreferrer');});});});})();
 </script>
 <script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script>
-<script defer src="/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1"></script>
+<script defer src="/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1&share=20261028-cn-copy-first-v1"></script>
 <script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about&anchors=20261013-v1&aboutcareer=20261021-about-contact-career-v1"></script>
 <script defer data-cn-native-prefetch="v2" src="/assets/site-native-prefetch-v1.js?v=b0feaac1aee8"></script>
 <script defer data-cn-source-runtime="v1" src="/assets/public-content-interactions.js?v=23f82e035fa2"></script></body></html>
