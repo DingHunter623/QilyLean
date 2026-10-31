@@ -185,9 +185,9 @@ jobs:
   validate-and-deploy:
     needs: transfer-contract
     if: >-
-    github.event_name != 'pull_request' &&
-    (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) &&
-    (github.event_name != 'push' || contains(github.event.head_commit.message, '[cn-clone-approved]'))
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) &&
+      (github.event_name != 'push' || contains(github.event.head_commit.message, '[cn-clone-approved]'))
     timeout-minutes: 300
     runs-on: ubuntu-latest
     steps:
