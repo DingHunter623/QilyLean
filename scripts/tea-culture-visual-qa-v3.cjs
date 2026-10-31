@@ -17,7 +17,7 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
    let ready=false;
    for(let attempt=0;attempt<18&&!ready;attempt++){
     await page.goto(base+'?tea-visual-qa='+Date.now()+'-'+attempt,{waitUntil:'domcontentloaded',timeout:90000});
-    try{await page.waitForFunction(()=>{const l=document.querySelector('#qilyTeaResourceVisualClosureV3'),c=document.querySelector('.tea-contact');return !!l&&l.href.includes('20261031-vi-unification-v3')&&!!c&&getComputedStyle(c).backgroundColor==='rgb(238, 247, 245)'},null,{timeout:9000});ready=true;}
+    try{await page.waitForFunction(()=>{const l=document.querySelector('#qilyTeaResourceVisualClosureV3'),c=document.querySelector('.tea-contact');return !!l&&l.href.includes('20261031-ritual-grid-v1')&&!!c&&getComputedStyle(c).backgroundColor==='rgb(238, 247, 245)'},null,{timeout:9000});ready=true;}
     catch(_){await page.waitForTimeout(7000);}
    }
    assert(ready,'V3 production page not available after deployment polling');
@@ -29,6 +29,15 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
     const nav=[...document.querySelectorAll('header.qily-site-header nav.qily-global-nav>a')];
     const sections=[...document.querySelectorAll('main.tea-page section')];
     const photoCaptions=[...document.querySelectorAll('.tea-photo figcaption')];
+    const ritualGrid=el('#tasting .tea-ritual-grid');
+    const ritualCards=[...ritualGrid.querySelectorAll('.tea-photo')];
+    const gallery={
+     columns:st('#tasting .tea-ritual-grid').gridTemplateColumns.split(' ').length,
+     cards:ritualCards.map(card=>{
+      const image=card.querySelector('img'),rect=image.getBoundingClientRect(),style=getComputedStyle(card);
+      return {src:new URL(image.src).pathname,gridColumn:style.gridColumn,gridColumnStart:style.gridColumnStart,gridColumnEnd:style.gridColumnEnd,ratio:rect.width/rect.height,naturalRatio:image.naturalWidth/image.naturalHeight};
+     })
+    };
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
     const pairs=[
      ['contact-copy',st('.tea-contact__copy p').color,st('.tea-contact__inner').backgroundColor],
@@ -47,7 +56,7 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
      contact:st('.tea-contact').backgroundColor,contactCard:st('.tea-contact__inner').backgroundColor,
      returnBg:st('.tea-directory-return__link').backgroundColor,returnFg:st('.tea-directory-return__link').color,
      fonts:[st('.tea-contact__copy p').fontSize,st('.tea-section__head p').fontSize,st('.tea-photo figcaption span').fontSize,st('.tea-page-heading h1').fontSize],
-     large, pairs,
+     large, pairs, gallery,
      fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit,st('.tea-flower-note img').objectFit],
      overflow:document.documentElement.scrollWidth>innerWidth+1,
      viewport:{width:innerWidth,height:innerHeight}
@@ -57,6 +66,13 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
    assert(m.nav.length===10&&m.nav.every((a,i)=>a.href===navExpected[i]),name+': global navigation differs from canonical order');
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
+   const expectedGalleryColumns=name==='desktop'?3:name==='tablet'?2:1;
+   assert(m.gallery.columns===expectedGalleryColumns,name+': tasting gallery columns mismatch '+m.gallery.columns);
+   assert(m.gallery.cards.length===5,name+': tasting gallery must contain five images');
+   assert(m.gallery.cards.every(card=>Math.abs(card.ratio-card.naturalRatio)<0.03),name+': tasting images must retain native aspect ratio '+JSON.stringify(m.gallery.cards));
+   if(name==='desktop')assert(m.gallery.cards[0].gridColumnStart==='span 2',name+': lead teapot image must span two columns');
+   if(name==='tablet')assert(m.gallery.cards[0].gridColumnStart==='1'&&m.gallery.cards[0].gridColumnEnd==='-1',name+': lead teapot image must span the tablet row');
+   if(name==='mobile')assert(m.gallery.cards[0].gridColumnStart==='1'&&m.gallery.cards[0].gridColumnEnd==='auto',name+': mobile gallery must return to a single-column flow');
    assert(m.dark===0,name+': legacy dark-surface marker remains');
    assert(m.body==='rgb(255, 255, 255)'&&m.contact==='rgb(238, 247, 245)'&&m.contactCard==='rgb(255, 255, 255)',name+': page/contact surface palette mismatch');
    assert(m.returnBg==='rgb(15, 75, 90)'&&m.returnFg==='rgb(255, 255, 255)',name+': return button contrast mismatch');
@@ -70,7 +86,7 @@ const ratio=(a,b)=>{const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min
    m.contrastRatios=ratios;m.imageLoad=imgs;
    fs.writeFileSync(path.join(out,name+'-computed.json'),JSON.stringify(m,null,2));
    await page.screenshot({path:path.join(out,name+'-full-page.png'),fullPage:true,animations:'disabled'});
-   results.push({viewport:name,pass:true,sections:m.sections,images:imgs.length,navLinks:m.nav.length,overflow:m.overflow,contrast:ratios.map(x=>x.ratio)});
+   results.push({viewport:name,pass:true,sections:m.sections,images:imgs.length,navLinks:m.nav.length,galleryColumns:m.gallery.columns,leadImageGridColumn:m.gallery.cards[0].gridColumn,overflow:m.overflow,contrast:ratios.map(x=>x.ratio)});
    await page.close();
   }
   fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify({status:'passed',url:base,results},null,2));
