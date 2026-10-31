@@ -148,7 +148,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    });
    if(name==='desktop')assert(Math.abs(m.grids.ritual.rows[1].centerDelta)<2,name+': last two tasting images must be centered as a pair');
    if(name==='tablet')assert(Math.abs(m.grids.ritual.rows[2].centerDelta)<2,name+': final tablet tasting image must be centered');
-   const expectedAxis=Math.min(1180,width-36);
+   const expectedAxis=Math.min(1180,m.viewport.width-36);
    assert(m.axis.every(x=>Math.abs(x.width-expectedAxis)<=1.5),name+': content blocks do not share the 1180px public axis '+JSON.stringify(m.axis));
    assert(m.dark===0,name+': legacy dark-surface marker remains');
    assert(m.body==='rgb(255, 255, 255)'&&m.contact==='rgb(238, 247, 245)'&&m.contactCard==='rgb(255, 255, 255)',name+': page/contact surface palette mismatch');
