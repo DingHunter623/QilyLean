@@ -50,5 +50,7 @@ jobs:
         if: env.CN_DIAG_HOST != ''
         run: |
           set -euo pipefail
+          scp -i ~/.ssh/qily_cn_diag -o BatchMode=yes -o ConnectTimeout=15 \
+            scripts/diagnose-international-delivery.sh "$CN_DIAG_USER@$CN_DIAG_HOST:/tmp/qily-international-delivery-diagnostic.sh"
           ssh -i ~/.ssh/qily_cn_diag -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 \
-            "$CN_DIAG_USER@$CN_DIAG_HOST" 'bash -s' < scripts/diagnose-international-delivery.sh
+            "$CN_DIAG_USER@$CN_DIAG_HOST" 'bash /tmp/qily-international-delivery-diagnostic.sh; rc=$?; rm -f /tmp/qily-international-delivery-diagnostic.sh; exit $rc'
