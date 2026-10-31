@@ -18,6 +18,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
+assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v=20261031-ritual-grid-v1"'),'Tasting gallery stylesheet cache version must be refreshed');
 const ritualStart=tea.indexOf('<div class="tea-grid tea-ritual-grid">');
 const ritualEnd=tea.indexOf('</div>',ritualStart);
 const ritualMarkup=ritualStart>=0&&ritualEnd>ritualStart?tea.slice(ritualStart,ritualEnd):'';
