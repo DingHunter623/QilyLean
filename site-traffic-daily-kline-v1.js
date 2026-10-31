@@ -233,8 +233,10 @@
         var lastY=y(p.lastSlot),firstY=y(p.firstSlot);
         var col=p.lastSlot>=p.firstSlot?'#c49a4e':'#178b94';
         svg('line',{x1:x,y1:y(p.peak),x2:x,y2:y(p.trough),stroke:col,'stroke-width':2.4},group);
-        svg('rect',{x:x-10,y:Math.min(firstY,lastY)-.8,width:20,
-          height:Math.max(3.5,Math.abs(lastY-firstY)+1.6),rx:1.8,
+        // Keep the existing upper edge; all six-hour bodies grow from zero PV.
+        var bodyTop=Math.min(firstY,lastY)-.8;
+        svg('rect',{x:x-10,y:bodyTop,width:20,
+          height:y(0)-bodyTop,rx:1.8,
           fill:col,'fill-opacity':'.88',stroke:col,'stroke-width':1},group);
         // Direct labels make the graph readable without hover, including phones.
         // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
