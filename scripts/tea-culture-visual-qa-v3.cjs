@@ -126,7 +126,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      large,pairs,grids,axis,media1179,teaStylesheet:{loaded:!!(teaLink&&teaLink.sheet),href:teaLink&&teaLink.href,sheetRuleCount,servedCss,ritualRules,allSheetErrors,gridInlineStyle:ritualGrid.getAttribute('style'),gridMatches:ritualGrid.matches('main.tea-page #tasting .tea-ritual-grid')},
      fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit,st('.tea-flower-note img').objectFit],
      overflow:document.documentElement.scrollWidth>innerWidth+1,
-     viewport:{width:innerWidth,height:innerHeight}
+     viewport:{width:innerWidth,clientWidth:document.documentElement.clientWidth,height:innerHeight}
     };
    });
    assert(m.header,name+': shared global header missing');
@@ -148,7 +148,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    });
    if(name==='desktop')assert(Math.abs(m.grids.ritual.rows[1].centerDelta)<2,name+': last two tasting images must be centered as a pair');
    if(name==='tablet')assert(Math.abs(m.grids.ritual.rows[2].centerDelta)<2,name+': final tablet tasting image must be centered');
-   const expectedAxis=Math.min(1180,m.viewport.width-36);
+   const expectedAxis=Math.min(1180,m.viewport.clientWidth-36);
    assert(m.axis.every(x=>Math.abs(x.width-expectedAxis)<=1.5),name+': content blocks do not share the 1180px public axis '+JSON.stringify(m.axis));
    assert(m.dark===0,name+': legacy dark-surface marker remains');
    assert(m.body==='rgb(255, 255, 255)'&&m.contact==='rgb(238, 247, 245)'&&m.contactCard==='rgb(255, 255, 255)',name+': page/contact surface palette mismatch');
