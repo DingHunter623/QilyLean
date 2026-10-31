@@ -1,0 +1,54 @@
+name: Diagnose QilyLean international delivery path
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-international-delivery.yml'
+      - 'scripts/diagnose-international-delivery.sh'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qilylean-international-delivery-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  global-runner:
+    name: Probe from GitHub global runner
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - name: Measure DNS, TLS, TTFB, transfer speed and CDN headers
+        run: bash scripts/diagnose-international-delivery.sh
+
+  mainland-runner:
+    name: Probe from Tencent Cloud Shanghai server
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Prepare private SSH connection
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CN_PREPROD_HOST:-}" ] || [ -z "${CN_PREPROD_SSH_KEY:-}" ]; then
+            echo "Tencent Cloud SSH secrets are not available; mainland probe skipped."
+            exit 0
+          fi
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qily_cn_diag
+          chmod 600 ~/.ssh/qily_cn_diag
+          ssh-keyscan -T 10 -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          printf 'CN_DIAG_HOST=%s\nCN_DIAG_USER=%s\n' "$CN_PREPROD_HOST" "${CN_PREPROD_USER:-ubuntu}" >> "$GITHUB_ENV"
+      - name: Measure the same endpoints from mainland egress
+        if: env.CN_DIAG_HOST != ''
+        run: |
+          set -euo pipefail
+          ssh -i ~/.ssh/qily_cn_diag -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 \
+            "$CN_DIAG_USER@$CN_DIAG_HOST" 'bash -s' < scripts/diagnose-international-delivery.sh
