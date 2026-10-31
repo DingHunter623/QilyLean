@@ -437,8 +437,12 @@ html:root:root:root body.qily-tea-culture-page .tea-wechat{
 html:root:root:root body.qily-tea-culture-page .tea-wechat__id{
   min-height:48px!important;font-size:26px!important;font-weight:900!important;
 }
-html:root:root:root body.qily-tea-culture-page .tea-copy-btn,
-html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-copy-btn{display:none!important}
+html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{
+  display:block!important;margin-top:12px!important;color:var(--qily-tea-deep)!important;
+  -webkit-text-fill-color:var(--qily-tea-deep)!important;font-size:20px!important;
+  font-weight:850!important;line-height:1.5!important;
+}
 html:root:root:root body.qily-tea-culture-page .tea-contact__qr{
   display:flex!important;align-items:center!important;justify-content:center!important;
   justify-self:stretch!important;box-sizing:border-box!important;
