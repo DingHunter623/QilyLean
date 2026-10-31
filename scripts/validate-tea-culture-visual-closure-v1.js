@@ -2,7 +2,7 @@
 'use strict';
 const fs=require('fs'),path=require('path'),assert=require('assert');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
-const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),css=read('tea-resource-visual-closure-v2.css');
+const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),css=read('tea-resource-visual-closure-v2.css'),navigationCore=read('site-navigation-core.js');
 const images=[...tea.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
 const captions=[...tea.matchAll(/<figcaption\b[^>]*>/gi)].map(m=>m[0]);
 const sections=[...tea.matchAll(/<section\b[^>]*>/gi)];
@@ -18,7 +18,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v6';
+const cache='20261031-tea-vi-axis-gallery-contrast-v7';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -51,6 +51,12 @@ assert(captions.length===12&&captions.every(x=>/data-qily-light-surface=["']true
 assert(!tea.includes('data-qily-dark-surface="true"'),'Dark-surface markers remain');
 assert(tea.includes('<h1>安溪铁观音</h1>')&&tea.includes('<h2>一叶承山韵，<em>一盏见匠心。</em></h2>'),'Semantic headings missing');
 assert(tea.includes('Qily259')&&tea.includes('/assets/contact/qilylean-wechat-qr.png'),'Approved WeChat ID or QR missing');
+assert(tea.includes('class="tea-contact__tagline">让一杯茶，成为彼此认识与交流的开始。</span>'),'Contact tagline must have a separate visual line.');
+assert(/<button[^>]*class="tea-fact__wechat"[^>]*data-qily-wechat-copy="Qily259"/.test(tea),'Quick contact tile must use shared WeChat copy action.');
+assert(/<button[^>]*class="tea-wechat__id"[^>]*data-qily-wechat-copy="Qily259"/.test(tea),'Contact-card WeChat ID must be directly clickable.');
+assert(/<button[^>]*class="tea-copy-btn"[^>]*data-qily-wechat-copy="Qily259"/.test(tea)&&!/<button[^>]*class="tea-copy-btn"[^>]*data-qily-copy=/.test(tea),'Copy button must use shared WeChat prompt, not duplicate generic handler.');
+assert(navigationCore.includes('window.__qilyCopyWechatAndPrompt=copyWechatAndPrompt')&&navigationCore.includes("'[data-qily-wechat-copy]'"),'Tea page must reuse the sitewide WeChat copy/open prompt.');
+assert(css.includes('.tea-contact__tagline')&&css.includes('.tea-fact__wechat:is(:hover,:focus-visible)')&&css.includes('.tea-wechat__id:focus-visible'),'Contact readability and keyboard focus styles missing.');
 assert(tea.includes('/assets/tea/11-anxi-tea-garden.jpg')&&tea.includes('/assets/tea/02-2026-spring-tea.jpg'),'Original tea images missing');
 assert(resource.includes('id="qilyTeaResourceVisualClosureV3"'),'Resource directory stylesheet link missing');
 assert(electrical>=0&&teaCard>electrical&&navigation>teaCard,'Resource feature placement order changed');

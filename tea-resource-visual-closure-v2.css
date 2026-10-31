@@ -338,3 +338,28 @@ html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePubli
   mix-blend-mode:normal!important;
   text-shadow:none!important;
 }
+
+
+/* QilyLean Tea contact readability + shared WeChat action parity V1 · 2026-10-31
+   Reuse site-navigation-core.js [data-qily-wechat-copy] handler.
+*/
+html:root:root:root body.qily-tea-culture-page .tea-contact__tagline{display:block!important;margin-top:4px!important}
+html:root:root:root body.qily-tea-culture-page .tea-wechat__id{
+ display:inline-flex!important;align-items:center!important;min-height:44px!important;margin:0!important;padding:0!important;
+ border:0!important;border-radius:6px!important;color:var(--qily-tea-deep)!important;-webkit-text-fill-color:var(--qily-tea-deep)!important;
+ background:transparent!important;font-family:inherit!important;font-size:22px!important;font-weight:850!important;line-height:1.5!important;
+ text-align:left!important;white-space:nowrap!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important
+}
+html:root:root:root body.qily-tea-culture-page .tea-fact__wechat{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;margin:0!important;padding:0!important;
+ border:0!important;border-radius:5px!important;color:var(--qily-tea-copy)!important;-webkit-text-fill-color:var(--qily-tea-copy)!important;
+ background:transparent!important;font-family:inherit!important;font-size:20px!important;font-weight:500!important;line-height:1.6!important;
+ text-align:center!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important
+}
+html:root:root:root body.qily-tea-culture-page .tea-fact__wechat:is(:hover,:focus-visible),
+html:root:root:root body.qily-tea-culture-page .tea-wechat__id:is(:hover,:focus-visible){
+ color:var(--qily-tea-teal)!important;-webkit-text-fill-color:var(--qily-tea-teal)!important;text-decoration:underline!important;
+ text-decoration-color:var(--qily-tea-gold)!important;text-underline-offset:4px!important
+}
+html:root:root:root body.qily-tea-culture-page .tea-fact__wechat:focus-visible,
+html:root:root:root body.qily-tea-culture-page .tea-wechat__id:focus-visible{outline:2px solid var(--qily-tea-gold)!important;outline-offset:4px!important}

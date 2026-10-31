@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v6';
+const cache='20261031-tea-vi-axis-gallery-contrast-v7';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
@@ -37,6 +37,22 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     return a.map(x=>({complete:x.complete,w:x.naturalWidth,h:x.naturalHeight,src:new URL(x.src).pathname}));
    });
    assert(imgs.length===19&&imgs.every(x=>x.complete&&x.w>0&&x.h>0),name+': original image load failed '+JSON.stringify(imgs.filter(x=>!x.w)));
+   const tagline=await page.locator('.tea-contact__tagline').textContent();
+   assert(tagline.trim()==='让一杯茶，成为彼此认识与交流的开始。',name+': tagline line missing');
+   await page.context().grantPermissions(['clipboard-read','clipboard-write'],{origin:new URL(base).origin});
+   await page.waitForFunction(()=>typeof window.__qilyCopyWechatAndPrompt==='function',null,{timeout:30000});
+   for(const selector of ['.tea-fact__wechat','.tea-wechat__id','.tea-copy-btn']){
+    const action=page.locator(selector);
+    assert(await action.count()===1,name+': missing or duplicate WeChat action '+selector);
+    await action.click();
+    await page.waitForFunction(()=>{
+     const prompt=document.getElementById('qilyWechatCopyPrompt');
+     return !!prompt&&prompt.classList.contains('show')&&prompt.textContent.includes('微信号Qily259已复制，是否开启微信主程序')&&!!prompt.querySelector('[data-qily-open-wechat]');
+    },null,{timeout:10000});
+    const copied=await page.evaluate(()=>navigator.clipboard.readText());
+    assert(copied==='Qily259',name+': '+selector+' did not copy Qily259');
+    await page.locator('#qilyWechatCopyPrompt').evaluate(el=>el.classList.remove('show'));
+   }
    const m=await page.evaluate(async()=>{
     const el=s=>document.querySelector(s),st=s=>getComputedStyle(el(s));
     const nav=[...document.querySelectorAll('header.qily-site-header nav.qily-global-nav>a')];
