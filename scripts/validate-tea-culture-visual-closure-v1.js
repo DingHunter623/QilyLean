@@ -2,7 +2,7 @@
 'use strict';
 const fs=require('fs'),path=require('path'),assert=require('assert');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
-const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),css=read('tea-resource-visual-closure-v2.css'),ritualCss=read('tea-ritual-gallery-layout-v1.css');
+const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),css=read('tea-resource-visual-closure-v2.css');
 const images=[...tea.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
 const captions=[...tea.matchAll(/<figcaption\b[^>]*>/gi)].map(m=>m[0]);
 const sections=[...tea.matchAll(/<section\b[^>]*>/gi)];
@@ -18,14 +18,16 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-assert(tea.includes('id="qilyTeaRitualGalleryLayoutV1"'),'Tasting gallery layout stylesheet missing');
-const ritual=tea.match(/<div class="tea-grid tea-ritual-grid">([\\s\\S]*?)<\\/div>/);
-assert(ritual&&[...ritual[1].matchAll(/<figure class="tea-photo"/g)].length===5,'Tasting gallery must retain five ordered photos');
-assert(/grid-template-columns:repeat\\(3,minmax\\(0,1fr\\)\\)!important/.test(ritualCss),'Desktop tasting gallery must use three columns');
-assert(/grid-column:span 2!important/.test(ritualCss),'Lead tea-service image must span two desktop columns');
-assert(/grid-template-columns:repeat\\(2,minmax\\(0,1fr\\)\\)!important/.test(ritualCss),'Tablet tasting gallery must use two columns');
-assert(/grid-template-columns:minmax\\(0,1fr\\)!important/.test(ritualCss),'Mobile tasting gallery must use one column');
-assert(/height:auto!important/.test(ritualCss)&&/object-fit:contain!important/.test(ritualCss),'Tasting images must preserve full source aspect ratio');
+const ritualStart=tea.indexOf('<div class="tea-grid tea-ritual-grid">');
+const ritualEnd=tea.indexOf('</div>',ritualStart);
+const ritualMarkup=ritualStart>=0&&ritualEnd>ritualStart?tea.slice(ritualStart,ritualEnd):'';
+assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).length===5,'Tasting gallery must retain five ordered photos');
+assert(css.includes('QilyLean tea culture — tasting gallery editorial mosaic.'),'Tasting gallery mosaic rules missing');
+assert(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))!important'),'Desktop tasting gallery must use three columns');
+assert(css.includes('grid-column:span 2!important'),'Lead tea-service image must span two desktop columns');
+assert(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))!important'),'Tablet tasting gallery must use two columns');
+assert(css.includes('grid-template-columns:minmax(0,1fr)!important'),'Mobile tasting gallery must use one column');
+assert(css.includes('height:auto!important')&&css.includes('object-fit:contain!important'),'Tasting images must preserve full source aspect ratio');
 
 assert(!/<footer class="tea-footer">/.test(tea)&&!tea.includes('tea-backtop'),'Custom low-contrast footer must be removed');
 assert(tea.includes('class="tea-directory-return__link" href="/links/"'),'High-contrast return action missing');
