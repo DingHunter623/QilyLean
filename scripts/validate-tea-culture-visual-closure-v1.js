@@ -27,7 +27,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v10';
+const cache='20261031-tea-vi-axis-gallery-contrast-v11';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -38,14 +38,15 @@ assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).leng
 assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified visual governance layer missing');
 assert(css.includes('@media(max-width:1179px)'),'Tablet and narrow-desktop grid breakpoint must be explicit');
 assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
-assert(css.includes('/* QilyLean tea process-flow redline V10')&&/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo craft gallery must use three plus two centered tracks');
-assert(css.includes('/* QilyLean tea process-flow redline V10')&&/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Two-photo origin gallery must use two columns on desktop');
+assert(css.includes('/* QilyLean tea process-flow redline V11')&&/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo craft gallery must use three plus two centered tracks');
+assert(css.includes('/* QilyLean tea process-flow redline V11')&&/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Two-photo origin gallery must use two columns on desktop');
 assert((tea.match(/<article class="tea-product-card">/g)||[]).length===4,'Tea collection must contain exactly four image cards');
 assert(/\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo tea collection must use a 2x2 desktop gallery');
 assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');
 assert(css.includes('.tea-ritual-grid>.tea-photo:first-child,')&&css.includes('.tea-ritual-grid>.tea-photo:nth-child(4){')&&css.includes('grid-column:auto!important;'),'Tablet tasting gallery must reset first and fourth image placement');
 assert(css.includes('.tea-ritual-grid>.tea-photo:nth-child(5){')&&css.includes('grid-column:1/-1!important;'),'Tablet fifth tasting image must occupy a centered full row without creating implicit tracks');
 assert(css.includes('@media(max-width:640px)')&&css.includes('grid-column:auto!important;'),'Mobile tasting gallery must reset desktop explicit column placement');
+assert(/@media\(max-width:1179px\)\{[\s\S]*?\.tea-craft-grid>\.tea-photo:nth-child\(4\)\{[\s\S]*?grid-column:auto!important/.test(css),'Tablet craft gallery must reset fourth photo placement to avoid implicit grid columns.');
 assert(css.includes('margin-top:auto!important'),'Photo captions must align to the bottom of each row');
 assert(/\.tea-photo img\{[\s\S]*?height:auto!important[\s\S]*?object-fit:contain!important/.test(css),'Photo source aspect ratio and uncropped display must be preserved');
 assert(css.includes('.resource-feature .resource-feature__meta>span')&&css.includes('-webkit-text-fill-color:#315f64!important'),'Directory feature metadata must explicitly use high-contrast dark text');

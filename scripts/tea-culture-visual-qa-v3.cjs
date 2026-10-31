@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v10';
+const cache='20261031-tea-vi-axis-gallery-contrast-v11';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];

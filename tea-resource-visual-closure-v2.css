@@ -520,7 +520,7 @@ html:root:root:root body.qily-tea-culture-page .qily-tea-lightbox__close:focus-v
 }
 
 
-/* QilyLean tea process-flow redline V10 · 2026-10-31
+/* QilyLean tea process-flow redline V11 · 2026-10-31
    Origin: exactly garden + harvested leaves. Craft: picking through finished tea.
    Contact: wider copy panel, QR aligned to the right, no redundant QR caption.
 */
@@ -588,6 +588,11 @@ html:root:root:root body.qily-tea-culture-page .tea-contact__qr span{display:non
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
   html:root:root:root body.qily-tea-culture-page .tea-craft-grid>.tea-photo{
+    grid-column:auto!important;
+    width:100%!important;
+    justify-self:stretch!important;
+  }
+  html:root:root:root body.qily-tea-culture-page .tea-craft-grid>.tea-photo:nth-child(4){
     grid-column:auto!important;
     width:100%!important;
     justify-self:stretch!important;
