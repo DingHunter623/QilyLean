@@ -12,6 +12,64 @@ const viewports=[
 const artifacts=path.join(process.cwd(),'visual-vi-v4-artifacts');
 fs.mkdirSync(artifacts,{recursive:true});
 
+for(const width of [1440,1024,820,390,320]){
+  test(`resource directory contains its navigation rail before delayed shell runtimes at ${width}px`,async({browser})=>{
+    const context=await browser.newContext({viewport:{width,height:1000}});
+    let releaseShell;
+    const shellGate=new Promise(resolve=>{releaseShell=resolve;});
+    let r8Requested=false;
+    try{
+      await context.addInitScript(()=>{
+        window.__qilyResourceRailProbe={samples:0,escapes:[]};
+        const sample=()=>{
+          document.querySelectorAll('header .qily-primary-nav-scroll-rail').forEach(rail=>{
+            const box=rail.getBoundingClientRect(),header=rail.closest('header').getBoundingClientRect();
+            const style=getComputedStyle(rail);
+            if(style.display==='none'||style.visibility==='hidden'||!box.width||!box.height)return;
+            window.__qilyResourceRailProbe.samples++;
+            if(box.top<header.top-1||box.bottom>header.bottom+1){
+              window.__qilyResourceRailProbe.escapes.push({time:performance.now(),railTop:box.top,railBottom:box.bottom,headerTop:header.top,headerBottom:header.bottom});
+            }
+          });
+          requestAnimationFrame(sample);
+        };
+        requestAnimationFrame(sample);
+      });
+      await context.route('**/*',async route=>{
+        const url=new URL(route.request().url());
+        if(url.origin!==new URL(base).origin)return route.abort();
+        if(['/site-visual-runtime-r8.js','/site-navigation-core.js'].includes(url.pathname)){
+          if(url.pathname==='/site-visual-runtime-r8.js')r8Requested=true;
+          await shellGate;
+        }
+        return route.continue();
+      });
+      const page=await context.newPage();
+      const response=await page.goto(base+'/links/',{waitUntil:'commit'});
+      expect(response&&response.ok()).toBeTruthy();
+      await expect.poll(()=>r8Requested).toBe(true);
+      await page.waitForFunction(()=>window.__qilyResourceRailProbe.samples>=12);
+      expect(await page.evaluate(()=>window.__qilyResourceRailProbe.escapes),'the rail must never paint over page content while R8/core are delayed').toEqual([]);
+      await page.locator('#electricalRecommendations').scrollIntoViewIfNeeded();
+      await page.screenshot({path:path.join(artifacts,`resource-rail-${width}-delayed.png`)});
+      releaseShell();
+      await page.waitForLoadState('domcontentloaded');
+      await page.waitForFunction(()=>window.__qilyVisualRuntimeR84===true&&window.__qilyLeanSiteNavigationPublicV8===true);
+      // Include all bounded R8 cascade/header checkpoints (last is 1400 ms).
+      await page.waitForTimeout(1600);
+      expect(await page.evaluate(()=>window.__qilyResourceRailProbe.escapes),'rail remains inside the header throughout hydration and scrolling').toEqual([]);
+      expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth),'no horizontal page overflow').toBeLessThanOrEqual(1);
+      await expect(page.locator('#companyGrid > .card')).toHaveCount(100);
+      await expect(page.locator('#electricalRecommendations [data-company-reference]')).toHaveCount(4);
+      if(width>820)await expectNavigationRail(page);
+      await page.screenshot({path:path.join(artifacts,`resource-rail-${width}-settled.png`)});
+    }finally{
+      releaseShell();
+      await context.close();
+    }
+  });
+}
+
 async function observeStaticMenu(context){
   await context.addInitScript(()=>{
     // This observer is only a regression probe. Production keeps one Dock owner.
@@ -275,7 +333,7 @@ test('navigation core preserves the static menu while its action runtime is dela
     await context.route('**/*',async route=>{
       const url=new URL(route.request().url());
       if(url.origin!==new URL(base).origin)return route.abort();
-      if(url.pathname==='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')await dockGate;
+      if(url.pathname==='/site-dock-share-runtime-v1.js')await dockGate;
       return route.continue();
     });
     const page=await context.newPage();
