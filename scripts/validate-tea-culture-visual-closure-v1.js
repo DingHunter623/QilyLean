@@ -32,8 +32,9 @@ assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px)
 assert(/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo craft gallery must be 2×2');
 assert(/\.tea-origin-grid,[\s\S]*?\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo galleries must remain one row on desktop');
 assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');
-assert(css.includes('.tea-ritual-grid>.tea-photo:first-child{')&&css.includes('grid-column:auto!important;'),'Tablet tasting gallery must not leave the first image spanning the full row');
-assert(css.includes('.tea-ritual-grid>.tea-photo:nth-child(4){')&&css.includes('.tea-ritual-grid>.tea-photo:nth-child(5){'),'Tablet/mobile tasting gallery must reset desktop nth-child column placement to avoid implicit grid tracks');
+assert(css.includes('.tea-ritual-grid>.tea-photo:first-child,')&&css.includes('.tea-ritual-grid>.tea-photo:nth-child(4){')&&css.includes('grid-column:auto!important;'),'Tablet tasting gallery must reset first and fourth image placement');
+assert(css.includes('.tea-ritual-grid>.tea-photo:nth-child(5){')&&css.includes('grid-column:1/-1!important;'),'Tablet fifth tasting image must occupy a centered full row without creating implicit tracks');
+assert(css.includes('@media(max-width:640px)')&&css.includes('grid-column:auto!important;'),'Mobile tasting gallery must reset desktop explicit column placement');
 assert(css.includes('margin-top:auto!important'),'Photo captions must align to the bottom of each row');
 assert(/\.tea-photo img\{[\s\S]*?height:auto!important[\s\S]*?object-fit:contain!important/.test(css),'Photo source aspect ratio and uncropped display must be preserved');
 assert(css.includes('.resource-feature .resource-feature__meta>span')&&css.includes('-webkit-text-fill-color:#315f64!important'),'Directory feature metadata must explicitly use high-contrast dark text');
