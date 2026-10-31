@@ -5,7 +5,7 @@ const MAIN=fs.readFileSync(path.join(ROOT,'site-traffic-stats-v1.js'),'utf8');
 const KLINE=fs.readFileSync(path.join(ROOT,'site-traffic-daily-kline-v1.js'),'utf8');
 const CSS=fs.readFileSync(path.join(ROOT,'site-traffic-stats-v1.css'),'utf8');
 const html=[
-  '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/site-traffic-stats-v1.css"></head><body><main>',
+  '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:18px;line-height:1.72}</style><link rel="stylesheet" href="/site-traffic-stats-v1.css"></head><body><main>',
   '<section id="traffic" class="qily-traffic-section" data-qily-traffic-stats="v1" aria-labelledby="qily-traffic-title">',
   '<div class="qily-traffic-heading"><span class="qily-traffic-kicker">SITE ANALYTICS</span><h2 id="qily-traffic-title">6. 网站访问统计</h2><p class="qily-traffic-intro">原始说明</p></div>',
   '<div class="qily-traffic-grid"><article class="qily-traffic-site">',
@@ -109,4 +109,43 @@ for(const width of [390,1440])test('International daily traffic trend chart uses
   expect(requests.some(p=>p.includes('qilylean_com_pv6h_v1_')&&p.includes('/hit/'))).toBe(true);
   fs.mkdirSync(path.join(ROOT,'test-results'),{recursive:true});
   await page.locator('#traffic').screenshot({path:path.join(ROOT,'test-results','intl-kline-'+width+'.png')});
+});
+
+for(const width of [390,1440])test('International six-hour bars share the zero baseline at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:1100});
+  await page.clock.setFixedTime(new Date('2026-10-31T15:30:00Z'));
+  const slots={'20261029':[30,80,50,90],'20261030':[140,100,70,20],'20261031':[60,120,90,60]};
+  await page.route('https://qilylean.com/**',route=>{
+    const name=new URL(route.request().url()).pathname;
+    const resource={'/about/':['text/html',html],'/site-traffic-stats-v1.css':['text/css',CSS],'/site-traffic-stats-v1.js':['application/javascript',MAIN],'/site-traffic-daily-kline-v1.js':['application/javascript',KLINE]}[name];
+    return resource?route.fulfill({status:200,contentType:resource[0],body:resource[1]}):route.fulfill({status:404,body:'Not found'});
+  });
+  await page.route('https://countapi.mileshilliard.com/**',route=>{
+    const match=route.request().url().match(/qilylean_com_pv6h_v1_(\d{8})_s([0-3])/);
+    return route.fulfill({status:200,contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:JSON.stringify({value:match?slots[match[1]][Number(match[2])]:143})});
+  });
+  await page.goto('https://qilylean.com/about/',{waitUntil:'domcontentloaded'});
+  await expect(page.locator('#traffic svg')).toBeVisible();
+  let originalDaily;
+  for(const days of [7,14,7]){
+    await page.getByRole('button',{name:'近'+days+'日',exact:true}).click();
+    await expect(page.getByRole('button',{name:'近'+days+'日',exact:true})).toHaveAttribute('aria-pressed','true');
+    await expect(page.locator('#traffic svg')).toHaveAttribute('aria-label',new RegExp('近'+days+'日国际站'));
+    const chart=await page.locator('#traffic svg').evaluate(root=>{
+      const baseline=Number(root.querySelector('[data-qily-kline-tick="0"]').getAttribute('y'))-4;
+      const groups=[...root.querySelectorAll(':scope > g')].filter(g=>g.querySelector('[data-qily-kline-label="high-pv"]'));
+      return {baseline,bars:groups.map(g=>{
+        const rect=g.querySelector('rect');return {top:Number(rect.getAttribute('y')),bottom:Number(rect.getAttribute('y'))+Number(rect.getAttribute('height')),color:rect.getAttribute('fill'),label:g.querySelector('[data-qily-kline-label="high-pv"]').textContent};
+      }),daily:groups.map(g=>({rect:g.querySelectorAll('rect')[1].outerHTML,label:g.querySelector('[data-qily-kline-label="daily-pv"]').outerHTML})),dailyLabels:groups.map(g=>g.querySelector('[data-qily-kline-label="daily-pv"]').textContent)};
+    });
+    expect(chart.bars).toHaveLength(3);
+    expect(chart.baseline).toBe(250);
+    for(const bar of chart.bars)expect(bar.bottom,'every six-hour body ends exactly at y(0)').toBeCloseTo(chart.baseline,8);
+    expect(chart.bars.map(bar=>bar.top),'existing upper edges remain unchanged').toEqual([159.2,109.2,189.2]);
+    expect(chart.bars.map(bar=>bar.color)).toEqual(['#c49a4e','#178b94','#c49a4e']);
+    expect(chart.bars.map(bar=>bar.label)).toEqual(['90','140','120']);
+    expect(chart.dailyLabels).toEqual(['250','330','330']);
+    if(originalDaily)expect(chart.daily,'range switches retain the existing daily PV rendering').toEqual(originalDaily);
+    else originalDaily=chart.daily;
+  }
 });
