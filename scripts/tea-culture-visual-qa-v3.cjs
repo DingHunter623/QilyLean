@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v7';
+const cache='20261031-tea-vi-axis-gallery-contrast-v8';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
@@ -133,12 +133,12 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav.length===10&&m.nav.every((a,i)=>a.href===navExpected[i]),name+': global navigation differs from canonical order');
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
-   const expectedTracks=name==='desktop'?{origin:3,craft:2,range:3,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
+   const expectedTracks=name==='desktop'?{origin:3,craft:2,range:2,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
    Object.keys(expectedTracks).forEach(key=>assert(m.grids[key].tracks===expectedTracks[key],name+': '+key+' grid track count mismatch '+m.grids[key].tracks+'; viewport='+m.viewport.width+'; template='+m.grids[key].template+'; media1179='+m.media1179+'; stylesheet='+JSON.stringify(m.teaStylesheet)));
    const expectedRows={
-    desktop:{origin:[3],craft:[2,2],range:[3],ritual:[3,2]},
-    tablet:{origin:[2,1],craft:[2,2],range:[2,1],ritual:[2,2,1]},
-    mobile:{origin:[1,1,1],craft:[1,1,1,1],range:[1,1,1],ritual:[1,1,1,1,1]}
+    desktop:{origin:[3],craft:[2,2],range:[2,2],ritual:[3,2]},
+    tablet:{origin:[2,1],craft:[2,2],range:[2,2],ritual:[2,2,1]},
+    mobile:{origin:[1,1,1],craft:[1,1,1,1],range:[1,1,1,1],ritual:[1,1,1,1,1]}
    }[name];
    Object.keys(expectedRows).forEach(key=>{
     assert(JSON.stringify(rowsFor(m.grids[key]))===JSON.stringify(expectedRows[key]),name+': '+key+' row distribution mismatch '+JSON.stringify(rowsFor(m.grids[key])));
