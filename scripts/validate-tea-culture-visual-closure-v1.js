@@ -18,7 +18,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v8';
+const cache='20261031-tea-vi-axis-gallery-contrast-v9';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -53,10 +53,14 @@ assert(captions.length===12&&captions.every(x=>/data-qily-light-surface=["']true
 assert(!tea.includes('data-qily-dark-surface="true"'),'Dark-surface markers remain');
 assert(tea.includes('<h1>安溪铁观音</h1>')&&tea.includes('<h2>一叶承山韵，<em>一盏见匠心。</em></h2>'),'Semantic headings missing');
 assert(tea.includes('Qily259')&&tea.includes('/assets/contact/qilylean-wechat-qr.png'),'Approved WeChat ID or QR missing');
+assert(!tea.includes('class="tea-facts"')&&!tea.includes('class="tea-fact"'),'Repeated origin/tea/contact summary tiles must be removed.');
 assert(tea.includes('class="tea-contact__tagline">让一杯茶，成为彼此认识与交流的开始。</span>'),'Contact tagline must have a separate visual line.');
-assert(/<button[^>]*class="tea-fact__wechat"[^>]*data-qily-wechat-copy="Qily259"/.test(tea),'Quick contact tile must use shared WeChat copy action.');
-assert(/<button[^>]*class="tea-wechat__id"[^>]*data-qily-wechat-copy="Qily259"/.test(tea),'Contact-card WeChat ID must be directly clickable.');
-assert(/<button[^>]*class="tea-copy-btn"[^>]*data-qily-wechat-copy="Qily259"/.test(tea)&&!/<button[^>]*class="tea-copy-btn"[^>]*data-qily-copy=/.test(tea),'Copy button must use shared WeChat prompt, not duplicate generic handler.');
+assert(/<button[^>]*class="tea-wechat__id"[^>]*data-qily-wechat-copy="Qily259"[^>]*>微信：Qily259<\/button>/.test(tea),'Single direct WeChat ID action must remain visible and clickable.');
+assert(!tea.includes('tea-copy-btn')&&!tea.includes('复制微信号</button>'),'Redundant copy button must be removed.');
+assert(!tea.includes('扫码添加微信')&&!/<div class="tea-contact__qr">[\s\S]*?<span/.test(tea),'QR caption with duplicated WeChat ID must be removed.');
+assert(tea.includes('tea-image-lightbox-v1.js?v=20261031-tea-lightbox-v1'),'Full-page image lightbox script must be loaded.');
+assert(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))!important')&&css.includes('.tea-contact__qr{'),'Contact and QR must be laid out as two equal modules.');
+assert(css.includes('.qily-tea-lightbox__close')&&css.includes('z-index:2147483646!important'),'Original-image lightbox and topmost close control styles must exist.');
 assert(navigationCore.includes('window.__qilyCopyWechatAndPrompt=copyWechatAndPrompt')&&navigationCore.includes("'[data-qily-wechat-copy]'"),'Tea page must reuse the sitewide WeChat copy/open prompt.');
 assert(css.includes('.tea-contact__tagline')&&css.includes('.tea-fact__wechat:is(:hover,:focus-visible)')&&css.includes('.tea-wechat__id:focus-visible'),'Contact readability and keyboard focus styles missing.');
 assert(tea.includes('/assets/tea/11-anxi-tea-garden.jpg')&&tea.includes('/assets/tea/02-2026-spring-tea.jpg'),'Original tea images missing');
