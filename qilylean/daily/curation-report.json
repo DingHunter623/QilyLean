@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-10-31T00:00:00.000Z",
-  "total_before": 385,
-  "total_after": 385,
+  "generated_at": "2026-11-01T00:00:00.000Z",
+  "total_before": 386,
+  "total_after": 386,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -12,7 +12,8 @@
     "2026-08-14",
     "2026-08-25",
     "2026-10-27",
-    "2026-10-31"
+    "2026-10-31",
+    "2026-11-01"
   ],
   "decisions": [
     {
@@ -4982,7 +4983,7 @@
     },
     {
       "week": "2026-10-26",
-      "candidates": 2,
+      "candidates": 3,
       "kept": [
         {
           "date": "2026-10-27",
@@ -4994,6 +4995,12 @@
           "date": "2026-10-31",
           "title": "从重复劳动到持续创造价值：精益改善的第一性原理",
           "score": 10211,
+          "protected": true
+        },
+        {
+          "date": "2026-11-01",
+          "title": "不等100%完美，先让60%方案落地：Kaizen与PDCA的持续改善逻辑",
+          "score": 10161,
           "protected": true
         }
       ],

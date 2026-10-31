@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-10-31",
-  "briefPath": "qilylean/daily/2026-10-31.html",
-  "checkedAt": "2026-10-31T00:00:00.000Z",
+  "briefDate": "2026-11-01",
+  "briefPath": "qilylean/daily/2026-11-01.html",
+  "checkedAt": "2026-11-01T00:00:00.000Z",
   "candidates": [
     {
       "term": "CT",
@@ -11,22 +11,10 @@
       "source": "CT"
     },
     {
-      "term": "ECRS",
+      "term": "KAIZEN",
       "explanation": "",
       "explicit": false,
-      "source": "ECRS"
-    },
-    {
-      "term": "FPY",
-      "explanation": "",
-      "explicit": false,
-      "source": "FPY"
-    },
-    {
-      "term": "IE",
-      "explanation": "",
-      "explicit": false,
-      "source": "IE"
+      "source": "KAIZEN"
     },
     {
       "term": "PDCA",
@@ -35,28 +23,10 @@
       "source": "PDCA"
     },
     {
-      "term": "PQCD",
-      "explanation": "生产率、质量、成本、交付",
-      "explicit": true,
-      "source": "PQCD（生产率、质量、成本、交付）"
-    },
-    {
-      "term": "SMED",
-      "explanation": "",
-      "explicit": false,
-      "source": "SMED"
-    },
-    {
       "term": "SOP",
       "explanation": "",
       "explicit": false,
       "source": "SOP"
-    },
-    {
-      "term": "UPH",
-      "explanation": "",
-      "explicit": false,
-      "source": "UPH"
     },
     {
       "term": "WIP",
@@ -67,25 +37,16 @@
   ],
   "coveredTerms": [
     "CT",
-    "ECRS",
-    "FPY",
-    "IE",
+    "KAIZEN",
     "PDCA",
-    "PQCD",
-    "SMED",
     "SOP",
-    "UPH",
     "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "Lean",
-    "IE",
-    "PDCA",
-    "ECRS",
-    "标准作业"
+    "01"
   ],
   "status": "passed"
 }
