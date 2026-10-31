@@ -71,6 +71,10 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      range:gridReport('.tea-range-grid','.tea-product-card','.tea-product-card__image img','.tea-product-card__copy'),
      ritual:gridReport('#tasting .tea-ritual-grid','.tea-photo','img','figcaption')
     };
+    const teaLink=el('#qilyTeaResourceVisualClosureV3'),ritualRules=[];
+    const collectRules=rules=>{for(const rule of Array.from(rules||[])){if(rule.cssRules)collectRules(rule.cssRules);else if(rule.selectorText&&rule.selectorText.includes('tea-ritual-grid'))ritualRules.push({selector:rule.selectorText,columns:rule.style.getPropertyValue('grid-template-columns'),priority:rule.style.getPropertyPriority('grid-template-columns')});}};
+    try{if(teaLink&&teaLink.sheet)collectRules(teaLink.sheet.cssRules);}catch(_){}
+    const media1179=matchMedia('(max-width:1179px)').matches;
     const axisSelectors=['.tea-breadcrumb','.tea-page-heading','.tea-hero','.tea-intro','.tea-section__inner','.tea-contact__inner'];
     const axis=axisSelectors.map(selector=>({selector,width:el(selector).getBoundingClientRect().width,left:el(selector).getBoundingClientRect().left}));
     const large=[getComputedStyle(document.body).backgroundColor,st('.tea-hero').backgroundColor,st('.tea-intro').backgroundColor,st('.tea-lifestyle').backgroundColor,st('.tea-contact').backgroundColor,st('.tea-directory-return').backgroundColor,...[...document.querySelectorAll('.tea-section')].map(x=>getComputedStyle(x).backgroundColor)];
@@ -91,7 +95,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
      contact:st('.tea-contact').backgroundColor,contactCard:st('.tea-contact__inner').backgroundColor,
      returnBg:st('.tea-directory-return__link').backgroundColor,returnFg:st('.tea-directory-return__link').color,
      fonts:[st('.tea-contact__copy p').fontSize,st('.tea-section__head p').fontSize,st('.tea-photo figcaption span').fontSize,st('.tea-page-heading h1').fontSize],
-     large,pairs,grids,axis,
+     large,pairs,grids,axis,media1179,teaStylesheet:{loaded:!!(teaLink&&teaLink.sheet),href:teaLink&&teaLink.href,ritualRules},
      fits:[st('.tea-hero img').objectFit,st('.tea-photo img').objectFit,st('.tea-product-card__image img').objectFit,st('.tea-lifestyle img').objectFit,st('.tea-flower-note img').objectFit],
      overflow:document.documentElement.scrollWidth>innerWidth+1,
      viewport:{width:innerWidth,height:innerHeight}
@@ -102,7 +106,7 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
    assert(m.nav[8].current==='page',name+': Resource Collaboration active state missing');
    assert(m.sections===8&&m.images===19&&m.captions===12,name+': page structure/image count changed');
    const expectedTracks=name==='desktop'?{origin:3,craft:2,range:3,ritual:6}:name==='tablet'?{origin:2,craft:2,range:2,ritual:2}:{origin:1,craft:1,range:1,ritual:1};
-   Object.keys(expectedTracks).forEach(key=>assert(m.grids[key].tracks===expectedTracks[key],name+': '+key+' grid track count mismatch '+m.grids[key].tracks+'; viewport='+m.viewport.width+'; template='+m.grids[key].template));
+   Object.keys(expectedTracks).forEach(key=>assert(m.grids[key].tracks===expectedTracks[key],name+': '+key+' grid track count mismatch '+m.grids[key].tracks+'; viewport='+m.viewport.width+'; template='+m.grids[key].template+'; media1179='+m.media1179+'; stylesheet='+JSON.stringify(m.teaStylesheet)));
    const expectedRows={
     desktop:{origin:[3],craft:[2,2],range:[3],ritual:[3,2]},
     tablet:{origin:[2,1],craft:[2,2],range:[2,1],ritual:[2,2,1]},
