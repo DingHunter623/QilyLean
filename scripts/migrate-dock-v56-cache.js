@@ -12,12 +12,13 @@ const root=path.resolve(__dirname,'..');
 const check=process.argv.includes('--check');
 const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
 const PATCH='20261022-four-actions-v1';
-const FULL=BASE+'&patch='+PATCH;
+const SHARE='20261031-copy-first-v1';
+const FULL=BASE+'&patch='+PATCH+'&share='+SHARE;
 const tracked=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 let changed=0;
 for(const file of tracked){
   const full=path.join(root,file),before=fs.readFileSync(full,'utf8');
-  const next=before.replace(new RegExp('/site-dock-share-runtime-v1\\.js\\?v='+BASE+'(?:&patch=[^\\"\\\'\\s>]*)?','g'),'/site-dock-share-runtime-v1.js?v='+FULL);
+  const next=before.replace(/\/site-dock-share-runtime-v1\.js(?:\?[^"'\s>]*)?/g,'/site-dock-share-runtime-v1.js?v='+FULL);
   if(next!==before){changed++;if(!check)fs.writeFileSync(full,next,'utf8');}
 }
 const runtime=fs.readFileSync(path.join(root,'site-dock-share-runtime-v1.js'),'utf8');
@@ -32,6 +33,8 @@ for(const token of [
 if(runtime.includes('mobile-fixed-bottom-compact-navigation')||runtime.includes('mobile-fixed-bottom-swipe-navigation'))throw new Error('Retired Dock layout marker returned');
 const mat=fs.readFileSync(path.join(root,'scripts/materialize-global-language-v3.js'),'utf8');
 if(!mat.includes("DOCK_SHARE='/site-dock-share-runtime-v1.js?v="+FULL+"'"))throw new Error('Global materializer does not own footer-style Dock cache');
+const firstPaint=fs.readFileSync(path.join(root,'scripts/materialize-public-shell-first-paint-v1.js'),'utf8');
+if(!firstPaint.includes("DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v="+FULL+"'"))throw new Error('First-paint materializer does not own copy-first Dock cache');
 const gate=fs.readFileSync(path.join(root,'scripts/validate-dock-flow-navigation-v56.js'),'utf8');
 if(!gate.includes('mobile-fixed-bottom-footer-navigation'))throw new Error('Dock gate is not aligned to footer-style contract');
 if(check&&changed)throw new Error('Dock footer-style HTML cache normalization pending: '+changed+' file(s)');

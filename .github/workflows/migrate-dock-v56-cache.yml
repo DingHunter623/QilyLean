@@ -1,6 +1,15 @@
 name: Maintain Dock V5.8 Compact Cache
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-dock-share-runtime-v1.js'
+      - 'scripts/migrate-dock-v56-cache.js'
+      - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/materialize-public-shell-first-paint-v1.js'
+      - 'scripts/validate-dock-flow-navigation-v56.js'
+      - '.github/workflows/migrate-dock-v56-cache.yml'
   workflow_dispatch:
 
 permissions:
@@ -42,6 +51,6 @@ jobs:
             echo 'Dock V5.8 compact cache contract already current.'
             exit 0
           fi
-          git commit -m 'build(dock): normalize compact fixed-bottom cache [skip ci]'
+          git commit -m 'build(dock): normalize copy-first share cache'
           git pull --rebase origin main
           git push origin HEAD:main

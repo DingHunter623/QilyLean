@@ -156,3 +156,38 @@ test('international current primary module is automatically visible',async({page
   expect(state.left).toBeGreaterThanOrEqual(state.navLeft-2);
   expect(state.right).toBeLessThanOrEqual(state.navRight+2);
 });
+
+
+test('分享当前同时复制标题网址并打开系统分享',async({page})=>{
+  await page.addInitScript(()=>{
+    window.__qilyShareProbe={clipboardText:null,shareData:null,shareCalls:0};
+    Object.defineProperty(navigator,'clipboard',{configurable:true,value:{
+      writeText:function(text){window.__qilyShareProbe.clipboardText=text;return Promise.resolve();}
+    }});
+    Object.defineProperty(navigator,'share',{configurable:true,value:function(data){
+      window.__qilyShareProbe.shareCalls+=1;
+      window.__qilyShareProbe.shareData=data;
+      return Promise.resolve();
+    }});
+  });
+  await page.setViewportSize({width:1440,height:1000});
+  // These two routes intentionally cover both existing listener orders:
+  // homepage redline capture first, and resource-page authoritative Dock first.
+  for(const route of ['/','/links/anxi-tea/']){
+    const response=await page.goto(base+route,{waitUntil:'domcontentloaded',timeout:30000});
+    expect(response&&response.ok(),route+' should resolve').toBeTruthy();
+    const button=page.locator('#floatDock .qily-float-btn[data-action="current"]');
+    await expect(button).toBeVisible();
+    await page.evaluate(()=>{window.__qilyShareProbe={clipboardText:null,shareData:null,shareCalls:0};});
+    await button.click();
+    await expect.poll(()=>page.evaluate(()=>window.__qilyShareProbe.shareCalls===1&&typeof window.__qilyShareProbe.clipboardText==='string')).toBeTruthy();
+    const result=await page.evaluate(()=>{
+      const toast=document.querySelector('#qilyDockStandaloneToastV5,#qilyDockShareCopyToastV2');
+      return {title:document.title,url:location.href,clipboardText:window.__qilyShareProbe.clipboardText,shareData:window.__qilyShareProbe.shareData,shareCalls:window.__qilyShareProbe.shareCalls,toast:toast&&toast.textContent};
+    });
+    expect(result.clipboardText).toBe(result.title+'\n'+result.url);
+    expect(result.shareData).toEqual({title:result.title,text:result.title,url:result.url});
+    expect(result.shareCalls).toBe(1);
+    expect(result.toast).toBe('标题与网址已复制，正在打开系统分享');
+  }
+});

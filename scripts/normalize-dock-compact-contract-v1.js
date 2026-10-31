@@ -15,7 +15,8 @@ const root=path.resolve(__dirname,'..');
 const apply=process.argv.includes('--apply');
 const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
 const PATCH='20261022-four-actions-v1';
-const FULL=`${BASE}&patch=${PATCH}`;
+const SHARE='20261031-copy-first-v1';
+const FULL=`${BASE}&patch=${PATCH}&share=${SHARE}`;
 const changed=[];
 
 function read(file){return fs.readFileSync(path.join(root,file),'utf8');}
@@ -32,7 +33,7 @@ function tracked(pattern){
 }
 function normalizeDockUrl(source){
   return source.replace(
-    new RegExp('/site-dock-share-runtime-v1\\.js\\?v='+BASE+'(?:&patch=[^\\"\\\'\\s>]*)?','g'),
+    /\/site-dock-share-runtime-v1\.js(?:\?[^"'\s>]*)?/g,
     '/site-dock-share-runtime-v1.js?v='+FULL
   );
 }
@@ -41,7 +42,8 @@ for(const file of tracked('*.html'))write(file,normalizeDockUrl(read(file)));
 for(const file of tracked('scripts/*.js')){
   if([
     'scripts/normalize-dock-compact-contract-v1.js',
-    'scripts/remediate-mobile-dock-first-paint-v1.js'
+    'scripts/remediate-mobile-dock-first-paint-v1.js',
+    'scripts/migrate-dock-v56-cache.js'
   ].includes(file))continue;
   write(file,normalizeDockUrl(read(file)));
 }
@@ -62,6 +64,8 @@ assert(!runtime.includes('mobile-fixed-bottom-swipe-navigation'),'retired swipe 
 
 const materializer=normalizeDockUrl(read('scripts/materialize-global-language-v3.js'));
 assert(materializer.includes(`DOCK_SHARE='/site-dock-share-runtime-v1.js?v=${FULL}'`),'global materializer does not own footer-style Dock cache');
+const firstPaint=normalizeDockUrl(read('scripts/materialize-public-shell-first-paint-v1.js'));
+assert(firstPaint.includes(`DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=${FULL}'`),'first-paint materializer does not own copy-first Dock cache');
 const gate=read('scripts/validate-dock-flow-navigation-v56.js');
 assert(gate.includes('mobile-fixed-bottom-footer-navigation'),'Dock gate is not aligned to footer-style contract');
 const spec=read('scripts/dock-flow-navigation-v56.spec.js');

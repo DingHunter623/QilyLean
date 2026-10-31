@@ -7,6 +7,12 @@ on:
     paths:
       - 'site-dock-share-runtime-v1.js'
       - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/materialize-public-shell-first-paint-v1.js'
+      - 'scripts/migrate-dock-v56-cache.js'
+      - 'scripts/materialize-cn-footer-actions-v2.js'
+      - 'cn-site/assets/cn-footer-actions-v1.js'
+      - 'cn-site/**/*.html'
       - 'scripts/dock-flow-navigation-v56.spec.js'
       - '.github/workflows/validate-dock-flow-navigation-v56.yml'
       - 'index.html'
@@ -17,6 +23,12 @@ on:
     paths:
       - 'site-dock-share-runtime-v1.js'
       - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/materialize-public-shell-first-paint-v1.js'
+      - 'scripts/migrate-dock-v56-cache.js'
+      - 'scripts/materialize-cn-footer-actions-v2.js'
+      - 'cn-site/assets/cn-footer-actions-v1.js'
+      - 'cn-site/**/*.html'
       - 'scripts/dock-flow-navigation-v56.spec.js'
       - '.github/workflows/validate-dock-flow-navigation-v56.yml'
   workflow_dispatch:

@@ -16,6 +16,7 @@ const cp=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
 const DOCK_PATCH='20261022-four-actions-v1';
+const DOCK_SHARE='20261031-copy-first-v1';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
 // Canonical cache revision for the approved underline-free international header.
@@ -76,13 +77,13 @@ function patchNormalizer(){
 function patchPersistentDockReferences(){
   const files=['scripts/materialize-global-language-v3.js','scripts/materialize-contact-route-v6.js','scripts/migrate-dock-v56-cache.js','scripts/validate-sitewide-visual-closure-v27.js'];
   let changed=0;
-  for(const rel of files){if(!fs.existsSync(abs(rel)))continue;if(patchFile(rel,src=>src.replace(/\/site-dock-share-runtime-v1\.js\?v=20260906-authority-v58-mobile-swipe-fixed-bottom(?:&patch=[^'"\s]*)?/g,`/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=${DOCK_PATCH}`)))changed++;}
+  for(const rel of files){if(!fs.existsSync(abs(rel)))continue;if(patchFile(rel,src=>src.replace(/\/site-dock-share-runtime-v1\.js\?v=20260906-authority-v58-mobile-swipe-fixed-bottom(?:&patch=[^'"\s]*)?/g,`/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=${DOCK_PATCH}&share=${DOCK_SHARE}`)))changed++;}
   return changed;
 }
 function patchHtmlCacheRefs(){
   let changed=0;
   for(const rel of trackedHtml())if(patchFile(rel,html=>html
-    .replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`)
+    .replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}&share=${DOCK_SHARE}`)
     .replace(/\/site-navigation\.js\?[^"'\s>]+/g,url=>{
       // Updating the visual revision must retain the first-paint/input
       // revisions owned by the shared-shell materializer.
