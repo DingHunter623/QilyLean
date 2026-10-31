@@ -1,4 +1,4 @@
-name: Tea Culture Visual Closure V3
+name: Tea Culture Visual Closure V4
 
 on:
   push:
@@ -16,7 +16,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: tea-culture-visual-v3-${{ github.ref }}
+  group: tea-culture-visual-v4-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -35,20 +35,20 @@ jobs:
           npm install --no-save playwright@1.55.0
           npx playwright install --with-deps chromium
 
-      - name: Validate page structure, global VI and WCAG color contracts
+      - name: Validate V4 page structure, shared content axis, gallery rules and WCAG contrast
         run: node scripts/validate-tea-culture-visual-closure-v1.js
 
-      - name: Render and verify production page at desktop, tablet and mobile
+      - name: Render and verify detail page and directory at desktop, tablet and mobile
         env:
           QILY_TEA_URL: https://qilylean.com/links/anxi-tea/
-          QA_OUTPUT: qa-output/tea-culture-v3
+          QA_OUTPUT: qa-output/tea-culture-v4
         run: node scripts/tea-culture-visual-qa-v3.cjs
 
       - name: Upload tea page visual evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tea-culture-visual-v3-${{ github.run_id }}
-          path: qa-output/tea-culture-v3/
+          name: tea-culture-visual-v4-${{ github.run_id }}
+          path: qa-output/tea-culture-v4/
           if-no-files-found: warn
           retention-days: 14

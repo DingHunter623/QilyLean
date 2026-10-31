@@ -203,3 +203,134 @@ html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritua
     grid-column:1!important;
   }
 }
+
+
+/* QilyLean Tea Culture Visual Governance V4 — 2026-10-31
+ * SSOT: inherit the 1180px public content axis; standardize editorial grids;
+ * preserve source pixels/aspect ratios; align photo tops and caption baselines.
+ */
+html:root:root:root body.qily-tea-culture-page :is(.tea-breadcrumb,.tea-page-heading,.tea-hero,.tea-intro){
+  width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important;
+  max-width:var(--qily-content-axis,1180px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-section,
+html:root:root:root body.qily-tea-culture-page .tea-contact,
+html:root:root:root body.qily-tea-culture-page .tea-lifestyle{
+  padding-left:18px!important;
+  padding-right:18px!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-section__inner,
+html:root:root:root body.qily-tea-culture-page .tea-contact__inner{
+  width:min(var(--qily-content-axis,1180px),100%)!important;
+  max-width:var(--qily-content-axis,1180px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-lifestyle__caption{
+  width:min(var(--qily-content-axis,1180px),100%)!important;
+  max-width:var(--qily-content-axis,1180px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-grid{
+  align-items:stretch!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-photo{
+  align-self:stretch!important;
+  min-width:0!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-photo img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-width:100%!important;
+  object-fit:contain!important;
+  object-position:top center!important;
+  background:#fff!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-photo figcaption{
+  margin-top:auto!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-product-card{
+  align-self:stretch!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-product-card__copy{
+  margin-top:auto!important;
+}
+/* Three photos: one row. Four photos: exactly two columns × two rows. */
+html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
+html:root:root:root body.qily-tea-culture-page .tea-range-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-craft-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+/* Five photos: three on row one, two centered on row two. */
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:24px!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo{
+  grid-column:span 2!important;
+  align-self:stretch!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:nth-child(4){
+  grid-column:2/span 2!important;
+}
+html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:nth-child(5){
+  grid-column:4/span 2!important;
+}
+@media(max-width:960px){
+  html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-range-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-craft-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:20px!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo{
+    grid-column:auto!important;
+    width:100%!important;
+    justify-self:stretch!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:first-child{
+    grid-column:auto!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:last-child{
+    grid-column:1/-1!important;
+    width:50%!important;
+    justify-self:center!important;
+  }
+}
+@media(max-width:640px){
+  html:root:root:root body.qily-tea-culture-page .tea-origin-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-range-grid,
+  html:root:root:root body.qily-tea-culture-page .tea-craft-grid,
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  html:root:root:root body.qily-tea-culture-page main.tea-page #tasting .tea-ritual-grid>.tea-photo:last-child{
+    grid-column:auto!important;
+    width:100%!important;
+    justify-self:stretch!important;
+  }
+}
+/* The directory feature is a light card. Never inherit dark-surface text semantics. */
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature .resource-feature__meta,
+html:root:root:root body.qily-resource-collaboration-page main#qilyResourcePublicDirectory .resource-feature .resource-feature__meta>span{
+  color:#315f64!important;
+  -webkit-text-fill-color:#315f64!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}

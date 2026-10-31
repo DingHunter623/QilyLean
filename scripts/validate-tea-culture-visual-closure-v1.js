@@ -18,18 +18,24 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v=20261031-ritual-grid-v1"'),'Tasting gallery stylesheet cache version must be refreshed');
+const cache='20261031-tea-vi-axis-gallery-contrast-v4';
+assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
+
 const ritualStart=tea.indexOf('<div class="tea-grid tea-ritual-grid">');
 const ritualEnd=tea.indexOf('</div>',ritualStart);
 const ritualMarkup=ritualStart>=0&&ritualEnd>ritualStart?tea.slice(ritualStart,ritualEnd):'';
 assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).length===5,'Tasting gallery must retain five ordered photos');
-assert(css.includes('QilyLean tea culture — tasting gallery editorial mosaic.'),'Tasting gallery mosaic rules missing');
-assert(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))!important'),'Desktop tasting gallery must use three columns');
-assert(css.includes('grid-column:span 2!important'),'Lead tea-service image must span two desktop columns');
-assert(css.includes('grid-template-columns:repeat(2,minmax(0,1fr))!important'),'Tablet tasting gallery must use two columns');
-assert(css.includes('grid-template-columns:minmax(0,1fr)!important'),'Mobile tasting gallery must use one column');
-assert(css.includes('height:auto!important')&&css.includes('object-fit:contain!important'),'Tasting images must preserve full source aspect ratio');
-
+assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified visual governance layer missing');
+assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
+assert(/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo craft gallery must be 2×2');
+assert(/\.tea-origin-grid,[\s\S]*?\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(3,minmax\(0,1fr\)\)!important/.test(css),'Three-photo galleries must remain one row on desktop');
+assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');
+assert(css.includes('.tea-ritual-grid>.tea-photo:first-child{')&&css.includes('grid-column:auto!important;'),'Tablet tasting gallery must not leave the first image spanning the full row');
+assert(css.includes('margin-top:auto!important'),'Photo captions must align to the bottom of each row');
+assert(/\.tea-photo img\{[\s\S]*?height:auto!important[\s\S]*?object-fit:contain!important/.test(css),'Photo source aspect ratio and uncropped display must be preserved');
+assert(css.includes('.resource-feature .resource-feature__meta>span')&&css.includes('-webkit-text-fill-color:#315f64!important'),'Directory feature metadata must explicitly use high-contrast dark text');
+const feature=wrapper&&wrapper[0].match(/<article class="resource-feature"[^>]*>/i);
+assert(feature&&/data-qily-light-surface="true"/.test(feature[0])&&!/data-qily-dark-surface/.test(feature[0]),'White resource card must be registered as a light surface, not a dark surface');
 assert(!/<footer class="tea-footer">/.test(tea)&&!tea.includes('tea-backtop'),'Custom low-contrast footer must be removed');
 assert(tea.includes('class="tea-directory-return__link" href="/links/"'),'High-contrast return action missing');
 assert(sections.length===8&&images.length===19,'Tea page section/image structure changed');
@@ -61,6 +67,7 @@ assert(!price.test(tea),'Price/currency text must not be present');
 function lum(hex){const c=hex.slice(1).match(/.{2}/g).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));return .2126*c[0]+.7152*c[1]+.0722*c[2]}
 function ratio(a,b){const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
 assert(ratio('#3f5e5d','#ffffff')>=4.5&&ratio('#3f5e5d','#eef7f5')>=4.5,'Body copy must meet WCAG AA');
+assert(ratio('#315f64','#ffffff')>=4.5,'Directory metadata must meet WCAG AA on its white card');
 assert(ratio('#80643b','#ffffff')>=4.5&&ratio('#80643b','#eef7f5')>=4.5,'Kicker text must meet WCAG AA');
 assert(ratio('#ffffff','#0f4b5a')>=4.5,'Action controls must meet WCAG AA');
-console.log('[Tea Visual Closure V3] PASS: shared global header, 10 nav links, 8 sections, 19 images, light VI surfaces, 20px copy, WCAG AA contrast, uncropped media and clear return action.');
+console.log('[Tea Visual Closure V4] PASS: shared global header, 10 nav links, 8 sections, 19 images, light VI surfaces, 20px copy, WCAG AA contrast, uncropped media and clear return action.');
