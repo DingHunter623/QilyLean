@@ -28,7 +28,7 @@ for(const token of [
   'border-top:3px solid #c8a25a!important',
   'background:#0f4b5a!important',
   'mobile-fixed-bottom-footer-navigation',
-  "setImportant(dock,'flex-wrap','wrap')"
+  "setImportant(dock,'flex-wrap','nowrap')"
 ])if(!runtime.includes(token))throw new Error('Dock footer-style contract missing '+token);
 if(runtime.includes('mobile-fixed-bottom-compact-navigation')||runtime.includes('mobile-fixed-bottom-swipe-navigation'))throw new Error('Retired Dock layout marker returned');
 const mat=fs.readFileSync(path.join(root,'scripts/materialize-global-language-v3.js'),'utf8');
