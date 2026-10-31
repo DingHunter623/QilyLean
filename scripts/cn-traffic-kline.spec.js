@@ -138,7 +138,7 @@ for(const width of [390,1440])test('China six-hour PV columns share the zero bas
   });
   await page.route('https://countapi.mileshilliard.com/**',route=>{
     const pathname=new URL(route.request().url()).pathname;
-    const bucket=pathname.match(/qilylean_cn_pv6h_v1_(\\d{8})_s([0-3])/);
+    const bucket=pathname.match(/qilylean_cn_pv6h_v1_(\d{8})_s([0-3])/);
     const value=bucket?((slots[bucket[1]]||[])[Number(bucket[2])]||0):143;
     return route.fulfill({status:200,headers:{'access-control-allow-origin':'*','content-type':'application/json'},body:JSON.stringify({value})});
   });
