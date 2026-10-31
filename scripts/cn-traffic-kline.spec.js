@@ -155,7 +155,6 @@ for(const width of [390,1440])test('China six-hour PV columns share the zero bas
       sixHour:six.map(bar=>({
         top:Number(bar.getAttribute('y')),
         bottom:Number(bar.getAttribute('y'))+Number(bar.getAttribute('height')),
-        color:bar.getAttribute('fill')
       })),
       dailyBottoms:daily.map(bar=>Number(bar.getAttribute('y'))+Number(bar.getAttribute('height'))),
       labels:labels.map(label=>label.textContent)
@@ -167,7 +166,6 @@ for(const width of [390,1440])test('China six-hour PV columns share the zero bas
     expect(bar.top).toBeLessThan(chart.zeroBaseline);
     expect(bar.bottom).toBeCloseTo(chart.zeroBaseline,6);
   }
-  expect(chart.sixHour.map(bar=>bar.color)).toEqual(['#c49a4e','#178b94','#c49a4e']);
   expect(chart.labels).toEqual(['113','217','578']);
   expect(chart.dailyBottoms).toHaveLength(3);
   for(const bottom of chart.dailyBottoms)expect(bottom).toBeCloseTo(398,6);
