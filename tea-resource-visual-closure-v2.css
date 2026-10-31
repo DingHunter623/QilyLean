@@ -363,3 +363,52 @@ html:root:root:root body.qily-tea-culture-page .tea-wechat__id:is(:hover,:focus-
 }
 html:root:root:root body.qily-tea-culture-page .tea-fact__wechat:focus-visible,
 html:root:root:root body.qily-tea-culture-page .tea-wechat__id:focus-visible{outline:2px solid var(--qily-tea-gold)!important;outline-offset:4px!important}
+
+
+/* QilyLean Tea Collection V5 — four-card 2×2 gallery + floating WeChat prompt above fixed dock. */
+html:root:root:root body.qily-tea-culture-page .tea-range-note{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;
+  gap:6px!important;width:100%!important;margin:0 0 22px!important;padding:18px 22px!important;
+  border:1px solid var(--qily-tea-line-strong)!important;border-left:3px solid var(--qily-tea-gold)!important;
+  border-radius:10px!important;color:var(--qily-tea-ink)!important;background:var(--qily-tea-tint)!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-note strong{
+  color:var(--qily-tea-deep)!important;-webkit-text-fill-color:var(--qily-tea-deep)!important;
+  font-family:"Noto Serif SC","Songti SC",serif!important;font-size:23px!important;font-weight:850!important;line-height:1.45!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-note p{
+  margin:0!important;color:var(--qily-tea-copy)!important;-webkit-text-fill-color:var(--qily-tea-copy)!important;
+  font-size:18px!important;line-height:1.7!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;gap:24px!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid>.tea-product-card{
+  display:flex!important;flex-direction:column!important;align-self:stretch!important;min-width:0!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid .tea-product-card__image{
+  display:flex!important;align-items:flex-start!important;justify-content:center!important;
+  width:100%!important;height:auto!important;min-height:0!important;background:#fff!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid .tea-product-card__image img{
+  display:block!important;width:100%!important;height:auto!important;max-width:100%!important;
+  object-fit:contain!important;object-position:top center!important;
+}
+html:root:root:root body.qily-tea-culture-page .tea-range-grid .tea-product-card__copy{margin-top:auto!important}
+@media(max-width:640px){
+ html:root:root:root body.qily-tea-culture-page .tea-range-grid{grid-template-columns:minmax(0,1fr)!important;gap:18px!important}
+ html:root:root:root body.qily-tea-culture-page .tea-range-note{padding:16px!important;margin-bottom:18px!important}
+ html:root:root:root body.qily-tea-culture-page .tea-range-note strong{font-size:21px!important}
+ html:root:root:root body.qily-tea-culture-page .tea-range-note p{font-size:17px!important}
+}
+html:root:root:root body.qily-tea-culture-page .qily-wechat-copy-prompt{
+  z-index:2147483001!important;
+}
+@media(max-width:820px){
+ html:root:root:root body.qily-tea-culture-page .qily-wechat-copy-prompt{
+  left:12px!important;right:12px!important;top:auto!important;
+  bottom:calc(64px + env(safe-area-inset-bottom))!important;
+  max-width:none!important;justify-content:space-between!important;
+ }
+}
