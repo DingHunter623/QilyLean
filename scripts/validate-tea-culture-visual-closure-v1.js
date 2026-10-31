@@ -13,8 +13,13 @@ const expectedNav=['/','/capabilities/','/improvements/','/lean-production/','/p
 
 const sectionBlock=id=>{const a=tea.indexOf('id="'+id+'"'),b=tea.indexOf('</section>',a);assert(a>=0&&b>a,'Missing section '+id);return tea.slice(a,b);};
 const imageNames=block=>[...block.matchAll(/<img[^>]+src="[^"]*\/([^/"?]+)"/g)].map(m=>m[1]);
-assert(JSON.stringify(imageNames(sectionBlock('origin')))==JSON.stringify(['11-anxi-tea-garden.jpg','14-fresh-leaves-basket.jpg']),'Origin must contain only the tea garden followed by the basket of fresh leaves.');
-assert(JSON.stringify(imageNames(sectionBlock('craft')))==JSON.stringify(['12-tea-picking-shoot.jpg','13-tea-processing.jpg','15-tea-processing-shape.jpg','16-finished-tea-tray.jpg','17-dry-tea-detail.jpg']),'Craft flow must follow picking, processing, shaping and finished dry tea.');
+assert(JSON.stringify(imageNames(sectionBlock('origin')))==JSON.stringify(['11-anxi-tea-garden.jpg','13-tea-processing.jpg']),'Origin must show the tea garden followed by the basket of fresh leaves.');
+assert(JSON.stringify(imageNames(sectionBlock('craft')))==JSON.stringify(['12-tea-picking-shoot.jpg','14-fresh-leaves-basket.jpg','15-tea-processing-shape.jpg','16-finished-tea-tray.jpg','17-dry-tea-detail.jpg']),'Craft must show the cloth-wrapping operation, formed tea, spread tea and finished tea in sequence.');
+assert(sectionBlock('origin').includes('<strong>鲜叶入篮</strong>')&&sectionBlock('craft').includes('<strong>包揉成形</strong>'),'Origin and craft captions must match the swapped source images.');
+assert(sectionBlock('craft').includes('<strong>包揉作业</strong>')&&sectionBlock('craft').includes('<strong>茶叶摊展</strong>'),'Craft captions must describe the actual machine and tea-tray scenes.');
+assert(JSON.stringify(imageNames(sectionBlock('tea-range')))==JSON.stringify(['04-tieguanyin-dry-leaf.jpg','02-2026-spring-tea.jpg','10-osmanthus-blossoms.jpg','08-osmanthus-black-tea.jpg']),'Tea collection must show osmanthus blossoms before osmanthus black tea.');
+const rangeTitles=[...sectionBlock('tea-range').matchAll(/<h3>(.*?)<\/h3>/g)].map(m=>m[1]);
+assert(rangeTitles.join('|')==='臻品铁观音|2026 春茶图鉴|桂花花枝|桂花红茶','Tea product captions must follow the flower-before-tea sequence.');
 assert(JSON.stringify(imageNames(sectionBlock('tasting')).slice(-2))==JSON.stringify(['06-brew-osmanthus-tea.jpg','18-tea-brewing.jpg']),'Tasting must show water pouring before the finished tea soup.');
 assert(['一、ORIGIN / 茶源','二、CRAFT / 制茶','三、TEA COLLECTION / 茶品','四、TEA RITUAL / 品鉴'].every(x=>tea.includes('>'+x+'</span>')),'Section headings must use Chinese sequence numbers.');
 assert([...tea.matchAll(/<small>(\d{2}) · /g)].map(m=>m[1]).join(',')==='01,02,03,04','Tea product sequence numbers must remain 01–04.');
@@ -27,7 +32,7 @@ assert(navHrefs.length===10&&navHrefs.every((v,i)=>v===expectedNav[i]),'Global n
 assert(/href="\/links\/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true"/.test(nav[1]),'Resource Collaboration must be the active global item');
 assert(!/<header class="topbar">/.test(tea),'Standalone header must not remain');
 assert(tea.includes('id="qilyTeaResourceVisualClosureV3"'),'V3 stylesheet link missing');
-const cache='20261031-tea-vi-axis-gallery-contrast-v11';
+const cache='20261031-tea-vi-axis-gallery-contrast-v12';
 assert(tea.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"')&&resource.includes('href="/tea-resource-visual-closure-v2.css?v='+cache+'"'),'Resource directory and tea detail page must use the same VI stylesheet cache');
 // Page-local rules use scoped selectors and a versioned cache; shared shell ordering remains owned by the site build.
 
@@ -38,8 +43,8 @@ assert(ritualMarkup&&(ritualMarkup.match(/<figure class="tea-photo"/g)||[]).leng
 assert(css.includes('QilyLean Tea Culture Visual Governance V4'),'V4 unified visual governance layer missing');
 assert(css.includes('@media(max-width:1179px)'),'Tablet and narrow-desktop grid breakpoint must be explicit');
 assert(css.includes('width:min(var(--qily-content-axis,1180px),calc(100% - 36px))!important'),'Tea page 1180px public content axis missing');
-assert(css.includes('/* QilyLean tea process-flow redline V11')&&/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo craft gallery must use three plus two centered tracks');
-assert(css.includes('/* QilyLean tea process-flow redline V11')&&/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Two-photo origin gallery must use two columns on desktop');
+assert(css.includes('/* QilyLean tea process-flow redline V12')&&/\.tea-craft-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo craft gallery must use three plus two centered tracks');
+assert(css.includes('/* QilyLean tea process-flow redline V12')&&/\.tea-origin-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Two-photo origin gallery must use two columns on desktop');
 assert((tea.match(/<article class="tea-product-card">/g)||[]).length===4,'Tea collection must contain exactly four image cards');
 assert(/\.tea-range-grid\{[\s\S]*?grid-template-columns:repeat\(2,minmax\(0,1fr\)\)!important/.test(css),'Four-photo tea collection must use a 2x2 desktop gallery');
 assert(/\.tea-ritual-grid\{[\s\S]*?grid-template-columns:repeat\(6,minmax\(0,1fr\)\)!important/.test(css),'Five-photo tasting gallery must use three plus two centered tracks');

@@ -2,7 +2,7 @@
 const {chromium}=require('playwright');
 const fs=require('fs'),path=require('path');
 const base=process.env.QILY_TEA_URL||'https://qilylean.com/links/anxi-tea/';
-const cache='20261031-tea-vi-axis-gallery-contrast-v11';
+const cache='20261031-tea-vi-axis-gallery-contrast-v12';
 const out=path.resolve(process.env.QA_OUTPUT||'qa-output/tea-culture-v4');
 fs.mkdirSync(out,{recursive:true});
 const navExpected=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
@@ -49,13 +49,23 @@ const rowsFor=(grid)=>grid.rows.map(r=>r.count);
     return {
      origin:names('.tea-origin-grid img'),
      craft:names('.tea-craft-grid img'),
+     teaRange:names('.tea-range-grid .tea-product-card__image img'),
      tasting:names('#tasting .tea-ritual-grid img'),
+     originTitles:[...document.querySelectorAll('.tea-origin-grid figcaption strong')].map(x=>x.textContent.trim()),
+     craftTitles:[...document.querySelectorAll('.tea-craft-grid figcaption strong')].map(x=>x.textContent.trim()),
+     productLabels:[...document.querySelectorAll('.tea-range-grid .tea-product-card__copy small')].map(x=>x.textContent.trim()),
+     productTitles:[...document.querySelectorAll('.tea-range-grid .tea-product-card__copy h3')].map(x=>x.textContent.trim()),
      headings:[...document.querySelectorAll('.tea-section__head .en')].map(x=>x.textContent.trim()),
      productNumbers:[...document.querySelectorAll('.tea-product-card__copy small')].map(x=>x.textContent.trim().slice(0,2))
     };
    });
-   assert(flowOrder.origin.join('|')==='11-anxi-tea-garden.jpg|14-fresh-leaves-basket.jpg',name+': origin must be garden then basket only '+JSON.stringify(flowOrder.origin));
-   assert(flowOrder.craft.join('|')==='12-tea-picking-shoot.jpg|13-tea-processing.jpg|15-tea-processing-shape.jpg|16-finished-tea-tray.jpg|17-dry-tea-detail.jpg',name+': craft photos must follow the real process sequence '+JSON.stringify(flowOrder.craft));
+   assert(flowOrder.origin.join('|')==='11-anxi-tea-garden.jpg|13-tea-processing.jpg',name+': origin must show garden then basket of fresh leaves '+JSON.stringify(flowOrder.origin));
+   assert(flowOrder.craft.join('|')==='12-tea-picking-shoot.jpg|14-fresh-leaves-basket.jpg|15-tea-processing-shape.jpg|16-finished-tea-tray.jpg|17-dry-tea-detail.jpg',name+': craft photos must follow the actual processing sequence '+JSON.stringify(flowOrder.craft));
+   assert(flowOrder.originTitles.join('|')==='梯田茶园|鲜叶入篮',name+': origin captions must match garden and basket '+JSON.stringify(flowOrder.originTitles));
+   assert(flowOrder.craftTitles.join('|')==='包揉作业|包揉成形|茶叶摊展|干茶呈现|干茶细节',name+': craft captions must match the real photo scenes '+JSON.stringify(flowOrder.craftTitles));
+   assert(flowOrder.teaRange.join('|')==='04-tieguanyin-dry-leaf.jpg|02-2026-spring-tea.jpg|10-osmanthus-blossoms.jpg|08-osmanthus-black-tea.jpg',name+': osmanthus blossoms must appear before osmanthus black tea '+JSON.stringify(flowOrder.teaRange));
+   assert(flowOrder.productLabels.join('|')==='01 · SIGNATURE TEA|02 · SPRING TEA|03 · OSMANTHUS|04 · FLORAL TEA',name+': product labels must follow the image order '+JSON.stringify(flowOrder.productLabels));
+   assert(flowOrder.productTitles.join('|')==='臻品铁观音|2026 春茶图鉴|桂花花枝|桂花红茶',name+': product titles must follow the image order '+JSON.stringify(flowOrder.productTitles));
    assert(flowOrder.tasting.slice(-2).join('|')==='06-brew-osmanthus-tea.jpg|18-tea-brewing.jpg',name+': brewing photo must precede the finished tea soup '+JSON.stringify(flowOrder.tasting));
    assert(flowOrder.headings.join('|')==='一、ORIGIN / 茶源|二、CRAFT / 制茶|三、TEA COLLECTION / 茶品|四、TEA RITUAL / 品鉴',name+': chapter headings must use Chinese sequence numbers');
    assert(flowOrder.productNumbers.join('|')==='01|02|03|04',name+': tea product numbering must remain 01–04');
