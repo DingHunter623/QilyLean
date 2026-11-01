@@ -384,7 +384,7 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
   background:#f4faf8!important;
 }
 /* QILY-CN-WASTE-MATRIX-2026-08-25-V1
- * Match the international source's fixed 13/18/30/20/19 column split.
+ * Match the international source's fixed 11/17/30/21/21 column split.
  * Keep the same 1120px reading canvas and allow Chinese labels to wrap naturally.
  */
 html:root:root:root body[data-qily-brief-parity] #main#main#main
@@ -393,11 +393,11 @@ article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-c
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(1){
-  width:13%!important;white-space:nowrap!important;
+  width:11%!important;white-space:nowrap!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
-  width:18%!important;white-space:normal!important;
+  width:17%!important;white-space:normal!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(3){
@@ -405,11 +405,11 @@ article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-c
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(4){
-  width:20%!important;
+  width:21%!important;
 }
 html:root:root:root body[data-qily-brief-parity] #main#main#main
 article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(5){
-  width:19%!important;
+  width:21%!important;
 }
 
 /* QILY-CN-BRIEF-HEADER-PARITY-20261019
