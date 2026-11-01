@@ -75,6 +75,41 @@ for prelude, body in rules:
         thresholds.add(int(dense.group(1)))
 assert {4, 5, 6} <= thresholds, "Missing dense column-count coverage"
 
+# 2026-08-25 eight-waste matrix: the international source and CN mirror must
+# use the same fixed 13/18/30/20/19 column contract and 1120px reading canvas.
+matrix_date = "2026-08-25"
+matrix_source = (ROOT / "qilylean/daily" / f"{matrix_date}.html").read_text(encoding="utf-8")
+assert '.w8 table{width:100%;min-width:1120px;border-collapse:collapse}' in matrix_source, "International matrix minimum width changed"
+assert 'article[id="2026-08-25"].w8 .matrix-wrap table{table-layout:fixed!important}' in matrix_source, "International matrix is not fixed-layout"
+column_widths = ("13%", "18%", "30%", "20%", "19%")
+for index, width in enumerate(column_widths, start=1):
+    rule = f'article[id="2026-08-25"].w8 .matrix-wrap tr>:nth-child({index}){{width:{width}!important'
+    assert rule in matrix_source, ("International matrix column width mismatch", index, width)
+
+cn_start = css.find("/* QILY-CN-WASTE-MATRIX-2026-08-25-V1")
+cn_end = css.find("/* QILY-CN-BRIEF-HEADER-PARITY", cn_start)
+assert cn_start >= 0 and cn_end > cn_start, "Missing CN 2026-08-25 matrix parity override"
+cn_matrix_css = css[cn_start:cn_end]
+assert "table-layout:fixed!important" in cn_matrix_css, "CN matrix is not fixed-layout"
+for index, width in enumerate(column_widths, start=1):
+    rule = f"tr>:nth-child({index}){{width:{width}!important"
+    assert rule in cn_matrix_css, ("CN matrix column width mismatch", index, width)
+
+matrix_page = CN / "briefs/archive" / matrix_date / "index.html"
+assert matrix_page.is_file(), "Missing generated CN 2026-08-25 brief"
+matrix_html = matrix_page.read_text(encoding="utf-8")
+scoped_blocks = re.findall(
+    r'<style\\b[^>]*data-qily-brief-source-style="v2"[^>]*>([\\s\\S]*?)</style\\s*>',
+    matrix_html,
+    re.I,
+)
+scoped_css = "\\n".join(scoped_blocks)
+assert f'{visual.CONTENT_SCOPE} article[id="2026-08-25"].w8 .matrix-wrap table{{table-layout:fixed!important}}' in scoped_css, "CN mirror did not receive the source table layout"
+for index, width in enumerate(column_widths, start=1):
+    rule = f'{visual.CONTENT_SCOPE} article[id="2026-08-25"].w8 .matrix-wrap tr>:nth-child({index}){{width:{width}!important'
+    assert rule in scoped_css, ("CN mirror source-style width mismatch", index, width)
+
+
 count = 0
 routes = set()
 for src in visual.source.SOURCES:
