@@ -99,11 +99,11 @@ matrix_page = CN / "briefs/archive" / matrix_date / "index.html"
 assert matrix_page.is_file(), "Missing generated CN 2026-08-25 brief"
 matrix_html = matrix_page.read_text(encoding="utf-8")
 scoped_blocks = re.findall(
-    r'<style\\b[^>]*data-qily-brief-source-style="v2"[^>]*>([\\s\\S]*?)</style\\s*>',
+    r'<style[^>]*data-qily-brief-source-style="v2"[^>]*>(.*?)</style>',
     matrix_html,
-    re.I,
+    re.I | re.S,
 )
-scoped_css = "\\n".join(scoped_blocks)
+scoped_css = "\n".join(scoped_blocks)
 assert f'{visual.CONTENT_SCOPE} article[id="2026-08-25"].w8 .matrix-wrap table{{table-layout:fixed!important}}' in scoped_css, "CN mirror did not receive the source table layout"
 for index, width in enumerate(column_widths, start=1):
     rule = f'{visual.CONTENT_SCOPE} article[id="2026-08-25"].w8 .matrix-wrap tr>:nth-child({index}){{width:{width}!important'
