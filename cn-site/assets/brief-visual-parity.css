@@ -383,11 +383,33 @@ html:root:root:root body[data-qily-brief-parity] #main#main#main
 :is(.qily-brief-table-scroll>table,table.lean-brief-table):has(>thead>tr:first-child>:nth-child(4)) tbody tr:nth-child(even)>td{
   background:#f4faf8!important;
 }
-/* This waste matrix has nine-character action labels. Give them their natural
- * width before distributing the remaining space to methods and evidence. */
+/* QILY-CN-WASTE-MATRIX-2026-08-25-V1
+ * Match the international source's fixed 11/17/30/21/21 column split.
+ * Keep the same 1120px reading canvas and allow Chinese labels to wrap naturally.
+ */
 html:root:root:root body[data-qily-brief-parity] #main#main#main
-.w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
-  width:1%!important;white-space:nowrap!important;
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child){
+  table-layout:fixed!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(1){
+  width:11%!important;white-space:nowrap!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(2){
+  width:17%!important;white-space:normal!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(3){
+  width:30%!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(4){
+  width:21%!important;
+}
+html:root:root:root body[data-qily-brief-parity] #main#main#main
+article[id="2026-08-25"].w8 .qily-brief-table-scroll>table:has(>thead>tr:first-child>:nth-child(5):last-child) tr>:nth-child(5){
+  width:21%!important;
 }
 
 /* QILY-CN-BRIEF-HEADER-PARITY-20261019
