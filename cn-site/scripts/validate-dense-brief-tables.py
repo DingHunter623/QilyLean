@@ -76,12 +76,12 @@ for prelude, body in rules:
 assert {4, 5, 6} <= thresholds, "Missing dense column-count coverage"
 
 # 2026-08-25 eight-waste matrix: the international source and CN mirror must
-# use the same fixed 13/18/30/20/19 column contract and 1120px reading canvas.
+# use the same fixed 11/17/30/21/21 column contract and 1120px reading canvas.
 matrix_date = "2026-08-25"
 matrix_source = (ROOT / "qilylean/daily" / f"{matrix_date}.html").read_text(encoding="utf-8")
 assert '.w8 table{width:100%;min-width:1120px;border-collapse:collapse}' in matrix_source, "International matrix minimum width changed"
 assert 'article[id="2026-08-25"].w8 .matrix-wrap table{table-layout:fixed!important}' in matrix_source, "International matrix is not fixed-layout"
-column_widths = ("13%", "18%", "30%", "20%", "19%")
+column_widths = ("11%", "17%", "30%", "21%", "21%")
 for index, width in enumerate(column_widths, start=1):
     rule = f'article[id="2026-08-25"].w8 .matrix-wrap tr>:nth-child({index}){{width:{width}!important'
     assert rule in matrix_source, ("International matrix column width mismatch", index, width)
