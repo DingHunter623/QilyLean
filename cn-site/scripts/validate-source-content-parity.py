@@ -287,6 +287,26 @@ def verify_semantics(value, row):
         pdf_paths = {href.split('?', 1)[0] for href in pdf_hrefs}
         require(len(pdf_paths) == 1 and next(iter(pdf_paths)).startswith('/assets/public-media/assets/resume/'),
                 'CN career mirror: all résumé PDF actions must use one local China-hosted original')
+
+        # The international source opens both PDF preview entry points in a
+        # separate tab. Preserve that behavior on CN; closing the PDF must not
+        # replace the visitor's original résumé page.
+        preview_link = re.search(
+            r"""<a\b(?=[^>]*\bclass=["'][^"']*\bresume-pdf-action\b[^"']*["'])[^>]*>\s*在线预览 PDF 原件\s*</a>""",
+            resume.group(0), re.I)
+        cover_link = re.search(
+            r"""<a\b(?=[^>]*\bclass=["'][^"']*\bresume-pdf-cover\b[^"']*["'])[^>]*>""",
+            resume.group(0), re.I)
+        require(preview_link is not None, 'CN career mirror: PDF preview action missing')
+        require(cover_link is not None, 'CN career mirror: PDF cover preview action missing')
+        for match, label in ((preview_link, 'preview button'), (cover_link, 'cover preview')):
+            attrs = Nodes(match.group(0)).nodes[0][1]
+            require(attrs.get('target') == '_blank',
+                    'CN career mirror: ' + label + ' must open in a new tab')
+            rel = set((attrs.get('rel') or '').split())
+            require({'noopener', 'noreferrer'} <= rel,
+                    'CN career mirror: ' + label + ' must use noopener noreferrer')
+
         downloads = [attrs.get('download') for tag, attrs in resume_nodes if tag == 'a' and attrs.get('download') is not None]
         require(downloads == ['丁启利_精益经理工程部经理简历_20261102.pdf'],
                 'CN career mirror: original PDF download/save filename or action is missing')
