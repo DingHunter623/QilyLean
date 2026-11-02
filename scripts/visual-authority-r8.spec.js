@@ -300,13 +300,13 @@ test('career four-stage single-column article geometry',async({browser})=>{
           if(!row){row={top:item.top,items:[]};rows.push(row);}
           row.items.push(item);
         }
-        return {center:box.left+box.width/2,rows:rows.map(r=>r.items)};
+        return {center:box.left+box.width/2,gridTemplateColumns:getComputedStyle(root).gridTemplateColumns,rows:rows.map(r=>r.items)};
       });
       if(vp.width<=760){
-        expect(tagLayout.rows.map(r=>r.length)).toEqual([2,2,1]);
+        expect(tagLayout.rows.map(r=>r.length),`mobile five-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([2,2,1]);
         expect(Math.abs(tagLayout.rows[2][0].center-tagLayout.center)).toBeLessThan(5);
       }else{
-        expect(tagLayout.rows.map(r=>r.length)).toEqual([3,2]);
+        expect(tagLayout.rows.map(r=>r.length),`desktop five-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([3,2]);
         const lastRowCenter=tagLayout.rows[1].reduce((sum,item)=>sum+item.center,0)/tagLayout.rows[1].length;
         expect(Math.abs(lastRowCenter-tagLayout.center)).toBeLessThan(5);
       }
