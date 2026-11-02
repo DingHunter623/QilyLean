@@ -19,6 +19,9 @@ on:
       - "site-early-career-history-v1.css"
       - "site-early-career-history-v1.js"
       - "scripts/publish-early-career-history.js"
+      - "qilylean/career-resume-full.js"
+      - "experience/index.html"
+      - "scripts/site-career-baseline-lib.js"
   workflow_run:
     workflows: ["Build daily engineering brief archive"]
     types: [completed]
