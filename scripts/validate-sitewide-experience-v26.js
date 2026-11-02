@@ -59,10 +59,9 @@ const dateHeadings=[
   '2025.11—至今',
   '2019.07—2025.08',
   '2015.07—2019.06',
-  '2009.07—2015.06',
-  '2006.07—2009.06'
+  '2006.07—2015.06'
 ];
-if((careerSection.match(/<article class="career-full-card"/g)||[]).length!==5)throw new Error('Career must retain all five professional stages');
+if((careerSection.match(/<article class="career-full-card"/g)||[]).length!==4)throw new Error('Career must retain all four professional stages from the latest PDF');
 let last=-1;
 for(const date of dateHeadings){
   const pos=careerSection.indexOf(date);

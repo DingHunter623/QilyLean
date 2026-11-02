@@ -266,12 +266,12 @@ test('navigation surface links retain background feedback without underlines',as
 /* The resume is a full-width chronological article, NOT a desktop card gallery.
  * Prevent global R8 card-count layout rules from returning it to two columns.
  */
-test('career five-stage single-column article geometry',async({browser})=>{
+test('career four-stage single-column article geometry',async({browser})=>{
   const cases=[
     {width:1600,height:950},{width:1366,height:900},
     {width:1024,height:900},{width:768,height:900},{width:390,height:844}
   ];
-  const order=['2025.11—至今','2019.07—2025.08','2015.07—2019.06','2009.07—2015.06','2006.07—2009.06'];
+  const order=['2025.11—至今','2019.07—2025.08','2015.07—2019.06','2006.07—2015.06'];
   for(const vp of cases){
     const context=await browser.newContext({viewport:{width:vp.width,height:vp.height},reducedMotion:'reduce'});
     await context.route('**/*',route=>{
@@ -282,7 +282,7 @@ test('career five-stage single-column article geometry',async({browser})=>{
       const page=await context.newPage();
       const response=await page.goto(BASE+'/experience/',{waitUntil:'domcontentloaded',timeout:30000});
       expect(response&&response.ok(),'career article page must load').toBeTruthy();
-      await expect(page.locator('#experience .career-full-card')).toHaveCount(5);
+      await expect(page.locator('#experience .career-full-card')).toHaveCount(4);
       await expect.poll(()=>page.locator('#experience .career-full-grid').evaluate(el=>getComputedStyle(el).display),
         {timeout:10000,message:`career ${vp.width}px must be an article stream`}).toBe('block');
       const state=await page.locator('#experience .career-full-grid').evaluate(grid=>{
@@ -294,9 +294,9 @@ test('career five-stage single-column article geometry',async({browser})=>{
         });
         return {root:{left:root.left,width:root.width},cards,overflow:grid.scrollWidth-grid.clientWidth};
       });
-      expect(state.cards.length).toBe(5);
+      expect(state.cards.length).toBe(4);
       expect(state.overflow,`career ${vp.width}px horizontal overflow`).toBeLessThanOrEqual(2);
-      for(let i=0;i<5;i++){
+      for(let i=0;i<4;i++){
         const item=state.cards[i];
         expect(item.period,`career stage ${i} chronology`).toContain(order[i]);
         expect(Math.abs(item.left-state.root.left),`career stage ${i} common left axis`).toBeLessThan(3);
