@@ -44,8 +44,18 @@ jobs:
           test -n "$CN_PREPROD_HOST"
           test -n "$CN_PREPROD_SSH_KEY"
           install -m 700 -d ~/.ssh
-          printf '%s\\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          python3 - <<'PYKEY'
+          import os
+          from pathlib import Path
+          key = os.environ["CN_PREPROD_SSH_KEY"].strip().replace("\\r", "")
+          if "\\\\n" in key and "\\n" not in key:
+              key = key.replace("\\\\n", "\\n")
+          if not key.endswith("\\n"):
+              key += "\\n"
+          Path.home().joinpath(".ssh/qilylean_cn").write_text(key)
+          PYKEY
           chmod 600 ~/.ssh/qilylean_cn
+          ssh-keygen -y -f ~/.ssh/qilylean_cn >/dev/null
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Atomically replace only the China-site résumé PDF
