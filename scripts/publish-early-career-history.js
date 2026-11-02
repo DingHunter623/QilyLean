@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-career-related-links-v2';
+const version = '20261102-resume-pdf-viewer-v1';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -204,6 +204,15 @@ function validate(archive, experience, careerResume, enhancer) {
   });
   assert((experience.match(/class="career-related-link"/g) || []).length === 24, 'experience: exactly 24 project tags required');
   assert((careerResume.match(/class="career-related-link"/g) || []).length === 24, 'career resume: exactly 24 project tags required');
+  const resumePdfPath = '/assets/resume/ding-qili-resume-2026-11.pdf';
+  const resumeCoverPath = '/assets/resume/ding-qili-resume-2026-11-cover.png';
+  assert(experience.includes('id="career-resume-20261102"'), 'experience: latest PDF resume section missing');
+  assert(experience.includes(`href="${resumePdfPath}"`), 'experience: PDF original link missing');
+  assert(experience.includes(`src="${resumeCoverPath}"`), 'experience: PDF cover thumbnail missing');
+  assert(experience.includes(`src="${resumePdfPath}#toolbar=1`), 'experience: native PDF viewer toolbar missing');
+  assert(experience.includes('download="丁启利_精益经理工程部经理简历_20261102.pdf"'), 'experience: local PDF download action missing');
+  assert(!experience.includes('文档预览与直接下载需待公开托管资源完成发布验收'), 'experience: backend publication note must not be public');
+  assert(!experience.includes('完整版PDF原始文件由本人提供，当前站内展示以附件为依据。'), 'experience: source/authorization note must not be public');
 
   assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');

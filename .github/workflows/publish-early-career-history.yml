@@ -13,6 +13,7 @@ on:
       - "scripts/site-career-baseline-lib.js"
       - "experience/index.html"
       - "qilylean/career-resume-full.js"
+      - "assets/resume/ding-qili-resume-2026-11.pdf"
   push:
     branches: [main]
     paths:
@@ -21,6 +22,7 @@ on:
       - "site-early-career-history-v1.js"
       - "scripts/publish-early-career-history.js"
       - "qilylean/career-resume-full.js"
+      - "assets/resume/ding-qili-resume-2026-11.pdf"
       - "experience/index.html"
       - "scripts/site-career-baseline-lib.js"
   workflow_run:
@@ -70,6 +72,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+      - name: Generate the approved four-page PDF cover thumbnail
+        shell: bash
+        run: |
+          set -euo pipefail
+          PDF='assets/resume/ding-qili-resume-2026-11.pdf'
+          COVER='assets/resume/ding-qili-resume-2026-11-cover.png'
+          test -s "$PDF"
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          PAGES="$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')"
+          test "$PAGES" = "4"
+          pdftoppm -f 1 -l 1 -scale-to-x 900 -scale-to-y -1 -png -singlefile "$PDF" "${COVER%.png}"
+          test -s "$COVER"
+
       - name: Materialize early career history and anchors
         shell: bash
         run: |
@@ -92,7 +108,7 @@ jobs:
               exit 0
             fi
 
-            git add qilylean/daily-insights.html experience/index.html qilylean/career-resume-full.js
+            git add qilylean/daily-insights.html experience/index.html qilylean/career-resume-full.js assets/resume/ding-qili-resume-2026-11.pdf assets/resume/ding-qili-resume-2026-11-cover.png
             git commit -m "build: restore early career history links [skip ci]"
 
             if git push origin HEAD:main; then
