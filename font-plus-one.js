@@ -38,7 +38,7 @@
     load('daily-insights-card.js?v=20260729-today-v2','dailyInsightsCardScript');
     load('gbt2828-card.js?v=gbt2828-1','gbt2828CardScript');
     load('experience-lock-v3.js?v=lock3','experienceLockV3Script');
-    load('career-resume-full.js?v=career-full1','careerResumeFullScript');
+    load('career-resume-full.js?v=career-full2','careerResumeFullScript');
     load('dialogue-knowledge-pro.js?v=dialogue-pro1','dialogueKnowledgeProScript');
     load('dialogue-soul-v1.js?v=soul1','dialogueSoulV1Script');
     load('hero-veteran-tag.js?v=veteran1','heroVeteranTagScript');
