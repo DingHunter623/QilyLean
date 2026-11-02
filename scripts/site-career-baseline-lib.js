@@ -94,22 +94,6 @@ function ensureCareerCardId(source, id, title) {
   return source.slice(0, articleStart) + updatedTag + source.slice(articleOpenEnd + 1);
 }
 
-function ensureCareerCardId(source, id, title) {
-  const titleMarkup = `<h3>${title}</h3>`;
-  const titleIndex = source.indexOf(titleMarkup);
-  if (titleIndex < 0) throw new Error(`Career card title is missing: ${title}`);
-  const articleStart = source.lastIndexOf('<article class="career-full-card"', titleIndex);
-  const articleOpenEnd = source.indexOf('>', articleStart);
-  if (articleStart < 0 || articleOpenEnd < 0) throw new Error(`Career card opening tag is missing: ${id}`);
-  const openingTag = source.slice(articleStart, articleOpenEnd + 1);
-  if (openingTag.includes(`id="${id}"`)) return source;
-  const updatedTag = openingTag.replace(
-    '<article class="career-full-card"',
-    `<article class="career-full-card" id="${id}" data-qily-baseline="career"`
-  );
-  return source.slice(0, articleStart) + updatedTag + source.slice(articleOpenEnd + 1);
-}
-
 function materializeExperienceCareerBaseline(source) {
   let next = source;
 
@@ -162,11 +146,6 @@ function materializeExperienceCareerBaseline(source) {
     'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html'
   );
 
-  next = ensureCareerCardId(next, 'career-2025-current', '精益顾问 / 数智化工厂推进');
-  next = ensureCareerCardId(next, 'career-2019-2025', '精益管理咨询顾问 / Lean项目交付负责人');
-  next = ensureCareerCardId(next, 'career-2015-2019', '工程部部长（Light Bar事业部）');
-  next = ensureCareerCardId(next, 'career-2009-2015', 'Cooper Bussmann保险丝｜生产技术／先后PE工程、IE工程');
-  next = ensureCareerCardId(next, 'career-2006-2009', 'PCBA TE工程／IE工程');
   next = ensureCareerCardId(next, 'career-2025-current', '精益顾问 / 数智化工厂推进');
   next = ensureCareerCardId(next, 'career-2019-2025', '精益管理咨询顾问 / Lean项目交付负责人');
   next = ensureCareerCardId(next, 'career-2015-2019', '工程部部长（Light Bar事业部）');
