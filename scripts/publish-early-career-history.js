@@ -3,12 +3,12 @@
 
 const fs = require('fs');
 const path = require('path');
-const { materializeExperienceCareerBaseline } = require('./site-career-baseline-lib');
+const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('./site-career-baseline-lib');
 // QILY-STATIC-CAREER-BASELINE:v1
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260825-year-range-wrap-v6';
+const version = '20261102-career-related-links-v1';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -179,6 +179,25 @@ function validate(archive, experience, careerResume, enhancer) {
     assert(careerResume.includes(company.chinese), `career resume: ${key} Chinese company name missing`);
     assert(careerResume.includes(`href="${company.website}"`), `career resume: ${key} official website missing`);
   });
+
+  assert(experience.includes('href="https://www.china-tianx.com/"'), 'experience: Tianxing official website missing');
+  assert(experience.includes('官方网站：天星电子｜官方主页'), 'experience: Tianxing official website label missing');
+  assert(careerResume.includes('href="https://www.china-tianx.com/"'), 'career resume: Tianxing official website missing');
+  assert(careerResume.includes('官方网站：天星电子｜官方主页'), 'career resume: Tianxing official website label missing');
+
+  Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
+    [experience, careerResume].forEach((content, index) => {
+      const label = index === 0 ? 'experience' : 'career resume';
+      assert(content.includes(`id="${careerId}"`), `${label}: ${careerId} career card missing`);
+      assert(content.includes('career-related-block'), `${label}: ${careerId} related-link block missing`);
+      links.forEach((link) => {
+        assert(content.includes(`href="${link.href}"`), `${label}: ${careerId} link target missing: ${link.href}`);
+        assert(content.includes(link.label), `${label}: ${careerId} link label missing: ${link.label}`);
+      });
+    });
+  });
+  assert((experience.match(/class="career-related-block"/g) || []).length === 5, 'experience: exactly five career related-link groups required');
+  assert((careerResume.match(/class="career-related-block"/g) || []).length === 5, 'career resume: exactly five career related-link groups required');
 
   assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
