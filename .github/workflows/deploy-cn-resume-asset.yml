@@ -1,0 +1,116 @@
+name: Deploy latest résumé PDF asset to QilyLean China site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/deploy-cn-resume-asset.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qilylean-cn-resume-pdf-asset
+  cancel-in-progress: false
+
+jobs:
+  deploy-resume-pdf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout approved source
+        uses: actions/checkout@v4
+
+      - name: Validate latest four-page résumé source
+        shell: bash
+        run: |
+          set -euo pipefail
+          PDF="assets/resume/ding-qili-resume-2026-11.pdf"
+          test -s "$PDF"
+          ACTUAL="$(sha256sum "$PDF" | awk '{print $1}')"
+          EXPECTED="6de6bb610b80439b5a46988580d1a9a6d311f51796d451a50ded9a41f9a0ff22"
+          test "$ACTUAL" = "$EXPECTED"
+          PAGES="$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')"
+          test "$PAGES" = "4"
+          echo "PASS: approved PDF SHA-256 $ACTUAL; $PAGES pages."
+
+      - name: Configure mainland SSH
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Atomically replace only the China-site résumé PDF
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          EXPECTED_SHA256: 6de6bb610b80439b5a46988580d1a9a6d311f51796d451a50ded9a41f9a0ff22
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          REMOTE_FILE="/tmp/qily-resume-pdf-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.pdf"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes)
+          scp "${OPTS[@]}" -i ~/.ssh/qilylean_cn assets/resume/ding-qili-resume-2026-11.pdf "$USER_NAME@$CN_PREPROD_HOST:$REMOTE_FILE"
+          ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "bash -s -- '$REMOTE_FILE' '$EXPECTED_SHA256' '$GITHUB_RUN_ID'" <<'REMOTE'
+          set -euo pipefail
+          STAGED="$1"
+          EXPECTED="$2"
+          RUN_ID="$3"
+          SITE="/var/www/qilylean-cn/current"
+          DEST="$SITE/assets/public-media/assets/resume/ding-qili-resume-2026-11.pdf"
+          BACKUP="${DEST}.backup-${RUN_ID}"
+          TEMP="${DEST}.new-${RUN_ID}"
+          VERIFY="/tmp/qily-resume-verify-${RUN_ID}.pdf"
+          cleanup() {
+            rm -f "$STAGED" "$VERIFY"
+            sudo rm -f "$TEMP"
+          }
+          trap cleanup EXIT
+          test -f "$STAGED"
+          test -f "$DEST"
+          STAGED_SHA="$(sha256sum "$STAGED" | awk '{print $1}')"
+          test "$STAGED_SHA" = "$EXPECTED"
+          sudo cp -a "$DEST" "$BACKUP"
+          sudo install -m 0644 "$STAGED" "$TEMP"
+          sudo chown --reference="$DEST" "$TEMP"
+          sudo chmod --reference="$DEST" "$TEMP"
+          sudo mv -f "$TEMP" "$DEST"
+          FINAL_SHA="$(sudo sha256sum "$DEST" | awk '{print $1}')"
+          if test "$FINAL_SHA" != "$EXPECTED"; then
+            sudo mv -f "$BACKUP" "$DEST"
+            echo "China résumé file hash mismatch; previous file restored." >&2
+            exit 1
+          fi
+          if ! curl --resolve qilylean.cn:443:127.0.0.1 --fail --silent --show-error --max-time 45 \
+            "https://qilylean.cn/assets/public-media/assets/resume/ding-qili-resume-2026-11.pdf?verify=$RUN_ID" \
+            --output "$VERIFY"; then
+            sudo mv -f "$BACKUP" "$DEST"
+            echo "China origin HTTP verification failed; previous file restored." >&2
+            exit 1
+          fi
+          LIVE_SHA="$(sha256sum "$VERIFY" | awk '{print $1}')"
+          if test "$LIVE_SHA" != "$EXPECTED"; then
+            sudo mv -f "$BACKUP" "$DEST"
+            echo "China origin returned a stale PDF; previous file restored." >&2
+            exit 1
+          fi
+          PAGES="$(pdfinfo "$VERIFY" | awk '/^Pages:/ {print $2}')"
+          if test "$PAGES" != "4"; then
+            sudo mv -f "$BACKUP" "$DEST"
+            echo "China origin PDF page count mismatch; previous file restored." >&2
+            exit 1
+          fi
+          sudo rm -f "$BACKUP"
+          echo "PASS: China production PDF is byte-identical to approved source ($FINAL_SHA), 4 pages."
+          REMOTE
