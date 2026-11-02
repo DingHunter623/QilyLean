@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-resume-pdf-card-v2';
+const version = '20261102-career-employer-dates-v1';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -181,10 +181,20 @@ function validate(archive, experience, careerResume, enhancer) {
     assert((content.match(/class="career-result"/g) || []).length === 4, 'Exactly four career summaries required');
   }
 
-  assert(experience.includes('href="https://www.china-tianx.com/"'), 'experience: Tianxing official website missing');
+  assert(experience.includes('href="http://www.china-tianx.com/"'), 'experience: Tianxing official website missing');
   assert(experience.includes('官方网站：天星电子｜官方主页'), 'experience: Tianxing official website label missing');
-  assert(careerResume.includes('href="https://www.china-tianx.com/"'), 'career resume: Tianxing official website missing');
+  assert(careerResume.includes('href="http://www.china-tianx.com/"'), 'career resume: Tianxing official website missing');
   assert(careerResume.includes('官方网站：天星电子｜官方主页'), 'career resume: Tianxing official website label missing');
+  for (const [content, label] of [[experience, 'experience'], [careerResume, 'career resume']]) {
+    const earlyStart = content.indexOf('id="career-2006-2015"');
+    const earlyEnd = content.indexOf('</article>', earlyStart);
+    assert(earlyStart >= 0 && earlyEnd > earlyStart, `${label}: early-career card boundary missing`);
+    const earlyCard = content.slice(earlyStart, earlyEnd);
+    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2009.07—2015.06'), `${label}: Cooper Bussmann employment period missing`);
+    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2006.07—2009.06'), `${label}: Flextronics employment period missing`);
+    assert(!earlyCard.includes('IATF 16949核心工具'), `${label}: remove unsupported IATF tag from early career`);
+    assert((earlyCard.match(/class="career-related-link"/g) || []).length === 5, `${label}: early-career tag count must be five`);
+  }
 
   Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
     [experience, careerResume].forEach((content, index) => {
@@ -200,10 +210,10 @@ function validate(archive, experience, careerResume, enhancer) {
   assert((experience.match(/class="career-related-block"/g) || []).length === 4, 'experience: exactly four career related-link groups required');
   assert((careerResume.match(/class="career-related-block"/g) || []).length === 4, 'career resume: exactly four career related-link groups required');
   Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
-    assert(links.length === 6, `${careerId}: exactly six evenly distributed project tags required`);
+    assert(links.length === (careerId === 'career-2006-2015' ? 5 : 6), `${careerId}: expected the approved evenly distributed project-tag count`);
   });
-  assert((experience.match(/class="career-related-link"/g) || []).length === 24, 'experience: exactly 24 project tags required');
-  assert((careerResume.match(/class="career-related-link"/g) || []).length === 24, 'career resume: exactly 24 project tags required');
+  assert((experience.match(/class="career-related-link"/g) || []).length === 23, 'experience: exactly 23 project tags required');
+  assert((careerResume.match(/class="career-related-link"/g) || []).length === 23, 'career resume: exactly 23 project tags required');
   const resumePdfPath = '/assets/resume/ding-qili-resume-2026-11.pdf';
   const resumeCoverPath = '/assets/resume/ding-qili-resume-2026-11-cover.png';
   assert(experience.includes('id="career-resume-20261102"'), 'experience: latest PDF resume section missing');

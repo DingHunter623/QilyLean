@@ -284,6 +284,33 @@ test('career four-stage single-column article geometry',async({browser})=>{
       expect(response&&response.ok(),'career article page must load').toBeTruthy();
       await expect(page.locator('#experience .career-full-card')).toHaveCount(4);
 
+      const earlyCareer=page.locator('#career-2006-2015');
+      await expect(earlyCareer.locator('.career-company-tenure')).toHaveCount(2);
+      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'东莞库柏电子'})).toContainText('2009.07—2015.06');
+      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'珠海伟创力制造'})).toContainText('2006.07—2009.06');
+      await expect(earlyCareer.locator('.career-related-link')).toHaveCount(5);
+      await expect(earlyCareer).not.toContainText('IATF 16949核心工具');
+      await expect(page.locator('#career-2025-current .career-company-official')).toHaveAttribute('href','http://www.china-tianx.com/');
+      const tagLayout=await earlyCareer.locator('.career-related-links').evaluate(root=>{
+        const box=root.getBoundingClientRect();
+        const items=[...root.querySelectorAll('a')].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,center:(r.left+r.right)/2}});
+        const rows=[];
+        for(const item of items.sort((a,b)=>a.top-b.top||a.left-b.left)){
+          let row=rows.find(x=>Math.abs(x.top-item.top)<3);
+          if(!row){row={top:item.top,items:[]};rows.push(row);}
+          row.items.push(item);
+        }
+        return {center:box.left+box.width/2,rows:rows.map(r=>r.items)};
+      });
+      if(vp.width<=760){
+        expect(tagLayout.rows.map(r=>r.length)).toEqual([2,2,1]);
+        expect(Math.abs(tagLayout.rows[2][0].center-tagLayout.center)).toBeLessThan(5);
+      }else{
+        expect(tagLayout.rows.map(r=>r.length)).toEqual([3,2]);
+        const lastRowCenter=tagLayout.rows[1].reduce((sum,item)=>sum+item.center,0)/tagLayout.rows[1].length;
+        expect(Math.abs(lastRowCenter-tagLayout.center)).toBeLessThan(5);
+      }
+
       // Latest four-page PDF: thumbnail must load and both original-file actions must remain usable.
       const resumeSection=page.locator('#career-resume-20261102');
       await expect(resumeSection).toBeVisible();

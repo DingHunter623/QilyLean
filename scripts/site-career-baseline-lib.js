@@ -2,7 +2,7 @@
 
 const MARKER = '<!-- QILY-STATIC-CAREER-BASELINE:v1 -->';
 
-const career2025Companies = `<div class="career-company-group" aria-label="任职公司与官方网站"><p class="career-company-line"><b>任职公司：</b><span class="career-company-name"><span>天星电子有限公司</span></span><a class="career-company-official" href="https://www.china-tianx.com/" target="_blank" rel="noopener noreferrer external">官方网站：天星电子｜官方主页 ↗</a></p></div>`;
+const career2025Companies = `<div class="career-company-group" aria-label="任职公司与官方网站"><p class="career-company-line"><b>任职公司：</b><span class="career-company-name"><span>天星电子有限公司</span></span><a class="career-company-official" href="http://www.china-tianx.com/" target="_blank" rel="noopener noreferrer external">官方网站：天星电子｜官方主页 ↗</a></p></div>`;
 
 const career2019Companies = `<div class="career-company-group" aria-label="任职公司与官方网站"><p class="career-company-line"><b>任职公司：</b><span class="career-company-name"><span lang="en">Guangdong Jinggon Intelligence System Co., Ltd.</span><span aria-hidden="true">｜</span><span>广东精工智能系统有限公司</span></span><a class="career-company-official" href="https://www.jinggon.com/" target="_blank" rel="noopener noreferrer external">官方网站：JINGGON｜精工智能（www.jinggon.com） ↗</a></p><p class="career-company-line"><b>任职公司：</b><span class="career-company-name"><span lang="en">GO-think（官方英文品牌）</span><span aria-hidden="true">｜</span><span>广东高胜互联科技有限公司</span></span><a class="career-company-official" href="https://www.gdgaosheng.cn/" target="_blank" rel="noopener noreferrer external">官方网站：GO-think｜高胜咨询（www.gdgaosheng.cn） ↗</a></p></div>`;
 
@@ -42,8 +42,7 @@ const CAREER_RELATED_LINKS = {
     { label: '标准工时与时间研究', href: '/improvements/standard-time/' },
     { label: 'IE基础数据与产能评估', href: '/improvements/ie-data/' },
     { label: '制造工程能力画像', href: '/capabilities/' },
-    { label: 'IATF 16949核心工具', href: '/knowledge/iatf16949-core-tools.html' },
-    { label: '制造改善方法专栏', href: '/improvements/' }
+        { label: '制造改善方法专栏', href: '/improvements/' }
   ]
 };
 
