@@ -291,6 +291,7 @@ test('career four-stage single-column article geometry',async({browser})=>{
       await expect(earlyCareer.locator('.career-related-link')).toHaveCount(5);
       await expect(earlyCareer).not.toContainText('IATF 16949核心工具');
       await expect(page.locator('#career-2025-current .career-company-official')).toHaveAttribute('href','http://www.china-tianx.com/');
+      // Re-run the responsive tag geometry gate against the corrected, cache-busted career stylesheet.
       const tagLayout=await earlyCareer.locator('.career-related-links').evaluate(root=>{
         const box=root.getBoundingClientRect();
         const items=[...root.querySelectorAll('a')].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,center:(r.left+r.right)/2}});
