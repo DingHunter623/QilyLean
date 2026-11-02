@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-resume-pdf-viewer-v1';
+const version = '20261102-resume-pdf-card-v2';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -209,7 +209,9 @@ function validate(archive, experience, careerResume, enhancer) {
   assert(experience.includes('id="career-resume-20261102"'), 'experience: latest PDF resume section missing');
   assert(experience.includes(`href="${resumePdfPath}"`), 'experience: PDF original link missing');
   assert(experience.includes(`src="${resumeCoverPath}"`), 'experience: PDF cover thumbnail missing');
-  assert(experience.includes(`src="${resumePdfPath}#toolbar=1`), 'experience: native PDF viewer toolbar missing');
+  assert(experience.includes('在线预览 PDF 原件'), 'experience: online original PDF preview action missing');
+  assert(experience.includes('下载 / 保存 PDF'), 'experience: local PDF save action missing');
+  assert(!experience.includes('class="resume-pdf-viewer"'), 'experience: keep resume page compact; use native PDF viewer on click');
   assert(experience.includes('download="丁启利_精益经理工程部经理简历_20261102.pdf"'), 'experience: local PDF download action missing');
   assert(!experience.includes('文档预览与直接下载需待公开托管资源完成发布验收'), 'experience: backend publication note must not be public');
   assert(!experience.includes('完整版PDF原始文件由本人提供，当前站内展示以附件为依据。'), 'experience: source/authorization note must not be public');

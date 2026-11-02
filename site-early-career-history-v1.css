@@ -43,6 +43,7 @@
 @media(max-width:760px){#experience .career-full-card .career-related-links{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.career-full-card .career-related-link{min-height:40px;padding:8px 9px;font-size:14px}}
 @media(max-width:420px){#experience .career-full-card .career-related-links{grid-template-columns:minmax(0,1fr)}}
 
+
 /* QilyLean｜最新版职业简历 PDF 原件展示｜2026-11-02 */
 #career-resume-20261102 .resume-pdf-card{display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr);gap:30px;align-items:center;margin:24px 0 28px;padding:22px 24px;border:1px solid #d5e4e3;border-left:4px solid #caa15f;border-radius:12px;background:#fff;box-shadow:0 8px 24px rgba(15,75,90,.07)}
 #career-resume-20261102 .resume-pdf-cover{display:block;box-sizing:border-box;width:100%;max-width:280px;margin:0 auto;padding:9px;border:1px solid #d5e4e3;border-radius:8px;background:#f6faf9;text-decoration:none!important}
@@ -58,6 +59,4 @@
 #career-resume-20261102 .resume-pdf-action:hover,#career-resume-20261102 .resume-pdf-action:focus-visible{border-color:#caa15f;background:#174f5c;box-shadow:0 5px 14px rgba(15,75,90,.14);outline:none}
 #career-resume-20261102 .resume-pdf-action--secondary{border-color:#caa15f;background:#fff;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
 #career-resume-20261102 .resume-pdf-action--secondary:hover,#career-resume-20261102 .resume-pdf-action--secondary:focus-visible{background:#fff7e8}
-#career-resume-20261102 .resume-pdf-viewer{width:100%;margin-top:24px;overflow:hidden;border:1px solid #cbdcda;border-radius:10px;background:#eef4f3;box-shadow:0 8px 24px rgba(15,75,90,.06)}
-#career-resume-20261102 .resume-pdf-viewer iframe{display:block;width:100%;height:1040px;min-height:760px;border:0;background:#f4f7f6}
-@media(max-width:760px){#career-resume-20261102 .resume-pdf-card{grid-template-columns:minmax(0,1fr);gap:20px;padding:18px}#career-resume-20261102 .resume-pdf-cover{max-width:230px}#career-resume-20261102 .resume-pdf-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}#career-resume-20261102 .resume-pdf-action{width:100%}#career-resume-20261102 .resume-pdf-viewer iframe{height:76vh;min-height:620px}}
+@media(max-width:760px){#career-resume-20261102 .resume-pdf-card{grid-template-columns:minmax(0,1fr);gap:20px;padding:18px}#career-resume-20261102 .resume-pdf-cover{max-width:230px}#career-resume-20261102 .resume-pdf-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}#career-resume-20261102 .resume-pdf-action{width:100%}}
