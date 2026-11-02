@@ -198,6 +198,18 @@ function validate(archive, experience, careerResume, enhancer) {
     assert((earlyCard.match(/class="career-related-link"/g) || []).length === 6, `${label}: early-career tag count must be six`);
   }
 
+  // Keep the two group-company employment periods tied to the correct legal entities.
+  for (const [content, label] of [[experience, 'experience'], [careerResume, 'career resume']]) {
+    const consultingStart = content.indexOf('id="career-2019-2025"');
+    const consultingEnd = content.indexOf('</article>', consultingStart);
+    assert(consultingStart >= 0 && consultingEnd > consultingStart, `${label}: 2019-2025 career card boundary missing`);
+    const consultingCard = content.slice(consultingStart, consultingEnd);
+    const companyLines = [...consultingCard.matchAll(/<div class="career-company-line">([\\s\\S]*?)<\\/div>/g)].map((match) => match[1]);
+    assert(companyLines.some((line) => line.includes('广东精工智能系统有限公司') && line.includes('2022.04—2025.08')), `${label}: JINGGON employment period must be 2022.04—2025.08`);
+    assert(companyLines.some((line) => line.includes('广东高胜互联科技有限公司') && line.includes('2019.07—2022.04')), `${label}: GO-think employment period must be 2019.07—2022.04`);
+    assert(!consultingCard.includes('履历年月?'), `${label}: unresolved employment-period placeholder remains`);
+  }
+
   Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
     [experience, careerResume].forEach((content, index) => {
       const label = index === 0 ? 'experience' : 'career resume';
