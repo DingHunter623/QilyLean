@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-career-employer-dates-v3';
+const version = '20261102-career-employer-dates-v4';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}

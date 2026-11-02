@@ -73,6 +73,3 @@
   #experience #career-2006-2015 .career-related-link{grid-column:auto!important;width:100%!important}
   #experience #career-2006-2015 .career-related-link:nth-child(5){grid-column:1/-1!important;justify-self:center!important;width:calc(50% - 6px)!important}
 }
-  #experience #career-2006-2015 .career-related-link{grid-column:auto}
-  #experience #career-2006-2015 .career-related-link:nth-child(5){grid-column:1/-1;justify-self:center;width:calc(50% - 6px)}
-}
