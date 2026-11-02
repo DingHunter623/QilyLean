@@ -37,15 +37,11 @@ const CAREER_RELATED_LINKS = {
     { label: '客户审核与文件控制', href: '/knowledge/customer-audit-document-control.html' },
     { label: '制造改善方法专栏', href: '/improvements/' }
   ],
-  'career-2009-2015': [
-    { label: '保险丝工艺改善', href: '/projects/fuse-improvement/' },
+  'career-2006-2015': [
+    { label: '保险丝切口与制程改善', href: '/projects/fuse-improvement/' },
     { label: '标准工时与时间研究', href: '/improvements/standard-time/' },
-    { label: 'IE基础数据', href: '/improvements/ie-data/' }
-  ],
-  'career-2006-2009': [
-    { label: '制造工程能力画像', href: '/capabilities/' },
-    { label: '标准工时与时间研究', href: '/improvements/standard-time/' },
-    { label: '制造改善方法专栏', href: '/improvements/' }
+    { label: 'IE基础数据与产能评估', href: '/improvements/ie-data/' },
+    { label: '制造工程能力画像', href: '/capabilities/' }
   ]
 };
 
@@ -96,64 +92,32 @@ function ensureCareerCardId(source, id, title) {
 
 function materializeExperienceCareerBaseline(source) {
   let next = source;
-
-  next = ensureCareerCardId(next, 'career-2025-current', '精益顾问 / 数智化工厂推进');
-  const currentCareerTitle = '<h3>精益顾问 / 数智化工厂推进</h3>';
-  const currentCareerTitleIndex = next.indexOf(currentCareerTitle);
-  const currentCareerAfterTitle = currentCareerTitleIndex + currentCareerTitle.length;
-  if (!next.slice(currentCareerAfterTitle, currentCareerAfterTitle + 120).includes('career-company-group')) {
-    next = next.slice(0, currentCareerAfterTitle) + career2025Companies + next.slice(currentCareerAfterTitle);
+  // Latest uploaded 2026-11-02 PDF is the immutable source of the four-stage
+  // public career timeline. Do not expand its last stage back into old cards.
+  if (!next.includes('data-resume-source="2026-11-02-pdf"')) return next;
+  const titles = [
+    ['career-2025-current', '精益顾问 / 数智化工厂推进'],
+    ['career-2019-2025', '精益管理咨询顾问 / Lean项目交付负责人'],
+    ['career-2015-2019', '工程部部长（Light Bar事业部）'],
+    ['career-2006-2015', 'IE、TE工程师']
+  ];
+  for (const [id, title] of titles) next = ensureCareerCardId(next, id, title);
+  const currentRole = '<h3>精益顾问 / 数智化工厂推进</h3>';
+  const currentRoleEnd = next.indexOf(currentRole) + currentRole.length;
+  if (!next.slice(currentRoleEnd, currentRoleEnd + 160).includes('career-company-group')) {
+    next = next.slice(0, currentRoleEnd) + career2025Companies + next.slice(currentRoleEnd);
   }
-
-  if (!next.includes(MARKER)) {
-    next = next.replace('<div class="career-full-grid">', `${MARKER}\n  <div class="career-full-grid">`);
+  next = next.replaceAll('https://www.eaton.com.cn/cn/zh-cn.html',
+    'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html');
+  if (!next.includes('id="career-2009-2015"')) {
+    const index = next.indexOf('id="career-2006-2015"');
+    const entry = next.indexOf('>',index);
+    if (entry < 0) throw new Error('Early career anchor position is missing');
+    next = next.slice(0,entry+1)
+      + '<span class="career-anchor-alias" id="career-2009-2015" aria-hidden="true"></span><span class="career-anchor-alias" id="career-2006-2009" aria-hidden="true"></span>'
+      + next.slice(entry+1);
   }
-
-  next = next.replace(
-    /<article class="career-full-card"(?:\s+id="career-2019-2025")?(?:\s+data-qily-baseline="career")?><small>2019\.07—2025\.08｜广东精工智能系统 \/ 广东高胜互联科技（集团内调动）<\/small>/,
-    '<article class="career-full-card" id="career-2019-2025" data-qily-baseline="career"><small>2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）</small>'
-  );
-
-  next = next.replace(
-    /<article class="career-full-card"(?:\s+id="career-2015-2019")?(?:\s+data-qily-baseline="career")?><small>2015\.07—2019\.06｜深圳万润科技·广东恒润光电有限公司(?:（上市公司：万润科技）)?<\/small>/,
-    '<article class="career-full-card" id="career-2015-2019" data-qily-baseline="career"><small>2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）</small>'
-  );
-
-  next = next.replace(
-    /(<article class="career-full-card" id="career-2019-2025" data-qily-baseline="career"><small>[\s\S]*?<h3>精益管理咨询顾问 \/ Lean项目交付负责人<\/h3>)(?!<div class="career-company-group")/,
-    `$1${career2019Companies}`
-  );
-
-  next = next.replace(
-    /(<article class="career-full-card" id="career-2015-2019" data-qily-baseline="career"><small>[\s\S]*?<h3>工程部部长（Light Bar事业部）<\/h3>)(?!<div class="career-company-group")/,
-    `$1${career2015Companies}`
-  );
-
-  if (!next.includes('id="career-2009-2015"') || !next.includes('id="career-2006-2009"')) {
-    next = next.replace(
-      /<article class="career-full-card"><small>2006\.07—2015\.06｜东莞库柏电子 \/ 珠海伟创力制造（欧美企业）<\/small>[\s\S]*?<\/article>/,
-      `${career2009}\n    ${career2006}`
-    );
-  }
-
-  next = next.replace(
-    '.career-chain strong{color:#ffe39b}',
-    '.career-chain strong{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}'
-  );
-
-  next = next.replaceAll(
-    'https://www.eaton.com.cn/cn/zh-cn.html',
-    'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html'
-  );
-
-  next = ensureCareerCardId(next, 'career-2025-current', '精益顾问 / 数智化工厂推进');
-  next = ensureCareerCardId(next, 'career-2019-2025', '精益管理咨询顾问 / Lean项目交付负责人');
-  next = ensureCareerCardId(next, 'career-2015-2019', '工程部部长（Light Bar事业部）');
-  next = ensureCareerCardId(next, 'career-2009-2015', 'Cooper Bussmann保险丝｜生产技术／先后PE工程、IE工程');
-  next = ensureCareerCardId(next, 'career-2006-2009', 'PCBA TE工程／IE工程');
   next = injectCareerRelatedLinks(next);
-
   return next;
 }
-
 module.exports = { MARKER, CAREER_RELATED_LINKS, materializeExperienceCareerBaseline };
