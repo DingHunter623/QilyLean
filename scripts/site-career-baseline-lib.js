@@ -81,6 +81,16 @@ function injectCareerRelatedLinks(source) {
 function materializeExperienceCareerBaseline(source) {
   let next = source;
 
+  next = next.replace(
+    /<article class="career-full-card"><small>2025\\.11—至今/,
+    '<article class="career-full-card" id="career-2025-current" data-qily-baseline="career"><small>2025.11—至今'
+  );
+
+  next = next.replace(
+    /(<article class="career-full-card" id="career-2025-current" data-qily-baseline="career"><small>[\\s\\S]*?<h3>精益顾问 \\/ 数智化工厂推进<\\/h3>)(?!<div class="career-company-group")/,
+    `$1${career2025Companies}`
+  );
+
   if (!next.includes(MARKER)) {
     next = next.replace('<div class="career-full-grid">', `${MARKER}\n  <div class="career-full-grid">`);
   }
@@ -122,7 +132,9 @@ function materializeExperienceCareerBaseline(source) {
     'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html'
   );
 
+  next = injectCareerRelatedLinks(next);
+
   return next;
 }
 
-module.exports = { MARKER, materializeExperienceCareerBaseline };
+module.exports = { MARKER, CAREER_RELATED_LINKS, materializeExperienceCareerBaseline };
