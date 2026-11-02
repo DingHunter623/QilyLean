@@ -82,14 +82,17 @@ function materializeExperienceCareerBaseline(source) {
   let next = source;
 
   next = next.replace(
-    /<article class="career-full-card"><small>2025\\.11—至今/,
+    '<article class="career-full-card"><small>2025.11—至今',
     '<article class="career-full-card" id="career-2025-current" data-qily-baseline="career"><small>2025.11—至今'
   );
 
-  next = next.replace(
-    /(<article class="career-full-card" id="career-2025-current" data-qily-baseline="career"><small>[\\s\\S]*?<h3>精益顾问 \\/ 数智化工厂推进<\\/h3>)(?!<div class="career-company-group")/,
-    `$1${career2025Companies}`
-  );
+  const currentCareerTitle = '<h3>精益顾问 / 数智化工厂推进</h3>';
+  const currentCareerTitleIndex = next.indexOf(currentCareerTitle);
+  if (currentCareerTitleIndex < 0) throw new Error('Current career title is missing');
+  const currentCareerAfterTitle = currentCareerTitleIndex + currentCareerTitle.length;
+  if (!next.slice(currentCareerAfterTitle, currentCareerAfterTitle + 120).includes('career-company-group')) {
+    next = next.slice(0, currentCareerAfterTitle) + career2025Companies + next.slice(currentCareerAfterTitle);
+  }
 
   if (!next.includes(MARKER)) {
     next = next.replace('<div class="career-full-grid">', `${MARKER}\n  <div class="career-full-grid">`);
