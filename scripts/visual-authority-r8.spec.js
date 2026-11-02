@@ -286,9 +286,11 @@ test('career four-stage single-column article geometry',async({browser})=>{
 
       const earlyCareer=page.locator('#career-2006-2015');
       await expect(earlyCareer.locator('.career-company-tenure')).toHaveCount(2);
-      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'东莞库柏电子'})).toContainText('2009.07—2015.06');
-      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'珠海伟创力制造'})).toContainText('2006.07—2009.06');
-      await expect(earlyCareer.locator('.career-related-link')).toHaveCount(5);
+      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'东莞库柏电子'})).toContainText('2009.05—2015.06');
+      await expect(earlyCareer.locator('.career-company-line').filter({hasText:'珠海伟创力制造'})).toContainText('2006.07—2009.04');
+      await expect(earlyCareer.locator('.career-related-link')).toHaveCount(6);
+      await expect(earlyCareer.locator('.career-related-link').filter({hasText:'DAP真空熔炉编程优化'})).toHaveAttribute('href','/experience/#dap-vacuum-furnace');
+      await expect(earlyCareer.locator('#dap-vacuum-furnace')).toContainText('刷新该项目制程能力历史纪录');
       await expect(earlyCareer).not.toContainText('IATF 16949核心工具');
       await expect(page.locator('#career-2025-current .career-company-official')).toHaveAttribute('href','http://www.china-tianx.com/');
       // Re-run the responsive tag geometry gate against the corrected, cache-busted career stylesheet.
@@ -304,12 +306,11 @@ test('career four-stage single-column article geometry',async({browser})=>{
         return {center:box.left+box.width/2,gridTemplateColumns:getComputedStyle(root).gridTemplateColumns,rows:rows.map(r=>r.items)};
       });
       if(vp.width<=760){
-        expect(tagLayout.rows.map(r=>r.length),`mobile five-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([2,2,1]);
-        expect(Math.abs(tagLayout.rows[2][0].center-tagLayout.center)).toBeLessThan(5);
+        expect(tagLayout.rows.map(r=>r.length),`mobile six-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([2,2,2]);
+        for(const row of tagLayout.rows){const rowCenter=row.reduce((sum,item)=>sum+item.center,0)/row.length;expect(Math.abs(rowCenter-tagLayout.center)).toBeLessThan(5);}
       }else{
-        expect(tagLayout.rows.map(r=>r.length),`desktop five-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([3,2]);
-        const lastRowCenter=tagLayout.rows[1].reduce((sum,item)=>sum+item.center,0)/tagLayout.rows[1].length;
-        expect(Math.abs(lastRowCenter-tagLayout.center)).toBeLessThan(5);
+        expect(tagLayout.rows.map(r=>r.length),`desktop six-tag layout: ${JSON.stringify(tagLayout)}`).toEqual([3,3]);
+        for(const row of tagLayout.rows){const rowCenter=row.reduce((sum,item)=>sum+item.center,0)/row.length;expect(Math.abs(rowCenter-tagLayout.center)).toBeLessThan(5);}
       }
 
       // Latest four-page PDF: thumbnail must load and both original-file actions must remain usable.

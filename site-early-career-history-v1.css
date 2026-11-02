@@ -61,15 +61,11 @@
 #career-resume-20261102 .resume-pdf-action--secondary:hover,#career-resume-20261102 .resume-pdf-action--secondary:focus-visible{background:#fff7e8}
 @media(max-width:760px){#career-resume-20261102 .resume-pdf-card{grid-template-columns:minmax(0,1fr);gap:20px;padding:18px}#career-resume-20261102 .resume-pdf-cover{max-width:230px}#career-resume-20261102 .resume-pdf-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}#career-resume-20261102 .resume-pdf-action{width:100%}}
 
-/* QilyLean｜早期履历任职年月与五项成果标签均匀排布｜移动端强制网格修正｜2026-11-02 */
+/* QilyLean｜欧美企业履历年月校正与六项成果标签均匀排布｜2026-11-02 */
 #experience .career-full-card .career-company-tenure{display:inline-flex;align-items:center;gap:4px;min-height:28px;padding:3px 10px;border:1px solid #e8d8b8;border-radius:999px;background:#fffaf0;color:#805f2d;font-size:14px;font-weight:850;line-height:1.4;white-space:nowrap}
 #experience .career-full-card .career-company-tenure b{color:#0f4b5a;font-weight:900}
-#experience #career-2006-2015 .career-related-links{grid-template-columns:repeat(6,minmax(0,1fr))}
-#experience #career-2006-2015 .career-related-link{grid-column:span 2}
-#experience #career-2006-2015 .career-related-link:nth-child(4){grid-column:2/span 2}
-#experience #career-2006-2015 .career-related-link:nth-child(5){grid-column:4/span 2}
+#experience #career-2006-2015 .career-related-links{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-auto-flow:row!important}
+#experience #career-2006-2015 .career-related-link{grid-column:auto!important;width:100%!important}
 @media(max-width:760px){
-  #experience #career-2006-2015 .career-related-links{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-auto-flow:row!important}
-  #experience #career-2006-2015 .career-related-link{grid-column:auto!important;width:100%!important}
-  #experience #career-2006-2015 .career-related-link:nth-child(5){grid-column:1/-1!important;justify-self:center!important;width:calc(50% - 6px)!important}
+  #experience #career-2006-2015 .career-related-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }

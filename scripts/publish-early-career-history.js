@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-career-employer-dates-v4';
+const version = '20261102-career-dap-v1';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -190,10 +190,12 @@ function validate(archive, experience, careerResume, enhancer) {
     const earlyEnd = content.indexOf('</article>', earlyStart);
     assert(earlyStart >= 0 && earlyEnd > earlyStart, `${label}: early-career card boundary missing`);
     const earlyCard = content.slice(earlyStart, earlyEnd);
-    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2009.07—2015.06'), `${label}: Cooper Bussmann employment period missing`);
-    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2006.07—2009.06'), `${label}: Flextronics employment period missing`);
+    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2009.05—2015.06'), `${label}: Cooper Bussmann employment period missing`);
+    assert(earlyCard.includes('class="career-company-tenure"><b>任职时间：</b>2006.07—2009.04'), `${label}: Flextronics employment period missing`);
     assert(!earlyCard.includes('IATF 16949核心工具'), `${label}: remove unsupported IATF tag from early career`);
-    assert((earlyCard.match(/class="career-related-link"/g) || []).length === 5, `${label}: early-career tag count must be five`);
+    assert(earlyCard.includes('id="dap-vacuum-furnace"') && earlyCard.includes('亲自完成DAP真空熔炉程序编程与优化'), `${label}: DAP vacuum-furnace programming evidence missing`);
+    assert(earlyCard.includes('href="/experience/#dap-vacuum-furnace"') && earlyCard.includes('DAP真空熔炉编程优化'), `${label}: DAP project tag missing`);
+    assert((earlyCard.match(/class="career-related-link"/g) || []).length === 6, `${label}: early-career tag count must be six`);
   }
 
   Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
@@ -210,10 +212,10 @@ function validate(archive, experience, careerResume, enhancer) {
   assert((experience.match(/class="career-related-block"/g) || []).length === 4, 'experience: exactly four career related-link groups required');
   assert((careerResume.match(/class="career-related-block"/g) || []).length === 4, 'career resume: exactly four career related-link groups required');
   Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
-    assert(links.length === (careerId === 'career-2006-2015' ? 5 : 6), `${careerId}: expected the approved evenly distributed project-tag count`);
+    assert(links.length === 6, `${careerId}: expected the approved evenly distributed project-tag count`);
   });
-  assert((experience.match(/class="career-related-link"/g) || []).length === 23, 'experience: exactly 23 project tags required');
-  assert((careerResume.match(/class="career-related-link"/g) || []).length === 23, 'career resume: exactly 23 project tags required');
+  assert((experience.match(/class="career-related-link"/g) || []).length === 24, 'experience: exactly 24 project tags required');
+  assert((careerResume.match(/class="career-related-link"/g) || []).length === 24, 'career resume: exactly 24 project tags required');
   const resumePdfPath = '/assets/resume/ding-qili-resume-2026-11.pdf';
   const resumeCoverPath = '/assets/resume/ding-qili-resume-2026-11-cover.png';
   assert(experience.includes('id="career-resume-20261102"'), 'experience: latest PDF resume section missing');

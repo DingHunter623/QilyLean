@@ -1,6 +1,6 @@
 name: Publish early career history
 # Publication refresh: 2026-08-11 Cooper Bussmann career branding v4
-# Career links closure: 2026-11-02 four-stage PDF, 23 related links, employer-specific dates and official URL
+# Career links closure: 2026-11-02 verified early-career dates, DAP project tag and six-item responsive grid
 
 on:
   pull_request:
