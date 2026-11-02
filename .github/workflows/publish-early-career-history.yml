@@ -9,6 +9,9 @@ on:
       - "site-early-career-history-v1.css"
       - "site-early-career-history-v1.js"
       - "scripts/publish-early-career-history.js"
+      - "scripts/site-career-baseline-lib.js"
+      - "experience/index.html"
+      - "qilylean/career-resume-full.js"
   push:
     branches: [main]
     paths:
@@ -85,7 +88,7 @@ jobs:
               exit 0
             fi
 
-            git add qilylean/daily-insights.html experience/index.html
+            git add qilylean/daily-insights.html experience/index.html qilylean/career-resume-full.js
             git commit -m "build: restore early career history links [skip ci]"
 
             if git push origin HEAD:main; then
