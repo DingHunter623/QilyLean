@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-career-related-links-v1';
+const version = '20261102-career-related-links-v2';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -199,6 +199,11 @@ function validate(archive, experience, careerResume, enhancer) {
   });
   assert((experience.match(/class="career-related-block"/g) || []).length === 4, 'experience: exactly four career related-link groups required');
   assert((careerResume.match(/class="career-related-block"/g) || []).length === 4, 'career resume: exactly four career related-link groups required');
+  Object.entries(CAREER_RELATED_LINKS).forEach(([careerId, links]) => {
+    assert(links.length === 6, `${careerId}: exactly six evenly distributed project tags required`);
+  });
+  assert((experience.match(/class="career-related-link"/g) || []).length === 24, 'experience: exactly 24 project tags required');
+  assert((careerResume.match(/class="career-related-link"/g) || []).length === 24, 'career resume: exactly 24 project tags required');
 
   assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
