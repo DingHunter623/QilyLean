@@ -65,13 +65,19 @@ function injectCareerRelatedLinks(source) {
     const close = next.indexOf('</article>', markerIndex);
     if (start < 0 || close < 0) throw new Error(`Career card boundary is invalid: ${id}`);
     let card = next.slice(start, close);
-    if (!card.includes('career-related-block')) {
+    const block = renderCareerRelatedLinks(items);
+    const relatedStart = card.indexOf('<div class="career-related-block"');
+    if (relatedStart >= 0) {
+      const navClose = card.indexOf('</nav>', relatedStart);
+      const blockEnd = navClose >= 0 ? card.indexOf('</div>', navClose) : -1;
+      if (navClose < 0 || blockEnd < 0) throw new Error(`Career related-link block is malformed: ${id}`);
+      card = card.slice(0, relatedStart) + block + card.slice(blockEnd + 6);
+    } else {
       const resultIndex = card.indexOf('<div class="career-result">');
       if (resultIndex < 0) throw new Error(`Career result summary is missing: ${id}`);
-      const block = renderCareerRelatedLinks(items);
       card = card.slice(0, resultIndex) + block + card.slice(resultIndex);
-      next = next.slice(0, start) + card + next.slice(close);
     }
+    next = next.slice(0, start) + card + next.slice(close);
   }
   return next;
 }
