@@ -172,13 +172,14 @@ function validate(archive, experience, careerResume, enhancer) {
 
   ['jinggon', 'gaosheng', 'mason', 'hengrun', 'cooper', 'flex'].forEach((key) => {
     const company = companies[key];
-    assert(experience.includes(company.english), `experience: ${key} English company name missing`);
-    assert(experience.includes(company.chinese), `experience: ${key} Chinese company name missing`);
-    assert(experience.includes(`href="${company.website}"`), `experience: ${key} official website missing`);
-    assert(careerResume.includes(company.english), `career resume: ${key} English company name missing`);
-    assert(careerResume.includes(company.chinese), `career resume: ${key} Chinese company name missing`);
-    assert(careerResume.includes(`href="${company.website}"`), `career resume: ${key} official website missing`);
+    assert(experience.includes('href="' + company.website + '"'), 'experience: ' + key + ' website missing');
+    assert(careerResume.includes('href="' + company.website + '"'), 'dynamic: ' + key + ' website missing');
   });
+  for (const content of [experience, careerResume]) {
+    assert((content.match(/class="career-full-card"/g) || []).length === 4, 'Exactly four career cards required');
+    assert((content.match(/class="career-company-official"/g) || []).length === 7, 'Exactly seven official employer links required');
+    assert((content.match(/class="career-result"/g) || []).length === 4, 'Exactly four career summaries required');
+  }
 
   assert(experience.includes('href="https://www.china-tianx.com/"'), 'experience: Tianxing official website missing');
   assert(experience.includes('官方网站：天星电子｜官方主页'), 'experience: Tianxing official website label missing');
@@ -196,8 +197,8 @@ function validate(archive, experience, careerResume, enhancer) {
       });
     });
   });
-  assert((experience.match(/class="career-related-block"/g) || []).length === 5, 'experience: exactly five career related-link groups required');
-  assert((careerResume.match(/class="career-related-block"/g) || []).length === 5, 'career resume: exactly five career related-link groups required');
+  assert((experience.match(/class="career-related-block"/g) || []).length === 4, 'experience: exactly four career related-link groups required');
+  assert((careerResume.match(/class="career-related-block"/g) || []).length === 4, 'career resume: exactly four career related-link groups required');
 
   assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
@@ -217,7 +218,22 @@ const originalCareerResume = read(careerResumePath);
 const enhancer = read(enhancerPath);
 const nextArchive = updateCareerTable(injectResources(originalArchive, archivePath));
 const nextExperience = materializeExperienceCareerBaseline(injectResources(originalExperience, experiencePath));
-const nextCareerResume = materializeExperienceCareerBaseline(originalCareerResume);
+// Browser fallback must reflect exactly the canonical four-stage public HTML.
+function mirrorCareerResume(experience, previousScript) {
+  const sectionStart = experience.indexOf('<section class="module-section alt" id="experience"');
+  const contentStart = experience.indexOf('<div class="inner">', sectionStart);
+  const sectionEnd = experience.indexOf('</section>', contentStart);
+  if (sectionStart < 0 || contentStart < 0 || sectionEnd < 0) throw new Error('Canonical career section missing');
+  const innerHtml = experience.slice(contentStart, sectionEnd).trim();
+  if ((innerHtml.match(/class="career-full-card"/g) || []).length !== 4) throw new Error('Canonical resume must have four stages');
+  const start = previousScript.indexOf('  const FULL_HTML=');
+  const end = previousScript.indexOf('\n  function addStyle()', start);
+  if (start < 0 || end < 0) throw new Error('Dynamic career template declaration missing');
+  return previousScript.slice(0, start)
+    + '  const FULL_HTML=' + JSON.stringify(innerHtml) + ';'
+    + previousScript.slice(end);
+}
+const nextCareerResume = mirrorCareerResume(nextExperience, originalCareerResume);
 
 validate(nextArchive, nextExperience, nextCareerResume, enhancer);
 
