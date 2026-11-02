@@ -230,7 +230,7 @@ function mirrorCareerResume(experience, previousScript) {
   const end = previousScript.indexOf('\n  function addStyle()', start);
   if (start < 0 || end < 0) throw new Error('Dynamic career template declaration missing');
   return previousScript.slice(0, start)
-    + '  const FULL_HTML=' + JSON.stringify(innerHtml) + ';'
+    + '  const FULL_HTML=' + String.fromCharCode(96) + innerHtml.replace(/`/g, '\\`').replace(/\$\{/g, '\\${') + String.fromCharCode(96) + ';'
     + previousScript.slice(end);
 }
 const nextCareerResume = mirrorCareerResume(nextExperience, originalCareerResume);
