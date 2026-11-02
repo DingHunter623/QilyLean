@@ -245,6 +245,56 @@ def verify_semantics(value, row):
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)
     require('湘ICP备2026041143号-1' in value and '湘公网安备43020002000443号' in value, 'Protected filings missing: ' + url)
 
+    if row['source'] == 'experience/index.html':
+        require(url == '/archive/profile/experience/', 'Career mirror must use its approved China-local route')
+        consulting = re.search(r"<article\b(?=[^>]*\bid=[\"']career-2019-2025[\"'])[\s\S]*?</article>", main, re.I)
+        require(consulting is not None, 'CN career mirror: 2019-2025 consulting card missing')
+        company_lines = re.findall(r'<div class="career-company-line">([\s\S]*?)</div>', consulting.group(0))
+        require(any('广东精工智能系统有限公司' in line and '2022.04—2025.08' in line for line in company_lines),
+                'CN career mirror: JINGGON employment period must be 2022.04—2025.08')
+        require(any('广东高胜互联科技有限公司' in line and '2019.07—2022.04' in line for line in company_lines),
+                'CN career mirror: GO-think employment period must be 2019.07—2022.04')
+        consulting_links = {attrs.get('href') for tag, attrs in Nodes(consulting.group(0)).nodes if tag == 'a'}
+        require('https://www.jinggon.com/' in consulting_links and 'https://www.gdgaosheng.cn/' in consulting_links,
+                'CN career mirror: consulting-company official links missing')
+
+        early = re.search(r"<article\b(?=[^>]*\bid=[\"']career-2006-2015[\"'])[\s\S]*?</article>", main, re.I)
+        require(early is not None, 'CN career mirror: early engineering card missing')
+        early_lines = re.findall(r'<div class="career-company-line">([\s\S]*?)</div>', early.group(0))
+        require(any('东莞库柏电子' in line and '2009.05—2015.06' in line for line in early_lines),
+                'CN career mirror: Cooper Bussmann dates must be 2009.05—2015.06')
+        require(any('珠海伟创力制造' in line and '2006.07—2009.04' in line for line in early_lines),
+                'CN career mirror: Flextronics dates must be 2006.07—2009.04')
+        early_tags = re.findall(r'<a\b(?=[^>]*\bclass=["\'][^"\']*\bcareer-related-link\b[^"\']*["\'])[^>]*>([\s\S]*?)</a>', early.group(0), re.I)
+        tag_labels = [html.unescape(re.sub(r'<[^>]+>', '', item)).strip() for item in early_tags]
+        require(len(tag_labels) == 6, 'CN career mirror: early engineering card must retain six related-result tags')
+        require('DAP真空熔炉编程优化' in tag_labels, 'CN career mirror: DAP vacuum-furnace programming improvement tag missing')
+        require(not any('IATF 16949' in label for label in tag_labels),
+                'CN career mirror: removed IATF 16949 tag must not return')
+
+        current = re.search(r"<article\b(?=[^>]*\bid=[\"']career-2025-current[\"'])[\s\S]*?</article>", main, re.I)
+        require(current is not None, 'CN career mirror: current Tianxing career card missing')
+        current_links = {attrs.get('href') for tag, attrs in Nodes(current.group(0)).nodes if tag == 'a'}
+        require('http://www.china-tianx.com/' in current_links,
+                'CN career mirror: Tianxing official website link missing')
+
+        resume = re.search(r"<section\b(?=[^>]*\bid=[\"']career-resume-20261102[\"'])[\s\S]*?</section>", main, re.I)
+        require(resume is not None, 'CN career mirror: latest November 2026 PDF résumé module missing')
+        resume_nodes = Nodes(resume.group(0)).nodes
+        pdf_hrefs = [attrs.get('href', '') for tag, attrs in resume_nodes
+                     if tag == 'a' and 'ding-qili-resume-2026-11.pdf' in attrs.get('href', '')]
+        require(len(pdf_hrefs) == 3, 'CN career mirror: PDF cover, preview and download links must all be present')
+        pdf_paths = {href.split('?', 1)[0] for href in pdf_hrefs}
+        require(len(pdf_paths) == 1 and next(iter(pdf_paths)).startswith('/assets/public-media/assets/resume/'),
+                'CN career mirror: all résumé PDF actions must use one local China-hosted original')
+        downloads = [attrs.get('download') for tag, attrs in resume_nodes if tag == 'a' and attrs.get('download') is not None]
+        require(downloads == ['丁启利_精益经理工程部经理简历_20261102.pdf'],
+                'CN career mirror: original PDF download/save filename or action is missing')
+        covers = [attrs.get('src', '') for tag, attrs in resume_nodes
+                  if tag == 'img' and 'ding-qili-resume-2026-11-cover.png' in attrs.get('src', '')]
+        require(len(covers) == 1 and covers[0].startswith('/assets/public-media/assets/resume/'),
+                'CN career mirror: full-quality résumé cover thumbnail must be locally mirrored')
+
     if row['source'] == 'capabilities/index.html':
         # Product actions must stay interactive after commercial-only filtering.
         # Never replace a download with plain text or drop privacy/support links.
@@ -458,6 +508,12 @@ def main():
     destination = manifest.get('destination_assets', [])
     link_adaptations = manifest.get('link_adaptations', [])
     require(pages and styles and media and destination, 'Empty source content/CSS/media/protected-assets inventory')
+    career_assets = {item.get('source') for item in media}
+    require({'assets/resume/ding-qili-resume-2026-11.pdf',
+             'assets/resume/ding-qili-resume-2026-11-cover.png'} <= career_assets,
+            'Career PDF original and cover must be included in the full-quality media hash ledger')
+    require(any(item.get('source') == 'site-early-career-history-v1.css' for item in styles),
+            'Career timeline source stylesheet must be mirrored and hash-verified')
     require(any(row.get('source') == 'knowledge/index.html'
                     and row.get('action') == 'localized-noncommercial-topic'
                     and row.get('to') == '/archive/profile/capabilities/#digital'

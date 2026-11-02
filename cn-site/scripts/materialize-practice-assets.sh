@@ -42,6 +42,7 @@ echo "CN original training PDF verified at full source-byte quality."
 # The international release is the approved immutable visual source. China
 # builds must not reorder its styles or republish its non-footer presentation.
 
+# [cn-clone-approved] 2026-11-02 — owner-approved refresh from the verified international career timeline.
 # Materialize the China-site local copy of eligible international public content.
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
 python3 "$CN_ROOT/scripts/materialize-brief-visual-parity.py"
