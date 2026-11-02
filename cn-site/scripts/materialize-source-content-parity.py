@@ -592,9 +592,17 @@ def render(node, source):
             if not href:
                 # An unavailable destination must not erase its public image/text.
                 return ''.join(render(child, source) for child in node.children)
+            # Keep source-approved new-tab behavior for same-origin PDF
+            # previews as well as external links. The China mirror rewrites PDF
+            # assets to local, hash-versioned URLs, but must not change the
+            # visitor's browsing context when opening the original document.
+            source_target_blank = attrs.get('target') == '_blank'
+            opens_local_pdf_in_new_tab = (
+                source_target_blank and urlsplit(href).path.lower().endswith('.pdf')
+            )
             attrs['href'] = href
             attrs.pop('target', None); attrs.pop('rel', None)
-            if href.startswith(('http:', 'https:')):
+            if href.startswith(('http:', 'https:')) or opens_local_pdf_in_new_tab:
                 attrs.update(target='_blank', rel='noopener noreferrer')
         # The international primary action is a commercial consultation link,
         # intentionally excluded on China's filed personal knowledge site.
