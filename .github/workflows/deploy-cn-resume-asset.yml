@@ -31,9 +31,7 @@ jobs:
           ACTUAL="$(sha256sum "$PDF" | awk '{print $1}')"
           EXPECTED="6de6bb610b80439b5a46988580d1a9a6d311f51796d451a50ded9a41f9a0ff22"
           test "$ACTUAL" = "$EXPECTED"
-          PAGES="$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')"
-          test "$PAGES" = "4"
-          echo "PASS: approved PDF SHA-256 $ACTUAL; $PAGES pages."
+          echo "PASS: approved four-page PDF SHA-256 $ACTUAL."
 
       - name: Configure mainland SSH
         shell: bash
@@ -103,12 +101,6 @@ jobs:
           if test "$LIVE_SHA" != "$EXPECTED"; then
             sudo mv -f "$BACKUP" "$DEST"
             echo "China origin returned a stale PDF; previous file restored." >&2
-            exit 1
-          fi
-          PAGES="$(pdfinfo "$VERIFY" | awk '/^Pages:/ {print $2}')"
-          if test "$PAGES" != "4"; then
-            sudo mv -f "$BACKUP" "$DEST"
-            echo "China origin PDF page count mismatch; previous file restored." >&2
             exit 1
           fi
           sudo rm -f "$BACKUP"
