@@ -283,6 +283,35 @@ test('career four-stage single-column article geometry',async({browser})=>{
       const response=await page.goto(BASE+'/experience/',{waitUntil:'domcontentloaded',timeout:30000});
       expect(response&&response.ok(),'career article page must load').toBeTruthy();
       await expect(page.locator('#experience .career-full-card')).toHaveCount(4);
+
+      // Latest four-page PDF: thumbnail must load and both original-file actions must remain usable.
+      const resumeSection=page.locator('#career-resume-20261102');
+      await expect(resumeSection).toBeVisible();
+      await expect(resumeSection).not.toContainText('文档预览与直接下载需待公开托管资源完成发布验收');
+      await expect(resumeSection.locator('.resume-pdf-viewer')).toHaveCount(0);
+      const cover=resumeSection.locator('.resume-pdf-cover img');
+      await cover.scrollIntoViewIfNeeded();
+      await expect(cover).toBeVisible();
+      await expect.poll(()=>cover.evaluate(img=>img.complete&&img.naturalWidth===900&&img.naturalHeight>1200),
+        {timeout:15000,message:`resume cover must load at full 900px source width on ${vp.width}px viewport`}).toBe(true);
+      const resumeActions=resumeSection.locator('.resume-pdf-action');
+      await expect(resumeActions).toHaveCount(2);
+      const resumeActionState=await resumeActions.evaluateAll(nodes=>nodes.map(el=>{
+        const r=el.getBoundingClientRect();
+        return {href:el.getAttribute('href'),target:el.getAttribute('target'),download:el.getAttribute('download'),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width};
+      }));
+      expect(resumeActionState[0].href).toBe('/assets/resume/ding-qili-resume-2026-11.pdf');
+      expect(resumeActionState[0].target).toBe('_blank');
+      expect(resumeActionState[1].href).toBe('/assets/resume/ding-qili-resume-2026-11.pdf');
+      expect(resumeActionState[1].download).toBe('丁启利_精益经理工程部经理简历_20261102.pdf');
+      const resumeCard=await resumeSection.locator('.resume-pdf-card').evaluate(el=>({width:el.clientWidth,scrollWidth:el.scrollWidth}));
+      expect(resumeCard.scrollWidth-resumeCard.width, `resume PDF card ${vp.width}px horizontal overflow`).toBeLessThanOrEqual(2);
+      for(const action of resumeActionState){
+        expect(action.left, `resume action left edge ${vp.width}px`).toBeGreaterThanOrEqual(-1);
+        expect(action.right, `resume action right edge ${vp.width}px`).toBeLessThanOrEqual(vp.width+1);
+      }
+      if(vp.width<=760)expect(resumeActionState[0].top).toBeLessThan(resumeActionState[1].top);
+      await resumeSection.locator('.resume-pdf-card').screenshot({path:path.join(OUT,`resume-pdf-card-${vp.width}.png`)});
       await expect.poll(()=>page.locator('#experience .career-full-grid').evaluate(el=>getComputedStyle(el).display),
         {timeout:10000,message:`career ${vp.width}px must be an article stream`}).toBe('block');
       const state=await page.locator('#experience .career-full-grid').evaluate(grid=>{
