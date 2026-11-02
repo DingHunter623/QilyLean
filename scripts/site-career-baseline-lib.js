@@ -41,7 +41,9 @@ const CAREER_RELATED_LINKS = {
     { label: '保险丝切口与制程改善', href: '/projects/fuse-improvement/' },
     { label: '标准工时与时间研究', href: '/improvements/standard-time/' },
     { label: 'IE基础数据与产能评估', href: '/improvements/ie-data/' },
-    { label: '制造工程能力画像', href: '/capabilities/' }
+    { label: '制造工程能力画像', href: '/capabilities/' },
+    { label: 'IATF 16949核心工具', href: '/knowledge/iatf16949-core-tools.html' },
+    { label: '制造改善方法专栏', href: '/improvements/' }
   ]
 };
 
