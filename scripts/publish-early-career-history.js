@@ -204,7 +204,7 @@ function validate(archive, experience, careerResume, enhancer) {
     const consultingEnd = content.indexOf('</article>', consultingStart);
     assert(consultingStart >= 0 && consultingEnd > consultingStart, `${label}: 2019-2025 career card boundary missing`);
     const consultingCard = content.slice(consultingStart, consultingEnd);
-    const companyLines = [...consultingCard.matchAll(/<div class="career-company-line">([\\s\\S]*?)<\\/div>/g)].map((match) => match[1]);
+    const companyLines = consultingCard.split('<div class="career-company-line">').slice(1).map((line) => line.split('</div>')[0]);
     assert(companyLines.some((line) => line.includes('广东精工智能系统有限公司') && line.includes('2022.04—2025.08')), `${label}: JINGGON employment period must be 2022.04—2025.08`);
     assert(companyLines.some((line) => line.includes('广东高胜互联科技有限公司') && line.includes('2019.07—2022.04')), `${label}: GO-think employment period must be 2019.07—2022.04`);
     assert(!consultingCard.includes('履历年月?'), `${label}: unresolved employment-period placeholder remains`);
