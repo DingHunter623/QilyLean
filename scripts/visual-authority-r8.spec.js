@@ -368,3 +368,40 @@ test('career four-stage single-column article geometry',async({browser})=>{
     }finally{await context.close();}
   }
 });
+
+
+/* DAP project tag must land on its exact achievement, respect the sticky
+ * header, and replay the gold feedback when clicked again. */
+test('DAP project tag jumps to exact achievement and repeats gold feedback',async({browser})=>{
+  for(const width of [1440,390]){
+    const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
+    await context.route('**/*',route=>{
+      const url=route.request().url();
+      return url.startsWith(BASE_ORIGIN)||url.startsWith('data:')||url.startsWith('blob:')?route.continue():route.abort();
+    });
+    try{
+      const page=await context.newPage();
+      const response=await page.goto(BASE+'/experience/',{waitUntil:'domcontentloaded',timeout:30000});
+      expect(response&&response.ok(),'career article page must load').toBeTruthy();
+      const earlyCareer=page.locator('#career-2006-2015');
+      const tag=earlyCareer.locator('.career-related-link').filter({hasText:'DAP真空熔炉编程优化'});
+      const target=earlyCareer.locator('#dap-vacuum-furnace');
+      await expect(tag).toBeVisible();
+      await expect(target).toContainText('亲自完成DAP真空熔炉程序编程与优化');
+      await expect.poll(()=>page.evaluate(()=>Boolean(window.__qilyDapEvidenceJumpV1)),{timeout:5000}).toBe(true);
+      await tag.click();
+      await expect(page).toHaveURL(BASE+'/experience/#dap-vacuum-furnace');
+      await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:5000}).toBe('true');
+      const position=await page.evaluate(()=>{
+        const target=document.getElementById('dap-vacuum-furnace');
+        const header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+        return {targetTop:target.getBoundingClientRect().top,headerBottom:header?header.getBoundingClientRect().bottom:0};
+      });
+      expect(position.targetTop).toBeGreaterThan(position.headerBottom+4);
+      expect(position.targetTop).toBeLessThan(position.headerBottom+42);
+      await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:2500}).toBeNull();
+      await tag.click();
+      await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:3000}).toBe('true');
+    }finally{await context.close();}
+  }
+});

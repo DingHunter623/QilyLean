@@ -69,3 +69,24 @@
 @media(max-width:760px){
   #experience #career-2006-2015 .career-related-links{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
+
+
+/* QilyLean｜履历主线：DAP项目标签→关键成果定位与浅金色反馈｜2026-11-03 */
+#experience #dap-vacuum-furnace{
+  scroll-margin-top:var(--qily-dap-anchor-offset,112px);
+  border-radius:7px;
+}
+#experience #dap-vacuum-furnace[data-qily-dap-highlight="true"]{
+  animation:qilyDapEvidenceFlash 2.4s ease-in-out 1;
+}
+@keyframes qilyDapEvidenceFlash{
+  0%,23%,47%,71%,100%{background-color:transparent;box-shadow:none}
+  10%,34%,58%{background-color:#fff2cf;box-shadow:0 0 0 2px rgba(202,161,95,.22)}
+}
+@media(prefers-reduced-motion:reduce){
+  #experience #dap-vacuum-furnace[data-qily-dap-highlight="true"]{
+    animation:none;
+    background-color:#fff2cf;
+    box-shadow:0 0 0 2px rgba(202,161,95,.22);
+  }
+}

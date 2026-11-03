@@ -28,6 +28,63 @@
   </div><div class="career-result">基础沉淀：建立PCBA测试与电子元器件制程的IE/TE工程基础，沉淀Time Study、标准工时、线平衡、产能评估、关键工艺优化以及5M2E/5W2H异常分析闭环方法。</div></article></div>
   <div class="career-chain" data-qily-dark-surface="true"><strong>长期方法链路：</strong>VSM价值流分析 → 5M2E要因分析 → 5W2H/PDCA改善闭环 → 单件流/小批流机制设计 → SMED → 标准作业与程序文件 → ERP/MES基础数据 → 项目复盘与机制固化。</div></div>`;
   function addStyle(){if(document.getElementById('careerFullStyle'))return;const s=document.createElement('style');s.id='careerFullStyle';s.textContent=`.career-overview{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:start;padding:18px 20px;margin-bottom:18px;border-left:4px solid var(--copper,#caa15f);background:#fff}.career-overview strong{color:var(--forest,#0f4b5a);font-size:20px}.career-overview span{color:var(--muted,#5f7474);font-size:18.5px;line-height:1.75}.career-full-grid{display:block;width:100%;gap:0}.career-full-card{padding:24px;border:1px solid var(--line,#d5e4e3);background:#fff;border-top:4px solid var(--teal,#178b94);box-shadow:0 12px 32px rgba(15,75,90,.08)}.career-full-card:nth-child(2n){border-top-color:var(--copper,#caa15f)}.career-full-card:nth-child(3n){border-top-color:var(--plum,#9e4a34)}.career-full-card small{display:block;color:var(--copper,#caa15f);font-weight:900;font-size:16px;margin-bottom:8px}.career-full-card h3{margin:0 0 12px;color:var(--forest,#0f4b5a);font-size:23px;line-height:1.35}.career-full-card h4{margin:16px 0 6px;color:var(--forest,#0f4b5a);font-size:18px}.career-full-card p,.career-full-card li{color:var(--muted,#5f7474);font-size:18.5px;line-height:1.78}.career-full-card ul{margin:6px 0 0;padding-left:1.2em}.career-full-card li{margin:5px 0}.career-industry{margin:0 0 10px}.career-result{margin-top:16px;padding:13px 15px;border-left:4px solid var(--copper,#caa15f);background:#eef8f6;color:#17443b;font-size:18px;font-weight:850;line-height:1.72}.career-chain{margin-top:18px;padding:17px 19px;background:var(--forest,#0f4b5a);color:#fff;font-size:18.5px;line-height:1.75}.career-chain strong{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}@media(max-width:860px){.career-full-grid{grid-template-columns:1fr}.career-overview{grid-template-columns:1fr}.career-full-card{padding:20px}}`;document.head.appendChild(s)}
+
+  // DAP evidence jump: align the exact achievement below the sticky header
+  // and replay the restrained QilyLean gold feedback on every activation.
+  var dapEvidenceHighlightTimer = null;
+  function scrollToDapEvidence(target){
+    if(!target)return;
+    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+    var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;
+    var offset=Math.max(76,headerHeight+(window.innerWidth<=900?14:18));
+    document.documentElement.style.setProperty('--qily-dap-anchor-offset',offset+'px');
+    if(dapEvidenceHighlightTimer){window.clearTimeout(dapEvidenceHighlightTimer);dapEvidenceHighlightTimer=null;}
+    target.removeAttribute('data-qily-dap-highlight');
+    void target.offsetWidth;
+    target.setAttribute('data-qily-dap-highlight','true');
+    window.requestAnimationFrame(function(){
+      var pageTop=window.pageYOffset||document.documentElement.scrollTop||0;
+      var top=Math.max(0,target.getBoundingClientRect().top+pageTop-offset);
+      var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({top:top,left:0,behavior:reduced?'auto':'smooth'});
+    });
+    var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    dapEvidenceHighlightTimer=window.setTimeout(function(){
+      if(target.isConnected)target.removeAttribute('data-qily-dap-highlight');
+      dapEvidenceHighlightTimer=null;
+    },reduced?1300:2700);
+  }
+  function bindDapEvidenceJump(){
+    if(window.__qilyDapEvidenceJumpV1)return;
+    window.__qilyDapEvidenceJumpV1=true;
+    function jumpFromLocation(){
+      if(window.location.hash!=='#dap-vacuum-furnace')return;
+      var target=document.getElementById('dap-vacuum-furnace');
+      if(target)scrollToDapEvidence(target);
+    }
+    document.addEventListener('click',function(event){
+      if(event.button!==0||event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;
+      var origin=event.target;
+      if(origin&&origin.nodeType!==1)origin=origin.parentElement;
+      var link=origin&&origin.closest('a.career-related-link[href]');
+      if(!link||(link.textContent||'').replace(/\s+/g,' ').trim()!=='DAP真空熔炉编程优化')return;
+      var destination;
+      try{destination=new URL(link.href,window.location.href);}catch(error){return;}
+      if(destination.origin!==window.location.origin||destination.pathname!==window.location.pathname||destination.hash!=='#dap-vacuum-furnace')return;
+      var target=document.getElementById('dap-vacuum-furnace');
+      if(!target)return;
+      event.preventDefault();
+      if(window.location.hash!==destination.hash){
+        window.history.pushState({qilyDapEvidence:true},'',destination.pathname+destination.search+destination.hash);
+      }
+      scrollToDapEvidence(target);
+    },true);
+    window.addEventListener('hashchange',jumpFromLocation);
+    window.addEventListener('pageshow',jumpFromLocation);
+    if(window.location.hash==='#dap-vacuum-furnace')jumpFromLocation();
+  }
+  bindDapEvidenceJump();
+
   function render(){addStyle();const sec=document.getElementById('experience');if(!sec)return;let unlocked=false;try{unlocked=sessionStorage.getItem('experienceUnlocked')==='1'}catch(e){}if(!unlocked)return;if(sec.dataset.fullResume==='1')return;sec.dataset.fullResume='1';sec.innerHTML=FULL_HTML;}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',render);else render();
   setInterval(render,500);

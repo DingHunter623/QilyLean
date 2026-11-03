@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline, CAREER_RELATED_LINKS } = require('.
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20261102-career-dap-v1';
+const version = '20261103-dap-evidence-jump-v1';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -137,7 +137,7 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-function validate(archive, experience, careerResume, enhancer) {
+function validate(archive, experience, careerResume, enhancer, careerCss) {
   [archive, experience].forEach((content, index) => {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
@@ -244,6 +244,12 @@ function validate(archive, experience, careerResume, enhancer) {
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
   assert(enhancer.includes('2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）'), 'enhancer: 2015-2019 exact career period missing');
   assert(enhancer.includes("'career-2019-2025'"), 'enhancer: 2019-2025 anchor missing');
+  assert(careerResume.includes('function bindDapEvidenceJump()'), 'dynamic career resume: DAP evidence jump handler missing');
+  assert(careerResume.includes('data-qily-dap-highlight'), 'dynamic career resume: repeatable DAP highlight state missing');
+  assert(experience.includes('career-resume-full.js?v=20261103-dap-evidence-jump-v1'), 'experience: DAP interaction script cache version missing');
+  assert(careerCss.includes('#experience #dap-vacuum-furnace[data-qily-dap-highlight="true"]'), 'career stylesheet: DAP highlight selector missing');
+  assert(careerCss.includes('@keyframes qilyDapEvidenceFlash'), 'career stylesheet: three-pulse gold feedback missing');
+  assert(careerCss.includes('scroll-margin-top:var(--qily-dap-anchor-offset'), 'career stylesheet: sticky-header anchor offset missing');
   assert(archive.includes('<col class="career-year-col">'), 'archive: career year column missing');
   assert(!/data-career-era="(?:2015-2019|2009-2015|2006-2009)"[\s\S]*?daily-insights\.html\?year=/.test(archive), 'archive: early career links still point to archive filters');
 }
@@ -256,6 +262,7 @@ const originalArchive = read(archivePath);
 const originalExperience = read(experiencePath);
 const originalCareerResume = read(careerResumePath);
 const enhancer = read(enhancerPath);
+const careerCss = read('site-early-career-history-v1.css');
 const nextArchive = updateCareerTable(injectResources(originalArchive, archivePath));
 const nextExperience = materializeExperienceCareerBaseline(injectResources(originalExperience, experiencePath));
 // Browser fallback must reflect exactly the canonical four-stage public HTML.
@@ -275,7 +282,7 @@ function mirrorCareerResume(experience, previousScript) {
 }
 const nextCareerResume = mirrorCareerResume(nextExperience, originalCareerResume);
 
-validate(nextArchive, nextExperience, nextCareerResume, enhancer);
+validate(nextArchive, nextExperience, nextCareerResume, enhancer, careerCss);
 
 const changes = [];
 if (nextArchive !== originalArchive) changes.push(archivePath);

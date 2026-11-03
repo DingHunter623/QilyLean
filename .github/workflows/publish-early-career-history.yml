@@ -53,6 +53,7 @@ jobs:
         run: |
           node --check site-early-career-history-v1.js
           node --check scripts/publish-early-career-history.js
+          node --check qilylean/career-resume-full.js
           node scripts/publish-early-career-history.js
           node scripts/publish-early-career-history.js --check
           git diff --check
@@ -93,6 +94,7 @@ jobs:
           git reset --hard origin/main
           node --check site-early-career-history-v1.js
           node --check scripts/publish-early-career-history.js
+          node --check qilylean/career-resume-full.js
           node scripts/publish-early-career-history.js
           node scripts/publish-early-career-history.js --check
           git diff --check
