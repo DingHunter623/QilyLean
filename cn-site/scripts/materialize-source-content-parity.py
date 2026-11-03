@@ -1096,6 +1096,7 @@ def copy_css(value):
     STYLE_RECORDS[relative] = {'source': relative, 'url': STYLE_CACHE[relative], 'source_sha256': file_hash(original), 'sha256': digest, 'bytes': target.stat().st_size}
     return STYLE_CACHE[relative]
 
+# Approved CN production release trigger: DAP interaction and international VI have passed preproduction regression.
 def dap_evidence_runtime_content():
     """Extract only the accepted DAP anchor/highlight interaction from the COM career runtime."""
     source = ROOT / 'qilylean/career-resume-full.js'
