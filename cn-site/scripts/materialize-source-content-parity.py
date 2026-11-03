@@ -1108,8 +1108,25 @@ def dap_evidence_runtime_content():
         raise RuntimeError('Canonical DAP evidence interaction markers changed; refusing a partial runtime clone')
     end += len(end_marker)
     interaction = original[start:end]
+    header_anchor = """    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+    var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;"""
+    header_replacement = """    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+    var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;
+    var stickyCandidates=document.querySelectorAll('header,nav,[role="banner"],.qily-cn-nav-shell,.qily-cn-nav-rail,#qilyCnNavRail,.qily-cn-header,[data-qily-sticky-header]');
+    for(var headerIndex=0;headerIndex<stickyCandidates.length;headerIndex++){
+      var candidate=stickyCandidates[headerIndex];
+      var candidateStyle=window.getComputedStyle(candidate);
+      var candidateRect=candidate.getBoundingClientRect();
+      if((candidateStyle.position==='fixed'||candidateStyle.position==='sticky')&&candidateRect.top<=12&&candidateRect.bottom>0){
+        headerHeight=Math.max(headerHeight,Math.ceil(candidateRect.bottom));
+      }
+    }"""
+    if header_anchor not in interaction:
+        raise RuntimeError('Canonical DAP header-offset block changed; refusing a partial CN adaptation')
+    interaction = interaction.replace(header_anchor, header_replacement, 1)
     required = ('function scrollToDapEvidence(target)', 'function bindDapEvidenceJump()',
-                'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();')
+                'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();',
+                '.qily-cn-nav-rail', 'candidateRect.bottom')
     if any(token not in interaction for token in required):
         raise RuntimeError('Canonical DAP evidence interaction is incomplete')
     if any(token in interaction for token in ('function render()', 'fetch(', 'XMLHttpRequest',

@@ -554,6 +554,8 @@ def main():
     runtime_content = local_path(career_runtime['url']).read_text(encoding='utf-8')
     require('function bindDapEvidenceJump()' in runtime_content
             and 'window.__qilyDapEvidenceJumpV1' in runtime_content
+            and '.qily-cn-nav-rail' in runtime_content
+            and 'candidateRect.bottom' in runtime_content
             and 'function render()' not in runtime_content
             and not any(token in runtime_content for token in ('fetch(', 'XMLHttpRequest', 'sendBeacon', 'qilylean.com', '/cooperation/')),
             'China DAP runtime must contain only the isolated same-origin evidence interaction')
