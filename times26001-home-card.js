@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 
-var TIMES26001_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
+var TIMES26001_POSITIONING='Times26001 是一款个人时间管理工具，同时兼顾工业工程、现场改善与作业时间研究场景，由 QilyLean｜启力精益开发。';
 var PURE_DDZ_POSITIONING='QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求，无广告、无强制注册、操作简单、打开即玩；也适合成年人放松思考，在轻松游戏中保持活力与智慧。';
 
 function copyText(text){
@@ -129,7 +129,7 @@ function addSection(){
   var section=document.createElement('section');
   section.id='times26001HomeSection';
   section.className='times26001-home-section';
-  section.innerHTML='<div class="times26001-home-inner"><div class="times26001-home-head"><h2>数字化工具作品</h2><p>Times26001聚焦工业工程时间研究与制造现场测时，形成可直接使用、可持续迭代的移动端专业工具；同时保留日常时间管理辅助能力。</p></div><article class="times26001-home-card"><figure class="times26001-home-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260805-android-v114" alt="Times26001工业工程时间研究与IE现场测时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure><div class="times26001-home-content"><small>移动端APP｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>'+TIMES26001_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、文本复制、倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p><ul class="times26001-feature-list"><li>IE秒表分段、本段时间与累计总时长</li><li>测时记录复制到Excel/WPS等工程工具</li><li>预设／自定义倒计时及离线通知</li><li>一次性、工作日、周末及自定义提醒</li><li>北京时间、阳历、农历、节气与节假日</li><li>当前手机试用版 v1.1.14 / versionCode 17 / API 36</li></ul><div class="times26001-home-actions"><a class="download" href="/Times26001-Android-v1.1.14-Standard-Website-Logo.apk?build=efe5e188" download>下载 v1.1.14 官网标准LOGO统一修正版</a><a class="secondary" href="/tools/times26001/">查看APP介绍与发布状态</a><button class="secondary" type="button" data-copy-times26001>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
+  section.innerHTML='<div class="times26001-home-inner"><div class="times26001-home-head"><h2>数字化工具作品</h2><p>Times26001以个人时间管理为基础，整合日常提醒、时间日历与天气辅助，并兼顾工业工程时间研究和制造现场测时需求。</p></div><article class="times26001-home-card"><figure class="times26001-home-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260805-android-v114" alt="Times26001工业工程时间研究与IE现场测时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure><div class="times26001-home-content"><small>移动端APP｜个人时间管理＋工业工程现场测时</small><h3>Times26001</h3><p><strong>'+TIMES26001_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、文本复制、倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p><ul class="times26001-feature-list"><li>IE秒表分段、本段时间与累计总时长</li><li>测时记录复制到Excel/WPS等工程工具</li><li>预设／自定义倒计时及离线通知</li><li>一次性、工作日、周末及自定义提醒</li><li>北京时间、阳历、农历、节气与节假日</li><li>当前手机试用版 v1.1.14 / versionCode 17 / API 36</li></ul><div class="times26001-home-actions"><a class="download" href="/Times26001-Android-v1.1.14-Standard-Website-Logo.apk?build=efe5e188" download>下载 v1.1.14 官网标准LOGO统一修正版</a><a class="secondary" href="/tools/times26001/">查看APP介绍与发布状态</a><button class="secondary" type="button" data-copy-times26001>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
   if(!appendHomeSection(section))return;
   var button=section.querySelector('[data-copy-times26001]');
   var status=section.querySelector('.times26001-home-status');
