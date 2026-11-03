@@ -28,7 +28,7 @@
 
 ## DNS
 
-- `@` A → `1.117.71.235`
+- `@` A → 由受控 DNS 记录管理，不在公开运维文档中记录具体公网 IP
 - `www` CNAME → `qilylean.cn`
 - TTL：600
 
@@ -49,7 +49,7 @@
 仓库 Actions 使用以下 Secrets（禁止提交明文）：
 
 - `CN_PREPROD_HOST`：大陆服务器公网 IPv4 / 主机名
-- `CN_PREPROD_USER`：`ubuntu`
+- `CN_PREPROD_USER`：由受控 GitHub Secret 提供
 - `CN_PREPROD_SSH_KEY`：实例 SSH 私钥全文
 
 历史 Secret 名称保留是为了兼容现有工作流；其实际用途已从预生产发布切换为中国站正式发布。
