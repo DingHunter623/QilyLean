@@ -6,8 +6,8 @@
   "apps": {
     "times26001": {
       "name": "Times26001",
-      "productName": "Times26001｜工业工程时间研究与IE现场测时工具",
-      "positioning": "面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。",
+      "productName": "Times26001｜个人时间管理与工业工程时间研究工具",
+      "positioning": "Times26001 是一款个人时间管理工具，同时兼顾工业工程、现场改善与作业时间研究场景，由 QilyLean｜启力精益开发。",
       "historicalName": "思大时间管理",
       "packageName": "com.qilylean.times26001",
       "publicRelease": {
