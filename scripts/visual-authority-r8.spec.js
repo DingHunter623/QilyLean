@@ -392,6 +392,14 @@ test('DAP project tag jumps to exact achievement and repeats gold feedback',asyn
       await tag.click();
       await expect(page).toHaveURL(BASE+'/experience/#dap-vacuum-furnace');
       await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:5000}).toBe('true');
+      const headerGap=()=>page.evaluate(()=>{
+        const target=document.getElementById('dap-vacuum-furnace');
+        const header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+        return target.getBoundingClientRect().top-(header?header.getBoundingClientRect().bottom:0);
+      });
+      // Wait for the requestAnimationFrame-driven scroll to settle before
+      // checking geometry; the highlight attribute is set just before RAF.
+      await expect.poll(headerGap,{timeout:4000}).toBeLessThan(42);
       const position=await page.evaluate(()=>{
         const target=document.getElementById('dap-vacuum-furnace');
         const header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
