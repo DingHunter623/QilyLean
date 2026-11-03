@@ -287,6 +287,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('bindDapEvidenceJump();', runtime)
         self.assertIn('.qily-cn-nav-rail', runtime)
         self.assertIn('candidateRect.bottom', runtime)
+        self.assertNotRegex(runtime, r'(?m)^\\s*#')
         self.assertNotIn('function render()', runtime)
         for forbidden in ('fetch(', 'XMLHttpRequest', 'sendBeacon', 'qilylean.com', '/cooperation/'):
             self.assertNotIn(forbidden, runtime)
