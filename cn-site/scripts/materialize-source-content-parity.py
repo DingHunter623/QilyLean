@@ -1125,7 +1125,7 @@ def dap_evidence_runtime_content():
     if header_anchor not in interaction:
         raise RuntimeError('Canonical DAP header-offset block changed; refusing a partial CN adaptation')
     interaction = interaction.replace(header_anchor, header_replacement, 1)
-    if re.search(r'(?m)^\\s*#', interaction):
+    if re.search(r'(?m)^\s*#', interaction):
         raise RuntimeError('DAP runtime contains non-JavaScript comment syntax')
     required = ('function scrollToDapEvidence(target)', 'function bindDapEvidenceJump()',
                 'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();',

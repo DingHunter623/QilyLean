@@ -556,7 +556,7 @@ def main():
             and 'window.__qilyDapEvidenceJumpV1' in runtime_content
             and '.qily-cn-nav-rail' in runtime_content
             and 'candidateRect.bottom' in runtime_content
-            and not re.search(r'(?m)^\\s*#', runtime_content)
+            and not re.search(r'(?m)^\s*#', runtime_content)
             and 'function render()' not in runtime_content
             and not any(token in runtime_content for token in ('fetch(', 'XMLHttpRequest', 'sendBeacon', 'qilylean.com', '/cooperation/')),
             'China DAP runtime must contain only the isolated same-origin evidence interaction')
