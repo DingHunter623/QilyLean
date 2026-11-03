@@ -109,3 +109,68 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
   }
  }
 });
+
+
+test('DAP evidence jump and gold feedback match on international and China career pages',async({browser})=>{
+ test.setTimeout(180000);
+ const sites=[
+  {name:'international',url:com+'/experience/'},
+  {name:'China',url:cn+'/archive/profile/experience/'}
+ ];
+ for(const width of [1440,390]){
+  for(const site of sites){
+   const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'no-preference'});
+   try{
+    const page=await context.newPage();
+    await page.goto(site.url,{waitUntil:'domcontentloaded'});
+    const early=page.locator('#career-2006-2015');
+    const tag=early.locator('.career-related-link').filter({hasText:'DAP真空熔炉编程优化'});
+    const target=early.locator('#dap-vacuum-furnace');
+    await expect(tag).toBeVisible();
+    await expect(target).toContainText('亲自完成DAP真空熔炉程序编程与优化');
+    await expect.poll(()=>page.evaluate(()=>Boolean(window.__qilyDapEvidenceJumpV1)),{timeout:10000}).toBe(true);
+    await tag.click();
+    await expect(page).toHaveURL(site.url+'#dap-vacuum-furnace');
+    await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:5000}).toBe('true');
+    const animation=await target.evaluate(element=>{
+     const style=getComputedStyle(element);
+     return {name:style.animationName,duration:style.animationDuration,iterations:style.animationIterationCount};
+    });
+    expect(animation.name,site.name+' '+width+' animation').toBe('qilyDapEvidenceFlash');
+    expect(animation.duration,site.name+' '+width+' duration').toBe('2.4s');
+    expect(animation.iterations,site.name+' '+width+' pulse count').toBe('1');
+    const headerGap=()=>page.evaluate(()=>{
+     const target=document.getElementById('dap-vacuum-furnace');
+     const candidates=[...document.querySelectorAll('header,nav,[role="banner"],.qily-cn-nav-shell,.qily-cn-nav-rail,#qilyCnNavRail,.qily-cn-header,[data-qily-sticky-header]')];
+     let bottom=0;
+     for(const element of candidates){
+      const style=getComputedStyle(element),rect=element.getBoundingClientRect();
+      if((style.position==='fixed'||style.position==='sticky')&&rect.top<=12&&rect.bottom>0)bottom=Math.max(bottom,rect.bottom);
+     }
+     return target.getBoundingClientRect().top-bottom;
+    });
+    await expect.poll(headerGap,{timeout:5000}).toBeGreaterThan(4);
+    await expect.poll(headerGap,{timeout:5000}).toBeLessThan(160);
+    await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:3500}).toBeNull();
+    await tag.click();
+    await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:3000}).toBe('true');
+   }finally{await context.close();}
+  }
+ }
+ const reduced=await browser.newContext({viewport:{width:390,height:900},reducedMotion:'reduce'});
+ try{
+  const page=await reduced.newPage();
+  await page.goto(cn+'/archive/profile/experience/',{waitUntil:'domcontentloaded'});
+  const tag=page.locator('#career-2006-2015 .career-related-link').filter({hasText:'DAP真空熔炉编程优化'});
+  const target=page.locator('#career-2006-2015 #dap-vacuum-furnace');
+  await expect.poll(()=>page.evaluate(()=>Boolean(window.__qilyDapEvidenceJumpV1)),{timeout:10000}).toBe(true);
+  await tag.click();
+  await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:3000}).toBe('true');
+  const reducedStyle=await target.evaluate(element=>{
+   const style=getComputedStyle(element);
+   return {name:style.animationName,background:style.backgroundColor};
+  });
+  expect(reducedStyle.name).toBe('none');
+  expect(reducedStyle.background).toBe('rgb(255, 242, 207)');
+ }finally{await reduced.close();}
+});

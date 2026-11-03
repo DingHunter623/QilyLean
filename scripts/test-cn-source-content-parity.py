@@ -279,5 +279,31 @@ class SourceContentAcceptanceTests(unittest.TestCase):
             parity.javascript_data_literal('{note: window.dynamic()}')
 
 
+    def test_dap_evidence_runtime_extracts_only_the_accepted_interaction(self):
+        runtime = parity.dap_evidence_runtime_content()
+        self.assertIn('function scrollToDapEvidence(target)', runtime)
+        self.assertIn('function bindDapEvidenceJump()', runtime)
+        self.assertIn('window.__qilyDapEvidenceJumpV1', runtime)
+        self.assertIn('bindDapEvidenceJump();', runtime)
+        self.assertNotIn('function render()', runtime)
+        for forbidden in ('fetch(', 'XMLHttpRequest', 'sendBeacon', 'qilylean.com', '/cooperation/'):
+            self.assertNotIn(forbidden, runtime)
+
+    def test_experience_runtime_provenance_tracks_the_authoritative_career_script(self):
+        raw = (parity.ROOT / 'experience/index.html').read_text(encoding='utf-8')
+        records = parity.source_runtime_records(raw, 'experience/index.html')
+        self.assertEqual([item['source'] for item in records], ['qilylean/career-resume-full.js'])
+        self.assertEqual(len(records[0]['sha256']), 64)
+        self.assertGreater(records[0]['bytes'], 0)
+
+    def test_dap_gold_feedback_styles_match_the_international_contract(self):
+        css = (parity.ROOT / 'site-early-career-history-v1.css').read_text(encoding='utf-8')
+        self.assertIn('#experience #dap-vacuum-furnace[data-qily-dap-highlight="true"]', css)
+        self.assertIn('@keyframes qilyDapEvidenceFlash', css)
+        self.assertIn('10%,34%,58%', css)
+        self.assertIn('@media(prefers-reduced-motion:reduce)', css)
+
+
+
 if __name__ == '__main__':
     unittest.main()

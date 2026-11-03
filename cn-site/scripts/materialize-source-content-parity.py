@@ -24,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261030-source-content-parity-v8-founder-portrait-restore'
+VERSION = '20261103-source-content-parity-v9-dap-evidence-jump'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -235,6 +235,8 @@ def source_runtime_records(raw, name):
     runtimes = list(HOME_RUNTIMES) if name == 'index.html' and '/site-home-conversion-v1.js' in raw else []
     if '/site-interaction-semantics-v1.js' in raw:
         runtimes.append('site-interaction-semantics-v1.js')
+    if name == 'experience/index.html' and 'career-resume-full.js' in raw:
+        runtimes.append('qilylean/career-resume-full.js')
     return [{'source': relative, 'sha256': file_hash(ROOT / relative), 'bytes': (ROOT / relative).stat().st_size}
             for relative in runtimes if '/' + relative in raw]
 
@@ -1094,6 +1096,45 @@ def copy_css(value):
     STYLE_RECORDS[relative] = {'source': relative, 'url': STYLE_CACHE[relative], 'source_sha256': file_hash(original), 'sha256': digest, 'bytes': target.stat().st_size}
     return STYLE_CACHE[relative]
 
+def dap_evidence_runtime_content():
+    """Extract only the accepted DAP anchor/highlight interaction from the COM career runtime."""
+    source = ROOT / 'qilylean/career-resume-full.js'
+    original = source.read_text(encoding='utf-8')
+    start_marker = '// DAP evidence jump: align the exact achievement below the sticky header'
+    end_marker = '  bindDapEvidenceJump();'
+    start = original.find(start_marker)
+    end = original.find(end_marker, start)
+    if start < 0 or end < 0:
+        raise RuntimeError('Canonical DAP evidence interaction markers changed; refusing a partial runtime clone')
+    end += len(end_marker)
+    interaction = original[start:end]
+    required = ('function scrollToDapEvidence(target)', 'function bindDapEvidenceJump()',
+                'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();')
+    if any(token not in interaction for token in required):
+        raise RuntimeError('Canonical DAP evidence interaction is incomplete')
+    if any(token in interaction for token in ('function render()', 'fetch(', 'XMLHttpRequest',
+                                                'sendBeacon', 'qilylean.com', '/cooperation/')):
+        raise RuntimeError('DAP evidence runtime unexpectedly contains unrelated or external behavior')
+    return "(function(){\n  'use strict';\n" + interaction + "\n})();\n"
+
+
+def copy_dap_evidence_runtime():
+    source = ROOT / 'qilylean/career-resume-full.js'
+    target = CN / 'assets/source-content/dap-evidence-jump.js'
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(dap_evidence_runtime_content(), encoding='utf-8')
+    digest = file_hash(target)
+    url = '/assets/source-content/dap-evidence-jump.js?v=' + digest[:12]
+    STYLE_RECORDS['dap-evidence-runtime'] = {
+        'source': 'qilylean/career-resume-full.js',
+        'url': url,
+        'source_sha256': file_hash(source),
+        'sha256': digest,
+        'bytes': target.stat().st_size,
+    }
+    return url
+
+
 def copy_daily_knowledge_runtime():
     """Copy only the existing public teaching enhancement, without its form/API."""
     source = ROOT / 'qilylean/daily-feedback.js'
@@ -1232,6 +1273,7 @@ def main():
         updated = re.sub(r'<link\b[^>]*data-cn-source-css=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>', '', updated, flags=re.I)
         updated = re.sub(r'<style\b[^>]*data-cn-source-css=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</style>', '', updated, flags=re.I)
         updated = re.sub(r'<script\b[^>]*data-cn-source-actions=[\x22\x27][^\x22\x27]*[\x22\x27][^>]*>[\s\S]*?</script>', '', updated, flags=re.I)
+        updated = re.sub(r'<script\b(?=[^>]*\bdata-cn-dap-evidence-runtime=[\x22\x27]v1[\x22\x27])[^>]*>[\s\S]*?</script>', '', updated, flags=re.I)
         updated = destination_shell_styles(updated, preserve_adapter)
         # A legacy 2026-10-15 CN link points to a file never published on this
         # domain. The live server returns 404; removing this unused reference
@@ -1244,6 +1286,8 @@ def main():
         runtime_tags = []
         if '/qilylean/daily-feedback.js' in raw:
             runtime_tags.append('<script defer data-cn-source-actions="v1" src="' + copy_daily_knowledge_runtime() + '"></script>')
+        if name == 'experience/index.html':
+            runtime_tags.append('<script defer data-cn-dap-evidence-runtime="v1" src="' + copy_dap_evidence_runtime() + '"></script>')
         for extension in ('css', 'js'):
             asset = CN / ('assets/public-content-interactions.' + extension)
             if not asset.is_file(): raise RuntimeError('Missing public interaction adapter: ' + str(asset))
