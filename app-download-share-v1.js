@@ -1,7 +1,7 @@
 /* QilyLean APP product/share normalization | 2026-08-31 */
 (function(){
   'use strict';
-  var TIMES_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
+  var TIMES_POSITIONING='Times26001 是一款个人时间管理工具，同时兼顾工业工程、现场改善与作业时间研究场景，由 QilyLean｜启力精益开发。';
   var TIMES_VERSION='1.1.14';
   var TIMES_CODE='17';
   var TIMES_TARGET='36';
@@ -141,14 +141,14 @@
     if(path!=='/tools/times26001/')return;
 
     document.title='Times26001｜工业工程时间研究与IE现场测时工具';
-    setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、万年历及天气定位辅助功能；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与功能验证。');
+    setMeta('meta[name="description"]',TIMES_POSITIONING+' 提供日常提醒、倒计时、时间日历与天气辅助，并支持IE秒表分段、累计总时长和数据复制；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与功能验证。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
     setMeta('meta[property="og:description"]',TIMES_POSITIONING+' v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与功能验证。');
     setMeta('meta[property="og:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
     setMeta('meta[name="twitter:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
 
     var lead=document.querySelector('.tool-lead');
-    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>Times26001以工业工程时间研究和制造现场测时为核心，提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟、万年历及天气定位与未来7天预报辅助能力。<br><strong>当前验证版本：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。其中'+TIMES_DEVICE+'提供实际界面截图证据。</strong>';
+    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>围绕个人日常时间管理，提供提醒、倒计时、时间日历与天气辅助；同时支持工业工程时间研究和制造现场测时，包含IE秒表分段、累计总时长及数据复制等功能。<br><strong>当前验证版本：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。其中'+TIMES_DEVICE+'提供实际界面截图证据。</strong>';
 
     var visual=document.querySelector('.tool-visual');
     if(visual){
@@ -176,11 +176,11 @@
       var image=timesCard.querySelector('.capability-digital-visual:not([data-qily-capability-overview]) img');
       if(image){image.src=TIMES_REAL_HERO;image.alt='Times26001 v1.1.14 三星C55真机首页截图';}
       var small=timesCard.querySelector('small');
-      if(small)small.textContent='数字工具作品｜工业工程时间研究＋IE现场测时';
+      if(small)small.textContent='数字工具作品｜个人时间管理＋IE现场测时';
       var title=timesCard.querySelector('h3');
       if(title)title.textContent='Times26001';
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
-      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气定位/未来7天预报；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。';
+      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成日常提醒、倒计时、时间日历与天气辅助，并支持IE秒表分段、累计总时长、数据复制及制造现场时间研究；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。';
       var result=timesCard.querySelector('.module-result');
       if(result)result.textContent='当前验证版：v1.1.14 / versionCode 17 / API 36｜'+TIMES_VERIFICATION_LABEL+'｜本地优先｜当前位置/城市搜索｜当前实况＋未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
