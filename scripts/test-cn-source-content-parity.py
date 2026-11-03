@@ -292,7 +292,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
     def test_experience_runtime_provenance_tracks_the_authoritative_career_script(self):
         raw = (parity.ROOT / 'experience/index.html').read_text(encoding='utf-8')
         records = parity.source_runtime_records(raw, 'experience/index.html')
-        self.assertEqual([item['source'] for item in records], ['qilylean/career-resume-full.js'])
+        self.assertEqual([item['source'] for item in records], ['site-interaction-semantics-v1.js', 'qilylean/career-resume-full.js'])
         self.assertEqual(len(records[0]['sha256']), 64)
         self.assertGreater(records[0]['bytes'], 0)
 
