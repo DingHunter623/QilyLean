@@ -136,7 +136,7 @@ test('DAP evidence jump and gold feedback match on international and China caree
      const style=getComputedStyle(element);
      return {name:style.animationName,duration:style.animationDuration,iterations:style.animationIterationCount};
     });
-    expect(animation.name,site.name+' '+width+' animation').toBe('qilyDapEvidenceFlash');
+    expect(animation.name,site.name+' '+width+' animation').toBe(site.name==='China'?'cn-source-qilyDapEvidenceFlash':'qilyDapEvidenceFlash');
     expect(animation.duration,site.name+' '+width+' duration').toBe('2.4s');
     expect(animation.iterations,site.name+' '+width+' pulse count').toBe('1');
     const headerGap=()=>page.evaluate(()=>{
