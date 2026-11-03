@@ -559,7 +559,8 @@ def main():
             'China DAP runtime must contain only the isolated same-origin evidence interaction')
     career_css_record = next((item for item in styles if item.get('source') == 'site-early-career-history-v1.css'), None)
     career_css_content = local_path(career_css_record['url']).read_text(encoding='utf-8') if career_css_record else ''
-    require('@keyframes qilyDapEvidenceFlash' in career_css_content
+    require('@keyframes cn-source-qilyDapEvidenceFlash' in career_css_content
+            and 'cn-source-qilyDapEvidenceFlash' in career_css_content
             and '[data-qily-dap-highlight="true"]' in career_css_content
             and 'prefers-reduced-motion' in career_css_content,
             'China career CSS must retain the international three-pulse and reduced-motion feedback rules')
