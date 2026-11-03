@@ -1,5 +1,7 @@
 # QilyLean 中国大陆服务器运维 Runbook
 
+> **规范关系（2026-11-03）：** 本 Runbook 仅记录中国站部署操作细节；双站治理、内容边界、VI、APP、安全及验收均以 `docs/QilyLean双站及数字产品全生命周期运维管理规范_V3.0_20261103.md` 为准。冲突时 V3.0 优先。
+
 状态：PRODUCTION / 已备案 / HTTPS 已启用 / 搜索入口已开放
 
 ## 当前生产边界
@@ -16,8 +18,8 @@
 
 - Ubuntu 24.04 LTS
 - 腾讯云上海轻量应用服务器
-- 公网 IPv4：`1.117.71.235`
-- 登录用户：`ubuntu`
+- 公网 IPv4：由受控 GitHub Secret CN_PREPROD_HOST 提供，不在公开文档中记录
+- 登录用户：由受控 GitHub Secret CN_PREPROD_USER 提供
 - 发布根目录：`/var/www/qilylean-cn`
 - 版本目录：`/var/www/qilylean-cn/releases/<release-id>`
 - 当前版本：`/var/www/qilylean-cn/current`
@@ -26,7 +28,7 @@
 
 ## DNS
 
-- `@` A → `1.117.71.235`
+- `@` A → 由受控 DNS 记录管理，不在公开运维文档中记录具体公网 IP
 - `www` CNAME → `qilylean.cn`
 - TTL：600
 
@@ -47,7 +49,7 @@
 仓库 Actions 使用以下 Secrets（禁止提交明文）：
 
 - `CN_PREPROD_HOST`：大陆服务器公网 IPv4 / 主机名
-- `CN_PREPROD_USER`：`ubuntu`
+- `CN_PREPROD_USER`：由受控 GitHub Secret 提供
 - `CN_PREPROD_SSH_KEY`：实例 SSH 私钥全文
 
 历史 Secret 名称保留是为了兼容现有工作流；其实际用途已从预生产发布切换为中国站正式发布。
