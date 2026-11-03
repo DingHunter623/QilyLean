@@ -269,6 +269,19 @@ def verify_semantics(value, row):
         tag_labels = [html.unescape(re.sub(r'<[^>]+>', '', item)).strip() for item in early_tags]
         require(len(tag_labels) == 6, 'CN career mirror: early engineering card must retain six related-result tags')
         require('DAP真空熔炉编程优化' in tag_labels, 'CN career mirror: DAP vacuum-furnace programming improvement tag missing')
+        related_links = [attrs for tag, attrs in Nodes(early.group(0)).nodes
+                         if tag == 'a' and 'career-related-link' in (attrs.get('class') or '').split()]
+        dap_index = tag_labels.index('DAP真空熔炉编程优化')
+        require(len(related_links) == len(tag_labels) == 6
+                and related_links[dap_index].get('href') == url + '#dap-vacuum-furnace',
+                'CN DAP project tag must target its local career achievement anchor')
+        require(re.search(r'<li\b(?=[^>]*\bid=["\']dap-vacuum-furnace["\'])[^>]*>[\s\S]*?亲自完成DAP真空熔炉程序编程与优化', early.group(0), re.I),
+                'CN DAP anchor must remain on the exact achievement bullet')
+        dap_runtime_tags = [attrs for tag, attrs in nodes
+                            if tag == 'script' and attrs.get('data-cn-dap-evidence-runtime') == 'v1']
+        require(len(dap_runtime_tags) == 1
+                and dap_runtime_tags[0].get('src', '').startswith('/assets/source-content/dap-evidence-jump.js?v='),
+                'CN career page must load exactly one local DAP evidence interaction runtime')
         require(not any('IATF 16949' in label for label in tag_labels),
                 'CN career mirror: removed IATF 16949 tag must not return')
 
@@ -534,6 +547,25 @@ def main():
             'Career PDF original and cover must be included in the full-quality media hash ledger')
     require(any(item.get('source') == 'site-early-career-history-v1.css' for item in styles),
             'Career timeline source stylesheet must be mirrored and hash-verified')
+    career_runtime = next((item for item in styles if item.get('source') == 'qilylean/career-resume-full.js'), None)
+    require(career_runtime is not None
+            and career_runtime.get('url', '').startswith('/assets/source-content/dap-evidence-jump.js?v='),
+            'Career DAP interaction runtime is not mirrored as a hash-verified China-local asset')
+    runtime_content = local_path(career_runtime['url']).read_text(encoding='utf-8')
+    require('function bindDapEvidenceJump()' in runtime_content
+            and 'window.__qilyDapEvidenceJumpV1' in runtime_content
+            and '.qily-cn-nav-rail' in runtime_content
+            and 'candidateRect.bottom' in runtime_content
+            and 'function render()' not in runtime_content
+            and not any(token in runtime_content for token in ('fetch(', 'XMLHttpRequest', 'sendBeacon', 'qilylean.com', '/cooperation/')),
+            'China DAP runtime must contain only the isolated same-origin evidence interaction')
+    career_css_record = next((item for item in styles if item.get('source') == 'site-early-career-history-v1.css'), None)
+    career_css_content = local_path(career_css_record['url']).read_text(encoding='utf-8') if career_css_record else ''
+    require('@keyframes cn-source-qilyDapEvidenceFlash' in career_css_content
+            and 'cn-source-qilyDapEvidenceFlash' in career_css_content
+            and '[data-qily-dap-highlight="true"]' in career_css_content
+            and 'prefers-reduced-motion' in career_css_content,
+            'China career CSS must retain the international three-pulse and reduced-motion feedback rules')
     require(any(row.get('source') == 'knowledge/index.html'
                     and row.get('action') == 'localized-noncommercial-topic'
                     and row.get('to') == '/archive/profile/capabilities/#digital'
