@@ -1112,6 +1112,7 @@ def dap_evidence_runtime_content():
     var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;"""
     header_replacement = """    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
     var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;
+    # China can use a taller two-row sticky header on narrow screens; include its visible bottom edge in the landing offset.
     var stickyCandidates=document.querySelectorAll('header,nav,[role="banner"],.qily-cn-nav-shell,.qily-cn-nav-rail,#qilyCnNavRail,.qily-cn-header,[data-qily-sticky-header]');
     for(var headerIndex=0;headerIndex<stickyCandidates.length;headerIndex++){
       var candidate=stickyCandidates[headerIndex];
