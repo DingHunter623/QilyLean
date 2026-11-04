@@ -87,8 +87,23 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         items = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
         self.assertEqual([text.strip() for _, text in items],
                          ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持'])
-        self.assertIn('/Times26001-Android-v1.1.14-Standard-Website-Logo.apk', items[0][0])
+        self.assertIn('/assets/public-media/Times26001_v1.1.15_API36_website_release.apk', items[0][0])
         self.assertEqual(items[-1][0], '/app-support/')
+
+    def test_times26001_cn_source_preserves_v115_readable_five_step_flow(self):
+        source = (parity.ROOT / 'tools/times26001/index.html').read_text(encoding='utf-8')
+        content = parity.render(parity.Tree(parity.source_fragment(source, 'tools/times26001/index.html')).root,
+                                'tools/times26001/index.html')
+        self.assertIn('times26001-five-rows-list', content)
+        self.assertEqual(content.count('class="times26001-step-number"'), 5)
+        self.assertIn('data-qily-times-visual="v3"', content)
+        self.assertIn('-webkit-text-fill-color:#0f4b5a!important', content)
+        self.assertIn('v1.1.15', content)
+        self.assertIn('/assets/public-media/Times26001_v1.1.15_API36_website_release.apk', content)
+        self.assertIn('/assets/public-media/Times26001_v1.1.15_API36_website_release.sha256.txt', content)
+        self.assertIn('data-app-share-qr="times26001"', content)
+        self.assertIn('id="copyIntro"', content)
+        self.assertIn('id="copyUrl"', content)
 
     def test_qilylean_home_cn_mirror_keeps_seven_clickable_actions(self):
         # Test rendered source-derived HTML, not a visual-only CSS patch.
