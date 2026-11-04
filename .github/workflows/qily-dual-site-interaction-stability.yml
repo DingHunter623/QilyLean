@@ -1,0 +1,49 @@
+name: QilyLean dual-site interaction freeze diagnostic
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Production smoke: daily. A clean run does NOT close the P1 incident.
+    - cron: '13 2 * * *'
+  pull_request:
+    paths:
+      - 'scripts/audit-dual-site-interaction-stability-20261104.cjs'
+      - '.github/workflows/qily-dual-site-interaction-stability.yml'
+      - 'docs/incident-reviews/2026-11-04-dual-site-interaction-freeze-p1.md'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-dual-site-interaction-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  freeze-diagnostics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate diagnostic syntax
+        run: node --check scripts/audit-dual-site-interaction-stability-20261104.cjs
+      - name: Install isolated Chromium test dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Exercise public navigation, body links and Times26001 modal
+        env:
+          QILY_INT_BASE: https://qilylean.com
+          QILY_CN_BASE: https://qilylean.cn
+          QILY_STABILITY_ROUNDS: '3'
+        run: node scripts/audit-dual-site-interaction-stability-20261104.cjs
+      - name: Upload diagnostic evidence, including failure screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-interaction-freeze-${{ github.run_id }}
+          path: audit-interaction-stability/
+          if-no-files-found: warn
+          retention-days: 21
