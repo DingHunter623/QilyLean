@@ -6,11 +6,11 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
-const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview.svg');
+const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview-v1115.svg');
 const ddzVisualCss = path.join(root, 'pure-ddz-capability-visual-v2.css');
 
 const DDZ_STYLE_VERSION = '20260824-red-heart-ace-v8';
-const APP_SHARE_VERSION = '20261104-personal-time-positioning-v1';
+const APP_SHARE_VERSION = '20261104-v115-capability-verified-v2';
 // Public materialization retrigger: ensure the static capability page consumes the red-heart Ace v8 cache key.
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
@@ -28,7 +28,7 @@ function fail(message) {
 }
 
 if (!fs.existsSync(capabilitiesFile)) fail('Missing capabilities/index.html');
-if (!fs.existsSync(timesAsset)) fail('Missing assets/tools/times26001-overview.svg');
+if (!fs.existsSync(timesAsset)) fail('Missing assets/tools/times26001-overview-v1115.svg');
 if (!fs.existsSync(ddzVisualCss)) fail('Missing pure-ddz-capability-visual-v2.css');
 
 const ddzCss = fs.readFileSync(ddzVisualCss, 'utf8');
@@ -41,7 +41,7 @@ const before = page;
 
 page = page.replace(
   /src="\/times26001\/times26001-showcase\.svg(?:\?[^\"]*)?"/g,
-  'src="/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1"'
+  'src="/assets/tools/times26001-overview-v1115.svg?v=20261104-v115-signed-card"'
 );
 
 page = page.replace(
@@ -88,7 +88,7 @@ if (/src="\/app-download-share-v1\.js\?v=[^"]+"/.test(page)) {
 }
 
 if (page.includes('/times26001/times26001-showcase.svg')) fail('Broken Times26001 path still present');
-if (!page.includes('/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1')) fail('Correct Times26001 asset path not materialized');
+if (!page.includes('/assets/tools/times26001-overview-v1115.svg?v=20261104-v115-signed-card')) fail('Correct Times26001 asset path not materialized');
 if (!page.includes(`/pure-ddz-capability-visual-v2.css?v=${DDZ_STYLE_VERSION}`)) fail('DDZ fresh readability stylesheet version not materialized');
 if (!page.includes('capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important')) fail('DDZ title white contrast safeguard missing');
 if (!page.includes('capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important')) fail('DDZ subtitle gold contrast safeguard missing');
