@@ -29,7 +29,7 @@ jobs:
           grep -q "20260824-red-heart-ace-v8" site-navigation.js
           grep -q "20260824-red-heart-ace-v8" site-certificate-facts-v2.js
           ! grep -q "20260824-joker-order-v6" site-certificate-facts-v2.js
-          grep -q "20261104-personal-time-positioning-v1" site-navigation.js
+          grep -q "20261104-v115-capability-verified-v2" site-navigation.js
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
           grep -q 'A♥</strong>' capabilities/index.html
           grep -q "homeActions.dataset.qilyHomeActions='20260824-v2'" app-download-share-v1.js
@@ -73,7 +73,7 @@ jobs:
             });
             if(JSON.stringify(data.actions)!==JSON.stringify(expected)) throw new Error('QHome actions wrong: '+JSON.stringify(data));
             if(!data.css.includes('20260824-red-heart-ace-v8')) throw new Error('DDZ CSS not self-healed: '+data.css);
-            if(!data.shareScript.includes('20261104-personal-time-positioning-v1')) throw new Error('APP share runtime not self-healed: '+data.shareScript);
+            if(!data.shareScript.includes('20261104-v115-capability-verified-v2')) throw new Error('APP share runtime not self-healed: '+data.shareScript);
             if(data.titleColor!=='rgb(255, 255, 255)'||data.titleFill!=='rgb(255, 255, 255)') throw new Error('DDZ title not white: '+JSON.stringify(data));
             if(data.subColor!=='rgb(255, 227, 155)'||data.subFill!=='rgb(255, 227, 155)') throw new Error('DDZ subtitle not gold: '+JSON.stringify(data));
             if(data.aceText!=='A♥') throw new Error('DDZ representative Ace identity wrong: '+JSON.stringify(data));
