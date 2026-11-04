@@ -97,6 +97,29 @@ def public_home_copy(fragment):
     return fragment
 
 
+def localize_times26001_cn_official_site(fragment):
+    """Keep approved Times26001 product content, localizing only CN website facts.
+
+    The official contact email stays on the CN site's standalone support page.
+    The content mirror must not expose COM homepage text with a CN homepage
+    destination, or leave an orphan '官网邮箱' label after mailto filtering.
+    """
+    original = ('<div class="tool-note"><strong>统一开发者支持：</strong>'
+                '官方网址 <a href="https://qilylean.com/">https://qilylean.com/</a>；'
+                '官网邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。'
+                '商店正式上架状态以对应应用市场审核结果为准。</div>')
+    localized = ('<div class="tool-note"><strong>统一开发者支持：</strong>'
+                 '官方网址 <a href="https://qilylean.cn/">https://qilylean.cn/</a>；'
+                 '官网邮箱及问题反馈请见<a href="/app-support/">技术支持</a>。'
+                 '商店正式上架状态以对应应用市场审核结果为准。</div>')
+    if fragment.count(original) != 1:
+        raise RuntimeError('Times26001 official developer-support block drifted; do not publish mixed-domain site facts')
+    result = fragment.replace(original, localized, 1)
+    if 'https://qilylean.com/' in result or 'mailto:admin@qilylean.com' in result:
+        raise RuntimeError('Times26001 CN product body still contains COM-only website contact information')
+    return result
+
+
 def media_url(value, source):
     if value.startswith('#'):
         return value
@@ -1266,6 +1289,8 @@ def main():
         fragment = source_fragment(raw, name)
         if name == 'index.html':
             fragment = public_home_copy(fragment)
+        if name == 'tools/times26001/index.html':
+            fragment = localize_times26001_cn_official_site(fragment)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
