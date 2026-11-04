@@ -281,6 +281,8 @@ def source_fragment(raw, name):
     """
     match = re.search(r'<main\b[^>]*>([\s\S]*?)</main\s*>', raw, re.I)
     fragment = match.group(1) if match else mirror.extract_fragment(raw, name)
+    if name == 'tools/times26001/index.html':
+        fragment = localize_times26001_cn_official_site(fragment)
     if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
         return settle_interaction_content(fragment, raw, name)
     runtime = (ROOT / HOME_RUNTIMES[0]).read_text()
@@ -1289,8 +1291,6 @@ def main():
         fragment = source_fragment(raw, name)
         if name == 'index.html':
             fragment = public_home_copy(fragment)
-        if name == 'tools/times26001/index.html':
-            fragment = localize_times26001_cn_official_site(fragment)
         content = render(Tree(fragment).root, name) if not preserve_adapter else None
         if content is not None:
             content = preserve_generated_page_heading(content, old)
