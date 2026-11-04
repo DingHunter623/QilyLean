@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - name: Download and authenticate exact official Release APK archive
         shell: bash
         env:
@@ -57,4 +57,19 @@ jobs:
           git diff --cached --check
           git diff --cached --quiet && { echo 'No changes to publish'; exit 1; }
           git commit -m 'release: publish Times26001 v1.1.15 signed APK international acceptance'
-          git push origin HEAD:main
+          # Merge unrelated concurrent site changes without force-pushing or replacing their work.
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo 'Concurrent edits conflict with the release: aborting rather than overwriting them.'
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo 'International-only APK acceptance release committed safely.'
+              exit 0
+            fi
+            echo "Concurrent main branch update, retrying safely: $attempt"
+          done
+          echo 'Could not publish without a conflict after four attempts.'
+          exit 1
