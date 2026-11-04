@@ -2,8 +2,8 @@
 (function(){
   'use strict';
   var TIMES_POSITIONING='Times26001 是一款个人时间管理工具，同时兼顾工业工程、现场改善与作业时间研究场景，由 QilyLean｜启力精益开发。';
-  var TIMES_VERSION='1.1.14';
-  var TIMES_CODE='17';
+  var TIMES_VERSION='1.1.15';
+  var TIMES_CODE='18';
   var TIMES_TARGET='36';
   var TIMES_DEVICE='三星 C55';
   var TIMES_VERIFIED_DEVICES='三星 C55、Moto G54、vivo S6 等安卓真机';
@@ -14,7 +14,7 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.14-Standard-Website-Logo.apk?build=20260827-v114',
+      download:'https://qilylean.com/Times26001_v1.1.15_API36_website_release.apk?build=20261104-release-v1115',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
@@ -148,7 +148,7 @@
     setMeta('meta[name="twitter:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
 
     var lead=document.querySelector('.tool-lead');
-    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>围绕个人日常时间管理，提供提醒、倒计时、时间日历与天气辅助；同时支持工业工程时间研究和制造现场测时，包含IE秒表分段、累计总时长及数据复制等功能。<br><strong>当前验证版本：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。其中'+TIMES_DEVICE+'提供实际界面截图证据。</strong>';
+    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>围绕个人日常时间管理，提供提醒、倒计时、时间日历与天气辅助；同时支持工业工程时间研究和制造现场测时，包含IE秒表分段、累计总时长及数据复制等功能。<br><strong>当前官网正式签名验收版：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；签名及元数据已通过自动校验，当前版本真机功能待用户验收。v1.1.14历史版已完成'+TIMES_VERIFIED_DEVICES+'安装验证。</strong>';
 
     var visual=document.querySelector('.tool-visual');
     if(visual){
