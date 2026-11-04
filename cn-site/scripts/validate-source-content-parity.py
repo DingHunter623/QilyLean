@@ -372,6 +372,15 @@ def verify_semantics(value, row):
                 'CN Times26001 SHA-256 verification link missing')
         require('href="/legal/times26001/privacy/"' in main and 'href="/legal/times26001/terms/"' in main and
                 'href="/app-support/"' in main, 'CN Times26001 local legal/support routes missing')
+        require('统一开发者支持：' in main and 'https://qilylean.cn/' in main,
+                'CN Times26001 displayed website must be the China official site')
+        require('https://qilylean.com/' not in main and 'admin@qilylean.com' not in main,
+                'CN Times26001 product page must not expose COM-only website/email information')
+        require('官网邮箱及问题反馈请见' in main and 'href="/app-support/"' in main,
+                'CN Times26001 developer contact must use the retained local support page')
+        require('官网邮箱 。' not in main,
+                'CN Times26001 developer email label must not be left orphaned')
+
 
     if url == '/':
         # First hero gold kicker must inherit the approved COM regular VI,
