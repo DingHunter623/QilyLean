@@ -1322,6 +1322,18 @@ def main():
             runtime_tags.append('<script defer data-cn-source-actions="v1" src="' + copy_daily_knowledge_runtime() + '"></script>')
         if name == 'experience/index.html':
             runtime_tags.append('<script defer data-cn-dap-evidence-runtime="v1" src="' + copy_dap_evidence_runtime() + '"></script>')
+        if name == 'tools/times26001/index.html':
+            times_adapter = CN / 'assets/times26001-v1115-public-actions.js'
+            times_qr = CN / 'assets/times26001-v1115-cn-qr.svg'
+            if not times_adapter.is_file() or not times_qr.is_file():
+                raise RuntimeError('Approved Times26001 v1.1.15 CN interaction assets missing')
+            times_href = '/assets/' + times_adapter.name + '?v=' + file_hash(times_adapter)[:12]
+            qr_href = '/assets/' + times_qr.name + '?v=' + file_hash(times_qr)[:12]
+            runtime_tags.append('<script defer data-cn-source-actions="v1" src="' + times_href + '"></script>')
+            STYLE_RECORDS['cn-site/assets/' + times_adapter.name] = {'source': 'cn-site/assets/' + times_adapter.name,
+                'url': times_href, 'source_sha256': file_hash(times_adapter), 'sha256': file_hash(times_adapter), 'bytes': times_adapter.stat().st_size}
+            STYLE_RECORDS['cn-site/assets/' + times_qr.name] = {'source': 'cn-site/assets/' + times_qr.name,
+                'url': qr_href, 'source_sha256': file_hash(times_qr), 'sha256': file_hash(times_qr), 'bytes': times_qr.stat().st_size}
         for extension in ('css', 'js'):
             asset = CN / ('assets/public-content-interactions.' + extension)
             if not asset.is_file(): raise RuntimeError('Missing public interaction adapter: ' + str(asset))
