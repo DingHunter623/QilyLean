@@ -309,9 +309,10 @@ test('Times26001 seven functional buttons and responsive VI match international'
   await visit(page,cnBase+'/archive/profile/capabilities/');
   const cn=await read();
   expect(intl.map(x=>x.text),'international Times26001 button contract').toEqual(labels);
+  expect(intl[0].href,'international signed APK contract').toContain('Times26001_v1.1.15_API36_website_release.apk');
   expect(cn.map(x=>x.text),'China Times26001 buttons must all be links').toEqual(labels);
   expect(cn.every(x=>x.href&&x.href!=='#'),'no inert buttons').toBe(true);
-  expect(cn[0].href).toContain('Times26001-Android-v1.1.14-Standard-Website-Logo.apk');
+  expect(cn[0].href,'China signed APK must use latest approved local release').toContain('Times26001_v1.1.15_API36_website_release.apk');
   expect(cn[6].href).toBe('/app-support/');
   for(let i=0;i<labels.length;i++){
    for(const key of ['height','color','background','fontSize','fontWeight','radius','padding','display']){
