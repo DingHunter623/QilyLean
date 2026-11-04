@@ -135,13 +135,15 @@ for(const width of [390,1440])test('International six-hour bars share the zero b
       const baseline=Number(root.querySelector('[data-qily-kline-tick="0"]').getAttribute('y'))-4;
       const groups=[...root.querySelectorAll(':scope > g')].filter(g=>g.querySelector('[data-qily-kline-label="high-pv"]'));
       return {baseline,bars:groups.map(g=>{
-        const rect=g.querySelector('rect');return {top:Number(rect.getAttribute('y')),bottom:Number(rect.getAttribute('y'))+Number(rect.getAttribute('height')),color:rect.getAttribute('fill'),label:g.querySelector('[data-qily-kline-label="high-pv"]').textContent};
-      }),daily:groups.map(g=>({rect:g.querySelectorAll('rect')[1].outerHTML,label:g.querySelector('[data-qily-kline-label="daily-pv"]').outerHTML})),dailyLabels:groups.map(g=>g.querySelector('[data-qily-kline-label="daily-pv"]').textContent)};
+        const rect=g.querySelector('[data-qily-kline-bar="six-hour"]');
+        return {top:Number(rect.getAttribute('y')),bottom:Number(rect.getAttribute('y'))+Number(rect.getAttribute('height')),color:rect.getAttribute('fill'),label:g.querySelector('[data-qily-kline-label="high-pv"]').textContent,wicks:g.querySelectorAll('line').length};
+      }),daily:groups.map(g=>({rect:g.querySelector('[data-qily-kline-bar="daily-total"]').outerHTML,label:g.querySelector('[data-qily-kline-label="daily-pv"]').outerHTML})),dailyLabels:groups.map(g=>g.querySelector('[data-qily-kline-label="daily-pv"]').textContent)};
     });
     expect(chart.bars).toHaveLength(3);
     expect(chart.baseline).toBe(250);
     for(const bar of chart.bars)expect(bar.bottom,'every six-hour body ends exactly at y(0)').toBeCloseTo(chart.baseline,8);
-    expect(chart.bars.map(bar=>bar.top),'existing upper edges remain unchanged').toEqual([159.2,109.2,189.2]);
+    expect(chart.bars.map(bar=>bar.top),'peak PV determines each complete column height').toEqual([160,110,130]);
+    expect(chart.bars.every(bar=>bar.wicks===0),'no stock-chart high/low wicks').toBe(true);
     expect(chart.bars.map(bar=>bar.color)).toEqual(['#c49a4e','#178b94','#c49a4e']);
     expect(chart.bars.map(bar=>bar.label)).toEqual(['90','140','120']);
     expect(chart.dailyLabels).toEqual(['250','330','330']);
