@@ -339,7 +339,7 @@ def verify_semantics(value, row):
         expected = ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持']
         require([html.unescape(label).strip() for _, label in actions] == expected,
                 'CN Times26001 seven-button contract differs from COM: ' + repr(actions))
-        require(actions[0][0].split('?', 1)[0].endswith('/Times26001-Android-v1.1.14-Standard-Website-Logo.apk'),
+        require(actions[0][0].split('?', 1)[0].endswith('/Times26001_v1.1.15_API36_website_release.apk'),
                 'CN Times26001 APK download must point to the approved exact release')
         require(actions[-1][0] == '/app-support/', 'CN Times26001 technical-support route must stay local')
 
@@ -358,6 +358,20 @@ def verify_semantics(value, row):
                 home_links[5][0] == 'https://qilylean.com/legal/qilylean-home/terms/',
                 'International Home APK privacy and terms must link to its official documents')
         require(home_links[-1][0] == '/app-support/', 'CN QilyLean Home technical support must stay local')
+
+    if row['source'] == 'tools/times26001/index.html':
+        require('times26001-five-rows-list' in main, 'CN Times26001 approved workflow missing')
+        require(main.count('class="times26001-step-number"') == 5, 'CN Times26001 five horizontal-readable rows missing')
+        require('data-qily-times-visual="v3"' in main, 'CN Times26001 visual guard missing')
+        require('style="color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;' in main,
+                'CN Times26001 dark-title visual contrast fix missing')
+        require('v1.1.15' in main and 'versionCode 18' in main, 'CN Times26001 latest identity differs from COM')
+        require('/assets/public-media/Times26001_v1.1.15_API36_website_release.apk' in main,
+                'CN Times26001 local signed APK link missing')
+        require('/assets/public-media/Times26001_v1.1.15_API36_website_release.sha256.txt' in main,
+                'CN Times26001 SHA-256 verification link missing')
+        require('href="/legal/times26001/privacy/"' in main and 'href="/legal/times26001/terms/"' in main and
+                'href="/app-support/"' in main, 'CN Times26001 local legal/support routes missing')
 
     if url == '/':
         # First hero gold kicker must inherit the approved COM regular VI,
