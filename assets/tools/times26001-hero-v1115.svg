@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 640" role="img" aria-labelledby="title desc">
+<title id="title">Times26001 v1.1.15 个人时间管理与工业工程测时工具</title>
+<desc id="desc">QilyLean Times26001 正式签名 APK v1.1.15，versionCode 18，API 36。安卓桌面名称个人时间管理，APP 内部品牌 Times26001。展示个人时间管理、IE分段测时和天气辅助。三星真机安装及备案入口验证通过。</desc>
+<defs>
+ <linearGradient id="surface" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff"/><stop offset="1" stop-color="#e9f5f3"/></linearGradient>
+ <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0c4d5c"/><stop offset="1" stop-color="#178b94"/></linearGradient>
+ <filter id="shadow" x="-20%" y="-30%" width="150%" height="165%"><feDropShadow dx="0" dy="7" stdDeviation="11" flood-color="#084151" flood-opacity=".14"/></filter>
+</defs>
+<rect width="920" height="640" rx="36" fill="url(#surface)"/>
+<rect x="36" y="32" width="118" height="118" rx="20" fill="#fff" filter="url(#shadow)"/>
+<g transform="translate(54 52) scale(.34)">
+    <rect width="304" height="304" fill="#fff"/>
+    <path fill="#10596c" d="M71 55 56 70 45 86 38 100 33 114 30 128v8l-1 1v20l1 1v7l3 14 5 14 7 14 12 17 13 13 16 12 16 8 18 6 16 2 1 1h23l1-1 16-2 19-7h3l22 22 39-11 1-1-33-29 12-13 12-17 7-14 5-14 3-14v-7l1-1v-20l-1-1v-8l-3-14-5-14-7-14-11-16-9-9 1 2v11l-6 15-10 10-10 4 10 19 4 17-1 22-5 15-7 12-15 16h-3l-24-21-23 18 16 16-2 2h-17l-16-4-16-8-20-20-7-13-4-13-1-22 1-1 1-10 4-11 6-11 15-16 7-5 11-6 19-5h17l4 1-1-1V63l6-15 10-10 11-5-27-6-30 1-17 4-11 4-19 10Z"/>
+    <path fill="#121a16" d="m140 75-19 5-11 6-7 5-14 15-6 11-4 11-1 10-1 1v15l3 14 6 14 7 10 11 11 9 6 14 6 13 3h17l1-1-16-16 25-19 23 21h3l11-11 10-16 5-15 1-22-4-17-5-11-5-7-13 1-9-2-8-4-10-10-4-8-1-5-4-1Z"/>
+    <path fill="#dc3c31" d="m192 33-8 2-8 4-9 9-6 15v11l6 15 9 9 11 5 13 1 9-2 8-4 9-9 6-15V63l-6-15-8-8-9-5-9-2Z"/>
+  </g>
+<text x="184" y="92" fill="#0f4b5a" font-family="Arial,Segoe UI,sans-serif" font-size="54" font-weight="900">Times26001</text>
+<text x="186" y="134" fill="#385e62" font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" font-weight="700">个人时间管理 · IE 现场测时 · 天气辅助</text>
+<rect x="36" y="166" width="848" height="5" rx="2.5" fill="#caa15f"/>
+<rect x="40" y="198" width="430" height="306" rx="25" fill="url(#dark)" filter="url(#shadow)"/>
+<text x="73" y="253" fill="#ffe39b" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="29" font-weight="900">IE 工程测时</text>
+<text x="73" y="343" fill="#fff" font-family="Arial,Segoe UI,sans-serif" font-size="69" font-weight="800" letter-spacing="2">00:02:36</text>
+<text x="73" y="387" fill="#e1f6f3" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="23">分段记录 · 累计总时长 · 数据复制</text>
+<rect x="73" y="417" width="114" height="50" rx="12" fill="#ebf7f4"/>
+<rect x="196" y="417" width="114" height="50" rx="12" fill="#fff2e4"/>
+<rect x="319" y="417" width="115" height="50" rx="12" fill="#ffe39b"/>
+<g font-family="PingFang SC,Microsoft YaHei,sans-serif" font-weight="900" font-size="21" text-anchor="middle">
+ <text x="130" y="449" fill="#0f4b5a">分段测时</text>
+ <text x="253" y="449" fill="#8b4836">累计时长</text>
+ <text x="376" y="449" fill="#664c18">数据输出</text>
+</g>
+<g font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif">
+ <rect x="491" y="198" width="390" height="92" rx="18" fill="#fff" stroke="#cadfda" stroke-width="2"/>
+ <rect x="509" y="214" width="52" height="52" rx="15" fill="#eaf6f3"/>
+ <text x="535" y="248" text-anchor="middle" font-size="26" font-weight="900" fill="#0f4b5a">01</text>
+ <text x="577" y="239" font-size="29" font-weight="900" fill="#0f4b5a">个人时间管理</text>
+ <text x="578" y="274" font-size="21" fill="#476669">闹钟 · 倒计时 · 时间日历</text>
+ <rect x="491" y="305" width="390" height="92" rx="18" fill="#fff" stroke="#cadfda" stroke-width="2"/>
+ <rect x="509" y="321" width="52" height="52" rx="15" fill="#eef7fc"/>
+ <text x="535" y="355" text-anchor="middle" font-size="26" font-weight="900" fill="#125a80">02</text>
+ <text x="577" y="346" font-size="29" font-weight="900" fill="#0f4b5a">IE 现场测时</text>
+ <text x="578" y="381" font-size="21" fill="#476669">分段 · 累计 · Excel / WPS</text>
+ <rect x="491" y="412" width="390" height="92" rx="18" fill="#fff" stroke="#cadfda" stroke-width="2"/>
+ <rect x="509" y="428" width="52" height="52" rx="15" fill="#fff6e6"/>
+ <text x="535" y="462" text-anchor="middle" font-size="26" font-weight="900" fill="#8a6020">03</text>
+ <text x="577" y="453" font-size="29" font-weight="900" fill="#0f4b5a">天气预报辅助</text>
+ <text x="578" y="488" font-size="21" fill="#476669">位置授权 · 城市搜索 · 七日趋势</text>
+</g>
+<rect x="40" y="526" width="841" height="91" rx="21" fill="#0f4b5a"/>
+<text x="67" y="565" fill="#ffe39b" font-family="Arial,Segoe UI,sans-serif" font-size="27" font-weight="900">v1.1.15  ·  versionCode 18  ·  API 36</text>
+<text x="67" y="597" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="21" font-weight="700">桌面名称：个人时间管理  ｜  APP 内：Times26001</text>
+</svg>
