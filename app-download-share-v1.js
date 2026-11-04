@@ -174,15 +174,15 @@
     if(timesCard){
       // Preserve the shared capability overview; real-device images belong to the tool page.
       var image=timesCard.querySelector('.capability-digital-visual:not([data-qily-capability-overview]) img');
-      if(image){image.src=TIMES_REAL_HERO;image.alt='Times26001 v1.1.14 三星C55真机首页截图';}
+      if(image){image.src='/assets/tools/times26001-overview-v1115.svg?v=20261104-v115-signed-card';image.alt='Times26001 v1.1.15 正式签名版功能示意：个人时间管理、IE现场测时及天气辅助';}
       var small=timesCard.querySelector('small');
       if(small)small.textContent='数字工具作品｜个人时间管理＋IE现场测时';
       var title=timesCard.querySelector('h3');
       if(title)title.textContent='Times26001';
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
-      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成日常提醒、倒计时、时间日历与天气辅助，并支持IE秒表分段、累计总时长、数据复制及制造现场时间研究；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与代表性功能验证。';
+      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 安卓桌面名称为「个人时间管理」，应用内部品牌保留「Times26001」。提供日常提醒、倒计时、时间日历与天气辅助，支持 IE 分段测时、累计总时长、数据复制及制造现场时间研究；天气支持主动定位与城市搜索。';
       var result=timesCard.querySelector('.module-result');
-      if(result)result.textContent='当前验证版：v1.1.14 / versionCode 17 / API 36｜'+TIMES_VERIFICATION_LABEL+'｜本地优先｜当前位置/城市搜索｜当前实况＋未来7天';
+      if(result)result.textContent='官网正式签名验收版：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'｜三星手机安装验证通过｜备案号查询跳转验证通过｜安卓桌面：个人时间管理｜应用内：Times26001｜本地优先｜当前位置/城市搜索｜当前实况及未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
