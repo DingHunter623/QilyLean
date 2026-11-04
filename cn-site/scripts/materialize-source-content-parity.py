@@ -1139,11 +1139,47 @@ def dap_evidence_runtime_content():
     if header_anchor not in interaction:
         raise RuntimeError('Canonical DAP header-offset block changed; refusing a partial CN adaptation')
     interaction = interaction.replace(header_anchor, header_replacement, 1)
+    # The DAP accomplishment is near the final career section. At 390px,
+    # the compact CN footer can leave less scrollable space than the COM shell.
+    # Add only the minimum scroll runway after this hash navigation; no
+    # global whitespace or unrelated layout changes are introduced.
+    scroll_anchor = "      window.scrollTo({top:top,left:0,behavior:reduced?'auto':'smooth'});"
+    scroll_fix = """      // China-only hash navigation: prevent max-scroll clamping at the last career achievement.
+      var main=target.closest('main')||document.querySelector('main');
+      if(main){
+        var runway=document.getElementById('cnDapEvidenceScrollRunwayV2');
+        if(!runway){
+          runway=document.createElement('div');
+          runway.id='cnDapEvidenceScrollRunwayV2';
+          runway.setAttribute('aria-hidden','true');
+          runway.style.cssText='display:block;width:100%;height:0;pointer-events:none;overflow:hidden';
+          main.appendChild(runway);
+        }
+        runway.style.height='0px';
+        var maxScroll=Math.max(document.documentElement.scrollHeight,document.body.scrollHeight)-window.innerHeight;
+        var wanted=Math.max(0,target.getBoundingClientRect().top+(window.pageYOffset||document.documentElement.scrollTop||0)-offset);
+        if(wanted>maxScroll){
+          runway.style.height=Math.ceil(wanted-maxScroll+36)+'px';
+        }
+      }
+      // Scroll without a lengthy animation; a delayed font/layout shift must not cancel the jump.
+      function alignDap(){
+        if(!target.isConnected)return;
+        var current=window.pageYOffset||document.documentElement.scrollTop||0;
+        var desired=Math.max(0,target.getBoundingClientRect().top+current-offset);
+        window.scrollTo({top:desired,left:0,behavior:'auto'});
+      }
+      alignDap();
+      window.requestAnimationFrame(alignDap);
+      window.setTimeout(alignDap,180);"""
+    if interaction.count(scroll_anchor) != 1:
+        raise RuntimeError('Canonical DAP scroll command changed; update CN bottom-runway adapter')
+    interaction = interaction.replace(scroll_anchor, scroll_fix, 1)
     if re.search(r'(?m)^\s*#', interaction):
         raise RuntimeError('DAP runtime contains non-JavaScript comment syntax')
     required = ('function scrollToDapEvidence(target)', 'function bindDapEvidenceJump()',
                 'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();',
-                '.qily-cn-nav-rail', 'candidateRect.bottom')
+                '.qily-cn-nav-rail', 'candidateRect.bottom', 'cnDapEvidenceScrollRunwayV2', 'alignDap')
     if any(token not in interaction for token in required):
         raise RuntimeError('Canonical DAP evidence interaction is incomplete')
     if any(token in interaction for token in ('function render()', 'fetch(', 'XMLHttpRequest',
