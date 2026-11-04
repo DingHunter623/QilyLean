@@ -30,30 +30,19 @@ function safeName(s) { return s.replace(/[^a-z0-9_-]/gi, '-').slice(0, 110); }
 function pathOnly(value) {
   try { const u = new URL(value); return u.pathname; } catch (_) { return '/'; }
 }
-function isSafeLocalAnchor(anchor, origin, currentPath) {
-  try {
-    const url = new URL(anchor.href, origin);
-    return url.origin === origin && /^https?:$/.test(url.protocol)
-      && url.pathname !== currentPath
-      && !/\.(?:apk|aab|pdf|zip|7z|rar|xlsx?|docx?|pptx?|mp4|mp3|jpe?g|png|svg|webp|gif)$/i.test(url.pathname)
-      && !anchor.hasAttribute('download')
-      && !anchor.hasAttribute('data-app-share-link')
-      && !anchor.hasAttribute('data-app-share-qr')
-      && (!anchor.target || anchor.target === '_self');
-  } catch (_) { return false; }
-}
-
 async function main() {
   const browser = await chromium.launch({ headless: true });
   let failures = 0;
   try {
     for (const site of SITES) {
       for (const width of WIDTHS) {
+        let contextFailures = 0;
         const context = await browser.newContext({
           viewport: { width, height: width < 500 ? 844 : 900 },
           acceptDownloads: false,
           serviceWorkers: 'allow'
         });
+        await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
         await context.addInitScript(() => {
           window.__qilyInteractionProbe = { worstGap: 0, gaps: [], longTasks: [] };
           let last = performance.now();
@@ -124,6 +113,7 @@ async function main() {
             row.error = String(err.message || err).slice(0, 500);
             row.jsErrors = events.jsErrors.slice(startErrors, startErrors + 4);
             failures++;
+            contextFailures++;
             try {
               await page.screenshot({ path: path.join(OUTPUT,
                 safeName(site.id + '-' + width + '-' + label) + '.png'), timeout: 5000 });
@@ -191,7 +181,14 @@ async function main() {
             });
           }
         }
-        await context.close();
+        try {
+          if (contextFailures) {
+            await context.tracing.stop({ path: path.join(OUTPUT,
+              'trace-' + safeName(site.id + '-' + width) + '.zip') });
+          } else {
+            await context.tracing.stop();
+          }
+        } finally { await context.close(); }
       }
     }
   } finally {
