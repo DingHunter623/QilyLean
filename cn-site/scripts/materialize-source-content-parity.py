@@ -127,6 +127,7 @@ def media_url(value, source):
 # published-content boundary and source parity checks prohibit that fallback.
 CAPABILITY_PUBLIC_APKS = frozenset({
     '/Times26001-Android-v1.1.14-Standard-Website-Logo.apk',
+    '/Times26001_v1.1.15_API36_website_release.apk',
     '/QilyLean_Home_v2.3.3_API36_INSTALL.apk',
 })
 # CN also mirrors the international com.qilylean.home APK.
@@ -149,7 +150,7 @@ def link_url(value, source):
     path = parsed.path
     if source == 'capabilities/index.html' and path in CAPABILITY_HOME_OFFICIAL_LEGAL:
         return 'https://qilylean.com' + path
-    if source == 'capabilities/index.html' and path in CAPABILITY_PUBLIC_APKS:
+    if source in {'capabilities/index.html', 'tools/times26001/index.html'} and path in CAPABILITY_PUBLIC_APKS:
         relative = unquote(path).lstrip('/')
         # Missing release artifacts must fail closed, never turn into dead CTAs.
         if relative not in TRACKED or not (ROOT / relative).is_file():
@@ -158,6 +159,13 @@ def link_url(value, source):
         MEDIA.add(encoded)
         # Main materializer copies and SHA-256 verifies the actual binary under
         # cn-site/assets/public-media; this URL is local and content-versioned.
+        return versioned_media_url(encoded, media_digest(relative))
+    if source == 'tools/times26001/index.html' and path == '/Times26001_v1.1.15_API36_website_release.sha256.txt':
+        relative = path.lstrip('/')
+        if relative not in TRACKED or not (ROOT / relative).is_file():
+            raise RuntimeError('Missing current release checksum: ' + relative)
+        encoded = quote(relative, safe='/')
+        MEDIA.add(encoded)
         return versioned_media_url(encoded, media_digest(relative))
     if path.startswith(COMMERCIAL_ROUTES) or parsed.fragment in BLOCK_IDS:
         return ''
@@ -624,6 +632,11 @@ def render(node, source):
             attrs['data-public-share'] = ''
         elif 'data-plan-preview' in attrs or 'preview-open' in classes:
             pass  # Destination-owned public-content-interactions handles these.
+        elif source == 'tools/times26001/index.html' and (
+            classes & {'app-share-trigger', 'app-link-share-trigger'} or identifier in {'copyIntro', 'copyUrl'}
+        ):
+            # Page-specific controls use the CN public interaction adapter.
+            pass
         else:
             # Audited interactive viewers are retained as complete DOMs below.
             # Unknown source JS is not copied; do not emit a dead active button.
