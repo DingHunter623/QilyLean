@@ -166,8 +166,8 @@ if 'https://qilylean.com/' in cn_support:
 # Immutable SSOT parity: all international public-support content is mirrored,
 # except the CN domain, independent Chinese Android launcher, legal routes,
 # and their own verifiable release-channel facts.
-com_main_match = re.search(r'<main class="wrap">([\\s\\S]*?)</main>', com_support)
-cn_main_match = re.search(r'<div class="times-support-mirror"[^>]*>([\\s\\S]*?)</div></div></section></main>', cn_support)
+com_main_match = re.search(r'<main class="wrap">([\s\S]*?)</main>', com_support)
+cn_main_match = re.search(r'<div class="times-support-mirror"[^>]*>([\s\S]*?)</div></div></section></main>', cn_support)
 if com_main_match is None or cn_main_match is None:
     errors.append('双APP支持中心正文结构不完整，无法验证国际站 SSOT')
 else:
