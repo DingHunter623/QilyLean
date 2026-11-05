@@ -37,24 +37,30 @@ t_store = t['storeCandidate']
 current = (t_latest.get('versionName'), t_latest.get('versionCode'))
 if (t_public.get('versionName'), t_public.get('versionCode')) != current:
     errors.append('Times26001 官网下载安装包落后于最新构建')
-if (t_store.get('versionName'), t_store.get('versionCode')) != current:
-    errors.append('Times26001 Google Play候选落后于最新构建')
+# The Google Play AAB remains an explicitly historical candidate, not the
+# official website's latest Release-JKS APK. Treating them as interchangeable
+# could corrupt the store signing chain.
+if t_store.get('versionCode', 0) > t_latest.get('versionCode', 0):
+    errors.append('Times26001 Google Play候选版本不应超过未提交的官网最新版本')
 if t_public.get('targetSdk') != 36:
     errors.append('Times26001 官网包targetSdk未记录为36')
-if '测试签名' not in t_public.get('status', '') or 'Google Play' not in t_public.get('status', ''):
-    errors.append('Times26001 官网测试签名与Google Play签名链边界说明缺失')
+if 'Release JKS' not in t_public.get('status', '') or '应用市场' not in t_public.get('status', ''):
+    errors.append('Times26001 官网正式签名及未上架边界说明缺失')
 if 'Upload Key' not in (t_store.get('status', '') + t_latest.get('status', '')):
     errors.append('Times26001 Google Play Upload Key状态说明缺失')
 if '官方网址与官网邮箱' not in t.get('officialWebsiteLinkPolicy', ''):
     errors.append('Times26001 联系字段未统一为官方网址与官网邮箱')
 
 validation = t.get('realDeviceValidation', {})
-if (validation.get('versionName'), validation.get('versionCode'), validation.get('targetSdk')) != (
+if validation.get('versionCode') != 17 or 'Samsung C55' not in validation.get('device', ''):
+    errors.append('Times26001 v1.1.14历史三星C55验收记录不可篡改')
+latest_device = t.get('currentRealDeviceValidation', {})
+if (latest_device.get('versionName'), latest_device.get('versionCode'), latest_device.get('targetSdk')) != (
     t_latest.get('versionName'), t_latest.get('versionCode'), t_latest.get('targetSdk')
 ):
-    errors.append('Times26001 真机验证版本未绑定到最新构建')
-if 'Samsung C55' not in validation.get('device', ''):
-    errors.append('Times26001 未记录三星C55真机验证')
+    errors.append('Times26001 v1.1.15正式版真机验收与当前构建不一致')
+if 'Samsung' not in latest_device.get('device', ''):
+    errors.append('Times26001 最新正式版未记录三星真机验收')
 for screenshot in validation.get('screenshots', []):
     if not Path(screenshot.lstrip('/')).exists():
         errors.append(f'Times26001 真机截图不存在: {screenshot}')
@@ -94,12 +100,12 @@ for path in release_surfaces:
             errors.append(f'{path} 仍残留旧发布口径: {token}')
 
 privacy = Path('legal/times26001/privacy/index.html').read_text(encoding='utf-8')
-for token in ('2026年8月27日', 'v1.1.14（versionCode 17 / API 36）', 'admin@qilylean.com', '不使用后台位置'):
+for token in ('2026年8月27日', '2026年11月5日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com', '不使用后台位置'):
     if token not in privacy:
         errors.append(f'Times26001隐私政策缺当前口径: {token}')
 
 terms = Path('legal/times26001/terms/index.html').read_text(encoding='utf-8')
-for token in ('2026年8月27日', 'v1.1.14（versionCode 17 / API 36）', 'admin@qilylean.com'):
+for token in ('2026年8月27日', '2026年11月5日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com'):
     if token not in terms:
         errors.append(f'Times26001用户协议缺当前口径: {token}')
 
@@ -227,6 +233,16 @@ for p in Path('.').rglob('*.html'):
     allow_information = p.as_posix() in cn_information_pages and cn_copy_handler and cn_contact_route and all(token in text for token in (
         'href="https://qilylean.cn/', 'data-qily-footer-action="contact"', '/assets/cn-footer-actions-v1.js?',
     ))
+    # Current CN Times26001 product page may print the verified developer
+    # support address as noncommercial information next to its local support link.
+    # No off-site website redirect or mailto CTA is permitted in this mirror.
+    allow_information = allow_information or (
+        p.as_posix() == 'cn-site/archive/tools/times26001/index.html'
+        and 'href="/app-support/"' in text
+        and 'https://qilylean.cn/' in text
+        and '<span class="notranslate" translate="no">admin@qilylean.com</span>' in text
+        and 'mailto:admin@qilylean.com' not in text
+    )
     email_audit = OfficialEmailAudit(
         allow_copy=p.as_posix() == 'cn-site/about/index.html' and cn_copy_handler,
         allow_information=allow_information,
