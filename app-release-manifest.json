@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-11-04",
+  "updatedAt": "2026-11-05",
   "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
@@ -15,8 +15,8 @@
         "versionCode": 18,
         "apk": "/Times26001_v1.1.15_API36_website_release.apk",
         "sha256": "/Times26001_v1.1.15_API36_website_release.sha256.txt",
-        "label": "国际站正式签名 APK v1.1.15（用户验收阶段）",
-        "status": "与腾讯云备案证书匹配的 Release JKS 正式签名；已通过 GitHub Actions 编译、签名验证、包信息及 SHA-256 检查；当前版本真机功能待用户验收，不代表应用商店上架",
+        "label": "双站官网正式签名 APK v1.1.15（三星真机安装验收通过）",
+        "status": "已通过 GitHub Actions 编译、正式 Release JKS 签名、包信息与 SHA-256 校验；用户已确认三星 Android 真机安装及基础功能验收通过；仍不代表应用市场正式上架",
         "targetSdk": 36
       },
       "storeCandidate": {
@@ -48,16 +48,25 @@
         "versionCode": 18,
         "targetSdk": 36,
         "label": "国际站 v1.1.15 正式签名验收版",
-        "status": "2026-11-04 GitHub Actions run 41766365021 构建通过；APK SHA-256 cf4f443e9382625a7207afc24fad129080d0b4fe73eab94ca16b98774db86606。真机功能验收尚未完成。",
+        "status": "2026-11-04 GitHub Actions run 41766365021 构建通过；APK SHA-256 cf4f443e9382625a7207afc24fad129080d0b4fe73eab94ca16b98774db86606；三星 Android 真机安装与基础功能已通过用户验收。",
         "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       },
       "websiteReleaseAcceptance": {
         "versionName": "1.1.15",
         "versionCode": 18,
-        "channel": "qilylean.com-only",
-        "status": "awaiting-owner-acceptance",
+        "channel": "official-website-direct-distribution",
+        "status": "owner-confirmed-Samsung-Android-acceptance",
         "ciRun": "https://github.com/DingHunter623/Times26001/actions/runs/41766365021",
-        "apkSha256": "cf4f443e9382625a7207afc24fad129080d0b4fe73eab94ca16b98774db86606"
+        "apkSha256": "cf4f443e9382625a7207afc24fad129080d0b4fe73eab94ca16b98774db86606",
+        "acceptedAt": "2026-11-04"
+      },
+      "currentRealDeviceValidation": {
+        "date": "2026-11-04",
+        "device": "Samsung Android smartphone（用户确认）",
+        "versionName": "1.1.15",
+        "versionCode": 18,
+        "targetSdk": 36,
+        "result": "用户已确认正式签名 APK 安装成功并通过基础功能验收；后续功能反馈持续跟踪"
       }
     },
     "qilyleanHome": {
