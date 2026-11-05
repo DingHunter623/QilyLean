@@ -109,6 +109,37 @@ for token in ('2026年8月27日', '2026年11月5日', 'v1.1.15（versionCode 18 
     if token not in terms:
         errors.append(f'Times26001用户协议缺当前口径: {token}')
 
+# Current legal/support documents on BOTH independently filed sites must
+# advertise the actual signed APK, while preserving their original legal dates.
+# Historical store-candidate screenshots remain explicitly outside this gate.
+current_legal_support = (
+    'legal/times26001/privacy/index.html',
+    'legal/times26001/terms/index.html',
+    'app-support/index.html',
+    'cn-site/legal/times26001/privacy/index.html',
+    'cn-site/legal/times26001/terms/index.html',
+    'cn-site/app-support/index.html',
+)
+for path in current_legal_support:
+    published = Path(path).read_text(encoding='utf-8')
+    if 'v1.1.15' not in published or 'versionCode 18' not in published:
+        errors.append(f'双站当前法律/支持页面版本缺失: {path}')
+    if re.search(r'v1\\.1\\.14\\s*[/（]\\s*versionCode\\s*17', published):
+        errors.append(f'双站法律/支持页面误把历史版本写成当前版: {path}')
+    marker = 'qilyCnTimesReleaseDocsViV115' if path.startswith('cn-site/') else 'qilyTimesReleaseDocsViV115'
+    if marker not in published or 'max-width:1140px!important' not in published:
+        errors.append(f'双站法律/支持页面视觉宽度未统一: {path}')
+    if 'privacy' in path or 'terms' in path:
+        if '2026年8月27日' not in published or '2026年11月5日' not in published:
+            errors.append(f'法律文件初始生效日/本次修订日标注不完整: {path}')
+for path in ('app-support/index.html', 'cn-site/app-support/index.html'):
+    published = Path(path).read_text(encoding='utf-8')
+    if '+86 134-5001-4003' not in published or 'tel:+8613450014003' not in published:
+        errors.append(f'双站技术支持手机号展示格式不一致: {path}')
+for path in ('tools/times26001/index.html', 'app-support/index.html'):
+    if '真机功能待验收' in Path(path).read_text(encoding='utf-8') or '功能仍待用户验收' in Path(path).read_text(encoding='utf-8'):
+        errors.append(f'当前正式签名版仍使用过期的真机待验收文字: {path}')
+
 # Shared legal/support visual governance: header and hero must not reuse the same horizontal flex behavior.
 legal_css = Path('legal/app-legal.css').read_text(encoding='utf-8')
 if '980px' in legal_css:
