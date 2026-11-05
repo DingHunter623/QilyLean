@@ -100,12 +100,12 @@ for path in release_surfaces:
             errors.append(f'{path} 仍残留旧发布口径: {token}')
 
 privacy = Path('legal/times26001/privacy/index.html').read_text(encoding='utf-8')
-for token in ('2026年8月27日', '2026年11月5日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com', '不使用后台位置'):
+for token in ('2026年8月27日', '2026年11月4日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com', '不使用后台位置'):
     if token not in privacy:
         errors.append(f'Times26001隐私政策缺当前口径: {token}')
 
 terms = Path('legal/times26001/terms/index.html').read_text(encoding='utf-8')
-for token in ('2026年8月27日', '2026年11月5日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com'):
+for token in ('2026年8月27日', '2026年11月4日', 'v1.1.15（versionCode 18 / API 36）', 'admin@qilylean.com'):
     if token not in terms:
         errors.append(f'Times26001用户协议缺当前口径: {token}')
 
