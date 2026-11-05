@@ -124,7 +124,7 @@ for path in current_legal_support:
     published = Path(path).read_text(encoding='utf-8')
     if 'v1.1.15' not in published or 'versionCode 18' not in published:
         errors.append(f'双站当前法律/支持页面版本缺失: {path}')
-    if re.search(r'v1\\.1\\.14\\s*[/（]\\s*versionCode\\s*17', published):
+    if re.search(r'v1\.1\.14\s*[/（]\s*versionCode\s*17', published):
         errors.append(f'双站法律/支持页面误把历史版本写成当前版: {path}')
     marker = 'qilyCnTimesReleaseDocsViV115' if path.startswith('cn-site/') else 'qilyTimesReleaseDocsViV115'
     if marker not in published or 'max-width:1140px!important' not in published:
