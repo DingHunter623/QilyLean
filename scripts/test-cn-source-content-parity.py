@@ -115,9 +115,17 @@ class SourceContentAcceptanceTests(unittest.TestCase):
 
     def test_times26001_cn_app_support_uses_current_signed_release(self):
         support = (parity.CN / 'app-support/index.html').read_text(encoding='utf-8')
-        self.assertIn('Times26001 v1.1.15 / versionCode 18 / Android API 36', support)
+        self.assertIn('QilyLean APP技术支持中心', support)
+        self.assertIn('qilyCnDualAppSupportParityV116', support)
+        self.assertIn('当前双站官网正式签名验收版 v1.1.15 / versionCode 18 / targetSdk 36', support)
+        self.assertIn('cn.qilylean.home', support)
+        self.assertIn('v1.0.0 / versionCode 1 / Android API 36', support)
+        self.assertIn('QilyLean Home · 中国站桌面', support)
+        self.assertEqual(support.count('<section class="card">'), 6)
         self.assertNotIn('v1.1.14 / versionCode 17', support)
         self.assertIn('https://qilylean.cn/', support)
+        self.assertNotIn('https://qilylean.com/', support)
+        self.assertIn('湘ICP备2026041143号-1', support)
 
     def test_qilylean_home_cn_mirror_keeps_seven_clickable_actions(self):
         # Test rendered source-derived HTML, not a visual-only CSS patch.
