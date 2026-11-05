@@ -110,7 +110,7 @@ def localize_times26001_cn_official_site(fragment):
                 '商店正式上架状态以对应应用市场审核结果为准。</div>')
     localized = ('<div class="tool-note"><strong>统一开发者支持：</strong>'
                  '官方网址 <a href="https://qilylean.cn/">https://qilylean.cn/</a>；'
-                 '官网邮箱及问题反馈请见<a href="/app-support/">技术支持</a>。'
+                 '官网邮箱 <span class="notranslate" translate="no">admin@qilylean.com</span>；<a href="/app-support/">技术支持</a>。'
                  '商店正式上架状态以对应应用市场审核结果为准。</div>')
     if fragment.count(original) != 1:
         raise RuntimeError('Times26001 official developer-support block drifted; do not publish mixed-domain site facts')
