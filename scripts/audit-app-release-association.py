@@ -180,6 +180,7 @@ else:
         ('/legal/qilylean-home/terms/','/legal/qilylean-cn-home/terms/'),
         ('https://qilylean.com/','https://qilylean.cn/'),
         ('<span class="pill">QilyLean Home</span>','<span class="pill">QilyLean Home · 中国站桌面</span>'),
+        ('设为桌面：按Home键后选择QilyLean Home并选择“始终”。','设为桌面：按Home键后选择“精益制造经验分享”并选择“始终”。'),
         ('当前官网安装包、最新构建与应用市场候选状态以统一发布清单为准。','当前中国站安装包与应用市场候选状态以各自真实发布记录为准。'),
     )
     for old, new in adjustments:
