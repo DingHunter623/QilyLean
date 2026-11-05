@@ -121,6 +121,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('cn.qilylean.home', support)
         self.assertIn('v1.0.0 / versionCode 1 / Android API 36', support)
         self.assertIn('QilyLean Home · 中国站桌面', support)
+        self.assertIn('按Home键后选择“精益制造经验分享”并选择“始终”', support)
         self.assertEqual(support.count('<section class="card">'), 6)
         self.assertNotIn('v1.1.14 / versionCode 17', support)
         self.assertIn('https://qilylean.cn/', support)
