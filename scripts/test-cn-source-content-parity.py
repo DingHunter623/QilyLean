@@ -127,6 +127,9 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('https://qilylean.cn/', support)
         self.assertNotIn('https://qilylean.com/', support)
         self.assertIn('湘ICP备2026041143号-1', support)
+        materializer = (parity.CN / 'scripts/materialize-source-content-parity.py').read_text(encoding='utf-8')
+        self.assertIn('20261105-source-content-parity-v10-cn-sticky-header-race-fix', materializer)
+        self.assertIn("header.site-header,header.qily-site-header", materializer)
 
     def test_qilylean_home_cn_mirror_keeps_seven_clickable_actions(self):
         # Test rendered source-derived HTML, not a visual-only CSS patch.
