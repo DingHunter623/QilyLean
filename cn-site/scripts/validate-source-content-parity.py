@@ -577,6 +577,7 @@ def main():
     runtime_content = local_path(career_runtime['url']).read_text(encoding='utf-8')
     require('function bindDapEvidenceJump()' in runtime_content
             and 'window.__qilyDapEvidenceJumpV1' in runtime_content
+            and 'header.site-header' in runtime_content
             and '.qily-cn-nav-rail' in runtime_content
             and 'candidateRect.bottom' in runtime_content
             and not re.search(r'(?m)^\s*#', runtime_content)
