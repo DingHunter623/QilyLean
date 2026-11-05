@@ -149,7 +149,13 @@ test('DAP evidence jump and gold feedback match on international and China caree
      }
      return target.getBoundingClientRect().top-bottom;
     });
-    await expect.poll(headerGap,{timeout:5000}).toBeGreaterThan(4);
+    const headerState=await page.evaluate(()=>{
+     const target=document.getElementById('dap-vacuum-furnace');
+     const candidates=[...document.querySelectorAll('header,nav,[role="banner"],.qily-cn-nav-shell,.qily-cn-nav-rail,#qilyCnNavRail,.qily-cn-header,[data-qily-sticky-header]')];
+     return {gap:(()=>{let bottom=0;for(const element of candidates){const style=getComputedStyle(element),rect=element.getBoundingClientRect();if((style.position==='fixed'||style.position==='sticky')&&rect.top<=12&&rect.bottom>0)bottom=Math.max(bottom,rect.bottom);}return target.getBoundingClientRect().top-bottom;})(),headers:candidates.map(element=>{const rect=element.getBoundingClientRect(),style=getComputedStyle(element);return {tag:element.tagName,className:element.className,position:style.position,top:Math.round(rect.top*1000)/1000,bottom:Math.round(rect.bottom*1000)/1000};}).filter(item=>item.position==='fixed'||item.position==='sticky')};
+    });
+    console.log('DAP_HEADER_GAP',JSON.stringify({site:site.name,width,gap:headerState.gap,headers:headerState.headers}));
+    await expect.poll(headerGap,{timeout:5000,message:site.name+' '+width+'px DAP evidence target must clear the visible sticky header'}).toBeGreaterThan(4);
     await expect.poll(headerGap,{timeout:5000}).toBeLessThan(160);
     await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:3500}).toBeNull();
     await tag.click();
