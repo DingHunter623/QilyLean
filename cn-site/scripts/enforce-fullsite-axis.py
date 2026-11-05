@@ -39,8 +39,13 @@ for path in sorted(CN.rglob("*.html")):
         text = text[:header.start()] + CANONICAL_HEADER + text[header.end():]
 
     # Legal/support emails remain directly actionable after removing footer contact.
-    text = re.sub(r'<span\b([^>]*)>admin@qilylean\.com</span>',
-                  r'<a\1 href="mailto:admin@qilylean.com">admin@qilylean.com</a>', text)
+    # The approved Times26001 CN product mirror intentionally shows the
+    # developer email as noncommercial informational text, beside a local
+    # /app-support/ route. Do not auto-convert that span into a mailto CTA
+    # or mutate its source-content parity DOM after manifest hashing.
+    if path != CN / "archive/tools/times26001/index.html":
+        text = re.sub(r'<span\b([^>]*)>admin@qilylean\.com</span>',
+                      r'<a\1 href="mailto:admin@qilylean.com">admin@qilylean.com</a>', text)
 
     # These international shell owners are not published at China-domain paths.
     # CN owns its navigation, footer and measured header through local assets.
