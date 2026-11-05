@@ -141,14 +141,14 @@
     if(path!=='/tools/times26001/')return;
 
     document.title='Times26001｜工业工程时间研究与IE现场测时工具';
-    setMeta('meta[name="description"]',TIMES_POSITIONING+' 提供日常提醒、倒计时、时间日历与天气辅助，并支持IE秒表分段、累计总时长和数据复制；v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与功能验证。');
+    setMeta('meta[name="description"]',TIMES_POSITIONING+' 提供日常提醒、倒计时、时间日历与天气辅助，并支持IE秒表分段、累计总时长和数据复制；当前正式签名版 v'+TIMES_VERSION+' 已通过三星 Android 真机基础功能验收；v1.1.14 为历史记录。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
-    setMeta('meta[property="og:description"]',TIMES_POSITIONING+' v1.1.14已完成'+TIMES_VERIFIED_DEVICES+'安装与功能验证。');
+    setMeta('meta[property="og:description"]',TIMES_POSITIONING+' 当前正式签名版 v'+TIMES_VERSION+' 已完成三星 Android 真机安装与基础功能验收。');
     setMeta('meta[property="og:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
     setMeta('meta[name="twitter:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
 
     var lead=document.querySelector('.tool-lead');
-    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>围绕个人日常时间管理，提供提醒、倒计时、时间日历与天气辅助；同时支持工业工程时间研究和制造现场测时，包含IE秒表分段、累计总时长及数据复制等功能。<br><strong>当前官网正式签名验收版：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；签名及元数据已通过自动校验，当前版本真机功能待用户验收。v1.1.14历史版已完成'+TIMES_VERIFIED_DEVICES+'安装验证。</strong>';
+    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>围绕个人日常时间管理，提供提醒、倒计时、时间日历与天气辅助；同时支持工业工程时间研究和制造现场测时，包含IE秒表分段、累计总时长及数据复制等功能。<br><strong>当前官网正式签名验收版：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；签名及元数据通过自动校验，v1.1.15 已完成三星 Android 真机安装及基础功能验收。v1.1.14历史版已完成'+TIMES_VERIFIED_DEVICES+'安装验证。</strong>';
 
     var visual=document.querySelector('.tool-visual');
     if(visual){
