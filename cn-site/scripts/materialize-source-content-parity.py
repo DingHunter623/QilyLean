@@ -24,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261103-source-content-parity-v9-dap-evidence-jump'
+VERSION = '20261105-source-content-parity-v10-cn-sticky-header-race-fix'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -1149,7 +1149,7 @@ def dap_evidence_runtime_content():
     interaction = original[start:end]
     header_anchor = """    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
     var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;"""
-    header_replacement = """    var header=document.querySelector('header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
+    header_replacement = """    var header=document.querySelector('header.site-header,header.qily-site-header,header.qily-global-header,header[data-qily-site-header]');
     var headerHeight=header?Math.ceil(header.getBoundingClientRect().height):0;
     // China can use a taller two-row sticky header on narrow screens; include its visible bottom edge in the landing offset.
     var stickyCandidates=document.querySelectorAll('header,nav,[role="banner"],.qily-cn-nav-shell,.qily-cn-nav-rail,#qilyCnNavRail,.qily-cn-header,[data-qily-sticky-header]');
@@ -1204,7 +1204,7 @@ def dap_evidence_runtime_content():
         raise RuntimeError('DAP runtime contains non-JavaScript comment syntax')
     required = ('function scrollToDapEvidence(target)', 'function bindDapEvidenceJump()',
                 'window.__qilyDapEvidenceJumpV1', 'data-qily-dap-highlight', 'bindDapEvidenceJump();',
-                '.qily-cn-nav-rail', 'candidateRect.bottom', 'cnDapEvidenceScrollRunwayV2', 'alignDap')
+                'header.site-header', '.qily-cn-nav-rail', 'candidateRect.bottom', 'cnDapEvidenceScrollRunwayV2', 'alignDap')
     if any(token not in interaction for token in required):
         raise RuntimeError('Canonical DAP evidence interaction is incomplete')
     if any(token in interaction for token in ('function render()', 'fetch(', 'XMLHttpRequest',
