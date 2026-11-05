@@ -163,6 +163,32 @@ if len(re.findall(r'<section class="card">', cn_support)) != len(re.findall(r'<s
     errors.append('中国站双APP技术支持中心卡片数量或顺序与国际站不一致')
 if 'https://qilylean.com/' in cn_support:
     errors.append('中国站双APP技术支持中心残留国际站域名')
+# Immutable SSOT parity: all international public-support content is mirrored,
+# except the CN domain, independent Chinese Android launcher, legal routes,
+# and their own verifiable release-channel facts.
+com_main_match = re.search(r'<main class="wrap">([\\s\\S]*?)</main>', com_support)
+cn_main_match = re.search(r'<div class="times-support-mirror"[^>]*>([\\s\\S]*?)</div></div></section></main>', cn_support)
+if com_main_match is None or cn_main_match is None:
+    errors.append('双APP支持中心正文结构不完整，无法验证国际站 SSOT')
+else:
+    expected = com_main_match.group(1)
+    adjustments = (
+        ('当前国际站正式签名验收版','当前双站官网正式签名验收版'),
+        ('当前官网安装包 / 最新构建 v2.3.3 / versionCode 11 / targetSdk 36；腾讯应用宝首发候选版 v2.3.3 / versionCode 11 / targetSdk 36。',
+         '中国站桌面现有可安装包 v1.0.0 / versionCode 1 / Android API 36（包名 cn.qilylean.home）；用户确认三星手机已安装并在使用。中国站与国际站 QilyLean Home 各自独立管理版本。'),
+        ('/legal/qilylean-home/privacy/','/legal/qilylean-cn-home/privacy/'),
+        ('/legal/qilylean-home/terms/','/legal/qilylean-cn-home/terms/'),
+        ('https://qilylean.com/','https://qilylean.cn/'),
+        ('<span class="pill">QilyLean Home</span>','<span class="pill">QilyLean Home · 中国站桌面</span>'),
+        ('当前官网安装包、最新构建与应用市场候选状态以统一发布清单为准。','当前中国站安装包与应用市场候选状态以各自真实发布记录为准。'),
+    )
+    for old, new in adjustments:
+        if old not in expected:
+            errors.append('国际站 SSOT 支持页面基准变化，需要重新审查本地化替换: ' + old[:50])
+        expected = expected.replace(old, new)
+    if expected != cn_main_match.group(1):
+        errors.append('双APP技术支持正文与国际站不一致（超出已批准的 CN 本地差异）')
+
 for path in ('legal/times26001/privacy/index.html','legal/times26001/terms/index.html',
              'cn-site/legal/times26001/privacy/index.html','cn-site/legal/times26001/terms/index.html'):
     legal = Path(path).read_text(encoding='utf-8')
