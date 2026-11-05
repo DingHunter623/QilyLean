@@ -130,7 +130,7 @@ for path in current_legal_support:
     if marker not in published or 'max-width:1140px!important' not in published:
         errors.append(f'双站法律/支持页面视觉宽度未统一: {path}')
     if 'privacy' in path or 'terms' in path:
-        if '2026年8月27日' not in published or '2026年11月5日' not in published:
+        if '2026年8月27日' not in published or '2026年11月4日' not in published or '<strong>修订日期：</strong>' not in published:
             errors.append(f'法律文件初始生效日/本次修订日标注不完整: {path}')
 for path in ('app-support/index.html', 'cn-site/app-support/index.html'):
     published = Path(path).read_text(encoding='utf-8')
@@ -139,6 +139,35 @@ for path in ('app-support/index.html', 'cn-site/app-support/index.html'):
 for path in ('tools/times26001/index.html', 'app-support/index.html'):
     if '真机功能待验收' in Path(path).read_text(encoding='utf-8') or '功能仍待用户验收' in Path(path).read_text(encoding='utf-8'):
         errors.append(f'当前正式签名版仍使用过期的真机待验收文字: {path}')
+
+# Cross-site Times26001 support cards: preserve matching content order while
+# allowing local legal routes, domain, filing and the independent CN Home APK.
+cn_support = Path('cn-site/app-support/index.html').read_text(encoding='utf-8')
+com_support = Path('app-support/index.html').read_text(encoding='utf-8')
+for token in (
+    'qilyCnDualAppSupportParityV116',
+    'QilyLean APP技术支持中心',
+    'times-support-mirror',
+    'QilyLean Home · 中国站桌面',
+    'cn.qilylean.home',
+    'v1.0.0 / versionCode 1',
+    'v1.1.15 / versionCode 18',
+    'https://qilylean.cn/',
+    'href="/legal/qilylean-cn-home/privacy/"',
+    'href="/legal/qilylean-cn-home/terms/"',
+    '湘ICP备2026041143号-1',
+):
+    if token not in cn_support:
+        errors.append(f'中国站双APP技术支持中心未克隆国际站内容/本地官网差异缺失: {token}')
+if len(re.findall(r'<section class="card">', cn_support)) != len(re.findall(r'<section class="card">', com_support)):
+    errors.append('中国站双APP技术支持中心卡片数量或顺序与国际站不一致')
+if 'https://qilylean.com/' in cn_support:
+    errors.append('中国站双APP技术支持中心残留国际站域名')
+for path in ('legal/times26001/privacy/index.html','legal/times26001/terms/index.html',
+             'cn-site/legal/times26001/privacy/index.html','cn-site/legal/times26001/terms/index.html'):
+    legal = Path(path).read_text(encoding='utf-8')
+    if '<strong>最近修订：</strong>' in legal or '2026年11月5日' in legal:
+        errors.append(f'APP法律文件存在已弃用修订口径: {path}')
 
 # Shared legal/support visual governance: header and hero must not reuse the same horizontal flex behavior.
 legal_css = Path('legal/app-legal.css').read_text(encoding='utf-8')
