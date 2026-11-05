@@ -106,7 +106,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertIn('id="copyUrl"', content)
 
         self.assertIn('https://qilylean.cn/</a>', content)
-        self.assertIn('官网邮箱及问题反馈请见', content)
+        self.assertIn('官网邮箱 <span class="notranslate" translate="no">admin@qilylean.com</span>', content)
         self.assertIn('>技术支持</a>', content)
         self.assertNotIn('https://qilylean.com/', content)
         self.assertNotIn('mailto:admin@qilylean.com', content)
