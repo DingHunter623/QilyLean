@@ -11,6 +11,9 @@ on:
       - 'app-support/**'
       - 'app-store/**'
       - 'legal/**'
+      - 'cn-site/legal/**'
+      - 'cn-site/app-support/**'
+      - 'cn-site/scripts/*app-document-parity.py'
       - 'site-link-standard-v1.css'
       - 'assets/tools/times26001-overview.svg'
       - 'Times26001-Android-*.apk'
@@ -29,6 +32,9 @@ on:
       - 'app-support/**'
       - 'app-store/**'
       - 'legal/**'
+      - 'cn-site/legal/**'
+      - 'cn-site/app-support/**'
+      - 'cn-site/scripts/*app-document-parity.py'
       - 'site-link-standard-v1.css'
       - 'assets/tools/times26001-overview.svg'
       - 'Times26001-Android-*.apk'
@@ -46,5 +52,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Materialize accepted China APP document mirrors
+        run: |
+          python cn-site/scripts/materialize-app-document-parity.py
+          python cn-site/scripts/validate-app-document-parity.py
       - name: Validate website/store/app version association
         run: python scripts/audit-app-release-association.py

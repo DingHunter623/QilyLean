@@ -129,6 +129,22 @@ test('DAP evidence jump and gold feedback match on international and China caree
     await expect(tag).toBeVisible();
     await expect(target).toContainText('亲自完成DAP真空熔炉程序编程与优化');
     await expect.poll(()=>page.evaluate(()=>Boolean(window.__qilyDapEvidenceJumpV1)),{timeout:10000}).toBe(true);
+    if(site.name==='international'){
+     // The DAP handler is ready before the navigation's final shell. A live
+     // 390px probe saw that shell add qily-global-header and grow from 138px
+     // to 140px after an early click, moving the target under the header.
+     // Compare the accepted, settled reference, as the other parity tests do;
+     // retain the strict clearance assertions below for the resulting jump.
+     await expect(page.locator('header.qily-global-header[data-qily-r8-header-shell="normalized"][data-qily-r8-measured="true"]')).toBeVisible({timeout:20000});
+     await page.evaluate(()=>document.fonts.ready);
+     await page.waitForTimeout(1600); // R8 reasserts its cascade at 120/700/1400ms.
+     await page.waitForFunction(()=>{
+      const authority=document.getElementById('qilyVisualAuthorityR8');
+      const local=[...document.head.querySelectorAll('link[rel="stylesheet"]')].filter(link=>new URL(link.href,location.href).origin===location.origin);
+      return !authority||local.at(-1)===authority;
+     });
+     await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+    }
     await tag.click();
     await expect(page).toHaveURL(site.url+'#dap-vacuum-furnace');
     await expect.poll(()=>target.getAttribute('data-qily-dap-highlight'),{timeout:5000}).toBe('true');

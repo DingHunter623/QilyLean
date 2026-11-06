@@ -14,6 +14,7 @@ on:
       - 'scripts/cn-release-transfer.py'
       - 'scripts/test-cn-release-transfer.py'
       - 'scripts/test-cn-source-content-parity.py'
+      - 'scripts/cn-app-document-parity-20261105.spec.js'
       - 'scripts/guard-approved-cn-contact-vi.py'
       - 'scripts/cn-traffic-kline.spec.js'
       - 'scripts/cn-traffic-production.spec.js'
@@ -220,6 +221,7 @@ jobs:
           set -euo pipefail
           chmod +x cn-site/scripts/materialize-practice-assets.sh
           cn-site/scripts/materialize-practice-assets.sh
+          python3 cn-site/scripts/validate-app-document-parity.py
 
       - name: Poka-yoke approved three-label contact VI before any production switch
         run: python3 scripts/guard-approved-cn-contact-vi.py --self-test
@@ -351,10 +353,12 @@ jobs:
           import hashlib, json, os
           from pathlib import Path
           manifest=Path('cn-site/archive/source-content-parity.json')
+          documents=Path('cn-site/archive/app-document-parity.json')
           output=Path('cn-site/meta/cn-content-release.json')
           output.parent.mkdir(parents=True,exist_ok=True)
           output.write_text(json.dumps({'sourceCommit':os.environ['GITHUB_SHA'],
-              'sourceContentManifestSha256':hashlib.sha256(manifest.read_bytes()).hexdigest()},indent=2)+'\n')
+              'sourceContentManifestSha256':hashlib.sha256(manifest.read_bytes()).hexdigest(),
+              'appDocumentManifestSha256':hashlib.sha256(documents.read_bytes()).hexdigest()},indent=2)+'\n')
           PYRELEASE
           fi
           # Identical content must produce identical bytes across a retried run;
@@ -901,6 +905,17 @@ jobs:
           assert release['sourceCommit']==os.environ['GITHUB_SHA'],'Unexpected deployed source commit'
           assert release['sourceContentManifestSha256']==hashlib.sha256(expected).hexdigest(),'Wrong release manifest identity'
           assert fetch('/archive/source-content-parity.json?release='+os.environ['GITHUB_SHA'])==expected,'Production manifest bytes differ'
+          documents=Path('cn-site/archive/app-document-parity.json').read_bytes()
+          assert release['appDocumentManifestSha256']==hashlib.sha256(documents).hexdigest(),'Wrong APP document release identity'
+          assert fetch('/archive/app-document-parity.json?release='+os.environ['GITHUB_SHA'])==documents,'Production APP document manifest bytes differ'
+          document_manifest=json.loads(documents)
+          for row in document_manifest['pages']:
+              page=fetch(row['url']+'?release='+os.environ['GITHUB_SHA']).decode('utf-8')
+              main=re.search(r'<main\b[^>]*>[\s\S]*?</main>',page).group(0)
+              assert hashlib.sha256(main.encode()).hexdigest()==row['main_sha256'],'Production APP document DOM differs: '+row['url']
+              assert '湘ICP备2026041143号-1' in page and '湘公网安备43020002000443号' in page,'APP document filings missing'
+          for row in document_manifest['styles']:
+              assert hashlib.sha256(fetch(row['url'])).hexdigest()==row['sha256'],'Production APP document CSS differs: '+row['source']
           for route in ('/','/archive/profile/experience/','/archive/profile/capabilities/','/archive/profile/tools/','/lean/','/notes/','/trust/','/knowledge/','/resources/','/briefs/','/about/'):
               text=fetch(route+'?release='+os.environ['GITHUB_SHA']).decode('utf-8')
               assert len(re.findall(r'<link\b[^>]*rel=[\x22\x27]canonical[\x22\x27]',text,re.I))==1,'Missing/duplicate canonical: '+route
@@ -915,6 +930,7 @@ jobs:
           name: cn-source-content-release-${{ github.run_id }}
           path: |
             cn-site/archive/source-content-parity.json
+            cn-site/archive/app-document-parity.json
             cn-site/meta/cn-content-release.json
           if-no-files-found: error
           retention-days: 30
@@ -933,7 +949,7 @@ jobs:
           set -euo pipefail
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js scripts/dual-site-mobile-axis-20261025.spec.js scripts/cn-traffic-kline.spec.js scripts/cn-traffic-production.spec.js --reporter=line --workers=1 --trace=on
+          npx playwright test scripts/redline-navigation-footer-parity.spec.js scripts/cn-home-visual-parity-20261023.spec.js scripts/dual-site-mobile-axis-20261025.spec.js scripts/cn-traffic-kline.spec.js scripts/cn-traffic-production.spec.js scripts/cn-app-document-parity-20261105.spec.js --reporter=line --workers=1 --trace=on
 
       - name: Upload production VI evidence
         if: always() && steps.source-parity.outputs.enabled == 'true'

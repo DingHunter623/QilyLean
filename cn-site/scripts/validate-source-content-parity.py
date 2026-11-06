@@ -352,11 +352,14 @@ def verify_semantics(value, row):
         home_links = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', home_box.group(1))
         require([html.unescape(label).strip() for _, label in home_links] == expected,
                 'CN QilyLean Home seven-button contract differs from COM: ' + repr(home_links))
-        require(home_links[0][0].split('?', 1)[0].endswith('/QilyLean_Home_v2.3.3_API36_INSTALL.apk'),
-                'CN QilyLean Home APK download must use approved local media')
-        require(home_links[4][0] == 'https://qilylean.com/legal/qilylean-home/privacy/' and
-                home_links[5][0] == 'https://qilylean.com/legal/qilylean-home/terms/',
-                'International Home APK privacy and terms must link to its official documents')
+        require(home_links[0][0].split('?', 1)[0].endswith('/QilyLean_CN_Home_v1.0.0_API36_INSTALL.apk'),
+                'CN Home must distribute the existing China package')
+        require('v1.0.0' in home_panel.group(0) and 'versionCode 1' in home_panel.group(0) and
+                'cn.qilylean.home' in home_panel.group(0) and 'v2.3.3' not in home_panel.group(0),
+                'CN Home product card package/version identity mismatch')
+        require(home_links[4][0] == '/legal/qilylean-cn-home/privacy/' and
+                home_links[5][0] == '/legal/qilylean-cn-home/terms/',
+                'CN Home must use the China package privacy and terms')
         require(home_links[-1][0] == '/app-support/', 'CN QilyLean Home technical support must stay local')
 
     if row['source'] == 'tools/times26001/index.html':

@@ -24,7 +24,7 @@ sys.path.insert(0, str(CN / 'scripts'))
 mirror = importlib.import_module('materialize-public-content-mirror')
 visual = importlib.import_module('materialize-brief-visual-parity')
 TRACKED = set(filter(None, subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT, text=True).split('\0')))
-VERSION = '20261105-source-content-parity-v10-cn-sticky-header-race-fix'
+VERSION = '20261106-source-content-parity-v11-cn-app-products'
 PRIMARY = {
     'index.html': ('/', 'home'),
     'experience/index.html': ('/archive/profile/experience/', 'contact'),
@@ -120,6 +120,35 @@ def localize_times26001_cn_official_site(fragment):
     return result
 
 
+CN_HOME_APK = '/QilyLean_CN_Home_v1.0.0_API36_INSTALL.apk'
+
+
+def localize_cn_home_card(fragment):
+    """Keep the accepted card layout with the existing CN package's identity."""
+    pattern = r'<article\b(?=[^>]*\bid="qilylean-home")[\s\S]*?</article>'
+    matches = list(re.finditer(pattern, fragment))
+    if len(matches) != 1:
+        raise RuntimeError('Canonical Home product card drifted')
+    original = matches[0].group()
+    card = original.replace('v2.3.3', 'v1.0.0').replace('versionCode 11', 'versionCode 1')
+    card = card.replace('/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233', CN_HOME_APK)
+    card = card.replace('/QilyLean_Home_v1.0.0_API36_INSTALL.apk?build=20260824-qhome-v233', CN_HOME_APK)
+    card = card.replace('R5官网最新导航', '中国站官网导航')
+    card = card.replace('官网当前 R5 导航顺序', '中国站官网导航顺序')
+    card = card.replace('首页、履历主线、能力体系、改善工具、代表项目、信任中心、项目合作、知识资产',
+                        '首页、履历主线、能力体系、改善工具、代表项目、信任中心、知识资产')
+    card = card.replace('<span>项目合作</span>', '')
+    card = card.replace('/legal/qilylean-home/', '/legal/qilylean-cn-home/')
+    card = card.replace('https://qilylean.com/capabilities/#qilylean-home',
+                        'https://qilylean.cn/archive/profile/capabilities/#qilylean-home')
+    card = card.replace('当前版本：v1.0.0 | versionCode 1 |',
+                        '当前版本：v1.0.0 | versionCode 1 | cn.qilylean.home |')
+    card = card.replace('data-qily-home-card="v1.0.0-full"', 'data-qily-home-card="cn-v1.0.0-full"')
+    if CN_HOME_APK not in card or 'v2.3.3' in card or 'https://qilylean.com' in card:
+        raise RuntimeError('CN Home card still points to the international package')
+    return fragment[:matches[0].start()] + card + fragment[matches[0].end():]
+
+
 def media_url(value, source):
     if value.startswith('#'):
         return value
@@ -152,14 +181,7 @@ CAPABILITY_PUBLIC_APKS = frozenset({
     '/Times26001-Android-v1.1.14-Standard-Website-Logo.apk',
     '/Times26001_v1.1.15_API36_website_release.apk',
     '/QilyLean_Home_v2.3.3_API36_INSTALL.apk',
-})
-# CN also mirrors the international com.qilylean.home APK.
-# Its privacy/terms apply to that exact package, not cn.qilylean.home.
-# These COM legal pages have no CN-hosted equivalent: preserve their official
-# destinations instead of unwrapping anchors into unstyled plain-text labels.
-CAPABILITY_HOME_OFFICIAL_LEGAL = frozenset({
-    '/legal/qilylean-home/privacy/',
-    '/legal/qilylean-home/terms/',
+    CN_HOME_APK,
 })
 
 def link_url(value, source):
@@ -171,8 +193,6 @@ def link_url(value, source):
     if parsed.netloc and parsed.hostname not in {'qilylean.com', 'www.qilylean.com', 'qilylean.cn', 'www.qilylean.cn'}:
         return value
     path = parsed.path
-    if source == 'capabilities/index.html' and path in CAPABILITY_HOME_OFFICIAL_LEGAL:
-        return 'https://qilylean.com' + path
     if source in {'capabilities/index.html', 'tools/times26001/index.html'} and path in CAPABILITY_PUBLIC_APKS:
         relative = unquote(path).lstrip('/')
         # Missing release artifacts must fail closed, never turn into dead CTAs.
@@ -283,6 +303,8 @@ def source_fragment(raw, name):
     fragment = match.group(1) if match else mirror.extract_fragment(raw, name)
     if name == 'tools/times26001/index.html':
         fragment = localize_times26001_cn_official_site(fragment)
+    if name == 'capabilities/index.html':
+        fragment = localize_cn_home_card(fragment)
     if name != 'index.html' or '/site-home-conversion-v1.js' not in raw:
         return settle_interaction_content(fragment, raw, name)
     runtime = (ROOT / HOME_RUNTIMES[0]).read_text()
@@ -755,6 +777,57 @@ def media_digest(relative):
 def versioned_media_url(encoded, digest):
     """Serve the exact release-owned file from China with a content-hash cache key."""
     return '/assets/public-media/' + encoded + '?v=' + digest[:16]
+
+def copy_app_product_actions():
+    """Use COM's accepted download dialog, with CN product URLs and packages."""
+    source = ROOT / 'app-download-share-v1.js'
+    raw = source.read_text()
+    start = raw.index('  function copy(text){')
+    end = raw.index('  function setMeta(', start)
+    apps = {
+        'times26001': {'name': 'Times26001',
+            'url': 'https://qilylean.cn/archive/tools/times26001/#android-download',
+            'download': link_url('/Times26001_v1.1.15_API36_website_release.apk', 'capabilities/index.html'),
+            'qr': '/assets/times26001-v1115-cn-qr.svg'},
+        'qilyleanHome': {'name': 'QilyLean Home｜官网通用安装包',
+            'url': 'https://qilylean.cn/archive/profile/capabilities/#qilylean-home',
+            'download': link_url(CN_HOME_APK, 'capabilities/index.html'),
+            'qr': '/assets/qilylean-cn-home-download-qr.svg'},
+    }
+    script = "/* Generated from the accepted international APP share dialog. */\n(function(){\n'use strict';\n"
+    script += "var main=document.querySelector('main[data-cn-source-content=\"capabilities/index.html\"]');\nif(!main||window.__qilyCnAppProductActions)return;\nwindow.__qilyCnAppProductActions=true;\n"
+    script += 'var apps=' + json.dumps(apps, ensure_ascii=False) + ';\n' + raw[start:end]
+    script += """main.addEventListener('click',function(e){
+  var trigger=e.target.closest('.module-actions a');
+  if(!trigger)return;
+  var card=trigger.closest('article');
+  var key=card&&card.id==='times26001'?'times26001':card&&card.id==='qilylean-home'?'qilyleanHome':null;
+  if(!key)return;
+  var label=trigger.textContent.trim();
+  if(label==='扫码下载'){e.preventDefault();showQr(key);}
+  else if(label==='分享下载页'){e.preventDefault();shareLink(key);}
+});
+})();
+"""
+    target = CN / 'assets/cn-app-product-actions.js'
+    target.write_text(script)
+    css_source = ROOT / 'app-download-share-v1.css'
+    css_target = CN / 'assets/cn-app-product-actions.css'
+    shutil.copyfile(css_source, css_target)
+    urls = []
+    for original, delivery in ((source, target), (css_source, css_target)):
+        url = '/assets/' + delivery.name + '?v=' + file_hash(delivery)[:12]
+        STYLE_RECORDS['cn-product-' + delivery.suffix] = {'source': original.relative_to(ROOT).as_posix(),
+            'url': url, 'source_sha256': file_hash(original), 'sha256': file_hash(delivery), 'bytes': delivery.stat().st_size}
+        urls.append(url)
+    for app in apps.values():
+        qr = CN / app['qr'].lstrip('/')
+        if not qr.is_file():
+            raise RuntimeError('CN product download QR missing: ' + str(qr))
+        STYLE_RECORDS[app['qr']] = {'source': 'cn-site/' + app['qr'].lstrip('/'), 'url': app['qr'],
+            'source_sha256': file_hash(qr), 'sha256': file_hash(qr), 'bytes': qr.stat().st_size}
+    return urls
+
 
 def localize_media_references(value):
     """Migrate retained viewer media from the live proxy to this static release."""
@@ -1383,6 +1456,10 @@ def main():
             runtime_tags.append('<script defer data-cn-source-actions="v1" src="' + copy_daily_knowledge_runtime() + '"></script>')
         if name == 'experience/index.html':
             runtime_tags.append('<script defer data-cn-dap-evidence-runtime="v1" src="' + copy_dap_evidence_runtime() + '"></script>')
+        if name == 'capabilities/index.html':
+            actions_url, actions_css = copy_app_product_actions()
+            runtime_tags.append('<script defer data-cn-source-actions="v1" src="' + actions_url + '"></script>')
+            style_tags.append('<link rel="stylesheet" data-cn-source-css="v1" href="' + actions_css + '">')
         if name == 'tools/times26001/index.html':
             times_adapter = CN / 'assets/times26001-v1115-public-actions.js'
             times_qr = CN / 'assets/times26001-v1115-cn-qr.svg'

@@ -66,8 +66,10 @@ test('About Hero, every content module and typography have one compact unified V
 });
 test('All native engineering and knowledge routes use the same responsive public frame',async({page})=>{
  test.setTimeout(180000);
+ // APP support now uses the accepted international document layout, covered
+ // by cn-app-document-parity-20261105.spec.js rather than this native frame.
  const routes=['/ie/','/factory/','/digital/','/methods/','/standardization/',
-  '/knowledge/vsm-time-structure/','/knowledge/standard-time-capacity/','/app-support/'];
+  '/knowledge/vsm-time-structure/','/knowledge/standard-time-capacity/'];
  for(const width of [390,430,820,1440]){
   for(const route of routes)verifyFrame(await readNativeFrame(page,route,width),route,width);
  }
