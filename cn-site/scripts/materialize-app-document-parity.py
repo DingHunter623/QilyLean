@@ -188,6 +188,8 @@ def materialize():
                     + hero + '<div class="wrap qily-app-document-wrap' + (' times-support-mirror' if name.startswith('app-support/') else '')
                     + '">' + content + '</div></main>')
             updated = re.sub(r'<main\b[^>]*>[\s\S]*?</main>', lambda _: main, old, count=1)
+            if name.startswith('app-support/'):
+                updated = re.sub(r'<title>[\s\S]*?</title>', '<title>QilyLean APP技术支持中心｜精益制造经验分享</title>', updated, count=1)
             updated = re.sub(r'<style\b[^>]*id="qilyCn(?:TimesReleaseDocsViV115|DualAppSupportParityV116)"[^>]*>[\s\S]*?</style>', '', updated)
             updated = re.sub(r'<link\b[^>]*data-cn-app-document-css[^>]*>', '', updated)
             updated = re.sub(r'<style\b[^>]*data-cn-app-document-css[^>]*>[\s\S]*?</style>', '', updated)
