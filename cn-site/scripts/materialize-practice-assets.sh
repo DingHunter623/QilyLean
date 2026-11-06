@@ -118,7 +118,11 @@ console.log('PASS: '+count+' CN pages carry the current copy-first share cache i
 PYCNSHARECACHE
   python3 "$REPO_ROOT/scripts/materialize-cn-intent-prefetch.py"
   python3 "$CN_ROOT/scripts/materialize-source-content-parity.py"
+  # Legal/support pages share the accepted international document DOM and CSS,
+  # while retaining the China-owned shell and independent Home release facts.
+  python3 "$CN_ROOT/scripts/materialize-app-document-parity.py"
   python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
+  python3 "$CN_ROOT/scripts/validate-app-document-parity.py"
   # Apply the authorized About navigation hierarchy to generated, untracked CN mirror pages.
   node "$REPO_ROOT/scripts/materialize-about-nav-footer-v1.js" --cn-only
   # Prevent a partial rollback: China Trust, the local curated archive, and

@@ -116,7 +116,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
     def test_times26001_cn_app_support_uses_current_signed_release(self):
         support = (parity.CN / 'app-support/index.html').read_text(encoding='utf-8')
         self.assertIn('QilyLean APP技术支持中心', support)
-        self.assertIn('qilyCnDualAppSupportParityV116', support)
+        self.assertIn('data-cn-app-document="20261105-app-document-source-parity-v1"', support)
         self.assertIn('当前双站官网正式签名验收版 v1.1.15 / versionCode 18 / targetSdk 36', support)
         self.assertIn('cn.qilylean.home', support)
         self.assertIn('v1.0.0 / versionCode 1 / Android API 36', support)
@@ -128,7 +128,7 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         self.assertNotIn('https://qilylean.com/', support)
         self.assertIn('湘ICP备2026041143号-1', support)
         materializer = (parity.CN / 'scripts/materialize-source-content-parity.py').read_text(encoding='utf-8')
-        self.assertIn('20261105-source-content-parity-v10-cn-sticky-header-race-fix', materializer)
+        self.assertIn('20261106-source-content-parity-v11-cn-app-products', materializer)
         self.assertIn("header.site-header,header.qily-site-header", materializer)
 
     def test_qilylean_home_cn_mirror_keeps_seven_clickable_actions(self):
@@ -144,9 +144,12 @@ class SourceContentAcceptanceTests(unittest.TestCase):
         items = re.findall(r'<a\b[^>]*\bhref="([^"]+)"[^>]*>([^<]+)</a>', action_box.group(1))
         self.assertEqual([text.strip() for _, text in items],
                          ['下载 Android APK', '下载说明', '扫码下载', '分享下载页', '隐私政策', '用户协议', '技术支持'])
-        self.assertIn('/QilyLean_Home_v2.3.3_API36_INSTALL.apk', items[0][0])
-        self.assertEqual(items[4][0], 'https://qilylean.com/legal/qilylean-home/privacy/')
-        self.assertEqual(items[5][0], 'https://qilylean.com/legal/qilylean-home/terms/')
+        self.assertIn('/QilyLean_CN_Home_v1.0.0_API36_INSTALL.apk', items[0][0])
+        self.assertIn('cn.qilylean.home', panel.group(0))
+        self.assertIn('v1.0.0', panel.group(0))
+        self.assertNotIn('v2.3.3', panel.group(0))
+        self.assertEqual(items[4][0], '/legal/qilylean-cn-home/privacy/')
+        self.assertEqual(items[5][0], '/legal/qilylean-cn-home/terms/')
         self.assertEqual(items[-1][0], '/app-support/')
 
     def test_current_module_style_keeps_real_header_and_local_routes(self):
