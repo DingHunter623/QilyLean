@@ -42,7 +42,7 @@ SVG_RISK=re.compile(r"<\s*(?:script|foreignObject|iframe|object|embed)\b|\bon[a-
 STYLE_IMPORT=re.compile(r'(@import\s+url\(["\']?)(/[^"\')\s]+)(["\']?\)\s*;)',re.I)
 CONTENT_SCOPE='main#main[data-qily-brief-content="v2"]'
 SOURCE_STYLE_VERSION="20261012-brief-source-parity-v8"
-SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1"}
+SOURCE_INLINE_STYLE_IDS={"qilyDailyReadabilityClosureV8","qilyDailyBriefSequenceOffV1","qilyVisionToExecutionBriefV1"}
 CSS_GROUPS={"media","supports","container","layer"}
 # Brand imagery belongs to the destination site; authored engineering diagrams
 # continue to use their original local mirror assets.

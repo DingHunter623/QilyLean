@@ -103,6 +103,21 @@ class RendererRegression(unittest.TestCase):
         markup=''.join(parser.parts)
         self.assertEqual(markup,'<aside class="brief-role-shift" aria-label="角色升级方向"><strong>制造系统设计者</strong></aside>')
 
+    def test_approved_20261108_weekly_issue_preserves_engineering_vi(self):
+        path=Path('qilylean/daily/2026-11-08.html')
+        self.assertTrue(visual.source.is_date_brief(path))
+        route=next(item.url for item in visual.source.SOURCES if item.path==path)
+        self.assertEqual(route,'/briefs/archive/2026-11-08/')
+        raw=(visual.ROOT/path).read_text(encoding='utf-8')
+        for marker in ('从梦想蓝图到改善成果', '没有想象力', '没有执行力', 'qv-flow', 'qv-cards', 'qv-table'):
+            self.assertIn(marker,raw)
+        style=re.search(r'<style id="qilyVisionToExecutionBriefV1">([\s\S]*?)</style>',raw)
+        self.assertIsNotNone(style)
+        localized=visual.scope_stylesheet(style.group(1))
+        for selector in ('.qv-thesis','.qv-flow','.qv-cards','.qv-table'):
+            self.assertIn(visual.CONTENT_SCOPE+' '+selector,localized)
+        self.assertGreater(assert_scoped_css(localized),15)
+
     def test_dense_tables_get_keyboard_scroll_regions(self):
         source='<section><table class="rule-table"><tr><td>CT</td></tr></table></section>'
         result=visual.contain_brief_tables(source)
