@@ -5,16 +5,22 @@
   "checkedAt": "2026-11-08T00:00:00.000Z",
   "candidates": [
     {
-      "term": "DIGITAL",
+      "term": "CT",
       "explanation": "",
       "explicit": false,
-      "source": "DIGITAL"
+      "source": "CT"
     },
     {
       "term": "ERP",
       "explanation": "",
       "explicit": false,
-      "source": "ERP/MES/WMS"
+      "source": "ERP/MES"
+    },
+    {
+      "term": "EXECUTION",
+      "explanation": "",
+      "explicit": false,
+      "source": "EXECUTION"
     },
     {
       "term": "FPY",
@@ -23,10 +29,10 @@
       "source": "FPY"
     },
     {
-      "term": "JSON",
+      "term": "IE",
       "explanation": "",
       "explicit": false,
-      "source": "JSON"
+      "source": "IE"
     },
     {
       "term": "KPI",
@@ -35,34 +41,52 @@
       "source": "KPI"
     },
     {
-      "term": "LEAN",
-      "explanation": "",
-      "explicit": false,
-      "source": "LEAN"
-    },
-    {
       "term": "MES",
       "explanation": "",
       "explicit": false,
-      "source": "ERP/MES/WMS"
+      "source": "ERP/MES"
     },
     {
-      "term": "OEE",
+      "term": "PDCA",
       "explanation": "",
       "explicit": false,
-      "source": "OEE"
+      "source": "PDCA"
     },
     {
-      "term": "OPERATIONS",
+      "term": "PFMEA",
       "explanation": "",
       "explicit": false,
-      "source": "OPERATIONS"
+      "source": "PFMEA"
     },
     {
-      "term": "SMED",
+      "term": "PQCD",
       "explanation": "",
       "explicit": false,
-      "source": "SMED"
+      "source": "PQCD"
+    },
+    {
+      "term": "RACI",
+      "explanation": "",
+      "explicit": false,
+      "source": "RACI"
+    },
+    {
+      "term": "SOP",
+      "explanation": "",
+      "explicit": false,
+      "source": "SOP"
+    },
+    {
+      "term": "STEP",
+      "explanation": "",
+      "explicit": false,
+      "source": "STEP"
+    },
+    {
+      "term": "TT",
+      "explanation": "",
+      "explicit": false,
+      "source": "TT"
     },
     {
       "term": "UPPH",
@@ -71,32 +95,36 @@
       "source": "UPPH"
     },
     {
+      "term": "VSM",
+      "explanation": "",
+      "explicit": false,
+      "source": "VSM"
+    },
+    {
       "term": "WIP",
       "explanation": "",
       "explicit": false,
       "source": "WIP"
-    },
-    {
-      "term": "WMS",
-      "explanation": "",
-      "explicit": false,
-      "source": "ERP/MES/WMS"
     }
   ],
   "coveredTerms": [
-    "DIGITAL",
+    "CT",
     "ERP",
+    "EXECUTION",
     "FPY",
-    "JSON",
+    "IE",
     "KPI",
-    "LEAN",
     "MES",
-    "OEE",
-    "OPERATIONS",
-    "SMED",
+    "PDCA",
+    "PFMEA",
+    "PQCD",
+    "RACI",
+    "SOP",
+    "STEP",
+    "TT",
     "UPPH",
-    "WIP",
-    "WMS"
+    "VSM",
+    "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",

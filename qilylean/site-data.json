@@ -9,9 +9,9 @@
   "briefs": {
     "total": 387,
     "latestDate": "2026-11-08",
-    "latestTheme": "精益生产运营数字化",
-    "latestTitle": "从精益看板到数字化运营：QilyLean精益生产管理平台与Excel数据模板",
-    "latestSummary": "QilyLean｜启力精益以模拟运营数据呈现月度KPI、周度6S稽查、现场改善、提案与课题评比，将数据录入、评审激励和荣誉发布连接为可交互的管理闭环。",
+    "latestTheme": "愿景规划与工程执行",
+    "latestTitle": "从梦想蓝图到改善成果：想象力与执行力的工程闭环",
+    "latestSummary": "没有想象力，就很难有突破性的规划；没有执行力，再好的规划也无法创造价值。以理想状态、工程数据、Pilot验证和PDCA标准化构建从愿景到制造价值的闭环。",
     "latestUrl": "/qilylean/daily/2026-11-08.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
@@ -72,8 +72,8 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 760,
-    "indexedPages": 661,
+    "indexedEntries": 759,
+    "indexedPages": 660,
     "terminologyTotal": 195,
     "briefTotal": 387,
     "latestBriefDate": "2026-11-08",
