@@ -112,7 +112,7 @@ class RendererRegression(unittest.TestCase):
         original=(visual.ROOT/path).read_text(encoding='utf-8')
         for marker in ('从梦想蓝图到改善成果', '没有想象力', '没有执行力', 'qv-flow', 'qv-cards', 'qv-table'):
             self.assertIn(marker,original)
-        style=re.search(r'<style id="qilyVisionToExecutionBriefV1">([\\s\\S]*?)</style>',original)
+        style=re.search(r'<style id="qilyVisionToExecutionBriefV1">([\s\S]*?)</style>',original)
         self.assertIsNotNone(style)
         scoped=visual.scope_stylesheet(style.group(1))
         for item in ('.qv-thesis','.qv-flow','.qv-cards','.qv-table'):
