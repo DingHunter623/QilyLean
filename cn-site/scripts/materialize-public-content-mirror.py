@@ -89,9 +89,12 @@ def tracked_html() -> list[Path]:
     out = subprocess.check_output(["git", "ls-files", "*.html", "*.htm"], cwd=ROOT, text=True)
     return [Path(x) for x in out.splitlines() if x.strip()]
 
+# One explicitly approved extra issue; do not silently mirror other undated pages.
+APPROVED_SPECIAL_BRIEFS = {"qilylean/daily/2026-11-08-vision-to-execution.html"}
+
 def is_date_brief(path: Path) -> bool:
     s = path.as_posix()
-    return bool(re.fullmatch(r"qilylean/daily/\d{4}-\d{2}-\d{2}\.html", s))
+    return bool(re.fullmatch(r"qilylean/daily/\d{4}-\d{2}-\d{2}\.html", s)) or s in APPROVED_SPECIAL_BRIEFS
 
 def selected_source(path: Path) -> bool:
     s = path.as_posix()
