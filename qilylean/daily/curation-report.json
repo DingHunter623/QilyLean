@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-11-01T00:00:00.000Z",
-  "total_before": 386,
-  "total_after": 386,
+  "generated_at": "2026-11-08T00:00:00.000Z",
+  "total_before": 387,
+  "total_after": 387,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -5002,6 +5002,19 @@
           "title": "不等100%完美，先让60%方案落地：Kaizen与PDCA的持续改善逻辑",
           "score": 10151,
           "protected": true
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-11-02",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-11-08",
+          "title": "从精益看板到数字化运营：QilyLean精益生产管理平台与Excel数据模板",
+          "score": 184,
+          "protected": false
         }
       ],
       "removed_count": 0

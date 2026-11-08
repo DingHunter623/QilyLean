@@ -1,46 +1,102 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-11-01",
-  "briefPath": "qilylean/daily/2026-11-01.html",
-  "checkedAt": "2026-11-01T00:00:00.000Z",
+  "briefDate": "2026-11-08",
+  "briefPath": "qilylean/daily/2026-11-08.html",
+  "checkedAt": "2026-11-08T00:00:00.000Z",
   "candidates": [
     {
-      "term": "CT",
+      "term": "DIGITAL",
       "explanation": "",
       "explicit": false,
-      "source": "CT"
+      "source": "DIGITAL"
     },
     {
-      "term": "KAIZEN",
+      "term": "ERP",
       "explanation": "",
       "explicit": false,
-      "source": "KAIZEN"
+      "source": "ERP/MES/WMS"
     },
     {
-      "term": "PDCA",
+      "term": "FPY",
       "explanation": "",
       "explicit": false,
-      "source": "PDCA"
+      "source": "FPY"
     },
     {
-      "term": "SOP",
+      "term": "JSON",
       "explanation": "",
       "explicit": false,
-      "source": "SOP"
+      "source": "JSON"
+    },
+    {
+      "term": "KPI",
+      "explanation": "",
+      "explicit": false,
+      "source": "KPI"
+    },
+    {
+      "term": "LEAN",
+      "explanation": "",
+      "explicit": false,
+      "source": "LEAN"
+    },
+    {
+      "term": "MES",
+      "explanation": "",
+      "explicit": false,
+      "source": "ERP/MES/WMS"
+    },
+    {
+      "term": "OEE",
+      "explanation": "",
+      "explicit": false,
+      "source": "OEE"
+    },
+    {
+      "term": "OPERATIONS",
+      "explanation": "",
+      "explicit": false,
+      "source": "OPERATIONS"
+    },
+    {
+      "term": "SMED",
+      "explanation": "",
+      "explicit": false,
+      "source": "SMED"
+    },
+    {
+      "term": "UPPH",
+      "explanation": "",
+      "explicit": false,
+      "source": "UPPH"
     },
     {
       "term": "WIP",
       "explanation": "",
       "explicit": false,
       "source": "WIP"
+    },
+    {
+      "term": "WMS",
+      "explanation": "",
+      "explicit": false,
+      "source": "ERP/MES/WMS"
     }
   ],
   "coveredTerms": [
-    "CT",
-    "KAIZEN",
-    "PDCA",
-    "SOP",
-    "WIP"
+    "DIGITAL",
+    "ERP",
+    "FPY",
+    "JSON",
+    "KPI",
+    "LEAN",
+    "MES",
+    "OEE",
+    "OPERATIONS",
+    "SMED",
+    "UPPH",
+    "WIP",
+    "WMS"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
