@@ -480,14 +480,14 @@ def verify_semantics(value, row):
             require(False, 'Unadapted source form remains: ' + url)
         if tag == 'input':
             require(attrs.get('type', 'text') in {'search', 'hidden'}, 'Unadapted source API/contact input remains: ' + url)
-    if parity.mirror.is_date_brief(Path(row['source'])):
+    if re.fullmatch(r'qilylean/daily/\d{4}-\d{2}-\d{2}\.html', row['source']):
         date = Path(row['source']).stem
         require(url == '/briefs/archive/' + date + '/', 'Brief is assigned outside the knowledge brief archive: ' + url)
-        if row['source'] == 'qilylean/daily/2026-11-08-vision-to-execution.html':
+        if date == '2026-11-08':
             for marker in ('从梦想蓝图到改善成果', '没有想象力', '没有执行力', 'qv-flow', 'qv-cards', 'qv-table'):
-                require(marker in main, 'Approved special brief lost source content or VI structure: ' + marker)
-            require('https://qilylean.cn/briefs/archive/2026-11-08-vision-to-execution/' in value,
-                    'Approved special brief lost China-local canonical')
+                require(marker in main, 'Latest special-content issue lost source structure: ' + marker)
+            require('https://qilylean.cn/briefs/archive/2026-11-08/' in value,
+                    'Latest issue lost China-local canonical')
     if row['source'] == 'index.html':
         plain = html.unescape(re.sub(r'<[^>]+>', ' ', main))
         require(not parity.COMMERCIAL_COPY.search(plain), 'Commercial transaction copy remains in the cloned homepage')
