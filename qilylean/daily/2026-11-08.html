@@ -172,6 +172,10 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
 #qily-lecture .deliverable{margin-top:12px;background:var(--lec-surface2);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--lec-ink2)}
 #qily-lecture .deliverable b{color:var(--lec-brand)}
 #qily-lecture .chapter.sub-flash{box-shadow:0 0 0 2px var(--lec-gold)}
+/* v2.4 follow-the-article: the original section being lectured gets a gold outline while it is current. */
+.lec-follow{outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px}
+#qilyLecPlayer .p-follow{display:inline-flex;margin:8px 0 0 0;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer .p-follow[aria-pressed="false"]{opacity:.6}
 #qilyLecPlayer{position:fixed;left:0;right:0;bottom:var(--qily-dock-footer-h,50px);z-index:50;background:var(--lec-player-bg);color:var(--lec-player-ink);border-top:3px solid var(--lec-gold);box-shadow:0 -10px 34px rgba(5,18,30,.35)}
 #qilyLecPlayer{transition:transform .2s ease,opacity .2s ease}
 #qilyLecPlayer.qily-lec-collapsed{transform:translateY(120%);opacity:0;pointer-events:none}
@@ -264,7 +268,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <p><a id="qilyLectureCta" href="#qily-lecture">▶ 收听讲课音频 · 全文十段，约 11 分钟</a></p></div></section>
 <nav class="lean-brief-toc module-inner" aria-label="本期目录"><a href="#section-1">核心判断</a><a href="#section-2">工程蓝图</a><a href="#section-3">实现路径</a><a href="#section-4">教学推演</a><a href="#section-5">量化验证</a><a href="#section-6">90天行动</a><a href="#section-7">管理观点</a><a href="#qily-lecture">讲课音频</a></nav>
 <article class="post knowledge-brief-article" id="2026-11-08" data-brief-title="从梦想蓝图到改善成果：想象力与执行力的工程闭环" data-brief-summary="没有想象力，就很难有突破性的规划；没有执行力，再好的规划也无法创造价值。以理想状态、工程数据、Pilot验证和PDCA标准化构建从愿景到制造价值的闭环。" data-brief-theme="愿景规划与工程执行">
-<section class="module-section knowledge-brief-section"><div class="module-inner lean-brief-copy">
+<section id="section-0" class="module-section knowledge-brief-section"><div class="module-inner lean-brief-copy">
 <p>在制造企业里，有些人善于发现问题，却难以想象另一种更好的运行方式；有些人擅长描绘未来，却迟迟不能把想法转化为工艺、产线和管理机制。真正具有创造力的工程管理，必须把两种能力结合起来。</p>
 <!-- QILY-DAILY-TERMINOLOGY:START -->
 <div class="checklist brief-terminology-audit" data-daily-terminology-audit="2026-11-08">
@@ -350,7 +354,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <section class="brief-feedback brief-message-only" data-brief-feedback data-brief-date="2026-11-08" data-brief-title="从梦想蓝图到改善成果：想象力与执行力的工程闭环" data-brief-url="https://qilylean.com/qilylean/daily/2026-11-08.html" aria-labelledby="briefMessageTitle"><div class="brief-feedback-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefMessageTitle">留言交流</h2><p>欢迎交流从愿景、工程规划到Pilot验证、标准化交付的实践经验。</p></div><form class="brief-inline-message" data-brief-message-form><div class="brief-inline-message-heading"><strong>本期留言</strong><span>来源简报：2026-11-08｜从梦想蓝图到改善成果：想象力与执行力的工程闭环</span></div><label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label><label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label><label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问或建议"></textarea></label><label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label><div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/qilylean/daily-insights.html">返回简报目录</a></div></form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div><p class="brief-feedback-privacy">留言正文不会在公开页面展示，仅用于回复与后续交流。</p></section>
 <section id="qily-lecture" class="module-section knowledge-brief-section" aria-labelledby="qilyLectureTitle">
 <div class="module-inner lean-brief-copy"><div class="module-heading"><h2 id="qilyLectureTitle">讲课音频 · 全文重讲版</h2></div>
-<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
+<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。播放时原文也会跟着讲课自动滚动到正在讲的那一段，正在讲的那一段会描金框标出来；点播放器里的“跟随原文”可以开关跟随，你自己滚动页面后，本段不再自动抢，到下一段再跟上。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
 <div id="qilyLecChapters"></div>
 <div aria-hidden="true" style="height:200px"></div>
 </div>
@@ -367,6 +371,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 </div>
 <div class="p-seek"><span id="qilyLecCurTime">0:00</span><input type="range" id="qilyLecSeek" min="0" max="100" step="0.1" value="0" aria-label="播放进度" /><span id="qilyLecDurTime">0:00</span></div>
 <div class="p-sub" id="qilyLecSub" role="button" tabindex="0" aria-label="字幕：点一下定位到原文段落"><div class="s-cur" id="qilyLecSubCur">点播放开始，字幕会跟读同步显示。</div><div class="s-next" id="qilyLecSubNext">点字幕可定位到原文段落</div></div>
+<button class="p-follow" id="qilyLecFollowBtn" aria-pressed="true">跟随原文：开</button>
 <button class="p-toggle" id="qilyLecCtlToggle" aria-expanded="false">语速 / 音调 / 音量设置</button>
 <div class="p-controls" id="qilyLecControls">
 <div class="ctl"><label>语速 <output id="qilyLecSpeedOut">1.00×</output></label><input type="range" id="qilyLecSpeed" min="0.5" max="2" step="0.05" value="1" aria-label="语速" /></div>
@@ -408,6 +413,10 @@ var CHAPTERS = [
         { step:"收尾", title:"管理观点：仰望未来，也要站稳现场", src:"assets/audio/2026-11-08/full09.mp3.b64",
           text:"最后一部分，是QilyLean的管理观点，仰望未来，也要站稳现场。用一句话总结，以梦想家的眼光看未来，以工程师的思维绘蓝图，以实干家的行动创造现实。真正的想象力，不是让目标脱离事实，而是让我们不再把现状误当作极限。真正的执行力，也不是不计代价地行动，而是把目标转换成能交付、能验证、能复用的制造价值。愿景要有高度，规划要有逻辑，执行要有节奏，结果要有证据。理想状态不是一次抵达的终点，而是推动组织持续改善的方向。IE的精髓，永远有更好的方法。同学们，这堂课的作业留一个，请你写下你所在产线的理想状态，用产能、一次合格率和交期三个数字表达，再写出第一步你明天就能做的现场调查动作。下课。" }
       ];
+      /* v2.4: where each lecture chapter lives in the ORIGINAL article text.
+         0 开场 -> hero title, 1 引子 -> first article section, 2 核心判断 ->
+         the thesis box, 3-9 -> article sections 1-7 in order. */
+      var CHAPTER_ANCHORS = ['#briefTitle', '#section-0', '.qv-thesis', '#section-1', '#section-2', '#section-3', '#section-4', '#section-5', '#section-6', '#section-7'];
 var audio = document.getElementById('qilyLecAudio');
 
       var current = 0, speed = 1, pitch = 0;
@@ -558,6 +567,7 @@ var audio = document.getElementById('qilyLecAudio');
         updateSubtitle(true);
         document.querySelectorAll('#qily-lecture .chapter').forEach(function(el, j){ el.classList.toggle('active', j === i); });
         document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === i && !audio.paused) ? '⏸ 播放中' : '▶ 播放本段'; });
+        followChapter(i, autoplay || !audio.paused);
         if (ch.blobUrl){
           audio.src = ch.blobUrl;
           audio.load();
@@ -592,7 +602,7 @@ var audio = document.getElementById('qilyLecAudio');
         else loadChapter(i, true);
       });
 
-      audio.addEventListener('play', function(){ setPlayUI(true); preloadChapter(current + 1); });
+      audio.addEventListener('play', function(){ setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
       audio.addEventListener('pause', function(){ setPlayUI(false); });
       audio.addEventListener('loadedmetadata', function(){
         document.getElementById('qilyLecDurTime').textContent = fmt(audio.duration);
@@ -688,6 +698,56 @@ var audio = document.getElementById('qilyLecAudio');
         sub.addEventListener('click', jumpToCard);
         sub.addEventListener('keydown', function(e){
           if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); jumpToCard(); }
+        });
+      })();
+
+      /* ---- v2.4 follow-the-article: scroll the original text in sync ----
+         While the lecture plays, the matching original section scrolls into
+         view and gets a gold outline, so the reader can follow the article
+         without staying in the lecture section. Chapter-level sync only:
+         the lecture is a re-teaching, not a verbatim reading, so sentences
+         have no one-to-one article anchor. A manual scroll suspends the
+         follow for the current chapter only; the next chapter resumes it.
+         The toggle is remembered per browser. */
+      var followOn = true, followSuspended = false, followTarget = null, followTimer = null;
+      try{ if (localStorage.getItem('qilyLecFollow') === '0') followOn = false; }catch(e){}
+      function followLabel(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        b.setAttribute('aria-pressed', followOn ? 'true' : 'false');
+        b.textContent = followOn ? '跟随原文：开' : '跟随原文：关';
+      }
+      function scrollToArticle(i){
+        if (!followOn || followSuspended) return;
+        var sel = CHAPTER_ANCHORS[i];
+        var el = sel ? document.querySelector(sel) : null;
+        if (!el) return;
+        if (followTarget && followTarget !== el) followTarget.classList.remove('lec-follow');
+        followTarget = el;
+        el.classList.add('lec-follow');
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+        if (followTimer) clearTimeout(followTimer);
+        followTimer = setTimeout(function(){ if (followTarget === el) el.classList.remove('lec-follow'); }, 6000);
+      }
+      function followChapter(i, playing){
+        followSuspended = false;
+        if (playing) scrollToArticle(i);
+      }
+      ['wheel', 'touchmove'].forEach(function(ev){
+        window.addEventListener(ev, function(){
+          if (!audio.paused) followSuspended = true;
+        }, {passive: true});
+      });
+      (function(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        followLabel();
+        b.addEventListener('click', function(){
+          followOn = !followOn;
+          try{ localStorage.setItem('qilyLecFollow', followOn ? '1' : '0'); }catch(e){}
+          followLabel();
+          if (followOn && !audio.paused){ followSuspended = false; scrollToArticle(current); }
         });
       })();
 
