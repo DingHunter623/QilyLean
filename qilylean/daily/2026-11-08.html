@@ -499,6 +499,16 @@ var audio = document.getElementById('qilyLecAudio');
         if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
         loadChapter(i, autoplay);
       }
+      /* A rapid second tap on prev/next (within 1s) is one intended step, not
+         two: ignore it. Deliberate steps more than 1s apart still work, and
+         auto-advance on chapter end bypasses this guard. */
+      var lastNavAt = 0;
+      function navGuard(){
+        var now = Date.now();
+        if (now - lastNavAt < 1000) return false;
+        lastNavAt = now;
+        return true;
+      }
 
       /* build chapter cards */
       var list = document.getElementById('qilyLecChapters');
@@ -573,8 +583,8 @@ var audio = document.getElementById('qilyLecAudio');
         if (!audio.src) { loadChapter(current, true); return; }
         if (audio.paused) safePlay(); else audio.pause();
       });
-      document.getElementById('qilyLecPrevBtn').addEventListener('click', function(){ goTo(current - 1, true); });
-      document.getElementById('qilyLecNextBtn').addEventListener('click', function(){ goTo(current + 1, true); });
+      document.getElementById('qilyLecPrevBtn').addEventListener('click', function(){ if (navGuard()) goTo(current - 1, true); });
+      document.getElementById('qilyLecNextBtn').addEventListener('click', function(){ if (navGuard()) goTo(current + 1, true); });
       list.addEventListener('click', function(e){
         var b = e.target.closest('[data-play]'); if(!b) return;
         var i = parseInt(b.dataset.play, 10);
