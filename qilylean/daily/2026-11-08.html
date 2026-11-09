@@ -172,8 +172,8 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
 #qily-lecture .deliverable{margin-top:12px;background:var(--lec-surface2);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--lec-ink2)}
 #qily-lecture .deliverable b{color:var(--lec-brand)}
 #qily-lecture .chapter.sub-flash{box-shadow:0 0 0 2px var(--lec-gold)}
-/* v2.4 follow-the-article: the original section being lectured gets a gold outline while it is current. */
-.lec-follow{outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px}
+/* v2.4 follow-the-article: the original section being lectured gets a light-gold background (kept for the whole chapter) plus a gold outline. */
+.lec-follow{background:rgba(255,227,155,.38) !important;outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px;transition:background-color .2s ease}
 #qilyLecPlayer .p-follow{display:inline-flex;margin:8px 0 0 0;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
 #qilyLecPlayer .p-follow[aria-pressed="false"]{opacity:.6}
 #qilyLecPlayer{position:fixed;left:0;right:0;bottom:var(--qily-dock-footer-h,50px);z-index:50;background:var(--lec-player-bg);color:var(--lec-player-ink);border-top:3px solid var(--lec-gold);box-shadow:0 -10px 34px rgba(5,18,30,.35)}
@@ -354,7 +354,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <section class="brief-feedback brief-message-only" data-brief-feedback data-brief-date="2026-11-08" data-brief-title="从梦想蓝图到改善成果：想象力与执行力的工程闭环" data-brief-url="https://qilylean.com/qilylean/daily/2026-11-08.html" aria-labelledby="briefMessageTitle"><div class="brief-feedback-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefMessageTitle">留言交流</h2><p>欢迎交流从愿景、工程规划到Pilot验证、标准化交付的实践经验。</p></div><form class="brief-inline-message" data-brief-message-form><div class="brief-inline-message-heading"><strong>本期留言</strong><span>来源简报：2026-11-08｜从梦想蓝图到改善成果：想象力与执行力的工程闭环</span></div><label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label><label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label><label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问或建议"></textarea></label><label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label><div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/qilylean/daily-insights.html">返回简报目录</a></div></form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div><p class="brief-feedback-privacy">留言正文不会在公开页面展示，仅用于回复与后续交流。</p></section>
 <section id="qily-lecture" class="module-section knowledge-brief-section" aria-labelledby="qilyLectureTitle">
 <div class="module-inner lean-brief-copy"><div class="module-heading"><h2 id="qilyLectureTitle">讲课音频 · 全文重讲版</h2></div>
-<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。播放时原文也会跟着讲课自动滚动到正在讲的那一段，正在讲的那一段会描金框标出来；点播放器里的“跟随原文”可以开关跟随，你自己滚动页面后，本段不再自动抢，到下一段再跟上。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
+<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。播放时原文也会跟着讲课自动滚动到正在讲的那一段，正在讲的那一段会以浅金色底色标出来；点播放器里的“跟随原文”可以开关跟随，你自己滚动页面后，本段不再自动抢，到下一段再跟上。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
 <div id="qilyLecChapters"></div>
 <div aria-hidden="true" style="height:200px"></div>
 </div>
@@ -703,13 +703,14 @@ var audio = document.getElementById('qilyLecAudio');
 
       /* ---- v2.4 follow-the-article: scroll the original text in sync ----
          While the lecture plays, the matching original section scrolls into
-         view and gets a gold outline, so the reader can follow the article
-         without staying in the lecture section. Chapter-level sync only:
+         view and gets a light-gold background (kept for the whole chapter,
+         moving to the next section when the chapter changes), so the reader
+         can follow the article without staying in the lecture section. Chapter-level sync only:
          the lecture is a re-teaching, not a verbatim reading, so sentences
          have no one-to-one article anchor. A manual scroll suspends the
          follow for the current chapter only; the next chapter resumes it.
          The toggle is remembered per browser. */
-      var followOn = true, followSuspended = false, followTarget = null, followTimer = null;
+      var followOn = true, followSuspended = false, followTarget = null;
       try{ if (localStorage.getItem('qilyLecFollow') === '0') followOn = false; }catch(e){}
       function followLabel(){
         var b = document.getElementById('qilyLecFollowBtn');
@@ -727,8 +728,6 @@ var audio = document.getElementById('qilyLecAudio');
         el.classList.add('lec-follow');
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
-        if (followTimer) clearTimeout(followTimer);
-        followTimer = setTimeout(function(){ if (followTarget === el) el.classList.remove('lec-follow'); }, 6000);
       }
       function followChapter(i, playing){
         followSuspended = false;
@@ -747,6 +746,7 @@ var audio = document.getElementById('qilyLecAudio');
           followOn = !followOn;
           try{ localStorage.setItem('qilyLecFollow', followOn ? '1' : '0'); }catch(e){}
           followLabel();
+          if (!followOn && followTarget) followTarget.classList.remove('lec-follow');
           if (followOn && !audio.paused){ followSuspended = false; scrollToArticle(current); }
         });
       })();
