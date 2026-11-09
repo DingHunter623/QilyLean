@@ -181,7 +181,7 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
 #qilyLecMini.show{display:flex}
 #qilyLecMini .m-play{flex:none;width:34px;height:34px;border-radius:50%;border:none;background:var(--lec-gold);color:#073c47;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer}
 #qilyLecMini .m-title{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#qilyLecMini .m-expand{flex:none;font-size:15px;color:var(--lec-gold-light);font-weight:900}
+#qilyLecMini .m-expand{flex:none;font-size:13px;color:var(--lec-gold-light);font-weight:900;white-space:nowrap}
 #qilyLecPlayer .player-inner{max-width:880px;margin:0 auto;padding:10px 16px 10px}
 #qilyLecPlayer .p-row{display:flex;align-items:center;gap:10px}
 #qilyLecPlayer .p-now{flex:1;min-width:0}
@@ -350,7 +350,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <section class="brief-feedback brief-message-only" data-brief-feedback data-brief-date="2026-11-08" data-brief-title="从梦想蓝图到改善成果：想象力与执行力的工程闭环" data-brief-url="https://qilylean.com/qilylean/daily/2026-11-08.html" aria-labelledby="briefMessageTitle"><div class="brief-feedback-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefMessageTitle">留言交流</h2><p>欢迎交流从愿景、工程规划到Pilot验证、标准化交付的实践经验。</p></div><form class="brief-inline-message" data-brief-message-form><div class="brief-inline-message-heading"><strong>本期留言</strong><span>来源简报：2026-11-08｜从梦想蓝图到改善成果：想象力与执行力的工程闭环</span></div><label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label><label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label><label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问或建议"></textarea></label><label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label><div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/qilylean/daily-insights.html">返回简报目录</a></div></form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div><p class="brief-feedback-privacy">留言正文不会在公开页面展示，仅用于回复与后续交流。</p></section>
 <section id="qily-lecture" class="module-section knowledge-brief-section" aria-labelledby="qilyLectureTitle">
 <div class="module-inner lean-brief-copy"><div class="module-heading"><h2 id="qilyLectureTitle">讲课音频 · 全文重讲版</h2></div>
-<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器不用时会自己收起来，变成右下角一个小按钮，点一下随时弹回来；也可以点播放器右上角的“收起”马上收起来。</p>
+<p class="qily-lecture-intro">本篇简报配有全文讲课音频：从核心判断讲起，依次走完想象力、蓝图与工程方案、八步闭环、教学推演、执行证据、九十天路线和管理观点，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十段，约 11 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
 <div id="qilyLecChapters"></div>
 <div aria-hidden="true" style="height:200px"></div>
 </div>
@@ -377,7 +377,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 </div>
 </div>
 </div>
-<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">▴</span></div>
+<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">展开</span></div>
 <audio id="qilyLecAudio" preload="metadata"></audio>
 <script>
 var CHAPTERS = [
@@ -645,7 +645,6 @@ var audio = document.getElementById('qilyLecAudio');
       var miniPlayEl = document.getElementById('qilyLecMiniPlay');
       var miniTitleEl = document.getElementById('qilyLecMiniTitle');
       var collapseBtn = document.getElementById('qilyLecCollapseBtn');
-      var IDLE_MS = 10000, idleTimer = null;
       function syncMini(){
         if (!miniTitleEl || !miniPlayEl) return;
         var ch = CHAPTERS[current];
@@ -655,15 +654,9 @@ var audio = document.getElementById('qilyLecAudio');
       function setCollapsed(collapsed, manual){
         playerEl.classList.toggle('qily-lec-collapsed', collapsed);
         miniEl.classList.toggle('show', collapsed);
-        collapseBtn.textContent = collapsed ? '▴ 展开' : '▾ 收起';
+        collapseBtn.textContent = collapsed ? '展开' : '▾ 收起';
         if (manual){ try{ localStorage.setItem('qilyLecCollapsed', collapsed ? '1' : '0'); }catch(e){} }
-        if (collapsed){ clearTimeout(idleTimer); idleTimer = null; }
-        else armIdleTimer();
         syncMini();
-      }
-      function armIdleTimer(){
-        clearTimeout(idleTimer);
-        idleTimer = setTimeout(function(){ setCollapsed(true, false); }, IDLE_MS);
       }
       collapseBtn.addEventListener('click', function(){ setCollapsed(true, true); });
       miniEl.addEventListener('click', function(e){
@@ -677,15 +670,9 @@ var audio = document.getElementById('qilyLecAudio');
       miniEl.addEventListener('keydown', function(e){
         if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setCollapsed(false, true); }
       });
-      playerEl.addEventListener('pointerenter', function(){ clearTimeout(idleTimer); idleTimer = null; });
-      playerEl.addEventListener('pointerleave', function(){ if (!playerEl.classList.contains('qily-lec-collapsed')) armIdleTimer(); });
-      playerEl.addEventListener('pointerdown', function(){ armIdleTimer(); });
-      playerEl.addEventListener('focusin', function(){ clearTimeout(idleTimer); idleTimer = null; });
-      playerEl.addEventListener('focusout', function(){ if (!playerEl.classList.contains('qily-lec-collapsed')) armIdleTimer(); });
       try{
         if (localStorage.getItem('qilyLecCollapsed') === '1'){ setCollapsed(true, false); }
-        else armIdleTimer();
-      }catch(e){ armIdleTimer(); }
+      }catch(e){}
 
       /* ---- subtitle click: jump to the matching chapter card in the article ---- */
       (function(){
