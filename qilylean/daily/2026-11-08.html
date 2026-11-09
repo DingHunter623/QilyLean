@@ -377,7 +377,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 </div>
 </div>
 </div>
-<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">展开</span></div>
+<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">▴ 展开</span></div>
 <audio id="qilyLecAudio" preload="metadata"></audio>
 <script>
 var CHAPTERS = [
@@ -654,7 +654,7 @@ var audio = document.getElementById('qilyLecAudio');
       function setCollapsed(collapsed, manual){
         playerEl.classList.toggle('qily-lec-collapsed', collapsed);
         miniEl.classList.toggle('show', collapsed);
-        collapseBtn.textContent = collapsed ? '展开' : '▾ 收起';
+        collapseBtn.textContent = collapsed ? '▴ 展开' : '▾ 收起';
         if (manual){ try{ localStorage.setItem('qilyLecCollapsed', collapsed ? '1' : '0'); }catch(e){} }
         syncMini();
       }
