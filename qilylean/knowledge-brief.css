@@ -123,8 +123,10 @@ html body.qily-knowledge-brief-page .knowledge-brief-meta span {
 
 .knowledge-brief-map a:nth-child(2n) { border-top-color: var(--brief-copper); }
 .knowledge-brief-map a:nth-child(3n) { border-top-color: #9e4a34; }
+/* 2026-11-09 hover-lift removal: translateY on :hover lets a map link slide out
+   from under a stationary cursor at its edge, toggling :hover on/off in a loop. */
 .knowledge-brief-map a:hover,
-.knowledge-brief-map a:focus-visible { transform: translateY(-2px); border-color: var(--brief-teal); box-shadow: 0 10px 22px rgba(15, 75, 90, .11); outline: none; }
+.knowledge-brief-map a:focus-visible { border-color: var(--brief-teal); box-shadow: 0 10px 22px rgba(15, 75, 90, .11); outline: none; }
 .knowledge-brief-map small { color: var(--brief-copper); font-size: 11px; font-weight: 950; letter-spacing: .08em; }
 .knowledge-brief-map strong { margin-top: 3px; font-size: 14px; line-height: 1.35; overflow-wrap: anywhere; }
 
@@ -321,7 +323,6 @@ html:root body.qily-knowledge-brief-page .brief-adjacent > a:focus-visible {
   background-color: #ffe39b !important;
   border-color: var(--brief-copper) !important;
   box-shadow: 0 8px 18px rgba(202, 161, 95, .22) !important;
-  transform: translateY(-1px) !important;
   outline: none !important;
 }
 html:root body.qily-knowledge-brief-page .brief-adjacent > a:active {

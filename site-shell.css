@@ -41,6 +41,9 @@ html.qily-shell-pending body {
 .topbar > a.brand,
 .top > a.brand { text-decoration: none; }
 
+/* 2026-11-09 hover-lift removal: a translateY on :hover lets the link slide
+   out from under a stationary cursor at its edge, toggling :hover on/off in a
+   loop (menu shake / page freeze). Keep colour, background and shadow feedback. */
 .nav a:hover,
 .nav a:focus-visible,
 .site-nav a:hover,
@@ -50,7 +53,6 @@ html.qily-shell-pending body {
   border-color: var(--qily-forest) !important;
   box-shadow: 0 8px 18px rgba(15, 75, 90, .22);
   outline: none;
-  transform: translateY(-2px);
 }
 
 .nav a:active,
@@ -398,7 +400,6 @@ body:has(.hero:not(:has(.hero-grid))) {
   background: var(--qily-gold);
   box-shadow: 0 10px 24px rgba(7, 60, 71, .2);
   outline: none;
-  transform: translateY(-2px);
 }
 
 .module-section {
@@ -488,7 +489,7 @@ body:has(.hero:not(:has(.hero-grid))) {
 }
 .module-actions a.secondary { color: var(--qily-forest); background: #fff; border-color: var(--qily-line); }
 .module-actions a:hover,
-.module-actions a:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 75, 90, .18); outline: none; }
+.module-actions a:focus-visible { box-shadow: 0 8px 20px rgba(15, 75, 90, .18); outline: none; }
 
 .module-note { margin-top: 18px; padding: 16px 18px; border-left: 4px solid var(--qily-copper); color: #17443b; background: #eef8f6; font-weight: 850; }
 .module-footer { padding: 25px clamp(18px, 4vw, 58px); color: #d6e5df; background: #101916; }

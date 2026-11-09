@@ -424,7 +424,9 @@ html body :is(
     a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href],
     a[href][aria-label]:has(>img),a[href][aria-label]:has(>svg),a[href]:has(>img.qily-icon),a[href]:has(>svg.qily-icon)
   ):not(.qily-brand):hover{
-    transform:translateY(-2px) scale(1.01)!important;
+    /* 2026-11-09 hover-lift removal: translateY on :hover lets a nav/menu link
+       slide out from under a stationary cursor at its edge, toggling :hover
+       on/off in a loop (menu shake / page freeze). Keep shadow feedback. */
     box-shadow:0 10px 24px rgba(15,75,90,.18)!important;
     opacity:1!important;
   }

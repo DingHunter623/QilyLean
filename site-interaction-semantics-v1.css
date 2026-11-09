@@ -32,10 +32,12 @@ html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-li
 html body a.qily-route-action[data-qily-route-emphasis="true"]{
   box-shadow:0 4px 10px rgba(15,75,90,.08)!important;
 }
+/* 2026-11-09 hover-lift removal: translateY on :hover lets a nav link slide out
+   from under a stationary cursor at its edge, toggling :hover on/off in a loop
+   (menu shake / page freeze). Keep filter and shadow feedback. */
 html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions,.qily-global-nav,nav) a[href][data-qily-interaction="route"]:hover,
 html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-link,.nav-btn)[data-qily-interaction="route"]:hover,
 html body a.qily-route-action[data-qily-route-emphasis="true"]:hover{
-  transform:translateY(-1px)!important;
   filter:saturate(1.04)!important;
   box-shadow:0 9px 22px rgba(15,75,90,.20)!important;
 }
