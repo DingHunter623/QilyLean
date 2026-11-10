@@ -32,6 +32,8 @@ def collect(now):
         records = []
         for delta in range(13, -1, -1):
             day = clock.date() - dt.timedelta(days=delta)
+            if day < dt.date(2026, 10, 29):
+                continue  # Counter keys did not exist before rollout.
             slots = []
             for slot in range(4):
                 if day == clock.date() and slot > clock.hour // 6:
