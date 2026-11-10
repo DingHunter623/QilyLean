@@ -17,7 +17,7 @@ const STYLE='<style id="'+STYLE_ID+'" data-qily-brief-first-frame="dock-v1">'+
   'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"]'+
   '{position:fixed!important;top:auto!important;left:0!important;right:0!important;bottom:0!important;'+
   'width:100%!important;max-width:none!important;box-sizing:border-box!important;'+
-  'z-index:2147482000!important;display:flex!important;flex-wrap:nowrap!important;'+
+  'z-index:2147482000!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;'+
   'margin:0!important;transform:none!important;transition:none!important;'+
   'background:#0f4b5a!important;border-top:3px solid #c8a25a!important}'+
   'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"] .qily-float-btn'+
