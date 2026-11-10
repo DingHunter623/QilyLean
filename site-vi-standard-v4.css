@@ -267,8 +267,9 @@ html body header.en-header.qily-site-header .en-shell{
   flex-wrap:wrap!important;
 }
 
-/* 09 | Shared Dock: one instance, in document flow, no content overlay. */
-html body #floatDock.qily-float-dock,
+/* 09 | Legacy flow Dock only. Published first-paint V5.8 menu is fixed-bottom
+ * and must never inherit this old centered flow geometry at any load phase. */
+html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"]),
 html body .qily-float-dock.qily-vi-v4-flow-dock{
   position:relative!important;
   inset:auto!important;
@@ -289,7 +290,7 @@ html body .qily-float-dock.qily-vi-v4-flow-dock{
   box-shadow:var(--qily-shadow-sm)!important;
   transform:none!important;
 }
-html body #floatDock.qily-float-dock .qily-float-btn,
+html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"]) .qily-float-btn,
 html body .qily-float-dock.qily-vi-v4-flow-dock .qily-float-btn{
   flex:0 1 auto!important;
   width:auto!important;
@@ -326,15 +327,15 @@ html body [data-qily-product-interior="true"]{--qily-product-shell-radius:var(--
   html body main>section{padding-left:max(12px,env(safe-area-inset-left))!important;padding-right:max(12px,env(safe-area-inset-right))!important;}
   html body header.qily-site-header{width:calc(100% - 20px)!important;}
   html body header.qily-site-header .qily-web-translate{flex:1 1 170px!important;width:auto!important;max-width:100%!important;margin-left:0!important;}
-  html body #floatDock.qily-float-dock,
+  html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"]),
   html body .qily-float-dock.qily-vi-v4-flow-dock{width:calc(100% - 24px)!important;margin-block:18px!important;padding:10px!important;}
-  html body #floatDock.qily-float-dock .qily-float-btn,
+  html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"]) .qily-float-btn,
   html body .qily-float-dock.qily-vi-v4-flow-dock .qily-float-btn{flex:1 1 132px!important;}
 }
 @media (max-width:360px){
   html body header.qily-site-header,
   html body :is(.module-inner,.qily-ia-inner,.qily-asset-inner,.section-inner,.daily-inner,.page-inner,.content-inner,.main-inner,.footer-inner){width:calc(100% - 16px)!important;}
-  html body #floatDock.qily-float-dock,
+  html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"]),
   html body .qily-float-dock.qily-vi-v4-flow-dock{width:calc(100% - 16px)!important;}
 }
 
