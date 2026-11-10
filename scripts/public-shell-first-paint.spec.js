@@ -400,7 +400,7 @@ for(const [name,url] of firstFrameBriefs){
               }
             }
             frames++;
-            if(frames<180)requestAnimationFrame(sample);
+            if(frames<1200&&state.samples<90)requestAnimationFrame(sample);
           }
           requestAnimationFrame(sample);
         });
