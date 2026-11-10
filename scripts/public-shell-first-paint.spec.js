@@ -385,8 +385,12 @@ for(const [name,url] of firstFrameBriefs){
               if(style.display!=='none'&&style.visibility!=='hidden'&&rect.height>0){
                 state.samples++;
                 if(state.firstPaintAt===null)state.firstPaintAt=performance.now();
-                const gap=window.innerHeight-rect.bottom;
-                const invalid=all.length!==1||style.position!=='fixed'||Math.abs(gap)>2||Math.abs(rect.left)>2||Math.abs(rect.right-window.innerWidth)>2;
+                // CSS fixed-position geometry may exclude classic scrollbar tracks.
+                const expectedBottom=document.documentElement.clientHeight;
+                const expectedRight=document.documentElement.clientWidth;
+                const gap=Math.min(Math.abs(window.innerHeight-rect.bottom),Math.abs(expectedBottom-rect.bottom));
+                const sideGap=Math.min(Math.abs(window.innerWidth-rect.right),Math.abs(expectedRight-rect.right));
+                const invalid=all.length!==1||style.position!=='fixed'||gap>2||Math.abs(rect.left)>2||sideGap>2;
                 if(invalid&&state.violations.length<15)state.violations.push({
                   frame:frames,position:style.position,count:all.length,bottomGap:gap,
                   left:rect.left,right:rect.right,screen:window.innerWidth
