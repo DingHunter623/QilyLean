@@ -1,9 +1,21 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-11-08",
-  "briefPath": "qilylean/daily/2026-11-08.html",
-  "checkedAt": "2026-11-08T00:00:00.000Z",
+  "briefDate": "2026-11-10",
+  "briefPath": "qilylean/daily/2026-11-10.html",
+  "checkedAt": "2026-11-10T00:00:00.000Z",
   "candidates": [
+    {
+      "term": "A",
+      "explanation": "Accountable",
+      "explicit": true,
+      "source": "A（Accountable）"
+    },
+    {
+      "term": "AI",
+      "explanation": "",
+      "explicit": false,
+      "source": "AI"
+    },
     {
       "term": "CT",
       "explanation": "",
@@ -11,22 +23,16 @@
       "source": "CT"
     },
     {
-      "term": "ERP",
+      "term": "ECRS",
       "explanation": "",
       "explicit": false,
-      "source": "ERP/MES"
-    },
-    {
-      "term": "EXECUTION",
-      "explanation": "",
-      "explicit": false,
-      "source": "EXECUTION"
+      "source": "ECRS"
     },
     {
       "term": "FPY",
-      "explanation": "",
-      "explicit": false,
-      "source": "FPY"
+      "explanation": "首过直通率",
+      "explicit": true,
+      "source": "FPY（首过直通率）"
     },
     {
       "term": "IE",
@@ -35,16 +41,22 @@
       "source": "IE"
     },
     {
+      "term": "IT",
+      "explanation": "",
+      "explicit": false,
+      "source": "IT"
+    },
+    {
+      "term": "KAIZEN",
+      "explanation": "",
+      "explicit": false,
+      "source": "KAIZEN"
+    },
+    {
       "term": "KPI",
       "explanation": "",
       "explicit": false,
       "source": "KPI"
-    },
-    {
-      "term": "MES",
-      "explanation": "",
-      "explicit": false,
-      "source": "ERP/MES"
     },
     {
       "term": "PDCA",
@@ -53,16 +65,22 @@
       "source": "PDCA"
     },
     {
-      "term": "PFMEA",
+      "term": "PE",
       "explanation": "",
       "explicit": false,
-      "source": "PFMEA"
+      "source": "IE/PE"
     },
     {
-      "term": "PQCD",
+      "term": "PMC",
       "explanation": "",
       "explicit": false,
-      "source": "PQCD"
+      "source": "PMC"
+    },
+    {
+      "term": "R",
+      "explanation": "Responsible",
+      "explicit": true,
+      "source": "R（Responsible）"
     },
     {
       "term": "RACI",
@@ -90,15 +108,9 @@
     },
     {
       "term": "UPPH",
-      "explanation": "",
-      "explicit": false,
-      "source": "UPPH"
-    },
-    {
-      "term": "VSM",
-      "explanation": "",
-      "explicit": false,
-      "source": "VSM"
+      "explanation": "人时产出",
+      "explicit": true,
+      "source": "UPPH（人时产出）"
     },
     {
       "term": "WIP",
@@ -108,29 +120,33 @@
     }
   ],
   "coveredTerms": [
+    "A",
+    "AI",
     "CT",
-    "ERP",
-    "EXECUTION",
+    "ECRS",
     "FPY",
     "IE",
+    "IT",
+    "KAIZEN",
     "KPI",
-    "MES",
     "PDCA",
-    "PFMEA",
-    "PQCD",
+    "PE",
+    "PMC",
+    "R",
     "RACI",
     "SOP",
     "STEP",
     "TT",
     "UPPH",
-    "VSM",
     "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "01"
+    "PDCA",
+    "Kaizen",
+    "RACI"
   ],
   "status": "passed"
 }

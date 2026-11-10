@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-08",
+  "generatedAt": "2026-11-10",
   "schemaVersion": 1,
   "terminology": {
     "total": 195,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 387,
-    "latestDate": "2026-11-08",
-    "latestTheme": "愿景规划与工程执行",
-    "latestTitle": "从梦想蓝图到改善成果：想象力与执行力的工程闭环",
-    "latestSummary": "没有想象力，就很难有突破性的规划；没有执行力，再好的规划也无法创造价值。以理想状态、工程数据、Pilot验证和PDCA标准化构建从愿景到制造价值的闭环。",
-    "latestUrl": "/qilylean/daily/2026-11-08.html",
+    "total": 388,
+    "latestDate": "2026-11-10",
+    "latestTheme": "持续改善与跨职能协同",
+    "latestTitle": "改善没有终点，协同创造价值：从单点改善到组织共创的工程闭环",
+    "latestSummary": "改善没有终点，协同创造价值。以电子装配制造场景拆解跨部门协同、RACI责任、PDCA与标准维持循环、教学推演数据口径和90天行动机制，让改善从个体经验转化为组织长期能力。",
+    "latestUrl": "/qilylean/daily/2026-11-10.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
     "earliestDate": "2019-07-10",
@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 759,
-    "indexedPages": 660,
+    "indexedEntries": 760,
+    "indexedPages": 661,
     "terminologyTotal": 195,
-    "briefTotal": 387,
-    "latestBriefDate": "2026-11-08",
+    "briefTotal": 388,
+    "latestBriefDate": "2026-11-10",
     "sitemapLastmod": "2026-11-10"
   }
 }
