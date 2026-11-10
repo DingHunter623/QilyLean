@@ -13,6 +13,7 @@ on:
       - 'scripts/intl-traffic-kline.spec.js'
       - 'scripts/intl-about-traffic-vi.spec.js'
       - 'scripts/cn-traffic-kline.spec.js'
+      - 'scripts/traffic-partial-buckets.spec.js'
       - 'site-traffic-stats-v1.css'
       - 'cn-site/assets/site-traffic-stats-v1.js'
       - 'cn-site/assets/site-traffic-stats-v1.css'
@@ -29,7 +30,7 @@ concurrency:
 
 jobs:
   materialize:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
@@ -47,6 +48,7 @@ jobs:
           node --check scripts/intl-about-traffic-vi.spec.js
           node --check cn-site/assets/site-traffic-daily-kline-v1.js
           node --check scripts/cn-traffic-kline.spec.js
+          node --check scripts/traffic-partial-buckets.spec.js
           node --check cn-site/assets/site-traffic-stats-v1.js
           node --check scripts/materialize-qily-traffic-stats-v1.js
       - name: Smoke-test the public counter API using a separate health-check key
@@ -69,7 +71,7 @@ jobs:
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-          npx playwright test scripts/intl-traffic-kline.spec.js scripts/cn-traffic-kline.spec.js scripts/intl-about-traffic-vi.spec.js --workers=1 --reporter=line
+          npx playwright test scripts/intl-traffic-kline.spec.js scripts/cn-traffic-kline.spec.js scripts/traffic-partial-buckets.spec.js scripts/intl-about-traffic-vi.spec.js --workers=1 --reporter=line
 
       - name: Archive phone and desktop Kline visual evidence
         if: always()
