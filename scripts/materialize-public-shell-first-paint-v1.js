@@ -36,6 +36,17 @@ const dockTag=[
   '</nav>'
 ].join('\n');
 const spacerTag=`<div id="${DOCK_SPACER_ID}" aria-hidden="true"></div>`;
+// The fixed footer is physically positioned by its own HTML on 2026-11-10+
+// briefs. This survives an early legacy stylesheet and requires no JS handoff.
+// Do not lock responsive padding/gap: V5.8 media queries own those values.
+const BRIEF_INLINE_FIXED='position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;max-width:none!important;display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;margin:0!important;box-sizing:border-box!important;transform:none!important;z-index:2147482000!important;background:#0f4b5a!important;border-top:3px solid #c8a25a!important';
+function briefDockMarkup(relative){
+  const date=/^qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html$/.exec(relative);
+  if(!date||date[1]<'2026-11-10')return dockTag;
+  return dockTag.replace('data-qily-standalone-dock="v5.8"',
+    'style="'+BRIEF_INLINE_FIXED+'" data-qily-standalone-dock="v5.8"');
+}
+
 
 function isEligible(relative,source){
   if(relative.startsWith('cn-site/')||relative.startsWith('global-knowledge/')||relative==='links/cn-public/index.html'||relative==='tools/pure-ddz/index.html')return false;
@@ -92,7 +103,7 @@ function materialize(source,relative){
     next=next.replace(/<\/head\s*>/i,authorityLink+'\n</head>');
   }
 
-  next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+dockTag+'\n');
+  next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+briefDockMarkup(relative)+'\n');
   next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
   return next;
 }

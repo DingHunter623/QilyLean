@@ -126,6 +126,23 @@ if (sourceLatest >= '2026-11-10') {
     'New curated issue renders exactly one Dock');
   assert((latest.match(/id="qilyBriefDockFirstFrameV1"/g)||[]).length===1,
     'New curated issue renders exactly one early Dock rule');
+
+  const dockStart=latest.match(/<nav\b[^>]*id=["']floatDock["'][^>]*>/i);
+  assert(dockStart,'New curated issue retains canonical navigation element');
+  const inlineDock=(dockStart[0].match(/\bstyle=["']([^"']+)["']/)||[])[1]||'';
+  for(const required of [
+    'position:fixed!important','left:0!important','right:0!important','bottom:0!important',
+    'justify-content:flex-start!important','margin:0!important','transform:none!important',
+  ]){
+    includes(inlineDock,required,'HTML-first Dock must not depend on asynchronous CSS/JS');
+  }
+  const formalCss=read('site-vi-standard-v4.css');
+  includes(formalCss,
+    'html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"])',
+    'Old centered VI flow styles must exclude fixed V5.8 Dock');
+  assert(!/html body #floatDock\.qily-float-dock(?!:not\()/i.test(formalCss),
+    'Legacy VI flow CSS must never recapture the published fixed Dock');
+
 }
 matches(latest, /site-navigation\.js\?v=[^"']+/, 'Latest retained page loads the versioned navigation wrapper');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
