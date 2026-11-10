@@ -136,6 +136,16 @@ if (sourceLatest >= '2026-11-10') {
   ]){
     includes(inlineDock,required,'HTML-first Dock must not depend on asynchronous CSS/JS');
   }
+
+  assert(dockStart[0].includes('data-qily-brief-dock-pending="v1"'),
+    'New curated Dock must start in pending state');
+  for(const guard of ['visibility:hidden!important','opacity:0!important','pointer-events:none!important']) {
+    includes(inlineDock,guard,'New curated Dock must be invisible until buttons are fully laid out');
+  }
+  includes(earlyStyle[1],'data-qily-brief-dock-pending="v1"]{visibility:hidden!important',
+    'Critical first-paint CSS must suppress any stacked interim Dock');
+  includes(latest,'&brief=20261110-gated-reveal-v1',
+    'New curated Dock must bypass the old cached runtime');
   const formalCss=read('site-vi-standard-v4.css');
   includes(formalCss,
     'html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"])',
