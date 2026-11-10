@@ -100,49 +100,7 @@ function targetButton(event){return event.target&&event.target.closest?event.tar
  * runtime has normalized every action and all external CSS has finished.
  * Chinese footer and other public pages do not carry this opt-in marker.
  */
-function scheduleBriefDockReveal(){
- var dock=d.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
- if(!dock||dock.dataset.qilyBriefRevealScheduled==='v1')return;
- dock.dataset.qilyBriefRevealScheduled='v1';
- var attempts=0;
- function inspect(){
-  var live=d.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
-  if(!live)return;
-  var styles=w.getComputedStyle(live),rect=live.getBoundingClientRect();
-  var controls=Array.prototype.slice.call(live.querySelectorAll('.qily-float-btn[data-action]'));
-  var y=controls.length?controls[0].getBoundingClientRect().top:0;
-  var previousRight=-1;
-  var row=controls.length===4&&controls.every(function(btn){
-    var box=btn.getBoundingClientRect();
-    var valid=box.width>4&&box.height>4&&Math.abs(box.top-y)<=3&&box.left>=previousRight-3;
-    previousRight=box.right;
-    return valid;
-  });
-  var targetRight=Math.min(w.innerWidth,d.documentElement.clientWidth);
-  var correct=styles.position==='fixed'&&styles.display==='flex'&&styles.flexDirection==='row'&&
-    styles.flexWrap==='nowrap'&&Math.abs(rect.left)<=2&&
-    Math.min(Math.abs(w.innerHeight-rect.bottom),Math.abs(d.documentElement.clientHeight-rect.bottom))<=2&&
-    Math.min(Math.abs(w.innerWidth-rect.right),Math.abs(targetRight-rect.right))<=3&&
-    d.querySelectorAll('#floatDock').length===1&&row&&w.__qilyDockV58CaptureBound===true;
-  if(!correct){
-    if(++attempts<120){w.requestAnimationFrame(inspect);}
-    else{live.dataset.qilyBriefDockState='blocked';}
-    return;
-  }
-  live.style.removeProperty('visibility');
-  live.style.removeProperty('opacity');
-  live.style.removeProperty('pointer-events');
-  live.dataset.qilyBriefDockReady='v1';
-  live.removeAttribute('data-qily-brief-dock-pending');
- }
- function afterAssets(){
-  w.requestAnimationFrame(function(){w.requestAnimationFrame(inspect);});
- }
- if(d.readyState==='complete')afterAssets();
- else w.addEventListener('load',afterAssets,{once:true});
-}
-
-function boot(){if(isExcluded())return;normalizeDock();installAuthoritativeEvents();scheduleBriefDockReveal();}if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();d.addEventListener('qily:shell-ready',boot);d.addEventListener('qily:softnavigate',boot);d.addEventListener('qily:language-change',boot);w.addEventListener('pageshow',boot,{passive:true});w.addEventListener('resize',boot,{passive:true});
+function boot(){if(isExcluded())return;normalizeDock();installAuthoritativeEvents();}if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();d.addEventListener('qily:shell-ready',boot);d.addEventListener('qily:softnavigate',boot);d.addEventListener('qily:language-change',boot);w.addEventListener('pageshow',boot,{passive:true});w.addEventListener('resize',boot,{passive:true});
 })(document,window);
 
 /* QILY-CN-PUBLIC-FOOTER-RUNTIME-CLOSURE-20261023 */
