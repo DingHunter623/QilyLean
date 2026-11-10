@@ -1,0 +1,29 @@
+name: QilyLean traffic reliability PR
+on:
+  pull_request:
+    paths:
+      - 'site-traffic-daily-kline-v1.js'
+      - 'cn-site/assets/site-traffic-daily-kline-v1.js'
+      - 'scripts/traffic-partial-buckets.spec.js'
+      - '.github/workflows/qily-traffic-regression-pr.yml'
+permissions:
+  contents: read
+jobs:
+  regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Check JavaScript syntax
+        run: |
+          node --check site-traffic-daily-kline-v1.js
+          node --check cn-site/assets/site-traffic-daily-kline-v1.js
+          node --check scripts/traffic-partial-buckets.spec.js
+      - name: Test both-site traffic charts against mocked API failures
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+          npx playwright test scripts/traffic-partial-buckets.spec.js scripts/cn-traffic-kline.spec.js scripts/intl-traffic-kline.spec.js --workers=1 --reporter=line
