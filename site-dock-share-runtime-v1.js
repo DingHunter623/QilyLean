@@ -92,7 +92,55 @@ function renderMainlandSearch(message){
 }
 function legacyCopy(text){return new Promise(function(resolve,reject){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.focus();area.select();var ok=false;try{ok=d.execCommand('copy')===true;}catch(error){}area.remove();if(ok)resolve();else reject(new Error('Clipboard copy failed'));});}
 function copyText(text){return navigator.clipboard&&w.isSecureContext?navigator.clipboard.writeText(text).catch(function(){return legacyCopy(text);}):legacyCopy(text);}function toast(message){var node=d.getElementById('qilyDockStandaloneToastV5');if(!node){node=d.createElement('div');node.id='qilyDockStandaloneToastV5';node.setAttribute('role','status');node.style.cssText='position:fixed;left:50%;bottom:calc(var(--qily-dock-footer-h,50px) + 14px + env(safe-area-inset-bottom));z-index:2147483000;transform:translateX(-50%);padding:9px 14px;border-radius:8px;background:#073c47;color:#fff;font:700 14px/1.2 sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:none;opacity:0;transition:opacity .16s';(d.body||d.documentElement).appendChild(node);}node.textContent=message;node.style.opacity='1';clearTimeout(toast.timer);toast.timer=setTimeout(function(){node.style.opacity='0';},2200);}function openSearch(){if(mainlandFooter()){openMainlandSearch();return;}if(w.QilySiteSearch&&typeof w.QilySiteSearch.open==='function'){w.QilySiteSearch.open();return;}var existing=d.getElementById('qilySiteSearchStandaloneV5');if(existing)return;var script=d.createElement('script');script.id='qilySiteSearchStandaloneV5';script.src='/site-search.js?v=20260826-search-navigation-v2';script.addEventListener('load',function(){if(w.QilySiteSearch)w.QilySiteSearch.open();else toast('本站搜索加载失败');},{once:true});script.addEventListener('error',function(){toast('本站搜索加载失败');},{once:true});(d.body||d.documentElement).appendChild(script);}function shareCurrent(){var title=d.title||'QilyLean｜启力精益',url=w.location.href,text=title+'\n'+url;copyText(text).then(function(){toast(navigator.share?'标题与网址已复制，正在打开系统分享':'标题与网址已复制，可直接粘贴分享');if(navigator.share){return navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError'){toast('已复制，可直接粘贴分享');return;}toast('已复制，可粘贴到微信、微博等应用');});}}).catch(function(){toast('复制失败，请手动复制地址栏网址');if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){});});}function openContactPage(){var url=mainlandFooter()?'https://qilylean.com/contact/':'/contact/';try{w.open(url,'_blank','noopener,noreferrer');}catch(error){location.href=url;}}function goPreviousPage(){try{if(w.history&&w.history.length>1){w.history.back();return;}}catch(error){}location.href=parentRoute(location.pathname);}function runAction(action){if(action==='home'){location.href='/';return;}if(action==='top'){d.documentElement.scrollTop=0;if(d.body)d.body.scrollTop=0;w.scrollTo({top:0,left:0,behavior:'smooth'});return;}if(action==='back'){location.href=parentRoute(location.pathname);return;}if(action==='previous'){goPreviousPage();return;}if(action==='search'){openSearch();return;}if(action==='current'){shareCurrent();return;}if(action==='contact'){openContactPage();return;}}
-function targetButton(event){return event.target&&event.target.closest?event.target.closest('#floatDock .qily-float-btn[data-action]'):null;}function installAuthoritativeEvents(){if(w.__qilyDockV58CaptureBound)return;w.__qilyDockV58CaptureBound=true;d.addEventListener('focusin',function(event){var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-keyboard-focus','true');setImportant(button,'color','#0f4b5a');setImportant(button,'-webkit-text-fill-color','#0f4b5a');setImportant(button,'background','#ffe39b');setImportant(button,'background-color','#ffe39b');setImportant(button,'border-color','#ffe39b');setImportant(button,'box-shadow','inset 0 0 0 2px rgba(255,227,155,.24),0 4px 12px rgba(4,32,39,.18)');setImportant(button,'transform','translateY(-1px)');},true);d.addEventListener('focusout',function(event){var button=targetButton(event);if(!button)return;button.removeAttribute('data-qily-keyboard-focus');['color','-webkit-text-fill-color','background','background-color','border-color','box-shadow','transform'].forEach(function(name){button.style.removeProperty(name);});applyInlineGeometry(d.getElementById('floatDock'));},true);d.addEventListener('pointerdown',function(event){var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-pressed','true');event.stopImmediatePropagation();},{capture:true,passive:true});function clearPressed(event){var button=targetButton(event);if(button)button.removeAttribute('data-qily-pressed');else d.querySelectorAll('#floatDock [data-qily-pressed="true"]').forEach(function(node){node.removeAttribute('data-qily-pressed');});}d.addEventListener('pointerup',clearPressed,{capture:true,passive:true});d.addEventListener('pointercancel',clearPressed,{capture:true,passive:true});d.addEventListener('click',function(event){var button=targetButton(event);if(!button)return;event.preventDefault();event.stopImmediatePropagation();handledClickAt=Date.now();runAction(button.getAttribute('data-action')||'');},true);d.addEventListener('keydown',function(event){if(event.key!=='Enter'&&event.key!==' ')return;var button=targetButton(event);if(!button)return;event.preventDefault();event.stopImmediatePropagation();if(Date.now()-handledClickAt<250)return;runAction(button.getAttribute('data-action')||'');},true);}function boot(){if(isExcluded())return;normalizeDock();installAuthoritativeEvents();}if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();d.addEventListener('qily:shell-ready',boot);d.addEventListener('qily:softnavigate',boot);d.addEventListener('qily:language-change',boot);w.addEventListener('pageshow',boot,{passive:true});w.addEventListener('resize',boot,{passive:true});
+function targetButton(event){return event.target&&event.target.closest?event.target.closest('#floatDock .qily-float-btn[data-action]'):null;}function installAuthoritativeEvents(){if(w.__qilyDockV58CaptureBound)return;w.__qilyDockV58CaptureBound=true;d.addEventListener('focusin',function(event){var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-keyboard-focus','true');setImportant(button,'color','#0f4b5a');setImportant(button,'-webkit-text-fill-color','#0f4b5a');setImportant(button,'background','#ffe39b');setImportant(button,'background-color','#ffe39b');setImportant(button,'border-color','#ffe39b');setImportant(button,'box-shadow','inset 0 0 0 2px rgba(255,227,155,.24),0 4px 12px rgba(4,32,39,.18)');setImportant(button,'transform','translateY(-1px)');},true);d.addEventListener('focusout',function(event){var button=targetButton(event);if(!button)return;button.removeAttribute('data-qily-keyboard-focus');['color','-webkit-text-fill-color','background','background-color','border-color','box-shadow','transform'].forEach(function(name){button.style.removeProperty(name);});applyInlineGeometry(d.getElementById('floatDock'));},true);d.addEventListener('pointerdown',function(event){var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-pressed','true');event.stopImmediatePropagation();},{capture:true,passive:true});function clearPressed(event){var button=targetButton(event);if(button)button.removeAttribute('data-qily-pressed');else d.querySelectorAll('#floatDock [data-qily-pressed="true"]').forEach(function(node){node.removeAttribute('data-qily-pressed');});}d.addEventListener('pointerup',clearPressed,{capture:true,passive:true});d.addEventListener('pointercancel',clearPressed,{capture:true,passive:true});d.addEventListener('click',function(event){var button=targetButton(event);if(!button)return;event.preventDefault();event.stopImmediatePropagation();handledClickAt=Date.now();runAction(button.getAttribute('data-action')||'');},true);d.addEventListener('keydown',function(event){if(event.key!=='Enter'&&event.key!==' ')return;var button=targetButton(event);if(!button)return;event.preventDefault();event.stopImmediatePropagation();if(Date.now()-handledClickAt<250)return;runAction(button.getAttribute('data-action')||'');},true);}
+/* A brief Dock must never expose half-loaded/stacked buttons. On dated new
+ * international briefs the HTML keeps it invisible until the shared V5.8
+ * runtime has normalized every action and all external CSS has finished.
+ * Chinese footer and other public pages do not carry this opt-in marker.
+ */
+function scheduleBriefDockReveal(){
+ var dock=d.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
+ if(!dock||dock.dataset.qilyBriefRevealScheduled==='v1')return;
+ dock.dataset.qilyBriefRevealScheduled='v1';
+ var attempts=0;
+ function inspect(){
+  var live=d.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
+  if(!live)return;
+  var styles=w.getComputedStyle(live),rect=live.getBoundingClientRect();
+  var controls=Array.prototype.slice.call(live.querySelectorAll('.qily-float-btn[data-action]'));
+  var y=controls.length?controls[0].getBoundingClientRect().top:0;
+  var previousRight=-1;
+  var row=controls.length===4&&controls.every(function(btn){
+    var box=btn.getBoundingClientRect();
+    var valid=box.width>4&&box.height>4&&Math.abs(box.top-y)<=3&&box.left>=previousRight-3;
+    previousRight=box.right;
+    return valid;
+  });
+  var targetRight=Math.min(w.innerWidth,d.documentElement.clientWidth);
+  var correct=styles.position==='fixed'&&styles.display==='flex'&&styles.flexDirection==='row'&&
+    styles.flexWrap==='nowrap'&&Math.abs(rect.left)<=2&&
+    Math.min(Math.abs(w.innerHeight-rect.bottom),Math.abs(d.documentElement.clientHeight-rect.bottom))<=2&&
+    Math.min(Math.abs(w.innerWidth-rect.right),Math.abs(targetRight-rect.right))<=3&&
+    d.querySelectorAll('#floatDock').length===1&&row&&w.__qilyDockV58CaptureBound===true;
+  if(!correct){
+    if(++attempts<120){w.requestAnimationFrame(inspect);}
+    else{live.dataset.qilyBriefDockState='blocked';}
+    return;
+  }
+  live.style.removeProperty('visibility');
+  live.style.removeProperty('opacity');
+  live.style.removeProperty('pointer-events');
+  live.dataset.qilyBriefDockReady='v1';
+  live.removeAttribute('data-qily-brief-dock-pending');
+ }
+ function afterAssets(){
+  w.requestAnimationFrame(function(){w.requestAnimationFrame(inspect);});
+ }
+ if(d.readyState==='complete')afterAssets();
+ else w.addEventListener('load',afterAssets,{once:true});
+}
+
+function boot(){if(isExcluded())return;normalizeDock();installAuthoritativeEvents();scheduleBriefDockReveal();}if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();d.addEventListener('qily:shell-ready',boot);d.addEventListener('qily:softnavigate',boot);d.addEventListener('qily:language-change',boot);w.addEventListener('pageshow',boot,{passive:true});w.addEventListener('resize',boot,{passive:true});
 })(document,window);
 
 /* QILY-CN-PUBLIC-FOOTER-RUNTIME-CLOSURE-20261023 */
