@@ -242,6 +242,23 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyLecMini .m-play{background:transparent!important;background-color:transparent!important;color:#073c47!important}
 #qilyLecMini .m-title{font-size:18px!important;color:#15222e!important}
 #qilyLecMini .m-expand{font-size:18px!important;color:#15222e!important}
+
+/* v2.4.5 mini-bar + font-size hardening (visual article), from pixel measurements
+   (browser tasks eea28d53 + a5f71104, 2026-11-10 22:23-22:37): v2.4.4 fixed the white
+   capsule (mini bar is now transparent like the model) and audio plays fine
+   (the earlier no-sound was a transient deploy-propagation miss; re-test 22:36
+   heard the opening, 0:00->0:19, total 0:31). Two residuals remain: (1) font sizes
+   still ~2px small (A glyph ~19px, B ~17px) — the model renders ~19px, so bump
+   .m-title/.m-expand/.p-collapse from 18px to 19px. (2) .m-play triangle still
+   invisible in normal state: the interaction contrast guard marks the button
+   data-qily-interaction-contrast="light" and its CSS forces
+   -webkit-text-fill-color:#ffffff, which outranks plain `color` in Blink.
+   Override BOTH color and -webkit-text-fill-color with literal values. */
+#qilyLecMini{-webkit-text-fill-color:#15222e!important}
+#qilyLecMini .m-play{-webkit-text-fill-color:#073c47!important}
+#qilyLecMini .m-title{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+#qilyLecMini .m-expand{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+#qilyLecPlayer .p-collapse{font-size:19px!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
