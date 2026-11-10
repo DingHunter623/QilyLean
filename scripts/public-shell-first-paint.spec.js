@@ -373,7 +373,7 @@ for(const [name,url] of firstFrameBriefs){
       const dockGate=new Promise(resolve=>{releaseDock=resolve;});
       try{
         await context.addInitScript(()=>{
-          window.__qilyBriefDockFrameProbe={samples:0,violations:[],firstPaintAt:null};
+          window.__qilyBriefDockFrameProbe={samples:0,violations:[],firstPaintAt:null,baseline:null};
           let frames=0;
           function sample(){
             const state=window.__qilyBriefDockFrameProbe;
@@ -392,7 +392,9 @@ for(const [name,url] of firstFrameBriefs){
                 const sideGap=Math.min(Math.abs(window.innerWidth-rect.right),Math.abs(expectedRight-rect.right));
                 const buttonRects=[...dock.querySelectorAll('.qily-float-btn[data-action]')].map(b=>b.getBoundingClientRect());
                 const oneRow=buttonRects.length===4&&buttonRects.every((r,i)=>i===0||(Math.abs(r.top-buttonRects[0].top)<=3&&r.left>=buttonRects[i-1].right-3));
-                const invalid=all.length!==1||style.position!=='fixed'||style.flexDirection!=='row'||style.flexWrap!=='nowrap'||!oneRow||gap>2||Math.abs(rect.left)>2||sideGap>2;
+                if(!state.baseline)state.baseline={top:rect.top,height:rect.height};
+                const shifting=Math.abs(state.baseline.top-rect.top)>2||Math.abs(state.baseline.height-rect.height)>2;
+                const invalid=all.length!==1||style.position!=='fixed'||style.flexDirection!=='row'||style.flexWrap!=='nowrap'||!oneRow||shifting||gap>2||Math.abs(rect.left)>2||sideGap>2;
                 if(invalid&&state.violations.length<15)state.violations.push({
                   frame:frames,position:style.position,count:all.length,bottomGap:gap,
                   left:rect.left,right:rect.right,screen:window.innerWidth
@@ -407,30 +409,32 @@ for(const [name,url] of firstFrameBriefs){
         await context.route('**/*',async route=>{
           const requestUrl=new URL(route.request().url());
           if(requestUrl.origin!==new URL(base).origin)return route.abort();
-          if(requestUrl.pathname==='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')await dockGate;
+          if(requestUrl.pathname==='/site-dock-share-runtime-v1.js')await dockGate;
           return route.continue();
         });
         const page=await context.newPage();
         await page.goto(base+url,{waitUntil:'commit'});
-        const gated=name.startsWith('latest-')&&newestBriefDate>='2026-11-10';
-        if(gated){
-          await page.waitForFunction(()=>{
-            const d=document.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
-            return d&&getComputedStyle(d).visibility==='hidden'&&getComputedStyle(d).opacity==='0';
-          });
-          expect(await page.evaluate(()=>window.__qilyBriefDockFrameProbe.samples),
-            'No half-initialized toolbar may paint before runtime').toBe(0);
-        }else{
-          await expect.poll(()=>page.evaluate(()=>window.__qilyBriefDockFrameProbe?.samples||0),{
-            message:'historical static brief Dock paints before runtime'
-          }).toBeGreaterThanOrEqual(6);
-        }
+        await expect.poll(()=>page.evaluate(()=>window.__qilyBriefDockFrameProbe?.samples||0),{
+          message:'global static Dock must paint before loading any JavaScript'
+        }).toBeGreaterThanOrEqual(6);
+        expect(await page.locator('#floatDock').getAttribute('data-qily-brief-dock-pending')).toBeNull();
+        const preRuntime=await page.locator('#floatDock').evaluate(dock=>{
+          const box=dock.getBoundingClientRect(),style=getComputedStyle(dock);
+          return {top:box.top,height:box.height,left:box.left,right:box.right,visible:style.visibility,opacity:style.opacity};
+        });
+        expect(preRuntime.visible).toBe('visible');
+        expect(preRuntime.opacity).toBe('1');
         releaseDock();
         await page.waitForLoadState('load');
-        if(gated)await page.waitForFunction(()=>{
-          const d=document.querySelector('#floatDock[data-qily-brief-dock-ready="v1"]');
-          return d&&!d.hasAttribute('data-qily-brief-dock-pending')&&getComputedStyle(d).visibility==='visible';
+        const postRuntime=await page.locator('#floatDock').evaluate(dock=>{
+          const box=dock.getBoundingClientRect(),style=getComputedStyle(dock);
+          return {top:box.top,height:box.height,left:box.left,right:box.right,visible:style.visibility,opacity:style.opacity};
         });
+        expect(postRuntime.visible).toBe('visible');
+        expect(postRuntime.opacity).toBe('1');
+        for(const key of ['top','height','left','right']){
+          expect(Math.abs(postRuntime[key]-preRuntime[key]),name+' '+width+'px: Dock '+key+' may not jump when JS loads').toBeLessThanOrEqual(2);
+        }
         await page.waitForTimeout(750);
         const state=await page.evaluate(()=>window.__qilyBriefDockFrameProbe);
         expect(state.samples,name+' at '+width+': sample actual first frames').toBeGreaterThanOrEqual(10);
@@ -467,3 +471,56 @@ test('newest curated Dock survives stale legacy centered flow cascade',async({br
     expect(Math.abs(state.right-state.viewportW),'Dock remains full-width').toBeLessThanOrEqual(18);
   }finally{await context.close();}
 });
+
+for(const width of [1600,390]){
+  test('public Dock does not animate during native brief-to-brief navigation at '+width+'px',async({browser})=>{
+    const context=await browser.newContext({viewport:{width,height:900}});
+    try{
+      await context.addInitScript(()=>{
+        window.__qilyShellFirstFrames={visible:0,hidden:0,stacked:0};
+        let count=0;
+        function sample(){
+          const dock=document.getElementById('floatDock');
+          if(dock){
+            const s=getComputedStyle(dock);
+            if(s.display!=='none'&&s.visibility==='visible'&&s.opacity!=='0'){
+              window.__qilyShellFirstFrames.visible++;
+              const buttons=[...dock.querySelectorAll('.qily-float-btn[data-action]')].map(b=>b.getBoundingClientRect());
+              if(buttons.length!==4||buttons.some((r,i)=>i>0&&Math.abs(r.top-buttons[0].top)>3)){
+                window.__qilyShellFirstFrames.stacked++;
+              }
+            } else window.__qilyShellFirstFrames.hidden++;
+          }
+          if(++count<180)requestAnimationFrame(sample);
+        }
+        requestAnimationFrame(sample);
+      });
+      const page=await context.newPage();
+      await page.goto(base+'/qilylean/daily/2026-11-08.html',{waitUntil:'load'});
+      const before=await page.locator('#floatDock').evaluate(dock=>{
+        const r=dock.getBoundingClientRect(),s=getComputedStyle(dock);
+        return {top:r.top,height:r.height,left:r.left,width:r.width,visibility:s.visibility,transition:s.viewTransitionName};
+      });
+      expect(before.visibility).toBe('visible');
+      expect(before.transition,'native same-origin navigation should preserve shared Dock identity').toBe('qily-public-dock');
+      await Promise.all([
+        page.waitForURL('**/qilylean/daily/2026-11-10.html'),
+        page.locator('a[href="/qilylean/daily/2026-11-10.html"]').first().click()
+      ]);
+      await page.waitForLoadState('load');
+      const after=await page.locator('#floatDock').evaluate(dock=>{
+        const r=dock.getBoundingClientRect(),s=getComputedStyle(dock);
+        return {top:r.top,height:r.height,left:r.left,width:r.width,visibility:s.visibility,transition:s.viewTransitionName};
+      });
+      const state=await page.evaluate(()=>window.__qilyShellFirstFrames);
+      expect(after.visibility).toBe('visible');
+      expect(after.transition).toBe('qily-public-dock');
+      for(const key of ['top','height','left','width'])
+        expect(Math.abs(before[key]-after[key]),'shared Dock geometry must remain unchanged across pages: '+key).toBeLessThanOrEqual(2);
+      expect(state.visible,'new document paints its public Dock immediately').toBeGreaterThan(0);
+      expect(state.hidden,'new document never hides its public Dock').toBe(0);
+      expect(state.stacked,'public Dock never stacks four action buttons').toBe(0);
+      await expect(page.locator('#floatDock .qily-float-btn')).toHaveCount(4);
+    }finally{await context.close();}
+  });
+}
