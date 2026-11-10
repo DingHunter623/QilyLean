@@ -253,7 +253,9 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
    invisible in normal state: the interaction contrast guard marks the button
    data-qily-interaction-contrast="light" and its CSS forces
    -webkit-text-fill-color:#ffffff, which outranks plain `color` in Blink.
-   Override BOTH color and -webkit-text-fill-color with literal values. */
+   Override BOTH color and -webkit-text-fill-color with literal values.
+   (Deploy retry: the 5b18915 Pages deploy failed at the deploy step; this
+   no-op comment re-triggers a clean single-push deploy.) */
 #qilyLecMini{-webkit-text-fill-color:#15222e!important}
 #qilyLecMini .m-play{-webkit-text-fill-color:#073c47!important}
 #qilyLecMini .m-title{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
