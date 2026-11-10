@@ -6,7 +6,7 @@ const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const {
-  ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,ORDER,LABELS,DOCK_STYLE_ID,
+  ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,ORDER,LABELS,DOCK_STYLE_ID,
   DOCK_SPACER_ID,criticalDockCss,isEligible,materialize,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV
 }=require('./materialize-public-shell-first-paint-v1.js');
 const assert=(ok,message)=>{if(!ok)throw new Error(`Public first paint: ${message}`);};
@@ -47,7 +47,7 @@ for(const relative of files){
   assert(countId(source,DOCK_SPACER_ID)===1,`${relative}: duplicate/missing bottom-content reserve`);
   assert(new RegExp(`<div\\b[^>]*\\bid=["']${DOCK_SPACER_ID}["'][^>]*>\\s*<\\/div>\\s*$`,'i').test(body[1]),`${relative}: bottom-content reserve must be the final body element`);
   const dockRuntime=[...source.matchAll(/<script\b[^>]*\bsrc=["']([^"']*site-dock-share-runtime-v1\.js[^"']*)["'][^>]*>\s*<\/script>/gi)];
-  assert(dockRuntime.length===1&&dockRuntime[0][1]===DOCK_RUNTIME_SRC,`${relative}: one direct current menu runtime required`);
+  assert(dockRuntime.length===1&&dockRuntime[0][1]===dockRuntimeSrc(relative),`${relative}: one direct current menu runtime required`);
   assert(/\bdefer\b/i.test(dockRuntime[0][0]),`${relative}: menu runtime must not delay parsing`);
   for(const tag of source.match(/<(?:script|link)\b[^>]*(?:site-interaction-semantics-v1\.js|site-visual-authority-r8\.css)[^>]*>/gi)||[]){
     assert(tag.includes(`rail=${NAV_RAIL_REV}`),`${relative}: changed navigation source has stale cache URL`);
