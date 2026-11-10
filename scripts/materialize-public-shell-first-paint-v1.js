@@ -13,6 +13,11 @@ const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
 const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1';
+const BRIEF_DOCK_RUNTIME_REV='20261110-gated-reveal-v1';
+function dockRuntimeSrc(relative){
+ const issue=/^qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html$/.exec(relative);
+ return issue&&issue[1]>='2026-11-10'?DOCK_RUNTIME_SRC+'&brief='+BRIEF_DOCK_RUNTIME_REV:DOCK_RUNTIME_SRC;
+}
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
 const NAVIGATION_INPUT_REV='20261010-user-nav-v5';
@@ -77,7 +82,8 @@ function materialize(source,relative){
   next=next.replace(/\/site-interaction-semantics-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&input=[^&"'\s<>]*/g,'')+'&input='+NAVIGATION_INPUT_REV);
   next=next.replace(/\/site-brand-home-feedback-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   next=next.replace(/\/site-contact-route-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
-  next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?[^\"'\s<>]*)?/g,DOCK_RUNTIME_SRC);
+  const routeDockRuntime=dockRuntimeSrc(relative);
+  next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?[^\"'\s<>]*)?/g,routeDockRuntime);
   // Replace only the nodes owned by this shared first-paint contract.
   next=next.replace(/\n?<link\b[^>]*id=["']qilyViV4Formal["'][^>]*>\n?/gi,'\n');
   next=next.replace(/\n?<style\b[^>]*id=["']qilyDockUnifiedV58Style["'][^>]*>[\s\S]*?<\/style>\n?/gi,'\n');
@@ -87,7 +93,7 @@ function materialize(source,relative){
   // Regional generators can introduce this owned runtime on their first pass.
   // Reinsert it at the same head position when another materializer rebuilds its tags.
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
-  const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag+'\n';
+  const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag.replace(DOCK_RUNTIME_SRC,routeDockRuntime)+'\n';
   next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+'</head>');
   // Resource directory: establish the rail's containing block before any
   // runtime inserts it. R8 stylesheet order alone cannot anchor an absolute
@@ -141,5 +147,5 @@ function materializeBridge(source){
   return next;
 }
 
-module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};
+module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};
 if(require.main===module)main();
