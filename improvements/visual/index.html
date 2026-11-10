@@ -261,6 +261,20 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyLecMini .m-title{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
 #qilyLecMini .m-expand{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
 #qilyLecPlayer .p-collapse{font-size:19px!important}
+
+/* v2.4.6 mini-bar font sizes (visual article), from pixel measurements
+   (browser task 305dd99d, 2026-11-10 23:16-23:26): v2.4.5 fixed the white
+   capsule and made the play triangle visible (same dark-teal #073C47 as the
+   model) and the collapse width now matches (80 vs 81px). Remaining gap is
+   glyph size: the model renders its mini-bar title at ~20px glyph height
+   and its play triangle at ~17px, while this page (at 19px font-size) renders
+   ~16-17px / ~12px. Glyph height runs ~0.85-0.9x the font-size, so the model's
+   true font-size is ~22px, not 19px. Bump .m-title/.m-expand to 22px and
+   .m-play (triangle) to 20px. .p-collapse stays at 19px (width already
+   matched, text only ~1px short). */
+#qilyLecMini .m-play{font-size:20px!important}
+#qilyLecMini .m-title{font-size:22px!important}
+#qilyLecMini .m-expand{font-size:22px!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
