@@ -27,6 +27,7 @@ on:
       - 'scripts/audit-daily-quality-linkage.js'
       - 'scripts/remove-daily-directory-consultation.js'
       - 'scripts/validate-current-daily-publication.js'
+      - 'scripts/materialize-daily-dock-first-frame-v1.js'
       - 'index.html'
       - 'knowledge/index.html'
       - 'trust/index.html'
@@ -66,6 +67,7 @@ jobs:
           node --check scripts/audit-daily-quality-linkage.js
           node --check scripts/remove-daily-directory-consultation.js
           node --check scripts/validate-current-daily-publication.js
+          node --check scripts/materialize-daily-dock-first-frame-v1.js
 
       - name: Publish and validate from the daily SSOT
         run: |
