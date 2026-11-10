@@ -305,6 +305,17 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyLecPlayer .p-toggle{font-size:21px!important}
 #qily-lecture .chapter p{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
 #qily-lecture .chapter h3{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+
+/* v2.4.9 player height fixed (visual article), user-demanded 2026-11-11 01:21:
+   "播放器界面的高矮与播放语速无关，必须检讨并整改。"
+   Root cause accepted: the settings panel (.p-controls) sits in normal flow,
+   so opening it grows the player by ~170px (258px collapsed -> 429px expanded,
+   browser task 9fc7a866). The speed value never caused the height; the panel
+   being in flow did. Fix: take .p-controls out of flow when open — it floats
+   as a popover directly above the player, so the player keeps the model's
+   collapsed height (258px) whether settings are open or closed. Panel is
+   centred to the 880px content width, styled as part of the player. */
+#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
