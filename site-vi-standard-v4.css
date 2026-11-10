@@ -315,6 +315,26 @@ html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qil
   flex-wrap:nowrap!important;
 }
 
+/* Static shared-shell continuity | QilyLean navigation 2026-11-10.
+ * Cross-document navigation is intentionally native (no DOM swapping or SPA).
+ * In supporting browsers the old Dock is captured until the new page is ready.
+ * Zero animation on the shared Dock prevents position, fade and scale effects.
+ * Unsupported browsers continue to use the complete first-paint fixed Dock CSS.
+ */
+@view-transition{navigation:auto}
+html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"]{
+  view-transition-name:qily-public-dock;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  transition:none!important;
+}
+::view-transition-group(qily-public-dock),
+::view-transition-old(qily-public-dock),
+::view-transition-new(qily-public-dock){
+  animation:none!important;
+  transform:none!important;
+}
+
 /* 10 | Footer remains the common shell. */
 html body footer{max-width:100%!important;color:var(--qily-ink);background:var(--qily-surface-soft)!important;border-top:1px solid var(--qily-line)!important;}
 
