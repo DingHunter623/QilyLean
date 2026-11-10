@@ -27,3 +27,28 @@ jobs:
           npm install --no-save --package-lock=false @playwright/test@1.55.0
           npx playwright install --with-deps chromium
           npx playwright test scripts/traffic-partial-buckets.spec.js scripts/cn-traffic-kline.spec.js scripts/intl-traffic-kline.spec.js --workers=1 --reporter=line
+      - name: Read-only public API evidence for 2026-11-07 through 2026-11-10
+        if: always()
+        continue-on-error: true
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request, urllib.error, json, datetime
+          base="https://countapi.mileshilliard.com/api/v1/get/"
+          def read(key):
+              try:
+                  with urllib.request.urlopen(urllib.request.Request(base+key,headers={"User-Agent":"QilyLean-CI-read-only-probe/1.0"}),timeout=15) as response:
+                      data=json.load(response)
+                      return {"status":response.status,"value":int(data["value"])}
+              except urllib.error.HTTPError as e:
+                  return {"status":e.code,"value":None}
+              except Exception as e:
+                  return {"status":"ERROR","reason":str(e)[:100],"value":None}
+          for site in ("cn","com"):
+              total=read("qilylean_"+site+"_sitewide_pageviews_20261029")
+              print("READ_ONLY_TOTAL",site,json.dumps(total,ensure_ascii=False),flush=True)
+              for day in ("20261107","20261108","20261109","20261110"):
+                  slots=[read("qilylean_"+site+"_pv6h_v1_"+day+"_s"+str(slot)) for slot in range(4)]
+                  numbers=[v["value"] for v in slots if v["status"]==200]
+                  print("READ_ONLY_DAILY",site,day,json.dumps({"slots":slots,"confirmed_sum":sum(numbers),"complete":len(numbers)==4},ensure_ascii=False),flush=True)
+          PY
