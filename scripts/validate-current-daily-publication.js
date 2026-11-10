@@ -131,7 +131,7 @@ if (sourceLatest >= '2026-11-10') {
   assert(dockStart,'New curated issue retains canonical navigation element');
   const inlineDock=(dockStart[0].match(/\bstyle=["']([^"']+)["']/)||[])[1]||'';
   for(const required of [
-    'position:fixed!important','left:0!important','right:0!important','bottom:0!important',
+    'position:fixed!important','left:0!important','right:0!important','bottom:0!important','flex-direction:row!important',
     'justify-content:flex-start!important','margin:0!important','transform:none!important',
   ]){
     includes(inlineDock,required,'HTML-first Dock must not depend on asynchronous CSS/JS');
@@ -142,6 +142,8 @@ if (sourceLatest >= '2026-11-10') {
   for(const guard of ['visibility:hidden!important','opacity:0!important','pointer-events:none!important']) {
     includes(inlineDock,guard,'New curated Dock must be invisible until buttons are fully laid out');
   }
+  includes(earlyStyle[1],'flex-direction:row!important',
+    'Initial Dock CSS must defeat legacy column stacking');
   includes(earlyStyle[1],'data-qily-brief-dock-pending="v1"]{visibility:hidden!important',
     'Critical first-paint CSS must suppress any stacked interim Dock');
   includes(latest,'&brief=20261110-gated-reveal-v1',
