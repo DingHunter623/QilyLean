@@ -275,6 +275,16 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyLecMini .m-play{font-size:20px!important}
 #qilyLecMini .m-title{font-size:22px!important}
 #qilyLecMini .m-expand{font-size:22px!important}
+
+/* v2.4.7 mini-bar font sizes (visual article), from pixel measurements
+   (browser task e57b259a, 2026-11-10 23:39-23:46): v2.4.6 set .m-title and
+   .m-expand to 22px, which overshot — the model renders ~19-20px glyph
+   height, this page now renders ~21-22px (about 2px too big). Step back to
+   20px. .m-play stays at 20px (its triangle already matches the model
+   exactly, 15x17px, same colour). .p-collapse stays at 19px (width 82 vs
+   83px, matched). */
+#qilyLecMini .m-title{font-size:20px!important}
+#qilyLecMini .m-expand{font-size:20px!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
