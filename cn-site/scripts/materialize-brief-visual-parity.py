@@ -377,10 +377,17 @@ class VisualSanitizer(HTMLParser):
 
 def sanitize_main(original:str,base_path:str="",public_controls:bool=False):
     svgs=[]
+    ui_only_icons=set()
     def svg_replace(m):
         raw=m.group(0)
         if SVG_RISK.search(raw):raise RuntimeError("unsafe inline SVG present; no lossy omission allowed")
         n=len(svgs);svgs.append(raw)
+        # Buttons are intentionally excluded from the CN static knowledge clone
+        # (e.g. international-site audio-player controls). Their SVG icons are
+        # controls, not engineering diagrams; keep the content-diagram loss gate.
+        prior=original[:m.start()]
+        if prior.rfind('<button')>prior.rfind('</button'):
+            ui_only_icons.add(n)
         return '<span data-parity-svg="'+str(n)+'"></span>'
     original=SVG_PATTERN.sub(svg_replace,original)
     # Forms and feedback panels contain personal contact and commercial conversion UI.
@@ -389,11 +396,18 @@ def sanitize_main(original:str,base_path:str="",public_controls:bool=False):
     parser.feed(original)
     safe="".join(parser.parts)
     safe=source.remove_forbidden_blocks(safe)
+    retained_svgs=0
     for i,svg in enumerate(svgs):
-        safe=safe.replace('<span data-parity-svg="'+str(i)+'"></span>',svg)
+        marker='<span data-parity-svg="'+str(i)+'"></span>'
+        if marker in safe:
+            safe=safe.replace(marker,svg)
+            retained_svgs+=1
+        elif i not in ui_only_icons:
+            raise RuntimeError("source engineering SVG unexpectedly omitted: "+base_path)
     if len(source.clean_text(safe))<100:raise RuntimeError("brief content unexpectedly empty after filtering")
-    # Shared with the nonbrief renderer: retain its three-value API contract.
-    return safe,len(svgs),parser.visual_nodes
+    # Shared with the nonbrief renderer: count only source SVGs in retained
+    # knowledge content, never stripped player-button icons.
+    return safe,retained_svgs,parser.visual_nodes
 
 def ensure_brief_heading(content:str,source_path:Path)->str:
     """Replace a source CSS-only banner with a real, accessible module hero."""
