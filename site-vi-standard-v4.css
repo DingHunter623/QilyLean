@@ -307,6 +307,14 @@ html body .qily-float-dock.qily-vi-v4-flow-dock .qily-float-btn{
   box-shadow:none!important;
 }
 
+/* V5.8 fixed four-action Dock: explicit horizontal ownership even when the
+ * interaction runtime is artificially delayed. Legacy V4 centered/column Dock
+ * styles must never stack buttons on the public first-paint menu. */
+html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"]{
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+}
+
 /* 10 | Footer remains the common shell. */
 html body footer{max-width:100%!important;color:var(--qily-ink);background:var(--qily-surface-soft)!important;border-top:1px solid var(--qily-line)!important;}
 

@@ -17,11 +17,13 @@ const STYLE='<style id="'+STYLE_ID+'" data-qily-brief-first-frame="dock-v1">'+
   'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"]'+
   '{position:fixed!important;top:auto!important;left:0!important;right:0!important;bottom:0!important;'+
   'width:100%!important;max-width:none!important;box-sizing:border-box!important;'+
-  'z-index:2147482000!important;display:flex!important;flex-wrap:nowrap!important;'+
+  'z-index:2147482000!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;'+
   'margin:0!important;transform:none!important;transition:none!important;'+
   'background:#0f4b5a!important;border-top:3px solid #c8a25a!important}'+
   'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"] .qily-float-btn'+
-  '{transition:none!important}</style>';
+  '{transition:none!important}'+
+  'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-brief-dock-pending="v1"]'+
+  '{visibility:hidden!important;opacity:0!important;pointer-events:none!important}</style>';
 const check=process.argv.includes('--check');
 let candidates=0,changed=0;
 for(const file of fs.readdirSync(daily).filter(n=>/^\d{4}-\d{2}-\d{2}\.html$/.test(n)&&n.slice(0,10)>=START_DATE).sort()){
@@ -31,6 +33,8 @@ for(const file of fs.readdirSync(daily).filter(n=>/^\d{4}-\d{2}-\d{2}\.html$/.te
   if(!original.includes(AFTER))throw Error(file+': missing readable first paint marker');
   if(!original.includes('id="qilyDockUnifiedV58Style"')||!original.includes('id="floatDock"'))throw Error(file+': missing canonical V5.8 Dock');
   if((original.match(/id="floatDock"/g)||[]).length!==1)throw Error(file+': duplicate Dock instances');
+  if(!original.includes('data-qily-brief-dock-pending="v1"')||!original.includes('visibility:hidden!important'))
+    throw Error(file+': new Dock must stay hidden until fully hydrated');
   let without=original;
   while(without.includes('<style id="'+STYLE_ID+'"')){
     const start=without.indexOf('<style id="'+STYLE_ID+'"');
