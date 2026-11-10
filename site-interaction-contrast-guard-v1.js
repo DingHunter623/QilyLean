@@ -8,7 +8,7 @@
   w.__qilyInteractionContrastGuardV1=true;
 
   var SELECTOR='a[href],button,[role="button"],input[type="button"],input[type="submit"],input[type="reset"]';
-  var queued=false;
+  var queued=false,debounceTimer=null,pendingRoot=null;
 
   function colorParts(value){
     var match=String(value||'').match(/rgba?\(([^)]+)\)/i);
@@ -91,9 +91,16 @@
     for(var i=0;i<nodes.length;i+=1)audit(nodes[i]);
   }
   function schedule(root){
-    if(queued)return;
-    queued=true;
-    w.requestAnimationFrame(function(){queued=false;auditTree(root&&root.nodeType===1?root:d)});
+    pendingRoot=(root&&root.nodeType===1)?root:d;
+    if(debounceTimer)w.clearTimeout(debounceTimer);
+    debounceTimer=w.setTimeout(function(){
+      debounceTimer=null;
+      if(queued)return;
+      queued=true;
+      var run=function(){queued=false;auditTree(pendingRoot||d)};
+      if(w.requestIdleCallback)w.requestIdleCallback(run,{timeout:1000});
+      else w.setTimeout(run,50);
+    },300);
   }
 
   function boot(){auditTree(d)}

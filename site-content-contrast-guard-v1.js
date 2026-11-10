@@ -12,7 +12,7 @@
   var SELECTOR='p,li,dt,dd,td,th,label,small,span,strong,b,em,h1,h2,h3,h4,h5,h6,.module-lead,.engineering-checklist,.notice,.callout,.summary,.insight,.lead,[role="status"],[role="alert"]';
   var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub,.visual-hero,.closing-view,.section.dark,.module-section.dark,.qily-section.dark,.qily-ia-dark,.qily-dark,.dark-bg,.qily-dark-band,.closing,.principle,[data-qily-dark-band="true"],[data-qily-dark-surface],[data-theme="dark"]';
   var EXCLUDE='header,.qily-site-header,.qily-global-header,#floatDock,.qily-floating-dock,.qily-web-translate,.qily-translation-progress,button,input,select,textarea,[role="button"],[contenteditable="true"]';
-  var queued=false;
+  var queued=false,debounceTimer=null,pendingRoot=null;
 
   function parseColor(value){
     var m=String(value||'').match(/rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:\s*[,/]\s*([\d.]+))?\s*\)/i);
@@ -73,7 +73,7 @@
     if(root.matches&&root.matches(SELECTOR))fix(root);
     var nodes=root.querySelectorAll?root.querySelectorAll(SELECTOR):[];for(var i=0;i<nodes.length;i+=1)fix(nodes[i])
   }
-  function schedule(root){if(queued)return;queued=true;w.requestAnimationFrame(function(){queued=false;scan(root&&root.nodeType===1?root:d.body)})}
+  function schedule(root){pendingRoot=(root&&root.nodeType===1)?root:d.body;if(debounceTimer)w.clearTimeout(debounceTimer);debounceTimer=w.setTimeout(function(){debounceTimer=null;if(queued)return;queued=true;var run=function(){queued=false;scan(pendingRoot||d.body)};if(w.requestIdleCallback)w.requestIdleCallback(run,{timeout:1000});else w.setTimeout(run,50)},300)}
   function boot(){scan(d.body)}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   d.addEventListener('qily:shell-ready',function(){schedule(d.body)});d.addEventListener('qily:language-change',function(){schedule(d.body)});w.addEventListener('pageshow',function(){schedule(d.body)},{passive:true});w.addEventListener('resize',function(){schedule(d.body)},{passive:true});
