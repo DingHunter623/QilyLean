@@ -427,3 +427,27 @@ for(const [name,url] of firstFrameBriefs){
     });
   }
 }
+
+test('newest curated Dock survives stale legacy centered flow cascade',async({browser})=>{
+  const newest=JSON.parse(fs.readFileSync(path.join(process.cwd(),'qilylean/daily/index.json'),'utf8'))[0].date;
+  const context=await browser.newContext({viewport:{width:1600,height:920}});
+  try{
+    const page=await context.newPage();
+    await page.goto(base+'/qilylean/daily/'+newest+'.html',{waitUntil:'domcontentloaded'});
+    await page.addStyleTag({content:
+      'html body #floatDock.qily-float-dock{position:relative!important;'+
+      'inset:auto!important;margin:24px auto!important;justify-content:center!important;'+
+      'width:min(1180px,calc(100% - 36px))!important}'
+    });
+    const state=await page.locator('#floatDock').evaluate(dock=>{
+      const s=getComputedStyle(dock),r=dock.getBoundingClientRect();
+      return {position:s.position,bottom:r.bottom,left:r.left,right:r.right,
+        viewportW:innerWidth,viewportH:innerHeight,domDockCount:document.querySelectorAll('#floatDock').length};
+    });
+    expect(state.domDockCount,'exactly one Dock').toBe(1);
+    expect(state.position,'cached old stylesheet must not put Dock in flow').toBe('fixed');
+    expect(Math.abs(state.bottom-state.viewportH),'Dock remains at actual viewport bottom').toBeLessThanOrEqual(2);
+    expect(Math.abs(state.left),'Dock remains full-width from x=0').toBeLessThanOrEqual(2);
+    expect(Math.abs(state.right-state.viewportW),'Dock remains full-width').toBeLessThanOrEqual(18);
+  }finally{await context.close();}
+});
