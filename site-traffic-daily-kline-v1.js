@@ -165,17 +165,25 @@
     var thisRequest=++requestId, days=dayList(range);
     statusBox.textContent='正在读取 '+days.length+' 日的实际分时PV…';
     var tasks=[];
+    var today=dayClock();
+    var currentSlot=Math.floor(new Date(Date.now()+8*3600000).getUTCHours()/6);
     days.forEach(function(day){
       for(var slot=0;slot<4;slot++) (function(day,slot){
-        tasks.push(function(){return fetchSlot(keyFor(day,slot));});
+        // Future Beijing-time slots have not occurred; do not query or flag them as failures.
+        if(day===today && slot>currentSlot){
+          tasks.push(function(){return Promise.resolve({value:0,exists:false,error:false});});
+        } else {
+          tasks.push(function(){return fetchSlot(keyFor(day,slot));});
+        }
       })(day,slot);
     });
     limited(tasks,6).then(function(results){
       if(thisRequest!==requestId) return;
       records=days.map(function(day,index){
         var four=results.slice(index*4,index*4+4);
-        var error=four.some(function(p){return p.error;});
-        var has=four.some(function(p){return p.exists;});
+        var observedFour=day===today?four.slice(0,currentSlot+1):four;
+        var error=observedFour.some(function(p){return p.error;});
+        var has=observedFour.some(function(p){return p.exists;});
         var vals=four.map(function(p){return p.value;});
         // Today's trend must not include future 6-hour intervals:
         // missing future values must never count as an observed daily low.
@@ -196,7 +204,7 @@
   function draw() {
     while(chartBox.firstChild) chartBox.removeChild(chartBox.firstChild);
     var days=records;
-    var count=days.filter(function(p){return p.has&&!p.error;}).length;
+    var count=days.filter(function(p){return p.has;}).length;
     var failed=days.some(function(p){return p.error;});
     if(!count) {
       statusBox.textContent=failed?'部分分时统计暂不可读取，请稍后刷新。':'尚无可绘制的真实分时访问量，首批访问会逐步形成趋势图。';
@@ -206,7 +214,7 @@
     var width=Math.max(availableWidth,days.length*(availableWidth<520?56:68)+160),height=460;
     var left=132,right=28,top=84,bottom=250,volumeTop=350,volumeBottom=398;
     var usable=width-left-right, step=usable/days.length;
-    var valid=days.filter(function(p){return p.has&&!p.error;});
+    var valid=days.filter(function(p){return p.has;});
     var maxCount=Math.max.apply(Math,valid.map(function(p){return p.peak;}));
     var maxY=Math.max(4,Math.ceil(maxCount*1.18));
     var maxV=Math.max(1,Math.max.apply(Math,valid.map(function(p){return p.volume;})));
@@ -226,7 +234,7 @@
     days.forEach(function(p,i){
       var x=left+step*(i+.5),group=svg('g',{},root);
       var label=p.date.slice(5).replace('-','/');
-      if(p.error||!p.has){
+      if(!p.has){
         svg('line',{x1:x-6,y1:bottom-4,x2:x+6,y2:bottom-4,stroke:'#769397','stroke-dasharray':'2 3'},group);
         svg('title',{},group,p.date+(p.error?' 部分时段读取失败':' 尚无采集记录'));
       } else {
@@ -242,21 +250,21 @@
         // The interval peak label is the day's highest recorded 6-hour PV, not a daily total.
         svg('text',{x:x,y:Math.max(top+4,y(p.peak)-12),'text-anchor':'middle',
           fill:'#8a6331','font-size':20,'font-weight':750,
-          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,String(p.peak));
+          'data-qily-kline-label':'high-pv','data-qily-kline-day':p.date},group,(p.error?'≥':'')+String(p.peak));
         var h=(p.volume/maxV)*(volumeBottom-volumeTop);
         svg('rect',{x:x-9,y:volumeBottom-h,width:18,height:Math.max(2,h),rx:1,
           fill:'#78a7a5','fill-opacity':'.98','data-qily-kline-bar':'daily-total'},group);
         // Volume labels are observed daily PV, excluding presentation base.
         svg('text',{x:x,y:Math.max(volumeTop-12,volumeBottom-h-10),'text-anchor':'middle',
           fill:'#0f4b5a','font-size':20,'font-weight':750,
-          'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,String(p.volume));
-        svg('title',{},group,p.date+'｜每日总访问量 '+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
+          'data-qily-kline-label':'daily-pv','data-qily-kline-day':p.date},group,(p.error?'≥':'')+String(p.volume));
+        svg('title',{},group,p.date+(p.error?'｜部分时段读取失败；已确认PV至少 ':'｜每日总访问量 ')+p.volume+'；6小时访问量：首时段 '+p.firstSlot+'、最高 '+p.peak+'、最低 '+p.trough+'、末时段 '+p.lastSlot);
       }
       svg('text',{x:x,y:430,'text-anchor':'middle',fill:'#526f70','font-size':20},root,label);
     });
     var realSum=valid.reduce(function(sum,p){return sum+p.volume;},0);
     var last=valid[valid.length-1];
-    statusBox.textContent='已采集 '+count+' 日｜所示期间实测分时PV合计 '+realSum+'｜最新 '+last.date.slice(5)+'：'+last.volume+' PV'+(failed?'｜部分日期接口不可读':'');
+    statusBox.textContent='已采集 '+count+' 日｜所示期间'+(failed?'已读取分时PV至少 ':'实测分时PV合计 ')+realSum+'｜最新 '+last.date.slice(5)+'：'+(last.error?'至少 ':'')+last.volume+' PV'+(failed?'｜部分日期接口不可读':'');
   }
   w.addEventListener('qily:pv6h-updated',function(event){
     var detail=event && event.detail;
