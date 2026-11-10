@@ -22,8 +22,7 @@ const STYLE='<style id="'+STYLE_ID+'" data-qily-brief-first-frame="dock-v1">'+
   'background:#0f4b5a!important;border-top:3px solid #c8a25a!important}'+
   'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-first-paint-dock="v1"] .qily-float-btn'+
   '{transition:none!important}'+
-  'html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qily-brief-dock-pending="v1"]'+
-  '{visibility:hidden!important;opacity:0!important;pointer-events:none!important}</style>';
+  '</style>';
 const check=process.argv.includes('--check');
 let candidates=0,changed=0;
 for(const file of fs.readdirSync(daily).filter(n=>/^\d{4}-\d{2}-\d{2}\.html$/.test(n)&&n.slice(0,10)>=START_DATE).sort()){
@@ -33,8 +32,12 @@ for(const file of fs.readdirSync(daily).filter(n=>/^\d{4}-\d{2}-\d{2}\.html$/.te
   if(!original.includes(AFTER))throw Error(file+': missing readable first paint marker');
   if(!original.includes('id="qilyDockUnifiedV58Style"')||!original.includes('id="floatDock"'))throw Error(file+': missing canonical V5.8 Dock');
   if((original.match(/id="floatDock"/g)||[]).length!==1)throw Error(file+': duplicate Dock instances');
-  if(!original.includes('data-qily-brief-dock-pending="v1"')||!original.includes('visibility:hidden!important'))
-    throw Error(file+': new Dock must stay hidden until fully hydrated');
+  const dockOpening=original.match(/<nav\b[^>]*\bid="floatDock"[^>]*>/i);
+  if(!dockOpening||dockOpening[0].includes('data-qily-brief-dock-pending')||
+     dockOpening[0].includes('visibility:hidden')||dockOpening[0].includes('opacity:0'))
+    throw Error(file+': shared Dock must paint immediately; no hidden/late reveal gate');
+  if(!dockOpening[0].includes('flex-direction:row!important'))
+    throw Error(file+': shared Dock must start in final horizontal geometry');
   let without=original;
   while(without.includes('<style id="'+STYLE_ID+'"')){
     const start=without.indexOf('<style id="'+STYLE_ID+'"');
