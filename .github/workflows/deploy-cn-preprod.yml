@@ -190,7 +190,9 @@ jobs:
       (github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only) &&
       (github.event_name != 'push' || contains(github.event.head_commit.message, '[cn-clone-approved]'))
     timeout-minutes: 300
-    runs-on: ubuntu-latest
+# Ubuntu 26.04 breaks pinned Playwright 1.55 during final production VI acceptance.
+    # Keep the actual release/rollback gate; pin runner to the proven supported image.
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
