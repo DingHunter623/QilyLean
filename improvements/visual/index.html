@@ -285,6 +285,26 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
    83px, matched). */
 #qilyLecMini .m-title{font-size:20px!important}
 #qilyLecMini .m-expand{font-size:20px!important}
+
+/* v2.4.8 buttons + chapter colours (visual article), from user screenshots
+   (2026-11-11 00:18/00:21) and browser task 874c541b (00:21-00:23).
+   (1) Buttons: the two player buttons "跟随原文" and "语速/音调/音量设置"
+   render at ~19px glyph on the model but only ~14-15px here. v2.4.3 locked
+   them to the player-CSS value 15px, but the model renders larger because a
+   shared stylesheet enlarges buttons — same mistake as the mini bar (lock
+   measured values, not player-CSS values). Bump .p-follow/.p-toggle to 21px.
+   (2) Chapter colours: the chapter body text renders dim muted teal
+   rgb(73,101,101) #496565 here, but bright off-white rgb(231,238,243)
+   #e7eef3 on the model (dark cards, user screenshots, pixel-sampled).
+   Root cause: site-core-visual-bundle-v1.css forces `p` inside card-like
+   containers to var(--qily-read-copy) #496565 with !important, overriding
+   the player rule `.chapter p{color:var(--lec-ink)}`. Restore the player's
+   own mode-aware ink variable with ID specificity + !important, for both
+   colour and -webkit-text-fill-color, on .chapter p and .chapter h3. */
+#qilyLecPlayer .p-follow{font-size:21px!important}
+#qilyLecPlayer .p-toggle{font-size:21px!important}
+#qily-lecture .chapter p{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+#qily-lecture .chapter h3{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
