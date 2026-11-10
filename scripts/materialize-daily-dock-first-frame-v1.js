@@ -36,7 +36,8 @@ for(const file of fs.readdirSync(daily).filter(n=>/^\d{4}-\d{2}-\d{2}\.html$/.te
     const start=without.indexOf('<style id="'+STYLE_ID+'"');
     const close=without.indexOf('</style>',start);
     if(close<start)throw Error(file+': incomplete first-frame style');
-    without=without.slice(0,start)+without.slice(close+'</style>'.length);
+    const from=without[start-1]==='\n'?start-1:start;
+    without=without.slice(0,from)+without.slice(close+'</style>'.length);
   }
   const updated=without.replace(AFTER,AFTER+'\n'+STYLE);
   const firstStyle=updated.indexOf('id="'+STYLE_ID+'"');
