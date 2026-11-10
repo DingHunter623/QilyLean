@@ -13,7 +13,7 @@ const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
 const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1';
-const BRIEF_DOCK_RUNTIME_REV='20261110-gated-reveal-v1';
+const BRIEF_DOCK_RUNTIME_REV='20261110-static-shell-v2';
 function dockRuntimeSrc(relative){
  const issue=/^qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html$/.exec(relative);
  return issue&&issue[1]>='2026-11-10'?DOCK_RUNTIME_SRC+'&brief='+BRIEF_DOCK_RUNTIME_REV:DOCK_RUNTIME_SRC;
@@ -44,12 +44,12 @@ const spacerTag=`<div id="${DOCK_SPACER_ID}" aria-hidden="true"></div>`;
 // The fixed footer is physically positioned by its own HTML on 2026-11-10+
 // briefs. This survives an early legacy stylesheet and requires no JS handoff.
 // Do not lock responsive padding/gap: V5.8 media queries own those values.
-const BRIEF_INLINE_FIXED='position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;max-width:none!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;margin:0!important;box-sizing:border-box!important;transform:none!important;z-index:2147482000!important;background:#0f4b5a!important;border-top:3px solid #c8a25a!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important';
+const BRIEF_INLINE_FIXED='position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;max-width:none!important;display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;margin:0!important;box-sizing:border-box!important;transform:none!important;z-index:2147482000!important;background:#0f4b5a!important;border-top:3px solid #c8a25a!important';
 function briefDockMarkup(relative){
   const date=/^qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html$/.exec(relative);
   if(!date||date[1]<'2026-11-10')return dockTag;
   return dockTag.replace('data-qily-standalone-dock="v5.8"',
-    'data-qily-brief-dock-pending="v1" style="'+BRIEF_INLINE_FIXED+'" data-qily-standalone-dock="v5.8"');
+    'style="'+BRIEF_INLINE_FIXED+'" data-qily-standalone-dock="v5.8"');
 }
 
 
