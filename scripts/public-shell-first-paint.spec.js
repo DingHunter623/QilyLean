@@ -373,7 +373,7 @@ for(const [name,url] of firstFrameBriefs){
       const dockGate=new Promise(resolve=>{releaseDock=resolve;});
       try{
         await context.addInitScript(()=>{
-          window.__qilyBriefDockFrameProbe={samples:0,violations:[],firstPaintAt:null};
+          window.__qilyBriefDockFrameProbe={samples:0,violations:[],firstPaintAt:null,baseline:null};
           let frames=0;
           function sample(){
             const state=window.__qilyBriefDockFrameProbe;
@@ -392,7 +392,9 @@ for(const [name,url] of firstFrameBriefs){
                 const sideGap=Math.min(Math.abs(window.innerWidth-rect.right),Math.abs(expectedRight-rect.right));
                 const buttonRects=[...dock.querySelectorAll('.qily-float-btn[data-action]')].map(b=>b.getBoundingClientRect());
                 const oneRow=buttonRects.length===4&&buttonRects.every((r,i)=>i===0||(Math.abs(r.top-buttonRects[0].top)<=3&&r.left>=buttonRects[i-1].right-3));
-                const invalid=all.length!==1||style.position!=='fixed'||style.flexDirection!=='row'||style.flexWrap!=='nowrap'||!oneRow||gap>2||Math.abs(rect.left)>2||sideGap>2;
+                if(!state.baseline)state.baseline={top:rect.top,height:rect.height};
+                const shifting=Math.abs(state.baseline.top-rect.top)>2||Math.abs(state.baseline.height-rect.height)>2;
+                const invalid=all.length!==1||style.position!=='fixed'||style.flexDirection!=='row'||style.flexWrap!=='nowrap'||!oneRow||shifting||gap>2||Math.abs(rect.left)>2||sideGap>2;
                 if(invalid&&state.violations.length<15)state.violations.push({
                   frame:frames,position:style.position,count:all.length,bottomGap:gap,
                   left:rect.left,right:rect.right,screen:window.innerWidth
@@ -407,30 +409,32 @@ for(const [name,url] of firstFrameBriefs){
         await context.route('**/*',async route=>{
           const requestUrl=new URL(route.request().url());
           if(requestUrl.origin!==new URL(base).origin)return route.abort();
-          if(requestUrl.pathname==='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1')await dockGate;
+          if(requestUrl.pathname==='/site-dock-share-runtime-v1.js')await dockGate;
           return route.continue();
         });
         const page=await context.newPage();
         await page.goto(base+url,{waitUntil:'commit'});
-        const gated=name.startsWith('latest-')&&newestBriefDate>='2026-11-10';
-        if(gated){
-          await page.waitForFunction(()=>{
-            const d=document.querySelector('#floatDock[data-qily-brief-dock-pending="v1"]');
-            return d&&getComputedStyle(d).visibility==='hidden'&&getComputedStyle(d).opacity==='0';
-          });
-          expect(await page.evaluate(()=>window.__qilyBriefDockFrameProbe.samples),
-            'No half-initialized toolbar may paint before runtime').toBe(0);
-        }else{
-          await expect.poll(()=>page.evaluate(()=>window.__qilyBriefDockFrameProbe?.samples||0),{
-            message:'historical static brief Dock paints before runtime'
-          }).toBeGreaterThanOrEqual(6);
-        }
+        await expect.poll(()=>page.evaluate(()=>window.__qilyBriefDockFrameProbe?.samples||0),{
+          message:'global static Dock must paint before loading any JavaScript'
+        }).toBeGreaterThanOrEqual(6);
+        expect(await page.locator('#floatDock').getAttribute('data-qily-brief-dock-pending')).toBeNull();
+        const preRuntime=await page.locator('#floatDock').evaluate(dock=>{
+          const box=dock.getBoundingClientRect(),style=getComputedStyle(dock);
+          return {top:box.top,height:box.height,left:box.left,right:box.right,visible:style.visibility,opacity:style.opacity};
+        });
+        expect(preRuntime.visible).toBe('visible');
+        expect(preRuntime.opacity).toBe('1');
         releaseDock();
         await page.waitForLoadState('load');
-        if(gated)await page.waitForFunction(()=>{
-          const d=document.querySelector('#floatDock[data-qily-brief-dock-ready="v1"]');
-          return d&&!d.hasAttribute('data-qily-brief-dock-pending')&&getComputedStyle(d).visibility==='visible';
+        const postRuntime=await page.locator('#floatDock').evaluate(dock=>{
+          const box=dock.getBoundingClientRect(),style=getComputedStyle(dock);
+          return {top:box.top,height:box.height,left:box.left,right:box.right,visible:style.visibility,opacity:style.opacity};
         });
+        expect(postRuntime.visible).toBe('visible');
+        expect(postRuntime.opacity).toBe('1');
+        for(const key of ['top','height','left','right']){
+          expect(Math.abs(postRuntime[key]-preRuntime[key]),name+' '+width+'px: Dock '+key+' may not jump when JS loads').toBeLessThanOrEqual(2);
+        }
         await page.waitForTimeout(750);
         const state=await page.evaluate(()=>window.__qilyBriefDockFrameProbe);
         expect(state.samples,name+' at '+width+': sample actual first frames').toBeGreaterThanOrEqual(10);
