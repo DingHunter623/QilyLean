@@ -137,18 +137,22 @@ if (sourceLatest >= '2026-11-10') {
     includes(inlineDock,required,'HTML-first Dock must not depend on asynchronous CSS/JS');
   }
 
-  assert(dockStart[0].includes('data-qily-brief-dock-pending="v1"'),
-    'New curated Dock must start in pending state');
-  for(const guard of ['visibility:hidden!important','opacity:0!important','pointer-events:none!important']) {
-    includes(inlineDock,guard,'New curated Dock must be invisible until buttons are fully laid out');
+  assert(!dockStart[0].includes('data-qily-brief-dock-pending'),
+    'A global public Dock must never wait for the page content to finish loading');
+  for(const forbidden of ['visibility:hidden!important','opacity:0!important','pointer-events:none!important']){
+    assert(!inlineDock.includes(forbidden),'Shared Dock must be visible at HTML first paint');
   }
+  assert(!earlyStyle[1].includes('data-qily-brief-dock-pending'),
+    'First-frame CSS cannot retain the old delayed reveal gate');
   includes(earlyStyle[1],'flex-direction:row!important',
-    'Initial Dock CSS must defeat legacy column stacking');
-  includes(earlyStyle[1],'data-qily-brief-dock-pending="v1"]{visibility:hidden!important',
-    'Critical first-paint CSS must suppress any stacked interim Dock');
-  includes(latest,'&brief=20261110-gated-reveal-v1',
-    'New curated Dock must bypass the old cached runtime');
+    'First-frame CSS must maintain the final four-action horizontal row');
+  includes(latest,'&brief=20261110-static-shell-v2',
+    'New curated Dock must bypass stale delayed-reveal runtime cache');
   const formalCss=read('site-vi-standard-v4.css');
+  includes(formalCss,'@view-transition{navigation:auto}',
+    'International public routes must enable native same-origin shared Dock continuity');
+  includes(formalCss,'view-transition-name:qily-public-dock',
+    'Public Dock must keep its own cross-document visual identity');
   includes(formalCss,
     'html body #floatDock.qily-float-dock:not([data-qily-first-paint-dock="v1"])',
     'Old centered VI flow styles must exclude fixed V5.8 Dock');
