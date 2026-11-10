@@ -199,6 +199,36 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
   #qilyLecPlayer .ctl{min-width:44%}
   #qilyLecPlayer .p-sub .s-cur{font-size:14px;min-height:42px}
 }
+/* v2.4.2 player hardening (visual article): this page loads page-wide button/link
+   rules that leak into the player and that the 2026-11-08 model page does not load:
+   site-closure-bundle-v24 sets position:relative!important on every button
+   (breaks .p-collapse absolute top-right), site-visual-closure-v1 sets
+   min-height:44px on every button, site-visual-governance-v2 sets
+   font-size:20px!important on every button/link in main. Restate the player's
+   own declarations with !important (ID-scoped, so they win) so the player
+   renders exactly like the model. */
+#qilyLectureCta{display:inline-flex!important;align-items:center!important;gap:6px!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:1px solid #c8a25a!important;background:#0f4b5a!important;color:#fff!important;padding:8px 16px!important;border-radius:999px!important}
+#qily-lecture .ch-play{font-size:13.5px!important;min-height:0!important;border:1px solid var(--lec-line)!important;background:var(--lec-surface)!important;color:var(--lec-brand)!important;font-weight:700!important;padding:7px 13px!important;border-radius:999px!important}
+#qilyLecPlayer{position:fixed!important;left:0!important;right:0!important;bottom:var(--qily-dock-footer-h,50px)!important;z-index:50!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border-top:3px solid var(--lec-gold)!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important}
+#qilyLecPlayer .player-inner{max-width:880px!important;margin:0 auto!important;padding:10px 16px 10px!important}
+#qilyLecPlayer .p-row{display:flex!important;align-items:center!important;gap:10px!important}
+#qilyLecPlayer .p-collapse{position:absolute!important;top:-13px!important;right:14px!important;left:auto!important;z-index:2!important;display:inline-flex!important;align-items:center!important;gap:4px!important;height:26px!important;min-height:26px!important;max-height:26px!important;padding:0 12px!important;background:var(--lec-player-bg)!important;border:1px solid var(--lec-gold)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:12px!important;font-weight:700!important;border-radius:999px!important;cursor:pointer!important;box-shadow:0 2px 8px rgba(5,18,30,.25)!important;white-space:nowrap!important}
+#qilyLecPlayer .p-btn{flex:none!important;width:40px!important;min-width:40px!important;height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:50%!important;border:1px solid var(--lec-player-line)!important;background:transparent!important;color:var(--lec-player-ink)!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+#qilyLecPlayer .p-btn.main{width:48px!important;min-width:48px!important;height:48px!important;min-height:48px!important;max-height:48px!important;background:var(--lec-gold)!important;border-color:var(--lec-gold)!important;color:#073c47!important}
+#qilyLecPlayer .p-btn svg{width:20px!important;height:20px!important;fill:currentColor!important}
+#qilyLecPlayer .p-btn.main svg{width:24px!important;height:24px!important}
+#qilyLecPlayer .p-follow{display:inline-flex!important;margin:8px 0 0 0!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:12.5px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:0!important}
+#qilyLecPlayer .p-toggle{display:inline-flex!important;margin-top:8px!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:12.5px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:0!important}
+#qilyLecPlayer .p-seek{display:flex!important;align-items:center!important;gap:10px!important;margin-top:8px!important;font-size:12.5px!important;color:var(--lec-player-ink2)!important}
+#qilyLecPlayer .p-sub{margin-top:8px!important;padding:7px 10px!important;background:rgba(255,255,255,.07)!important;border:1px solid var(--lec-player-line)!important;border-radius:10px!important;cursor:pointer!important}
+#qilyLecPlayer .p-controls{display:none!important;flex-wrap:wrap!important;gap:8px 22px!important;margin-top:10px!important;align-items:flex-end!important}
+#qilyLecPlayer .p-controls.open{display:flex!important}
+#qilyLecMini{position:fixed!important;right:12px!important;bottom:calc(var(--qily-dock-footer-h,50px) + 12px)!important;z-index:51!important;display:none!important;align-items:center!important;gap:8px!important;max-width:min(78vw,340px)!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:999px!important;padding:8px 8px 8px 10px!important;box-shadow:0 8px 24px rgba(5,18,30,.35)!important;cursor:pointer!important}
+#qilyLecMini.show{display:flex!important}
+#qilyLecMini .m-play{flex:none!important;width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;max-height:34px!important;border-radius:50%!important;border:none!important;background:var(--lec-gold)!important;color:#073c47!important;font-size:14px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+#qilyLecMini .m-title{flex:1!important;min-width:0!important;font-size:13px!important;font-weight:700!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#qilyLecMini .m-expand{flex:none!important;font-size:13px!important;color:var(--lec-gold-light)!important;font-weight:900!important;white-space:nowrap!important}
+
 </style>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
 <link id="qilyViV4Formal" data-qily-vi="v4-formal" rel="stylesheet" href="/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1">
