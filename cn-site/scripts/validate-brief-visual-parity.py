@@ -268,9 +268,11 @@ def validate_generated_corpus():
         original_ids={attrs['id'] for tag,attrs in original_page.nodes if tag=='article' and attrs.get('id')}
         generated_ids={attrs['id'] for tag,attrs in main_page.nodes if tag=='article' and attrs.get('id')}
         assert original_ids<=generated_ids,(src.path,original_ids-generated_ids)
-        expected_svg=len(re.findall(r'<svg\b',source_main,re.I))
+        # Count only diagrams retained by the approved non-interactive CN clone.
+        # Source audio-player button icons are intentionally not copied.
+        expected_svg=visual.sanitize_main(source_main,src.path.as_posix())[1]
         actual_svg=len(re.findall(r'<svg\b',rendered_main,re.I))
-        assert expected_svg==actual_svg,(src.path,'inline diagram lost')
+        assert expected_svg==actual_svg,(src.path,'inline engineering diagram lost')
         counts['svg']+=actual_svg
         expected_images=[visual.local_media(attrs.get('src','')) for tag,attrs in original_page.nodes if tag=='img']
         expected_images=[url for url in expected_images if url]

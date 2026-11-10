@@ -488,6 +488,18 @@ def verify_semantics(value, row):
                 require(marker in main, 'Latest special-content issue lost source structure: ' + marker)
             require('https://qilylean.cn/briefs/archive/2026-11-08/' in value,
                     'Latest issue lost China-local canonical')
+        if date == '2026-11-10':
+            for marker in (
+                '改善没有终点，协同创造价值', '从单点改善到组织共创的工程闭环',
+                'continuous-collaboration-20261110', 'hc-thesis', 'hc-loop',
+                'hc-cards', 'hc-table', 'hc-flow', 'hc-roadmap',
+                '90天落地路线', '教学推演',
+            ):
+                require(marker in main, '2026-11-10 cloned brief lost original knowledge/visual structure: ' + marker)
+            require('https://qilylean.cn/briefs/archive/2026-11-10/' in value,
+                    '2026-11-10 issue lost China-local canonical')
+            require('2026-11-10-brief.css' in value,
+                    '2026-11-10 original scoped source CSS was not mirrored')
     if row['source'] == 'index.html':
         plain = html.unescape(re.sub(r'<[^>]+>', ' ', main))
         require(not parity.COMMERCIAL_COPY.search(plain), 'Commercial transaction copy remains in the cloned homepage')
