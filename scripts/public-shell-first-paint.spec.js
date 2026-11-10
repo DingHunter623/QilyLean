@@ -354,3 +354,76 @@ test('navigation core preserves the static menu while its action runtime is dela
     expectPaint(await paintState(page,'.hero .eyebrow'),'Dock runtime adopts core-preserved menu');
   }finally{releaseDock();await context.close();}
 });
+
+/* 2026-11-10 regression: sample actual animation frames, not just the settled page.
+ * Reference 2026-11-08 is already accepted, and the index supplies each new
+ * newest edition. Deliberately delay the Dock runtime to simulate cold loading.
+ * One frame floating above the bottom is a failing release.
+ */
+const newestBriefDate=JSON.parse(fs.readFileSync(path.join(process.cwd(),'qilylean/daily/index.json'),'utf8'))[0].date;
+const firstFrameBriefs=[
+  ['accepted-2026-11-08','/qilylean/daily/2026-11-08.html'],
+  ['latest-'+newestBriefDate,'/qilylean/daily/'+newestBriefDate+'.html']
+];
+for(const [name,url] of firstFrameBriefs){
+  for(const width of [1600,820,390]){
+    test('curated brief never flashes its Dock away from bottom: '+name+' at '+width+'px',async({browser})=>{
+      const context=await browser.newContext({viewport:{width,height:900}});
+      let releaseDock;
+      const dockGate=new Promise(resolve=>{releaseDock=resolve;});
+      try{
+        await context.addInitScript(()=>{
+          window.__qilyBriefDockFrameProbe={samples:0,violations:[],firstPaintAt:null};
+          let frames=0;
+          function sample(){
+            const state=window.__qilyBriefDockFrameProbe;
+            const all=document.querySelectorAll('#floatDock');
+            const dock=all[0];
+            if(dock){
+              const style=getComputedStyle(dock);
+              const rect=dock.getBoundingClientRect();
+              if(style.display!=='none'&&style.visibility!=='hidden'&&rect.height>0){
+                state.samples++;
+                if(state.firstPaintAt===null)state.firstPaintAt=performance.now();
+                // CSS fixed-position geometry may exclude classic scrollbar tracks.
+                const expectedBottom=document.documentElement.clientHeight;
+                const expectedRight=document.documentElement.clientWidth;
+                const gap=Math.min(Math.abs(window.innerHeight-rect.bottom),Math.abs(expectedBottom-rect.bottom));
+                const sideGap=Math.min(Math.abs(window.innerWidth-rect.right),Math.abs(expectedRight-rect.right));
+                const invalid=all.length!==1||style.position!=='fixed'||gap>2||Math.abs(rect.left)>2||sideGap>2;
+                if(invalid&&state.violations.length<15)state.violations.push({
+                  frame:frames,position:style.position,count:all.length,bottomGap:gap,
+                  left:rect.left,right:rect.right,screen:window.innerWidth
+                });
+              }
+            }
+            frames++;
+            if(frames<180)requestAnimationFrame(sample);
+          }
+          requestAnimationFrame(sample);
+        });
+        await context.route('**/*',async route=>{
+          const requestUrl=new URL(route.request().url());
+          if(requestUrl.origin!==new URL(base).origin)return route.abort();
+          if(requestUrl.pathname==='/site-dock-share-runtime-v1.js')await dockGate;
+          return route.continue();
+        });
+        const page=await context.newPage();
+        await page.goto(base+url,{waitUntil:'commit'});
+        await expect.poll(()=>page.evaluate(()=>window.__qilyBriefDockFrameProbe?.samples||0),{
+          message:'static brief Dock must paint before runtime loads'
+        }).toBeGreaterThanOrEqual(6);
+        releaseDock();
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(750);
+        const state=await page.evaluate(()=>window.__qilyBriefDockFrameProbe);
+        expect(state.samples,name+' at '+width+': sample actual first frames').toBeGreaterThanOrEqual(10);
+        expect(state.violations,name+' at '+width+': Dock must have zero displaced/duplicate frames').toEqual([]);
+        await expect(page.locator('#floatDock [data-action]')).toHaveCount(4);
+      }finally{
+        releaseDock();
+        await context.close();
+      }
+    });
+  }
+}

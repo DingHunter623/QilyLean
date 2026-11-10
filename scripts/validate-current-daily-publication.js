@@ -110,6 +110,23 @@ if (secondLatestDate) {
   includes(secondLatest, `/qilylean/daily/${sourceLatest}.html`, 'Second-latest retained page links forward to the latest retained brief');
   assert(!/已是最新一期/.test(secondLatest), 'Second-latest retained page is not falsely marked as latest');
 }
+if (sourceLatest >= '2026-11-10') {
+  const earlyStyle=latest.match(/<style\s+id=["']qilyBriefDockFirstFrameV1["'][^>]*>([\s\S]*?)<\/style>/i);
+  assert(earlyStyle, 'New curated issue has fixed Dock pre-paint CSS');
+  for(const token of ['position:fixed!important','bottom:0!important','z-index:2147482000!important','transform:none!important']) {
+    includes(earlyStyle[1],token,'New curated issue prevents first-frame Dock displacement');
+  }
+  const anchor=latest.indexOf('<!-- QILY-R2-FIRST-PAINT:END -->');
+  const first=latest.indexOf('id="qilyBriefDockFirstFrameV1"');
+  const firstExternal=latest.search(/<link\s+[^>]*rel=["']stylesheet["']/i);
+  const canonical=latest.indexOf('id="qilyDockUnifiedV58Style"');
+  assert(anchor>=0&&first>anchor&&first<firstExternal&&canonical>first,
+    'Fixed Dock is declared before external styles; canonical V5.8 remains terminal');
+  assert((latest.match(/id="floatDock"/g)||[]).length===1,
+    'New curated issue renders exactly one Dock');
+  assert((latest.match(/id="qilyBriefDockFirstFrameV1"/g)||[]).length===1,
+    'New curated issue renders exactly one early Dock rule');
+}
 matches(latest, /site-navigation\.js\?v=[^"']+/, 'Latest retained page loads the versioned navigation wrapper');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
 matches(latest, /\bBUILD='[^']+'/, 'Latest retained page uses a versioned bounded stale-document guard');

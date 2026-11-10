@@ -28,6 +28,9 @@ const steps = [
   // with the same layout/first-paint authority used by the CN mirror build.
   ['publish-daily-brief-layout-guard-v1.js'],
   ['materialize-brief-focus-overrides-20261014.js'],
+  // Every newly published curated issue must own a stable fixed Dock from first paint.
+  ['materialize-daily-dock-first-frame-v1.js'],
+  ['materialize-daily-dock-first-frame-v1.js', '--check'],
   ['validate-weekly-brief-curation.js'],
   ['validate-current-daily-publication.js']
 ];
