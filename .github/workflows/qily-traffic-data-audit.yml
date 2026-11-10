@@ -1,0 +1,31 @@
+name: QilyLean traffic data-quality daily audit
+on:
+  schedule:
+    - cron: '15 17 * * *' # 01:15 Beijing time daily
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/traffic-data-audit.py'
+      - '.github/workflows/qily-traffic-data-audit.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read only aggregate and last 14 days of six-hour PV buckets
+        run: python3 scripts/traffic-data-audit.py
+      - name: Archive observations without changing PV data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: traffic-data-quality-evidence
+          path: traffic-audit-output/
+          retention-days: 30
+          if-no-files-found: warn
