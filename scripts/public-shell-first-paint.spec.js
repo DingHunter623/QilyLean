@@ -471,3 +471,56 @@ test('newest curated Dock survives stale legacy centered flow cascade',async({br
     expect(Math.abs(state.right-state.viewportW),'Dock remains full-width').toBeLessThanOrEqual(18);
   }finally{await context.close();}
 });
+
+for(const width of [1600,390]){
+  test('public Dock does not animate during native brief-to-brief navigation at '+width+'px',async({browser})=>{
+    const context=await browser.newContext({viewport:{width,height:900}});
+    try{
+      await context.addInitScript(()=>{
+        window.__qilyShellFirstFrames={visible:0,hidden:0,stacked:0};
+        let count=0;
+        function sample(){
+          const dock=document.getElementById('floatDock');
+          if(dock){
+            const s=getComputedStyle(dock);
+            if(s.display!=='none'&&s.visibility==='visible'&&s.opacity!=='0'){
+              window.__qilyShellFirstFrames.visible++;
+              const buttons=[...dock.querySelectorAll('.qily-float-btn[data-action]')].map(b=>b.getBoundingClientRect());
+              if(buttons.length!==4||buttons.some((r,i)=>i>0&&Math.abs(r.top-buttons[0].top)>3)){
+                window.__qilyShellFirstFrames.stacked++;
+              }
+            } else window.__qilyShellFirstFrames.hidden++;
+          }
+          if(++count<180)requestAnimationFrame(sample);
+        }
+        requestAnimationFrame(sample);
+      });
+      const page=await context.newPage();
+      await page.goto(base+'/qilylean/daily/2026-11-08.html',{waitUntil:'load'});
+      const before=await page.locator('#floatDock').evaluate(dock=>{
+        const r=dock.getBoundingClientRect(),s=getComputedStyle(dock);
+        return {top:r.top,height:r.height,left:r.left,width:r.width,visibility:s.visibility,transition:s.viewTransitionName};
+      });
+      expect(before.visibility).toBe('visible');
+      expect(before.transition,'native same-origin navigation should preserve shared Dock identity').toBe('qily-public-dock');
+      await Promise.all([
+        page.waitForURL('**/qilylean/daily/2026-11-10.html'),
+        page.locator('a[href="/qilylean/daily/2026-11-10.html"]').first().click()
+      ]);
+      await page.waitForLoadState('load');
+      const after=await page.locator('#floatDock').evaluate(dock=>{
+        const r=dock.getBoundingClientRect(),s=getComputedStyle(dock);
+        return {top:r.top,height:r.height,left:r.left,width:r.width,visibility:s.visibility,transition:s.viewTransitionName};
+      });
+      const state=await page.evaluate(()=>window.__qilyShellFirstFrames);
+      expect(after.visibility).toBe('visible');
+      expect(after.transition).toBe('qily-public-dock');
+      for(const key of ['top','height','left','width'])
+        expect(Math.abs(before[key]-after[key]),'shared Dock geometry must remain unchanged across pages: '+key).toBeLessThanOrEqual(2);
+      expect(state.visible,'new document paints its public Dock immediately').toBeGreaterThan(0);
+      expect(state.hidden,'new document never hides its public Dock').toBe(0);
+      expect(state.stacked,'public Dock never stacks four action buttons').toBe(0);
+      await expect(page.locator('#floatDock .qily-float-btn')).toHaveCount(4);
+    }finally{await context.close();}
+  });
+}
