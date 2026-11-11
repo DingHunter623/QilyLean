@@ -281,22 +281,22 @@ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.foo
 
 
 function setAttribute(tag,name,value){
-  const re=new RegExp('\\\\b'+name+'\\\\s*=','i');
-  if(re.test(tag))return tag.replace(new RegExp('\\\\b'+name+'\\\\s*=\\\\s*(["\\\\']).*?\\\\1','i'),name+'="'+value+'"');
+  const attr=new RegExp('\\b'+name+'\\s*=\\s*(?:"[^"]*"|\\x27[^\\x27]*\\x27)','i');
+  if(attr.test(tag))return tag.replace(attr,name+'="'+value+'"');
   return tag.replace(/>$/,' '+name+'="'+value+'">');
 }
 function addClass(tag,value){
-  const m=/\\bclass=(["'])(.*?)\\1/i.exec(tag);
+  const m=/\bclass=(["'])(.*?)\1/i.exec(tag);
   if(!m)return tag.replace(/>$/,' class="'+value+'">');
-  const classes=[...new Set((m[2]+' '+value).trim().split(/\\s+/).filter(Boolean))].join(' ');
+  const classes=[...new Set((m[2]+' '+value).trim().split(/\s+/).filter(Boolean))].join(' ');
   return tag.replace(m[0],'class="'+classes+'"');
 }
 function extractElement(source,tagName,startIndex){
-  const re=new RegExp('<\\\\/?'+tagName+'\\\\b[^>]*>','gi');re.lastIndex=startIndex;
+  const re=new RegExp('<\\/?'+tagName+'\\b[^>]*>','gi');re.lastIndex=startIndex;
   let depth=0,match;
   while((match=re.exec(source))){
-    if(/^<\\//.test(match[0]))depth--;
-    else if(!/\\/\\s*>$/.test(match[0]))depth++;
+    if(/^<\//.test(match[0]))depth--;
+    else if(!/\/\s*>$/.test(match[0]))depth++;
     if(depth===0)return {start:startIndex,end:re.lastIndex,html:source.slice(startIndex,re.lastIndex)};
   }
   throw new Error('Unbalanced '+tagName+' element in CN header.');
@@ -308,31 +308,31 @@ function cnTranslationMarkup(){
  return '<div id="qilyCnTranslateV3" class="qily-cn-translate" data-qily-static-first-paint="v1" data-qily-header-utility="translation" data-qily-translation-provider="qilylean-api" data-qily-translation-engine="youdao" translate="no" role="group" aria-label="网页翻译"><span class="qily-cn-translate__mark" aria-hidden="true">🌐</span><select class="qily-cn-translate__select" aria-label="选择网站语言"><option value="zh-CN">中文简体</option><option value="zh-TW">中文繁体</option><option value="en">English</option><option value="__more__">其他</option></select><span class="qily-cn-translate__provider">站内翻译</span><div class="qily-cn-language-more" hidden role="dialog" aria-label="更多翻译语言"></div></div>';
 }
 function materializeHeader(source){
-  const match=/<header\\b[^>]*\\bclass=["'][^"']*\\bsite-header\\b[^"']*["'][^>]*>[\\s\\S]*?<\\/header>/i.exec(source);
+  const match=/<header\b[^>]*\bclass=["'][^"']*\bsite-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i.exec(source);
   if(!match)return source;
   let header=match[0];
-  const navOpen=/<nav\\b[^>]*\\bclass=["'][^"']*\\bnav\\b[^"']*["'][^>]*>/i.exec(header);
+  const navOpen=/<nav\b[^>]*\bclass=["'][^"']*\bnav\b[^"']*["'][^>]*>/i.exec(header);
   if(!navOpen)return source;
   const navStart=navOpen.index,navElement=extractElement(header,'nav',navStart);
   let nav=navElement.html;
-  const open=nav.match(/^<nav\\b[^>]*>/i)[0];
+  const open=nav.match(/^<nav\b[^>]*>/i)[0];
   let updatedOpen=addClass(open,'nav');
   updatedOpen=setAttribute(updatedOpen,'id','qilyCnPrimaryNavigation');
   updatedOpen=setAttribute(updatedOpen,'data-qily-cn-nav-rail','static-v1');
   updatedOpen=setAttribute(updatedOpen,'aria-label','主导航');
   nav=updatedOpen+nav.slice(open.length);
   const shellMarkup='<div class="qily-cn-nav-shell" data-qily-cn-nav-shell="v7">'+nav+cnRailMarkup()+'</div>';
-  const shellOpen=/<div\\b[^>]*\\bclass=["'][^"']*\\bqily-cn-nav-shell\\b[^"']*["'][^>]*>/i.exec(header);
+  const shellOpen=/<div\b[^>]*\bclass=["'][^"']*\bqily-cn-nav-shell\b[^"']*["'][^>]*>/i.exec(header);
   if(shellOpen){
     const shell=extractElement(header,'div',shellOpen.index);
     header=header.slice(0,shell.start)+shellMarkup+header.slice(shell.end);
   }else{
     header=header.slice(0,navElement.start)+shellMarkup+header.slice(navElement.end);
   }
-  const hasTranslator=/cn-translate-baidu-v1\\.js/.test(source);
+  const hasTranslator=/cn-translate-baidu-v1\.js/.test(source);
   if(hasTranslator&&!/id=["']qilyCnTranslateV3["']/.test(header))header=header.replace(shellMarkup,shellMarkup+cnTranslationMarkup());
   let next=source.slice(0,match.index)+header+source.slice(match.index+match[0].length);
-  if(hasTranslator&&!/cn-translate-baidu-v1\\.css/.test(next))next=next.replace(/<\\/head\\s*>/i,'<link rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2">\\n</head>');
+  if(hasTranslator&&!/cn-translate-baidu-v1\.css/.test(next))next=next.replace(/<\/head\s*>/i,'<link rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2">\n</head>');
   return next;
 }
 
