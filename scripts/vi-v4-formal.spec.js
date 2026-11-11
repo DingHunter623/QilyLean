@@ -81,6 +81,8 @@ test('international curated archive keeps primary navigation sticky while scroll
       };
     });
     console.log(`QILY-STICKY-DIAG ${device} ${JSON.stringify(stickyDiagnostics)}`);
+    expect(stickyDiagnostics.bodyOverflowX,`${device}: body horizontal overflow must not create a scroll container`).toBe('clip');
+    expect(stickyDiagnostics.bodyOverflowY,`${device}: body vertical overflow must remain visible`).toBe('visible');
     await page.screenshot({path:path.join('visual-vi-v4-artifacts',`daily-insights-sticky-${device}.png`)});
     await expect.poll(()=>header.evaluate(el=>Math.round(el.getBoundingClientRect().top)),{message:`${device}: global header should remain pinned to the viewport top`}).toBe(0);
     await expect.poll(()=>header.evaluate(el=>getComputedStyle(el).position),{message:`${device}: sticky positioning must remain active after scroll`}).toBe('sticky');
