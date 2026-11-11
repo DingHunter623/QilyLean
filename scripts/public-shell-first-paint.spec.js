@@ -78,7 +78,7 @@ for(const width of [1440,1024,820,390,320]){
 async function observeStaticMenu(context){
   await context.addInitScript(()=>{
     // This observer is only a regression probe. Production keeps one Dock owner.
-    const probe={initial:null,replaced:false,initialHeader:null,headerReplaced:false,invalidMenus:[],coreReady:false,navMovements:[]};
+    const probe={initial:null,replaced:false,initialHeader:null,headerReplaced:false,initialTranslation:null,translationReplaced:false,invalidMenus:[],coreReady:false,navMovements:[]};
     window.__qilyStaticMenuProbe=probe;
     const movement=(nav,reason,stack)=>{
       if(!nav.matches('header nav'))return;
@@ -94,6 +94,9 @@ async function observeStaticMenu(context){
       const header=document.querySelector('header.qily-site-header.qily-global-header');
       if(!probe.initialHeader&&header)probe.initialHeader=header;
       if(probe.initialHeader&&header!==probe.initialHeader)probe.headerReplaced=true;
+      const translation=document.getElementById('qilyGlobalTranslationDualRouteV2');
+      if(!probe.initialTranslation&&translation)probe.initialTranslation=translation;
+      if(probe.initialTranslation&&translation!==probe.initialTranslation)probe.translationReplaced=true;
       if(!probe.initial&&current&&current.getAttribute('data-qily-first-paint-dock')==='v1'&&actions(current).length===4)probe.initial=current;
       if(!probe.initial)return;
       if(current!==probe.initial)probe.replaced=true;
@@ -121,7 +124,7 @@ async function observeStaticMenu(context){
 async function expectStaticMenuPreserved(page){
   const probe=await page.evaluate(()=>{
     const state=window.__qilyStaticMenuProbe;
-    return state&&{captured:!!state.initial,sameNode:state.initial===document.getElementById('floatDock'),replaced:state.replaced,headerCaptured:!!state.initialHeader,headerSameNode:state.initialHeader===document.querySelector('header.qily-site-header.qily-global-header'),headerReplaced:state.headerReplaced,invalidMenus:state.invalidMenus};
+    return state&&{captured:!!state.initial,sameNode:state.initial===document.getElementById('floatDock'),replaced:state.replaced,headerCaptured:!!state.initialHeader,headerSameNode:state.initialHeader===document.querySelector('header.qily-site-header.qily-global-header'),headerReplaced:state.headerReplaced,translationCaptured:!!state.initialTranslation,translationSameNode:state.initialTranslation===document.getElementById('qilyGlobalTranslationDualRouteV2'),translationReplaced:state.translationReplaced,invalidMenus:state.invalidMenus};
   });
   expect(probe&&probe.captured,'the parser supplied the initial static menu').toBeTruthy();
   expect(probe.sameNode,'the original static menu survives shared runtime/core loading').toBeTruthy();
@@ -129,6 +132,12 @@ async function expectStaticMenuPreserved(page){
   expect(probe.headerCaptured,'the parser supplied the initial static global header').toBeTruthy();
   expect(probe.headerSameNode,'the original static header survives shared runtime/core loading').toBeTruthy();
   expect(probe.headerReplaced,'the static header must never be replaced').toBe(false);
+  const translationRequired=await page.evaluate(()=>!!document.querySelector('script[src*="site-translation-safe-runtime-v1.js"]'));
+  if(translationRequired){
+    expect(probe.translationCaptured,'the parser supplied the initial static translation utility').toBeTruthy();
+    expect(probe.translationSameNode,'the original translation utility survives runtime hydration').toBeTruthy();
+    expect(probe.translationReplaced,'the static translation utility must never be replaced').toBe(false);
+  }
   expect(probe.invalidMenus,'loading must never introduce a menu with missing actions').toEqual([]);
   await expect(page.locator('script[src*="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"]'),'pending first-paint runtime must suppress the legacy fallback loader').toHaveCount(1);
 }
@@ -166,6 +175,8 @@ async function paintState(page,labelSelector){
     const headerStyle=header&&getComputedStyle(header);
     const headerRect=header&&header.getBoundingClientRect();
     const primaryNav=header&&header.querySelector('nav.qily-global-nav,nav.site-nav');
+    const translation=document.getElementById('qilyGlobalTranslationDualRouteV2');
+    const translationRequired=!!document.querySelector('script[src*="site-translation-safe-runtime-v1.js"]');
     const dock=document.querySelector('#floatDock');
     const dockStyle=dock&&getComputedStyle(dock);
     const rect=dock&&dock.getBoundingClientRect();
@@ -181,6 +192,7 @@ async function paintState(page,labelSelector){
         return drawn&&circle&&outlined?[hero.className+pseudo]:[];
       })),
       header:headerStyle&&{position:headerStyle.position,top:headerRect.top,height:headerRect.height,visible:visible(header),navLinks:primaryNav?primaryNav.querySelectorAll('a[href]').length:0,brand:!!header.querySelector('.qily-brand')},
+      translation:{required:translationRequired,visible:visible(translation)},
       dock:dockStyle&&{position:dockStyle.position,color:dockStyle.backgroundColor,border:dockStyle.borderTopWidth,borderColor:dockStyle.borderTopColor,x:rect.x,width:rect.width,height:rect.height,bottom:rect.bottom,visible:visible(dock),padding:dockStyle.padding,gap:dockStyle.gap,display:dockStyle.display,pseudoHeight:getComputedStyle(dock,'::after').height,buttonHeight:dock.querySelector('button').getBoundingClientRect().height,buttonPadding:getComputedStyle(dock.querySelector('button')).padding,buttonFont:getComputedStyle(dock.querySelector('button')).font},
       docks:document.querySelectorAll('#floatDock').length,
       styles:document.querySelectorAll('#qilyDockUnifiedV58Style').length,
@@ -208,6 +220,7 @@ function expectPaint(state,name){
   expect(state.header.top).toBeCloseTo(0,0);
   expect(state.header.navLinks).toBe(10);
   expect(state.header.brand).toBe(true);
+  if(state.translation.required)expect(state.translation.visible,'translation utility is visible before JavaScript').toBe(true);
   expect(state.docks).toBe(1);
   expect(state.styles).toBe(1);
   expect(state.spacers).toBe(1);
