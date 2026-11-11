@@ -316,6 +316,18 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
    collapsed height (258px) whether settings are open or closed. Panel is
    centred to the 880px content width, styled as part of the player. */
 #qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
+
+/* v2.5.0 KTV-style sentence highlight (both lectures), user-approved 2026-11-11:
+   Lecture text gets a synchronized background per sentence being spoken,
+   like KTV lyrics — NOT the whole module/card filled.
+   (1) Subtitle current sentence (.s-cur) gets a light-gold tint.
+   (2) Chapter-card text is split into sentence spans; the sentence being
+       spoken gets .on (light-gold bg, dark ink).
+   (3) Follow-the-article (.lec-follow) no longer fills the whole article
+       section — outline only, for location. */
+#qilyLecPlayer .p-sub .s-cur{background:rgba(255,227,155,.22)!important;border-radius:6px!important;padding:2px 6px!important;margin:0 -6px!important}
+#qily-lecture .chapter .lec-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+.lec-follow{background:transparent!important;outline:2px solid #c8a25a!important;outline-offset:6px!important;border-radius:10px!important}
 </style>
 <script defer data-qily-traffic-loader="v1" src="/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"></script>
@@ -450,6 +462,11 @@ var audio = document.getElementById('qilyLecAudio');
         cur.textContent = ch.sentences[idx] || '';
         var nextTxt = ch.sentences[idx + 1];
         nxt.textContent = nextTxt ? nextTxt : (current < CHAPTERS.length - 1 ? '本段完 · 将自动接下一段' : '本段完 · 全文结束');
+        var card = document.getElementById('qilyLecCh-' + current);
+        if (card){
+          var spans = card.querySelectorAll('.lec-sen');
+          for (var j = 0; j < spans.length; j++) spans[j].classList.toggle('on', j === idx);
+        }
       }
       /* play() can reject when called outside a user gesture (iOS Safari):
          surface it honestly instead of failing silently. */
@@ -526,7 +543,7 @@ var audio = document.getElementById('qilyLecAudio');
         var html = '<div class="chapter-head"><div class="ch-num">' + (i===0 ? '序' : (i===CHAPTERS.length-1 ? '结' : i)) + '</div>' +
           '<h3>' + ch.step + ' · ' + ch.title + '</h3>' +
           '<button class="ch-play" data-play="' + i + '">▶ 播放本段</button></div>' +
-          '<p>' + ch.text + '</p>';
+          '<p>' + ch.sentences.map(function(s){ return '<span class="lec-sen">' + s + '</span>'; }).join('') + '</p>';
         if (ch.deliverable) html += '<div class="deliverable"><b>交付物与易错点：</b>' + ch.deliverable + '</div>';
         el.innerHTML = html;
         list.appendChild(el);
@@ -563,6 +580,7 @@ var audio = document.getElementById('qilyLecAudio');
         document.getElementById('qilyLecNowStep').textContent = stepLabel;
         document.getElementById('qilyLecNowTitle').textContent = ch.title;
         syncMini();
+        document.querySelectorAll('#qily-lecture .lec-sen.on').forEach(function(sp){ sp.classList.remove('on'); });
         updateSubtitle(true);
         document.querySelectorAll('#qily-lecture .chapter').forEach(function(el, j){ el.classList.toggle('active', j === i); });
         document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === i && !audio.paused) ? '⏸ 播放中' : '▶ 播放本段'; });
