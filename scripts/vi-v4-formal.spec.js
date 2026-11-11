@@ -55,9 +55,35 @@ test('international curated archive keeps primary navigation sticky while scroll
     expect(maxScroll,`${device}: archive should provide a real scroll range`).toBeGreaterThan(300);
     await page.evaluate(()=>window.scrollTo(0,Math.min(700,document.documentElement.scrollHeight-window.innerHeight)));
     await expect.poll(()=>page.evaluate(()=>window.scrollY),{message:`${device}: document should scroll`}).toBeGreaterThan(0);
+    const stickyDiagnostics=await page.evaluate(()=>{
+      const el=document.querySelector('body > header.qily-site-header');
+      const chain=[];
+      for(let node=el;node;node=node.parentElement){
+        const css=getComputedStyle(node),rect=node.getBoundingClientRect();
+        chain.push({
+          tag:node.tagName,id:node.id,
+          className:typeof node.className==='string'?node.className:'',
+          position:css.position,top:css.top,
+          overflowX:css.overflowX,overflowY:css.overflowY,
+          transform:css.transform,contain:css.contain,
+          rectTop:Math.round(rect.top),rectBottom:Math.round(rect.bottom),
+          height:Math.round(rect.height),scrollHeight:node.scrollHeight,clientHeight:node.clientHeight
+        });
+      }
+      const htmlCss=getComputedStyle(document.documentElement),bodyCss=getComputedStyle(document.body);
+      return {
+        scrollY:window.scrollY,scrollingElement:document.scrollingElement?.tagName,
+        htmlOverflowX:htmlCss.overflowX,htmlOverflowY:htmlCss.overflowY,
+        bodyOverflowX:bodyCss.overflowX,bodyOverflowY:bodyCss.overflowY,
+        headerPosition:getComputedStyle(el).position,headerTop:getComputedStyle(el).top,
+        headerRectTop:Math.round(el.getBoundingClientRect().top),headerTransform:getComputedStyle(el).transform,
+        chain
+      };
+    });
+    console.log(`QILY-STICKY-DIAG ${device} ${JSON.stringify(stickyDiagnostics)}`);
+    await page.screenshot({path:path.join('visual-vi-v4-artifacts',`daily-insights-sticky-${device}.png`)});
     await expect.poll(()=>header.evaluate(el=>Math.round(el.getBoundingClientRect().top)),{message:`${device}: global header should remain pinned to the viewport top`}).toBe(0);
     await expect.poll(()=>header.evaluate(el=>getComputedStyle(el).position),{message:`${device}: sticky positioning must remain active after scroll`}).toBe('sticky');
-    await page.screenshot({path:path.join('visual-vi-v4-artifacts',`daily-insights-sticky-${device}.png`)});
     await context.close();
   }
 });
