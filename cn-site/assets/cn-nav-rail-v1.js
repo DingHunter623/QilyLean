@@ -97,15 +97,18 @@ function sync(nav,rail,thumb){
 function installRail(nav){
   if(!nav)return;
   var shell=ensureShell(nav);
-  var old=shell.querySelector('.qily-primary-nav-scroll-rail');
-  if(old)old.remove();
-
   nav.dataset.qilyCnNavRail='v7';
   if(!nav.id)nav.id='qilyCnPrimaryNavigation';
   if(!nav.querySelector('a[aria-current="page"]'))nav.scrollLeft=0;
 
-  var rail=d.createElement('div');
-  rail.className='qily-primary-nav-scroll-rail';
+  // The rail is server-materialized in HTML so it paints with the header.
+  // Reuse that exact node; replacing it here would recreate the delayed flash.
+  var rail=shell.querySelector('.qily-primary-nav-scroll-rail');
+  if(!rail){
+    rail=d.createElement('div');
+    rail.className='qily-primary-nav-scroll-rail';
+    shell.appendChild(rail);
+  }
   rail.setAttribute('role','scrollbar');
   rail.setAttribute('aria-label','一级导航左右滑动条');
   rail.setAttribute('aria-controls',nav.id);
@@ -113,11 +116,13 @@ function installRail(nav){
   rail.setAttribute('aria-valuemin','0');
   rail.setAttribute('aria-valuemax','100');
 
-  var thumb=d.createElement('span');
-  thumb.className='qily-primary-nav-scroll-thumb';
-  thumb.setAttribute('aria-hidden','true');
-  rail.appendChild(thumb);
-  shell.appendChild(rail);
+  var thumb=rail.querySelector('.qily-primary-nav-scroll-thumb');
+  if(!thumb){
+    thumb=d.createElement('span');
+    thumb.className='qily-primary-nav-scroll-thumb';
+    thumb.setAttribute('aria-hidden','true');
+    rail.appendChild(thumb);
+  }
 
   var framePending=false;
   function requestSync(){
