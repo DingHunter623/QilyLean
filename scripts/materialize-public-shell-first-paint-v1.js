@@ -47,6 +47,12 @@ const HEADER_CSS=String.raw\`
 @media(max-width:900px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-weight:900!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
 \`;
 const HEADER_STYLE_TAG='<style id="'+HEADER_STYLE_ID+'" data-qily-first-paint-header="v2">'+HEADER_CSS+'</style>';
+
+const TRANSLATION_CSS_HREF='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
+function translationMarkup(){
+ return '<div id="qilyGlobalTranslationDualRouteV2" class="qily-web-translate" data-qily-static-first-paint="v1" data-qily-google-translate-current="true" data-qily-no-translate="true" data-qily-header-utility="translation" data-qily-translation-provider="google" data-qily-translation-layout="stable-fast-path-v1" translate="no" role="group" aria-label="Google 网页翻译" title="默认中文简体；可切换中文繁体、English 或更多语言。"><span class="qily-web-translate__mark" aria-hidden="true">🌐</span><select class="qily-web-translate__select" aria-label="选择网站语言"><option value="zh-CN">中文简体</option><option value="zh-TW">中文繁体</option><option value="en">English</option><option value="__more__">其他</option></select><div id="google_translate_element" class="qily-web-translate__google" aria-label="Google 网页翻译服务"></div><div class="qily-language-more" hidden role="dialog" aria-modal="false" aria-label="更多语言"></div></div>';
+}
+
 function modulePathForRelative(relative){
  const p='/'+relative.replace(/\\/g,'/');
  if(p==='/index.html'||p==='/')return '/';
@@ -75,24 +81,26 @@ function addAttributeToTag(tag,name,value){
  if(new RegExp('\\b'+name+'\\s*=', 'i').test(tag))return tag;
  return tag.replace(/>$/,' '+name+'="'+value+'">');
 }
-function canonicalHeader(relative){
+function canonicalHeader(relative,hasTranslation){
  const active=modulePathForRelative(relative);
  const links=HEADER_ROUTES.map(([label,href])=>'<a href="'+href+'"'+(active===href?' aria-current="page"':'')+'>'+label+'</a>').join('');
- return '<header class="qily-site-header qily-global-header" data-qily-public-shell-first-paint="v2"><a class="qily-brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean｜启力精益</a><nav class="site-nav qily-global-nav" aria-label="QilyLean核心导视">'+links+'</nav></header>';
+ return '<header class="qily-site-header qily-global-header" data-qily-public-shell-first-paint="v2"><a class="qily-brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean｜启力精益</a><nav class="site-nav qily-global-nav" aria-label="QilyLean核心导视">'+links+'</nav>'+(hasTranslation?translationMarkup():'')+'</header>';
 }
 function materializeHeader(source,relative){
+ const hasTranslation=/site-translation-safe-runtime-v1\.js|site-global-language-v3\.js/.test(source);
  const match=/<header\b[\s\S]*?<\/header>/i.exec(source);
- if(!match)return canonicalHeader(relative);
+ if(!match)return canonicalHeader(relative,hasTranslation);
  let header=match[0];
  const navMatch=/<nav\b([^>]*)>([\s\S]*?)<\/nav>/i.exec(header);
  const brandMatch=/<a\b[^>]*\bclass=["'][^"']*\b(?:qily-brand|brand)\b[^"']*["'][^>]*>/i.exec(header);
  const hrefs=navMatch?[...navMatch[2].matchAll(/<a\b[^>]*\bhref=["']([^"']+)["']/gi)].map(m=>m[1]):[];
  const complete=!!navMatch&&!!brandMatch&&hrefs.length===HEADER_ROUTES.length&&HEADER_ROUTES.every((route,i)=>hrefs[i]===route[1]);
- if(!complete)return canonicalHeader(relative);
+ if(!complete)return canonicalHeader(relative,hasTranslation);
  header=addClassesToTag(header,['qily-site-header','qily-global-header']);
  header=header.replace(/<header\b([^>]*)>/i,tag=>addAttributeToTag(tag,'data-qily-public-shell-first-paint','v2'));
  header=header.replace(/<nav\b([^>]*)>/i,tag=>addAttributeToTag(addClassesToTag(tag,['site-nav','qily-global-nav']),'aria-label','QilyLean核心导视'));
  header=header.replace(brandMatch[0],addClassesToTag(brandMatch[0],['qily-brand']));
+ if(hasTranslation&&!header.includes('id="qilyGlobalTranslationDualRouteV2"'))header=header.replace(/<\\/nav>/i,'</nav>'+translationMarkup());
  return header;
 }
 
@@ -165,6 +173,7 @@ function materialize(source,relative){
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag.replace(DOCK_RUNTIME_SRC,routeDockRuntime)+'\n';
   next=next.replace(/\s*<style\b[^>]*id=["']qilyGlobalHeaderFirstPaintV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');
+  if(/site-translation-safe-runtime-v1\.js|site-global-language-v3\.js/.test(next)&&!next.includes('site-translation-public-ui-v1.css'))next=next.replace(/<\/head\s*>/i,'<link rel="stylesheet" id="qilyTranslationPublicUiV1" href="'+TRANSLATION_CSS_HREF+'">\n</head>');
   next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+HEADER_STYLE_TAG+'\n'+'</head>');
   // Resource directory: establish the rail's containing block before any
   // runtime inserts it. R8 stylesheet order alone cannot anchor an absolute
@@ -219,5 +228,5 @@ function materializeBridge(source){
   return next;
 }
 
-module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,HEADER_STYLE_ID,HEADER_CSS,HEADER_ROUTES,criticalDockCss,isEligible,materialize,materializeHeader};
+module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,HEADER_STYLE_ID,HEADER_CSS,HEADER_ROUTES,TRANSLATION_CSS_HREF,translationMarkup,criticalDockCss,isEligible,materialize,materializeHeader};
 if(require.main===module)main();
