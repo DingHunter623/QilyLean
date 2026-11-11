@@ -210,7 +210,7 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
    (.p-controls) floats as a popover directly above the player when open, so
    the player keeps its collapsed height whether settings are open or closed.
    Cloned from the visual page v2.4.9 rule; applied to all three lectures. */
-#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;margin-top:0!important;padding:11px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
+#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;height:186px!important;box-sizing:border-box!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
 #qilyLecPlayer .ctl{min-width:150px;flex:1}
 #qilyLecPlayer .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--lec-player-ink2);margin-bottom:5px}
 #qilyLecPlayer .ctl label output{color:var(--lec-player-ink);font-weight:700;font-variant-numeric:tabular-nums}
