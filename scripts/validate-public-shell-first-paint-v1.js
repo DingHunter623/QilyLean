@@ -19,30 +19,31 @@ let eligible=0,cacheCovered=0,cnEligible=0,cnPages=0;
 for(const relative of files){
   const source=read(relative);
   if(relative.startsWith('cn-site/')){
-    assert(cnShell.materialize(source)===source,`${relative}: CN public shell materializer has drifted`);
-    const cnHeader=source.match(/<header\\b[^>]*\\bclass=["'][^"']*\\bsite-header\\b[^"']*["'][^>]*>[\\s\\S]*?<\\/header>/i);
+    assert(cnShell.materialize(source)===source,relative+': CN public shell materializer has drifted');
+    const cnHeader=source.match(/<header\b[^>]*\bclass=["'][^"']*\bsite-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i);
     if(cnHeader){
-      const nav=cnHeader[0].match(/<nav\\b[^>]*\\bclass=["'][^"']*\\bnav\\b[^"']*["'][^>]*>([\\s\\S]*?)<\\/nav>/i);
-      assert(nav,`${relative}: CN static header primary nav missing`);
-      assert(/class=["'][^"']*\\bqily-cn-nav-shell\\b/i.test(cnHeader[0]),`${relative}: CN nav shell must be static`);
-      assert(/id=["']qilyCnPrimaryNavigation["']/.test(nav[0]),`${relative}: CN static nav id missing`);
-      assert(/data-qily-cn-nav-rail=["']static-v1["']/.test(nav[0]),`${relative}: CN static nav rail hydration marker missing`);
-      assert(/class=["'][^"']*\\bqily-primary-nav-scroll-rail\\b/.test(cnHeader[0]),`${relative}: CN scroll rail must paint with header`);
-      assert(source.indexOf(cnHeader[0])<source.indexOf('<main'),`${relative}: CN header must precede page content`);
-      if(/cn-translate-baidu-v1\\.js/.test(source)){
-        assert(/id=["']qilyCnTranslateV3["'][^>]*data-qily-static-first-paint=["']v1["']/.test(cnHeader[0]),`${relative}: CN translation utility must be static`);
-        assert(/cn-translate-baidu-v1\\.css/.test(source),`${relative}: CN translation utility CSS missing`);
+      const nav=cnHeader[0].match(/<nav\b[^>]*\bclass=["'][^"']*\bnav\b[^"']*["'][^>]*>([\s\S]*?)<\/nav>/i);
+      assert(nav,relative+': CN static header primary nav missing');
+      assert(/class=["'][^"']*\bqily-cn-nav-shell\b/i.test(cnHeader[0]),relative+': CN nav shell must be static');
+      assert(/id=["']qilyCnPrimaryNavigation["']/.test(nav[0]),relative+': CN static nav id missing');
+      assert(/data-qily-cn-nav-rail=["']static-v1["']/.test(nav[0]),relative+': CN static nav rail hydration marker missing');
+      assert(/class=["'][^"']*\bqily-primary-nav-scroll-rail\b/.test(cnHeader[0]),relative+': CN scroll rail must paint with header');
+      const mainIndex=source.indexOf('<main');
+      assert(mainIndex<0||source.indexOf(cnHeader[0])<mainIndex,relative+': CN header must precede page content');
+      if(/cn-translate-baidu-v1\.js/.test(source)){
+        assert(/id=["']qilyCnTranslateV3["'][^>]*data-qily-static-first-paint=["']v1["']/.test(cnHeader[0]),relative+': CN translation utility must be static');
+        assert(/cn-translate-baidu-v1\.css/.test(source),relative+': CN translation utility CSS missing');
       }
       cnPages++;
     }
-    const cnFooter=source.match(/<footer\\b[^>]*\\bclass=["']footer["'][^>]*>[\\s\\S]*?<\\/footer>/i);
+    const cnFooter=source.match(/<footer\b[^>]*\bclass=["']footer["'][^>]*>[\s\S]*?<\/footer>/i);
     if(cnFooter){
-      const dock=cnFooter[0].match(/<nav\\b[^>]*\\bid=["']floatDock["'][^>]*>([\\s\\S]*?)<\\/nav>/i);
-      assert(dock,`${relative}: CN static footer dock missing`);
-      const actions=[...dock[1].matchAll(/<button\\b[^>]*\\bdata-action=["']([^"']+)["']/gi)].map(m=>m[1]);
-      assert(actions.join(',')===cnShell.ACTIONS.join(','),`${relative}: CN footer must contain four canonical static actions`);
+      const dock=cnFooter[0].match(/<nav\b[^>]*\bid=["']floatDock["'][^>]*>([\s\S]*?)<\/nav>/i);
+      assert(dock,relative+': CN static footer dock missing');
+      const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["']/gi)].map(m=>m[1]);
+      assert(actions.join(',')===cnShell.ACTIONS.join(','),relative+': CN footer must contain four canonical static actions');
       const records=cnShell.filings(cnFooter[0]);
-      assert(records.includes('湘ICP备2026041143号-1')&&records.includes('湘公网安备43020002000443号'),`${relative}: CN footer filing records missing`);
+      assert(records.includes('湘ICP备2026041143号-1')&&records.includes('湘公网安备43020002000443号'),relative+': CN footer filing records missing');
     }
     cnEligible++;
     continue;
@@ -71,16 +72,17 @@ for(const relative of files){
   const dock=body[1].match(/^\s*(<nav\b[^>]*\bid=["']floatDock["'][^>]*>[\s\S]*?<\/nav>)/i);
   assert(dock,`${relative}: menu must parse before page content`);
   const afterDock=body[1].slice(dock[0].length);
-  const header=afterDock.match(/^\\s*(<header\\b[^>]*>[\\s\\S]*?<\\/header>)/i);
-  assert(header,`${relative}: static public header must immediately follow the Dock before page content`);
-  assert(/class=["'][^"']*\\bqily-site-header\\b[^"']*\\bqily-global-header\\b/i.test(header[1]),`${relative}: public header must use the governed global shell classes`);
-  assert(/data-qily-public-shell-first-paint=["']v2["']/i.test(header[1]),`${relative}: static header first-paint marker missing`);
-  const nav=header[1].match(/<nav\\b[^>]*>([\\s\\S]*?)<\\/nav>/i);
-  const brand=header[1].match(/<a\\b[^>]*\\bclass=["'][^"']*\\bqily-brand\\b[^"']*["'][^>]*>/i);
-  assert(nav&&brand,`${relative}: static header must contain its brand and primary navigation`);
-  const hrefs=[...nav[1].matchAll(/<a\\b[^>]*\\bhref=["']([^"']+)["']/gi)].map(m=>m[1]);
-  assert(hrefs.length===HEADER_ROUTES.length&&HEADER_ROUTES.every((route,i)=>hrefs[i]===route[1]),`${relative}: static primary navigation must match the canonical route order`);
-  assert(source.indexOf(header[1])<source.indexOf('<main'),`${relative}: global navigation must precede page content`);
+  const header=afterDock.match(/^\s*(<header\b[^>]*>[\s\S]*?<\/header>)/i);
+  assert(header,relative+': static public header must immediately follow the Dock before page content');
+  assert(/class=["'][^"']*\bqily-site-header\b[^"']*\bqily-global-header\b/i.test(header[1]),relative+': public header must use the governed global shell classes');
+  assert(/data-qily-public-shell-first-paint=["']v2["']/i.test(header[1]),relative+': static header first-paint marker missing');
+  const nav=header[1].match(/<nav\b[^>]*>([\s\S]*?)<\/nav>/i);
+  const brand=header[1].match(/<a\b[^>]*\bclass=["'][^"']*\bqily-brand\b[^"']*["'][^>]*>/i);
+  assert(nav&&brand,relative+': static header must contain its brand and primary navigation');
+  const hrefs=[...nav[1].matchAll(/<a\b[^>]*\bhref=["']([^"']+)["']/gi)].map(m=>m[1]);
+  assert(hrefs.length===HEADER_ROUTES.length&&HEADER_ROUTES.every((route,i)=>hrefs[i]===route[1]),relative+': static primary navigation must match the canonical route order');
+  const mainIndex=source.indexOf('<main');
+  assert(mainIndex<0||source.indexOf(header[1])<mainIndex,relative+': global navigation must precede page content');
 
 
   if(/site-translation-safe-runtime-v1\.js|site-global-language-v3\.js/.test(source)){
@@ -90,7 +92,7 @@ for(const relative of files){
   }
 
   const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi)];
-  assert(actions.length===ORDER.length&&actions.map(match=>match[1]).join(',')===ORDER.join(','),`${relative}: canonical five menu actions required`);
+  assert(actions.length===ORDER.length&&actions.map(match=>match[1]).join(',')===ORDER.join(','),`${relative}: canonical four menu actions required`);
   for(const match of actions){
     const text=match[2].replace(/<[^>]*>/g,'').replace(/\s+/g,'').trim();
     const label=LABELS[ORDER.indexOf(match[1])];
