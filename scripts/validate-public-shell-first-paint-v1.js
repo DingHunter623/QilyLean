@@ -7,7 +7,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const {
   ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,ORDER,LABELS,DOCK_STYLE_ID,
-  DOCK_SPACER_ID,criticalDockCss,isEligible,materialize,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV
+  DOCK_SPACER_ID,HEADER_STYLE_ID,HEADER_CSS,HEADER_ROUTES,criticalDockCss,isEligible,materialize,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV
 }=require('./materialize-public-shell-first-paint-v1.js');
 const assert=(ok,message)=>{if(!ok)throw new Error(`Public first paint: ${message}`);};
 const read=relative=>fs.readFileSync(path.join(ROOT,relative),'utf8');
@@ -31,11 +31,27 @@ for(const relative of files){
   assert(/\brel=["']stylesheet["']/i.test(formal[0])&&!/\b(?:disabled|onload|media)\s*(?:=|>)/i.test(formal[0]),`${relative}: formal CSS must block the first paint`);
   assert(countId(source,'qilyViV4Formal')===1,`${relative}: duplicate formal CSS owner`);
   assert(countId(source,DOCK_STYLE_ID)===1,`${relative}: duplicate/missing critical menu style`);
+  assert(countId(source,HEADER_STYLE_ID)===1,`${relative}: duplicate/missing critical header style`);
+  const headerStyle=head[1].match(new RegExp(`<style\\b[^>]*\\bid=["']${HEADER_STYLE_ID}["'][^>]*>([\\s\\S]*?)<\\/style>`,'i'));
+  assert(headerStyle&&headerStyle[1]===HEADER_CSS,`${relative}: critical header CSS must match the canonical first-paint owner`);
+
   const critical=head[1].match(new RegExp(`<style\\b[^>]*\\bid=["']${DOCK_STYLE_ID}["'][^>]*>([\\s\\S]*?)<\\/style>`,'i'));
   assert(critical&&critical[1]===criticalDockCss,`${relative}: critical menu CSS must match its canonical runtime owner`);
   assert(countId(source,'floatDock')===1,`${relative}: duplicate/missing menu`);
   const dock=body[1].match(/^\s*(<nav\b[^>]*\bid=["']floatDock["'][^>]*>[\s\S]*?<\/nav>)/i);
   assert(dock,`${relative}: menu must parse before page content`);
+  const afterDock=body[1].slice(dock[0].length);
+  const header=afterDock.match(/^\\s*(<header\\b[^>]*>[\\s\\S]*?<\\/header>)/i);
+  assert(header,`${relative}: static public header must immediately follow the Dock before page content`);
+  assert(/class=["'][^"']*\\bqily-site-header\\b[^"']*\\bqily-global-header\\b/i.test(header[1]),`${relative}: public header must use the governed global shell classes`);
+  assert(/data-qily-public-shell-first-paint=["']v2["']/i.test(header[1]),`${relative}: static header first-paint marker missing`);
+  const nav=header[1].match(/<nav\\b[^>]*>([\\s\\S]*?)<\\/nav>/i);
+  const brand=header[1].match(/<a\\b[^>]*\\bclass=["'][^"']*\\bqily-brand\\b[^"']*["'][^>]*>/i);
+  assert(nav&&brand,`${relative}: static header must contain its brand and primary navigation`);
+  const hrefs=[...nav[1].matchAll(/<a\\b[^>]*\\bhref=["']([^"']+)["']/gi)].map(m=>m[1]);
+  assert(hrefs.length===HEADER_ROUTES.length&&HEADER_ROUTES.every((route,i)=>hrefs[i]===route[1]),`${relative}: static primary navigation must match the canonical route order`);
+  assert(source.indexOf(header[1])<source.indexOf('<main'),`${relative}: global navigation must precede page content`);
+
   const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi)];
   assert(actions.length===ORDER.length&&actions.map(match=>match[1]).join(',')===ORDER.join(','),`${relative}: canonical five menu actions required`);
   for(const match of actions){
@@ -68,4 +84,4 @@ assert(semanticContract&&!/html\[data-qily-vi-version|body\[data-qily-vi-shell/.
 for(const token of ['var(--qily-vi-gold-light)!important','font-weight:400!important','border:0!important','border-radius:0!important','padding:0!important','background:transparent!important']){
   assert(semanticContract.includes(token),`semantic label first-paint contract missing ${token}`);
 }
-console.log(`PASS: ${eligible} international pages have blocking formal VI, canonical menu CSS, five static actions before content, one bottom reserve and one deferred runtime; navigation cache references=${cacheCovered}; labels paint without JavaScript markers.`);
+console.log(`PASS: ${eligible} international pages have blocking formal VI, canonical header and Dock CSS, static header plus four Dock actions before content, one bottom reserve and one deferred runtime; navigation cache references=${cacheCovered}; labels paint without JavaScript markers.`);
