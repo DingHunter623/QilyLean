@@ -581,6 +581,7 @@ var audio = document.getElementById('qilyLecAudio');
       }
 
       function loadChapter(i, autoplay){
+        clearAutoNext();
         current = i;
         lastRate = null;
         lastSubIdx = -1;
@@ -628,7 +629,7 @@ var audio = document.getElementById('qilyLecAudio');
         else loadChapter(i, true);
       });
 
-      audio.addEventListener('play', function(){ setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
+      audio.addEventListener('play', function(){ clearAutoNext(); setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
       audio.addEventListener('pause', function(){ setPlayUI(false); });
       audio.addEventListener('loadedmetadata', function(){
         document.getElementById('qilyLecDurTime').textContent = fmt(audio.duration);
@@ -638,10 +639,33 @@ var audio = document.getElementById('qilyLecAudio');
         document.getElementById('qilyLecCurTime').textContent = fmt(audio.currentTime);
         if (audio.duration) document.getElementById('qilyLecSeek').value = (audio.currentTime / audio.duration) * 100;
         updateSubtitle(false);
+        if (audio.duration && audio.duration - audio.currentTime < 10) preloadChapter(current + 1);
       });
+      /* Auto-advance rule (user-set 2026-11-11): when a segment ends, pause
+         3 seconds, then automatically play the next segment. The 3s gap is a
+         deliberate breathing pause between segments, not a stall — the next
+         chapter is preloaded during the pause so the switch is immediate.
+         If the user navigates or presses play during the pause, the timer
+         is cancelled and no auto-advance happens. */
+      var autoNextTimer = null;
+      function clearAutoNext(){ if (autoNextTimer){ clearInterval(autoNextTimer); autoNextTimer = null; } }
       audio.addEventListener('ended', function(){
-        if (current < CHAPTERS.length - 1) goTo(current + 1, true);
-        else setPlayUI(false);
+        if (current >= CHAPTERS.length - 1){ setPlayUI(false); return; }
+        var endedIdx = current;
+        var nextIdx = current + 1;
+        preloadChapter(nextIdx);
+        var remain = 3;
+        var stepEl = document.getElementById('qilyLecNowStep');
+        stepEl.textContent = '本段完 · ' + remain + ' 秒后自动接下一段';
+        autoNextTimer = setInterval(function(){
+          remain--;
+          if (remain > 0){
+            stepEl.textContent = '本段完 · ' + remain + ' 秒后自动接下一段';
+            return;
+          }
+          clearAutoNext();
+          if (current === endedIdx && audio.paused) goTo(nextIdx, true);
+        }, 1000);
       });
 
       document.getElementById('qilyLecSeek').addEventListener('input', function(e){

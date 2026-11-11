@@ -184,6 +184,11 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 #qilyLecPlayer .p-sub .s-next{font-size:12.5px;line-height:1.4;color:var(--lec-player-ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #qilyLecPlayer .p-controls{display:none;flex-wrap:wrap;gap:8px 22px;margin-top:10px;align-items:flex-end}
 #qilyLecPlayer .p-controls.open{display:flex}
+/* Settings popover (unified 2026-11-11, user-demanded): the settings panel
+   (.p-controls) floats as a popover directly above the player when open, so
+   the player keeps its collapsed height whether settings are open or closed.
+   Cloned from the visual page v2.4.9 rule; applied to all three lectures. */
+#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
 #qilyLecPlayer .ctl{min-width:150px;flex:1}
 #qilyLecPlayer .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--lec-player-ink2);margin-bottom:5px}
 #qilyLecPlayer .ctl label output{color:var(--lec-player-ink);font-weight:700;font-variant-numeric:tabular-nums}
@@ -647,6 +652,7 @@ var audio = document.getElementById('qilyLecAudio');
       }
 
       function loadChapter(i, autoplay){
+        clearAutoNext();
         current = i;
         lastRate = null;
         lastSubIdx = -1;
@@ -694,7 +700,7 @@ var audio = document.getElementById('qilyLecAudio');
         else loadChapter(i, true);
       });
 
-      audio.addEventListener('play', function(){ setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
+      audio.addEventListener('play', function(){ clearAutoNext(); setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
       audio.addEventListener('pause', function(){ setPlayUI(false); });
       audio.addEventListener('loadedmetadata', function(){
         document.getElementById('qilyLecDurTime').textContent = fmt(audio.duration);
@@ -704,10 +710,33 @@ var audio = document.getElementById('qilyLecAudio');
         document.getElementById('qilyLecCurTime').textContent = fmt(audio.currentTime);
         if (audio.duration) document.getElementById('qilyLecSeek').value = (audio.currentTime / audio.duration) * 100;
         updateSubtitle(false);
+        if (audio.duration && audio.duration - audio.currentTime < 10) preloadChapter(current + 1);
       });
+      /* Auto-advance rule (user-set 2026-11-11): when a segment ends, pause
+         3 seconds, then automatically play the next segment. The 3s gap is a
+         deliberate breathing pause between segments, not a stall — the next
+         chapter is preloaded during the pause so the switch is immediate.
+         If the user navigates or presses play during the pause, the timer
+         is cancelled and no auto-advance happens. */
+      var autoNextTimer = null;
+      function clearAutoNext(){ if (autoNextTimer){ clearInterval(autoNextTimer); autoNextTimer = null; } }
       audio.addEventListener('ended', function(){
-        if (current < CHAPTERS.length - 1) goTo(current + 1, true);
-        else setPlayUI(false);
+        if (current >= CHAPTERS.length - 1){ setPlayUI(false); return; }
+        var endedIdx = current;
+        var nextIdx = current + 1;
+        preloadChapter(nextIdx);
+        var remain = 3;
+        var stepEl = document.getElementById('qilyLecNowStep');
+        stepEl.textContent = '本段完 · ' + remain + ' 秒后自动接下一段';
+        autoNextTimer = setInterval(function(){
+          remain--;
+          if (remain > 0){
+            stepEl.textContent = '本段完 · ' + remain + ' 秒后自动接下一段';
+            return;
+          }
+          clearAutoNext();
+          if (current === endedIdx && audio.paused) goTo(nextIdx, true);
+        }, 1000);
       });
 
       document.getElementById('qilyLecSeek').addEventListener('input', function(e){
