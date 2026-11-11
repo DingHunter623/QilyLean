@@ -35,7 +35,7 @@
 
   function removeLegacyControl(){
     var legacy=d.getElementById(CONTROL_ID);
-    if(legacy&&legacy.parentNode)legacy.parentNode.removeChild(legacy);
+    if(legacy&&legacy.parentNode&&legacy.getAttribute('data-qily-static-first-paint')!=='v1')legacy.parentNode.removeChild(legacy);
   }
 
   function addOption(select,value,label){
@@ -45,63 +45,72 @@
     select.appendChild(option);
   }
 
-  function buildPrimarySelect(){
-    var select=d.createElement('select');
+  function buildPrimarySelect(existing){
+    var select=existing||d.createElement('select');
     select.className='qily-web-translate__select';
     select.setAttribute('aria-label','选择网站语言');
-    addOption(select,'zh-CN','中文简体');
-    addOption(select,'zh-TW','中文繁体');
-    addOption(select,'en','English');
-    addOption(select,MORE_VALUE,'其他');
+    if(!select.options.length){
+      addOption(select,'zh-CN','中文简体');
+      addOption(select,'zh-TW','中文繁体');
+      addOption(select,'en','English');
+      addOption(select,MORE_VALUE,'其他');
+    }
     select.value=currentLanguageCode();
     if(!PRIMARY_CODES[select.value])select.value=MORE_VALUE;
-    select.addEventListener('change',function(){
-      if(select.value===MORE_VALUE){openMorePanel();return;}
-      closeMorePanel();
-      applyLanguage(select.value);
-    });
+    if(select.dataset.qilyTranslationBound!=='v1'){
+      select.addEventListener('change',function(){
+        if(select.value===MORE_VALUE){openMorePanel();return;}
+        closeMorePanel();
+        applyLanguage(select.value);
+      });
+      select.dataset.qilyTranslationBound='v1';
+    }
     return select;
   }
 
-  function buildMorePanel(){
-    var panel=d.createElement('div');
+  function buildMorePanel(existing){
+    var panel=existing||d.createElement('div');
     panel.className='qily-language-more';
     panel.hidden=true;
     panel.setAttribute('role','dialog');
     panel.setAttribute('aria-modal','false');
     panel.setAttribute('aria-label','更多语言');
+    if(!panel.querySelector('.qily-language-more__grid')){
+      var head=d.createElement('div');
+      head.className='qily-language-more__head';
+      var title=d.createElement('strong');
+      title.textContent='更多语言';
+      var close=d.createElement('button');
+      close.type='button';
+      close.className='qily-language-more__close';
+      close.setAttribute('aria-label','关闭更多语言');
+      close.textContent='×';
+      close.addEventListener('click',closeMorePanel);
+      head.appendChild(title);
+      head.appendChild(close);
 
-    var head=d.createElement('div');
-    head.className='qily-language-more__head';
-    var title=d.createElement('strong');
-    title.textContent='更多语言';
-    var close=d.createElement('button');
-    close.type='button';
-    close.className='qily-language-more__close';
-    close.setAttribute('aria-label','关闭更多语言');
-    close.textContent='×';
-    close.addEventListener('click',closeMorePanel);
-    head.appendChild(title);
-    head.appendChild(close);
+      moreSearch=d.createElement('input');
+      moreSearch.type='search';
+      moreSearch.className='qily-language-more__search';
+      moreSearch.placeholder='搜索语言 / Language';
+      moreSearch.setAttribute('aria-label','搜索更多语言');
+      moreSearch.addEventListener('input',filterMoreLanguages);
 
-    moreSearch=d.createElement('input');
-    moreSearch.type='search';
-    moreSearch.className='qily-language-more__search';
-    moreSearch.placeholder='搜索语言 / Language';
-    moreSearch.setAttribute('aria-label','搜索更多语言');
-    moreSearch.addEventListener('input',filterMoreLanguages);
+      moreGrid=d.createElement('div');
+      moreGrid.className='qily-language-more__grid';
 
-    moreGrid=d.createElement('div');
-    moreGrid.className='qily-language-more__grid';
-
-    panel.appendChild(head);
-    panel.appendChild(moreSearch);
-    panel.appendChild(moreGrid);
+      panel.appendChild(head);
+      panel.appendChild(moreSearch);
+      panel.appendChild(moreGrid);
+    }else{
+      moreSearch=panel.querySelector('.qily-language-more__search');
+      moreGrid=panel.querySelector('.qily-language-more__grid');
+    }
     return panel;
   }
 
   function buildControl(){
-    var wrapper=d.createElement('div');
+    var wrapper=d.getElementById(CONTROL_ID)||d.createElement('div');
     wrapper.id=CONTROL_ID;
     wrapper.className='qily-web-translate';
     wrapper.setAttribute('data-qily-google-translate-current','true');
@@ -126,28 +135,27 @@
     wrapper.style.setProperty('flex','0 0 auto');
     wrapper.style.setProperty('max-width','100%');
 
-    var mark=d.createElement('span');
-    mark.className='qily-web-translate__mark';
-    mark.setAttribute('aria-hidden','true');
-    mark.textContent='🌐';
+    var mark=wrapper.querySelector('.qily-web-translate__mark');
+    if(!mark){mark=d.createElement('span');mark.className='qily-web-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';}
+    primarySelect=buildPrimarySelect(wrapper.querySelector('.qily-web-translate__select'));
 
-    primarySelect=buildPrimarySelect();
-
-    target=d.createElement('div');
-    target.id=ELEMENT_ID;
-    target.className='qily-web-translate__google';
-    target.setAttribute('aria-label','Google 网页翻译服务');
+    target=wrapper.querySelector('#'+ELEMENT_ID);
+    if(!target){
+      target=d.createElement('div');
+      target.id=ELEMENT_ID;
+      target.className='qily-web-translate__google';
+      target.setAttribute('aria-label','Google 网页翻译服务');
+    }
     target.style.setProperty('box-sizing','border-box','important');
     target.style.setProperty('min-height','14px','important');
     target.style.setProperty('height','14px','important');
     target.style.setProperty('overflow','visible','important');
 
-    morePanel=buildMorePanel();
-
-    wrapper.appendChild(mark);
-    wrapper.appendChild(primarySelect);
-    wrapper.appendChild(target);
-    wrapper.appendChild(morePanel);
+    morePanel=buildMorePanel(wrapper.querySelector('.qily-language-more'));
+    if(!mark.parentNode)wrapper.insertBefore(mark,wrapper.firstChild);
+    if(!primarySelect.parentNode)mark.insertAdjacentElement('afterend',primarySelect);
+    if(!target.parentNode)primarySelect.insertAdjacentElement('afterend',target);
+    if(!morePanel.parentNode)wrapper.appendChild(morePanel);
     return wrapper;
   }
 
@@ -156,7 +164,7 @@
     var nav=headerNav();
     var header=nav&&nav.closest&&nav.closest('header');
     if(header){
-      if(control.parentNode!==header||nav.nextElementSibling!==control)nav.insertAdjacentElement('afterend',control);
+      if(nav.nextElementSibling!==control)nav.insertAdjacentElement('afterend',control);
       header.setAttribute('data-qily-google-translate-slot','ready');
       return;
     }

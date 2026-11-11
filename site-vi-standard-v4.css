@@ -331,8 +331,8 @@ html:root:root:root:root:root:root body #floatDock.qily-page-action-nav[data-qil
 ::view-transition-group(qily-public-dock),
 ::view-transition-old(qily-public-dock),
 ::view-transition-new(qily-public-dock){
+  /* Disable motion, but preserve the browser-computed geometry transform. */
   animation:none!important;
-  transform:none!important;
 }
 
 /* 10 | Footer remains the common shell. */
@@ -558,3 +558,20 @@ html:root:root:root:root:root body.project-detail-page main
     font-size:22px!important;
   }
 }
+
+
+/* QILY-LECTURE-DIRECTORY-BADGE-V1 | one-click entry to real lecture modules */
+.qily-lecture-directory-badge{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;
+ min-height:30px!important;padding:5px 10px!important;border:1px solid #c8a25a!important;border-radius:999px!important;
+ color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff8e8!important;
+ font-size:13px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;white-space:nowrap!important;
+}
+.qily-lecture-directory-badge:hover,.qily-lecture-directory-badge:focus-visible{
+ color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;
+ outline:2px solid rgba(200,162,90,.24)!important;outline-offset:2px!important;
+}
+.qily-lecture-icon{display:inline-block!important;flex:0 0 17px!important;width:17px!important;height:17px!important;vertical-align:middle!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+#qilyLectureCta .qily-lecture-icon{width:18px!important;height:18px!important;flex-basis:18px!important}
+.brief-index-actions .qily-lecture-directory-badge{margin-left:8px!important}
+

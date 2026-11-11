@@ -113,36 +113,61 @@ async function apply(target){
 }
 function closePanel(){if(!panel)return;panel.hidden=true;control.removeAttribute('data-more-languages-open');if(select.value===MORE)select.value=activeLanguage}
 function openPanel(){panel.hidden=false;control.setAttribute('data-more-languages-open','true')}
-function buildPanel(){
-  var p=d.createElement('div');p.className='qily-cn-language-more';p.hidden=true;p.setAttribute('role','dialog');p.setAttribute('aria-label','更多翻译语言');
-  var head=d.createElement('div');head.className='qily-cn-language-more__head';
-  var title=d.createElement('strong');title.textContent='更多语言';
-  var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';close.textContent='×';close.setAttribute('aria-label','关闭更多语言');close.addEventListener('click',closePanel);
-  head.appendChild(title);head.appendChild(close);
-  var grid=d.createElement('div');grid.className='qily-cn-language-more__grid';
-  LANGS.forEach(function(item){
-    var b=d.createElement('button');b.type='button';b.className='qily-cn-language-more__item';b.textContent=item[1];
-    b.addEventListener('click',function(){closePanel();apply(item[0])});
-    grid.appendChild(b);
-  });
-  var note=d.createElement('p');note.className='qily-cn-language-more__note';note.textContent='站内翻译，不跳转第三方网页。';
-  p.appendChild(head);p.appendChild(grid);p.appendChild(note);return p;
+function buildPanel(existing){
+  var p=existing||d.createElement('div');
+  p.className='qily-cn-language-more';p.hidden=true;p.setAttribute('role','dialog');p.setAttribute('aria-label','更多翻译语言');
+  if(!p.querySelector('.qily-cn-language-more__grid')){
+    var head=d.createElement('div');head.className='qily-cn-language-more__head';
+    var title=d.createElement('strong');title.textContent='更多语言';
+    var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';close.textContent='×';close.setAttribute('aria-label','关闭更多翻译语言');close.addEventListener('click',closePanel);
+    head.appendChild(title);head.appendChild(close);
+    var grid=d.createElement('div');grid.className='qily-cn-language-more__grid';
+    LANGS.forEach(function(item){
+      var b=d.createElement('button');b.type='button';b.className='qily-cn-language-more__item';b.textContent=item[1];
+      b.addEventListener('click',function(){closePanel();apply(item[0])});
+      grid.appendChild(b);
+    });
+    var note=d.createElement('p');note.className='qily-cn-language-more__note';note.textContent='站内翻译，不跳转第三方网页。';
+    p.appendChild(head);p.appendChild(grid);p.appendChild(note);
+  }
+  return p;
 }
-function build(){
-  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('data-qily-translation-engine','youdao');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
-  var mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';
-  select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
-  option(select,'zh-CN','中文简体');option(select,'zh-TW','中文繁体');option(select,'en','English');option(select,MORE,'其他');
-  select.value='zh-CN';select.addEventListener('change',function(){if(select.value===MORE){openPanel();return}apply(select.value)});
-  status=d.createElement('span');status.className='qily-cn-translate__provider';status.textContent='站内翻译';
-  panel=buildPanel();
-  wrap.appendChild(mark);wrap.appendChild(select);wrap.appendChild(status);wrap.appendChild(panel);return wrap;
+function build(existing){
+  var wrap=existing||d.createElement('div');
+  wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('data-qily-translation-engine','youdao');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
+  var mark=wrap.querySelector('.qily-cn-translate__mark');
+  if(!mark){mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';}
+  select=wrap.querySelector('.qily-cn-translate__select');
+  if(!select){
+    select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
+    option(select,'zh-CN','中文简体');option(select,'zh-TW','中文繁体');option(select,'en','English');option(select,MORE,'其他');
+  }
+  select.value=activeLanguage;
+  if(select.dataset.qilyCnTranslateBound!=='v1'){
+    select.addEventListener('change',function(){if(select.value===MORE){openPanel();return}apply(select.value)});
+    select.dataset.qilyCnTranslateBound='v1';
+  }
+  status=wrap.querySelector('.qily-cn-translate__provider');
+  if(!status){status=d.createElement('span');status.className='qily-cn-translate__provider';status.textContent='站内翻译';}
+  panel=buildPanel(wrap.querySelector('.qily-cn-language-more'));
+  if(!existing){wrap.appendChild(mark);wrap.appendChild(select);wrap.appendChild(status);wrap.appendChild(panel);}
+  else{
+    if(!mark.parentNode)wrap.insertBefore(mark,wrap.firstChild);
+    if(!select.parentNode)mark.insertAdjacentElement('afterend',select);
+    if(!status.parentNode)select.insertAdjacentElement('afterend',status);
+    if(!panel.parentNode)wrap.appendChild(panel);
+  }
+  return wrap;
 }
 function init(){
   var header=d.querySelector('header.site-header');if(!header)return;
   var inner=header.querySelector('.header-inner')||header,nav=inner.querySelector('nav.nav,nav[aria-label="主导航"]');
-  Array.prototype.forEach.call(inner.querySelectorAll('[data-qily-header-utility="translation"]'),function(n){n.remove()});
-  control=build();if(nav)nav.insertAdjacentElement('afterend',control);else inner.appendChild(control);
+  var existing=inner.querySelector('#'+CONTROL_ID);
+  Array.prototype.forEach.call(inner.querySelectorAll('[data-qily-header-utility="translation"]'),function(n){if(n!==existing)n.remove()});
+  control=build(existing);
+  var host=nav&&nav.closest('.qily-cn-nav-shell')||nav;
+  if(host&&host.parentNode&&host.nextElementSibling!==control)host.insertAdjacentElement('afterend',control);
+  else if(!host&&control.parentNode!==inner)inner.appendChild(control);
   d.addEventListener('pointerdown',function(e){if(panel&&!panel.hidden&&!control.contains(e.target))closePanel()});
   d.addEventListener('keydown',function(e){if(e.key==='Escape')closePanel()});
 }

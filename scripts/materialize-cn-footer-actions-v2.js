@@ -279,6 +279,63 @@ html:root:root:root:root:root:root:root:root:root:root:root:root body footer.foo
 
 `;
 
+
+function setAttribute(tag,name,value){
+  const attr=new RegExp('\\b'+name+'\\s*=\\s*(?:"[^"]*"|\\x27[^\\x27]*\\x27)','i');
+  if(attr.test(tag))return tag.replace(attr,name+'="'+value+'"');
+  return tag.replace(/>$/,' '+name+'="'+value+'">');
+}
+function addClass(tag,value){
+  const m=/\bclass=(["'])(.*?)\1/i.exec(tag);
+  if(!m)return tag.replace(/>$/,' class="'+value+'">');
+  const classes=[...new Set((m[2]+' '+value).trim().split(/\s+/).filter(Boolean))].join(' ');
+  return tag.replace(m[0],'class="'+classes+'"');
+}
+function extractElement(source,tagName,startIndex){
+  const re=new RegExp('<\\/?'+tagName+'\\b[^>]*>','gi');re.lastIndex=startIndex;
+  let depth=0,match;
+  while((match=re.exec(source))){
+    if(/^<\//.test(match[0]))depth--;
+    else if(!/\/\s*>$/.test(match[0]))depth++;
+    if(depth===0)return {start:startIndex,end:re.lastIndex,html:source.slice(startIndex,re.lastIndex)};
+  }
+  throw new Error('Unbalanced '+tagName+' element in CN header.');
+}
+function cnRailMarkup(){
+ return '<div class="qily-primary-nav-scroll-rail" role="scrollbar" aria-label="一级导航左右滑动条" aria-controls="qilyCnPrimaryNavigation" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0%" aria-disabled="true" tabindex="-1" data-qily-nav-overflow="false"><span class="qily-primary-nav-scroll-thumb" aria-hidden="true"></span></div>';
+}
+function cnTranslationMarkup(){
+ return '<div id="qilyCnTranslateV3" class="qily-cn-translate" data-qily-static-first-paint="v1" data-qily-header-utility="translation" data-qily-translation-provider="qilylean-api" data-qily-translation-engine="youdao" translate="no" role="group" aria-label="网页翻译"><span class="qily-cn-translate__mark" aria-hidden="true">🌐</span><select class="qily-cn-translate__select" aria-label="选择网站语言"><option value="zh-CN">中文简体</option><option value="zh-TW">中文繁体</option><option value="en">English</option><option value="__more__">其他</option></select><span class="qily-cn-translate__provider">站内翻译</span><div class="qily-cn-language-more" hidden role="dialog" aria-label="更多翻译语言"></div></div>';
+}
+function materializeHeader(source){
+  const match=/<header\b[^>]*\bclass=["'][^"']*\bsite-header\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i.exec(source);
+  if(!match)return source;
+  let header=match[0];
+  const navOpen=/<nav\b[^>]*\bclass=["'][^"']*\bnav\b[^"']*["'][^>]*>/i.exec(header);
+  if(!navOpen)return source;
+  const navStart=navOpen.index,navElement=extractElement(header,'nav',navStart);
+  let nav=navElement.html;
+  const open=nav.match(/^<nav\b[^>]*>/i)[0];
+  let updatedOpen=addClass(open,'nav');
+  updatedOpen=setAttribute(updatedOpen,'id','qilyCnPrimaryNavigation');
+  updatedOpen=setAttribute(updatedOpen,'data-qily-cn-nav-rail','static-v1');
+  updatedOpen=setAttribute(updatedOpen,'aria-label','主导航');
+  nav=updatedOpen+nav.slice(open.length);
+  const shellMarkup='<div class="qily-cn-nav-shell" data-qily-cn-nav-shell="v7">'+nav+cnRailMarkup()+'</div>';
+  const shellOpen=/<div\b[^>]*\bclass=["'][^"']*\bqily-cn-nav-shell\b[^"']*["'][^>]*>/i.exec(header);
+  if(shellOpen){
+    const shell=extractElement(header,'div',shellOpen.index);
+    header=header.slice(0,shell.start)+shellMarkup+header.slice(shell.end);
+  }else{
+    header=header.slice(0,navElement.start)+shellMarkup+header.slice(navElement.end);
+  }
+  const hasTranslator=/cn-translate-baidu-v1\.js/.test(source);
+  if(hasTranslator&&!/id=["']qilyCnTranslateV3["']/.test(header))header=header.replace(shellMarkup,shellMarkup+cnTranslationMarkup());
+  let next=source.slice(0,match.index)+header+source.slice(match.index+match[0].length);
+  if(hasTranslator&&!/cn-translate-baidu-v1\.css/.test(next))next=next.replace(/<\/head\s*>/i,'<link rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2">\n</head>');
+  return next;
+}
+
 function filings(footer){
   const opening=/<span\b[^>]*\bclass=["'][^"']*\bfooter-records\b[^"']*["'][^>]*>/i.exec(footer);
   if(!opening)throw new Error('Original filing records unavailable.');
@@ -290,11 +347,12 @@ function nav(){
   return '<nav id="floatDock" class="footer-actions qily-float-dock qily-page-action-nav" aria-label="精益制造经验分享页面快捷导航" data-qily-footer-contract="'+ACTIONS.join(',')+'" data-qily-standalone-dock="v5.8" data-qily-dock-layout="fixed-bottom-footer-navigation">'+ACTIONS.map((action,i)=>'<button type="button" class="qily-float-btn qily-float-'+action+'" data-action="'+action+'" data-qily-footer-action="'+action+'" aria-label="'+LABELS[i]+'" title="'+LABELS[i]+'" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>'+LABELS[i]+'</span></span></button>').join('')+'</nav>';
 }
 function materialize(source){
-  const match=/<footer\b[^>]*\bclass=["']footer["'][^>]*>[\s\S]*?<\/footer>/i.exec(source);
-  if(!match)return source;
+  let next=materializeHeader(source);
+  const match=/<footer\b[^>]*\bclass=["']footer["'][^>]*>[\s\S]*?<\/footer>/i.exec(next);
+  if(!match)return next;
   const records=filings(match[0]);
   if(!records.includes('湘ICP备2026041143号-1')||!records.includes('湘公网安备43020002000443号'))throw new Error('Expected China filing records missing.');
-  let next=source.slice(0,match.index)+'<footer class="footer"><div class="footer-inner">'+nav()+records+'</div></footer>'+source.slice(match.index+match[0].length);
+  next=next.slice(0,match.index)+'<footer class="footer"><div class="footer-inner">'+nav()+records+'</div></footer>'+next.slice(match.index+match[0].length);
   next=next.replace(/(?<![\w/-])\/assets\/cn-footer-actions-v1\.css(?:\?[^"'\s<>]*)?/g,CSS_HREF);
   next=next.replace(/(?<![\w/-])\/assets\/cn-footer-actions-v1\.js(?:\?[^"'\s<>]*)?/g,JS_SRC);
   if(filings(next.match(/<footer\b[^>]*\bclass=["']footer["'][^>]*>[\s\S]*?<\/footer>/i)[0])!==records)throw new Error('Filing DOM changed.');
@@ -316,5 +374,5 @@ function main(){
   if(check&&changed)throw new Error('Public four-action footer stale: '+changed+' assets/pages.');
   console.log((check?'CHECK':'APPLY')+' PASS: CN canonical four-action footer; changed='+changed+'; pages='+count+'; filing DOM unchanged; runtime matches international owner.');
 }
-module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,runtime,actionCss,regionCss,filings,nav,materialize};
+module.exports={VERSION,ACTIONS,LABELS,CSS_HREF,JS_SRC,runtime,actionCss,regionCss,filings,nav,cnRailMarkup,cnTranslationMarkup,materializeHeader,materialize};
 if(require.main===module)main();

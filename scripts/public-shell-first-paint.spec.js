@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 const fs=require('fs');
 const path=require('path');
 const base=process.env.QILY_VI_V4_BASE||'http://127.0.0.1:4173';
-const pages=[['home','/','.qily-home-conversion-hero__kicker'],['lean-production','/lean-production/','.hero .eyebrow']];
+const pages=[['home','/','.qily-home-conversion-hero__kicker'],['lean-production','/lean-production/','.hero .eyebrow'],['daily-index','/qilylean/daily-insights.html','h1'],['daily-brief','/qilylean/daily/2026-11-08.html','h1'],['improvements','/improvements/','h1']];
 const viewports=[
   ['desktop',{width:1680,height:1000}],
   ['tablet',{width:1024,height:900}],
@@ -78,7 +78,7 @@ for(const width of [1440,1024,820,390,320]){
 async function observeStaticMenu(context){
   await context.addInitScript(()=>{
     // This observer is only a regression probe. Production keeps one Dock owner.
-    const probe={initial:null,replaced:false,invalidMenus:[],coreReady:false,navMovements:[]};
+    const probe={initial:null,replaced:false,initialHeader:null,headerReplaced:false,initialTranslation:null,translationReplaced:false,invalidMenus:[],coreReady:false,navMovements:[]};
     window.__qilyStaticMenuProbe=probe;
     const movement=(nav,reason,stack)=>{
       if(!nav.matches('header nav'))return;
@@ -91,6 +91,12 @@ async function observeStaticMenu(context){
     const actions=node=>[...node.querySelectorAll('[data-action]')].map(button=>button.getAttribute('data-action'));
     const inspect=records=>{
       const current=document.getElementById('floatDock');
+      const header=document.querySelector('header.qily-site-header.qily-global-header');
+      if(!probe.initialHeader&&header)probe.initialHeader=header;
+      if(probe.initialHeader&&header!==probe.initialHeader)probe.headerReplaced=true;
+      const translation=document.getElementById('qilyGlobalTranslationDualRouteV2');
+      if(!probe.initialTranslation&&translation)probe.initialTranslation=translation;
+      if(probe.initialTranslation&&translation!==probe.initialTranslation)probe.translationReplaced=true;
       if(!probe.initial&&current&&current.getAttribute('data-qily-first-paint-dock')==='v1'&&actions(current).length===4)probe.initial=current;
       if(!probe.initial)return;
       if(current!==probe.initial)probe.replaced=true;
@@ -118,11 +124,20 @@ async function observeStaticMenu(context){
 async function expectStaticMenuPreserved(page){
   const probe=await page.evaluate(()=>{
     const state=window.__qilyStaticMenuProbe;
-    return state&&{captured:!!state.initial,sameNode:state.initial===document.getElementById('floatDock'),replaced:state.replaced,invalidMenus:state.invalidMenus};
+    return state&&{captured:!!state.initial,sameNode:state.initial===document.getElementById('floatDock'),replaced:state.replaced,headerCaptured:!!state.initialHeader,headerSameNode:state.initialHeader===document.querySelector('header.qily-site-header.qily-global-header'),headerReplaced:state.headerReplaced,translationCaptured:!!state.initialTranslation,translationSameNode:state.initialTranslation===document.getElementById('qilyGlobalTranslationDualRouteV2'),translationReplaced:state.translationReplaced,invalidMenus:state.invalidMenus};
   });
   expect(probe&&probe.captured,'the parser supplied the initial static menu').toBeTruthy();
   expect(probe.sameNode,'the original static menu survives shared runtime/core loading').toBeTruthy();
   expect(probe.replaced,'the static menu must never be replaced').toBe(false);
+  expect(probe.headerCaptured,'the parser supplied the initial static global header').toBeTruthy();
+  expect(probe.headerSameNode,'the original static header survives shared runtime/core loading').toBeTruthy();
+  expect(probe.headerReplaced,'the static header must never be replaced').toBe(false);
+  const translationRequired=await page.evaluate(()=>!!document.querySelector('script[src*="site-translation-safe-runtime-v1.js"]'));
+  if(translationRequired){
+    expect(probe.translationCaptured,'the parser supplied the initial static translation utility').toBeTruthy();
+    expect(probe.translationSameNode,'the original translation utility survives runtime hydration').toBeTruthy();
+    expect(probe.translationReplaced,'the static translation utility must never be replaced').toBe(false);
+  }
   expect(probe.invalidMenus,'loading must never introduce a menu with missing actions').toEqual([]);
   await expect(page.locator('script[src*="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20261022-four-actions-v1&share=20261031-copy-first-v1"]'),'pending first-paint runtime must suppress the legacy fallback loader').toHaveCount(1);
 }
@@ -156,6 +171,12 @@ async function paintState(page,labelSelector){
   return page.evaluate(selector=>{
     const label=document.querySelector(selector);
     const labelStyle=label&&getComputedStyle(label);
+    const header=document.querySelector('header.qily-site-header.qily-global-header');
+    const headerStyle=header&&getComputedStyle(header);
+    const headerRect=header&&header.getBoundingClientRect();
+    const primaryNav=header&&header.querySelector('nav.qily-global-nav,nav.site-nav');
+    const translation=document.getElementById('qilyGlobalTranslationDualRouteV2');
+    const translationRequired=!!document.querySelector('script[src*="site-translation-safe-runtime-v1.js"]');
     const dock=document.querySelector('#floatDock');
     const dockStyle=dock&&getComputedStyle(dock);
     const rect=dock&&dock.getBoundingClientRect();
@@ -170,6 +191,8 @@ async function paintState(page,labelSelector){
         const outlined=parseFloat(style.borderTopWidth)>0&&style.borderTopStyle!=='none';
         return drawn&&circle&&outlined?[hero.className+pseudo]:[];
       })),
+      header:headerStyle&&{position:headerStyle.position,top:headerRect.top,height:headerRect.height,visible:visible(header),navLinks:primaryNav?primaryNav.querySelectorAll('a[href]').length:0,brand:!!header.querySelector('.qily-brand')},
+      translation:{required:translationRequired,visible:visible(translation)},
       dock:dockStyle&&{position:dockStyle.position,color:dockStyle.backgroundColor,border:dockStyle.borderTopWidth,borderColor:dockStyle.borderTopColor,x:rect.x,width:rect.width,height:rect.height,bottom:rect.bottom,visible:visible(dock),padding:dockStyle.padding,gap:dockStyle.gap,display:dockStyle.display,pseudoHeight:getComputedStyle(dock,'::after').height,buttonHeight:dock.querySelector('button').getBoundingClientRect().height,buttonPadding:getComputedStyle(dock.querySelector('button')).padding,buttonFont:getComputedStyle(dock.querySelector('button')).font},
       docks:document.querySelectorAll('#floatDock').length,
       styles:document.querySelectorAll('#qilyDockUnifiedV58Style').length,
@@ -191,6 +214,13 @@ function expectPaint(state,name){
   expect(state.label.borders).toEqual(['0px','0px','0px','0px']);
   expect(state.label.radius).toBe('0px');
   expect(state.decorativeOrbits,`${name}: no decorative circle appears before a runtime hides it`).toEqual([]);
+  expect(state.header,'global header is visible before JavaScript').toBeTruthy();
+  expect(state.header.visible).toBeTruthy();
+  expect(state.header.position).toBe('sticky');
+  expect(state.header.top).toBeCloseTo(0,0);
+  expect(state.header.navLinks).toBe(10);
+  expect(state.header.brand).toBe(true);
+  if(state.translation.required)expect(state.translation.visible,'translation utility is visible before JavaScript').toBe(true);
   expect(state.docks).toBe(1);
   expect(state.styles).toBe(1);
   expect(state.spacers).toBe(1);
@@ -305,7 +335,7 @@ test('navigation core adopts published navigation before presentation runtimes l
     const page=await context.newPage();
     await page.goto(base+'/lean-production/',{waitUntil:'domcontentloaded'});
     await page.waitForFunction(()=>window.__qilyInteractionSemanticsV17===true);
-    await expect(page.locator('header.topbar')).not.toHaveClass(/qily-site-header/);
+    await expect(page.locator('header.topbar')).toHaveClass(/qily-site-header/);
     await page.evaluate(()=>{
       window.__qilyPublishedNavigation=document.querySelector('header nav');
       window.__qilyPublishedRail=document.querySelector('input.qily-primary-nav-scroll-rail');
