@@ -86,9 +86,9 @@ for(const relative of files){
 
 
   if(/site-translation-safe-runtime-v1\.js|site-global-language-v3\.js/.test(source)){
-    assert(header[1].includes('id="qilyGlobalTranslationDualRouteV2"'),\`\${relative}: international translation utility must be static\`);
-    assert(header[1].includes('data-qily-static-first-paint="v1"'),\`\${relative}: international translation utility first-paint marker missing\`);
-    assert(head[1].includes(TRANSLATION_CSS_HREF),\`\${relative}: translation utility stylesheet must load before paint\`);
+    assert(header[1].includes('id="qilyGlobalTranslationDualRouteV2"'),\`${relative}: international translation utility must be static\`);
+    assert(header[1].includes('data-qily-static-first-paint="v1"'),\`${relative}: international translation utility first-paint marker missing\`);
+    assert(head[1].includes(TRANSLATION_CSS_HREF),\`${relative}: translation utility stylesheet must load before paint\`);
   }
 
   const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi)];
@@ -131,7 +131,7 @@ for(const path of ['qilylean/daily/2026-11-08.html','qilylean/daily/2026-10-25.h
 assert(!dailyIndex.includes('data-date="2026-11-10" data-qily-lecture="available"'),'brief without a lecture must not receive the lecture badge');
 const vi=read('site-vi-standard-v4.css');
 const dockTransition=vi.split('::view-transition-group(qily-public-dock)')[1]?.split('/* 10 |')[0]||'';
-assert(dockTransition&&!/transform\\s*:\\s*none/i.test(dockTransition),'native view-transition group must preserve browser-computed Dock geometry');
+assert(dockTransition&&!/transform\s*:\s*none/i.test(dockTransition),'native view-transition group must preserve browser-computed Dock geometry');
 const semanticContract=vi.split('QILY-FULL-SITE-HERO-LABEL-VI-V1')[1].split('/* 04 | Typography hierarchy. */')[0];
 assert(semanticContract&&!/html\[data-qily-vi-version|body\[data-qily-vi-shell/.test(semanticContract),'semantic label paint must not wait for JavaScript shell markers');
 for(const token of ['var(--qily-vi-gold-light)!important','font-weight:400!important','border:0!important','border-radius:0!important','padding:0!important','background:transparent!important']){
