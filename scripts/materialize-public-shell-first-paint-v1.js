@@ -34,7 +34,7 @@ const HEADER_ROUTES=[
  ['精益生产','/lean-production/'],['代表项目','/projects/'],['信任中心','/trust/'],
  ['项目合作','/cooperation/'],['知识资产','/knowledge/'],['资源协同','/links/'],['关于我们','/about/']
 ];
-const HEADER_CSS=String.raw\`
+const HEADER_CSS=String.raw`
 .qily-site-header.qily-global-header{position:sticky!important;top:0!important;z-index:8000!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;min-height:70px!important;padding:10px clamp(18px,3.8vw,54px) 10px max(70px,env(safe-area-inset-left))!important;color:#182420!important;background:rgba(255,255,255,.98)!important;border-bottom:1px solid #d5e4e3!important;box-shadow:0 6px 20px rgba(15,75,90,.06)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important}
 .qily-global-header .qily-brand{display:block!important;flex:0 0 auto!important;width:clamp(168px,14vw,226px)!important;height:34px!important;margin:0!important;padding:0!important;overflow:hidden!important;color:transparent!important;background:url("/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5") left center/contain no-repeat!important;text-indent:-9999px!important;white-space:nowrap!important;text-decoration:none!important}
 .qily-global-header .qily-global-nav{display:flex!important;flex:0 1 auto!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;max-width:calc(100vw - 330px)!important;margin-left:auto!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;color:#182420!important;white-space:nowrap!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important}
@@ -45,7 +45,7 @@ const HEADER_CSS=String.raw\`
 @media(max-width:620px){.qily-global-header .qily-brand{width:126px!important;height:23px!important}.qily-global-header .qily-global-nav a{font-size:17.5px!important;padding:5px 7px!important}}
 @media(min-width:901px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-size:20px!important;font-weight:900!important;line-height:1.22!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
 @media(max-width:900px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-weight:900!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
-\`;
+`;
 const HEADER_STYLE_TAG='<style id="'+HEADER_STYLE_ID+'" data-qily-first-paint-header="v2">'+HEADER_CSS+'</style>';
 
 const TRANSLATION_CSS_HREF='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
