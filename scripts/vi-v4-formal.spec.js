@@ -23,6 +23,74 @@ const heroSelector='.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.
 
 fs.mkdirSync(path.join(process.cwd(),'visual-vi-v4-artifacts'),{recursive:true});
 
+test('international curated archive keeps primary navigation sticky while scrolling',async({browser})=>{
+  test.setTimeout(90000);
+  const viewports=[
+    ['desktop',{width:1440,height:900}],
+    ['tablet',{width:1024,height:900}],
+    ['mobile',{width:390,height:844}]
+  ];
+  for(const [device,viewport] of viewports){
+    const context=await browser.newContext({viewport,reducedMotion:'reduce'});
+    await context.route('**/*',route=>{
+      try{return new URL(route.request().url()).origin===new URL(base).origin?route.continue():route.abort();}
+      catch(error){return route.abort();}
+    });
+    const page=await context.newPage();
+    const response=await page.goto(`${base}/qilylean/daily-insights.html`,{waitUntil:'load',timeout:30000});
+    expect(response&&response.ok(),`${device}: archive page should resolve`).toBeTruthy();
+    const header=page.locator('body > header.qily-site-header');
+    await expect(header, `${device}: global header should be visible`).toBeVisible();
+    await expect(header, `${device}: header must be identified as a global navigation shell`).toHaveClass(/qily-global-header/);
+    await expect(header.locator('nav.site-nav.qily-global-nav a[href]')).toHaveCount(10);
+    const initial=await header.evaluate(el=>({
+      position:getComputedStyle(el).position,
+      top:Math.round(el.getBoundingClientRect().top),
+      height:Math.round(el.getBoundingClientRect().height)
+    }));
+    expect(initial.position,`${device}: header positioning mode`).toBe('sticky');
+    expect(initial.top,`${device}: header initial top alignment`).toBe(0);
+    expect(initial.height,`${device}: header must have a visible height`).toBeGreaterThan(0);
+    const maxScroll=await page.evaluate(()=>document.documentElement.scrollHeight-window.innerHeight);
+    expect(maxScroll,`${device}: archive should provide a real scroll range`).toBeGreaterThan(300);
+    await page.evaluate(()=>window.scrollTo(0,Math.min(700,document.documentElement.scrollHeight-window.innerHeight)));
+    await expect.poll(()=>page.evaluate(()=>window.scrollY),{message:`${device}: document should scroll`}).toBeGreaterThan(0);
+    const stickyDiagnostics=await page.evaluate(()=>{
+      const el=document.querySelector('body > header.qily-site-header');
+      const chain=[];
+      for(let node=el;node;node=node.parentElement){
+        const css=getComputedStyle(node),rect=node.getBoundingClientRect();
+        chain.push({
+          tag:node.tagName,id:node.id,
+          className:typeof node.className==='string'?node.className:'',
+          position:css.position,top:css.top,
+          overflowX:css.overflowX,overflowY:css.overflowY,
+          transform:css.transform,contain:css.contain,
+          rectTop:Math.round(rect.top),rectBottom:Math.round(rect.bottom),
+          height:Math.round(rect.height),scrollHeight:node.scrollHeight,clientHeight:node.clientHeight
+        });
+      }
+      const htmlCss=getComputedStyle(document.documentElement),bodyCss=getComputedStyle(document.body);
+      return {
+        scrollY:window.scrollY,scrollingElement:document.scrollingElement?.tagName,
+        htmlOverflowX:htmlCss.overflowX,htmlOverflowY:htmlCss.overflowY,
+        bodyOverflowX:bodyCss.overflowX,bodyOverflowY:bodyCss.overflowY,
+        headerPosition:getComputedStyle(el).position,headerTop:getComputedStyle(el).top,
+        headerRectTop:Math.round(el.getBoundingClientRect().top),headerTransform:getComputedStyle(el).transform,
+        chain
+      };
+    });
+    console.log(`QILY-STICKY-DIAG ${device} ${JSON.stringify(stickyDiagnostics)}`);
+    expect(stickyDiagnostics.bodyOverflowX,`${device}: body horizontal overflow must not create a scroll container`).toBe('clip');
+    expect(stickyDiagnostics.bodyOverflowY,`${device}: body vertical overflow must remain visible`).toBe('visible');
+    await page.screenshot({path:path.join('visual-vi-v4-artifacts',`daily-insights-sticky-${device}.png`)});
+    await expect.poll(()=>header.evaluate(el=>Math.round(el.getBoundingClientRect().top)),{message:`${device}: global header should remain pinned to the viewport top`}).toBe(0);
+    await expect.poll(()=>header.evaluate(el=>getComputedStyle(el).position),{message:`${device}: sticky positioning must remain active after scroll`}).toBe('sticky');
+    await context.close();
+  }
+});
+
+
 test('curated brief contents remain separate usable buttons at every breakpoint',async({browser})=>{
   test.setTimeout(120000);
   const issues=[['2026-09-13',10],['2026-09-20',8],['2026-09-23',8],['2026-09-28',7],['2026-10-11',7]];
