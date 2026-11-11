@@ -23,6 +23,46 @@ const heroSelector='.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.
 
 fs.mkdirSync(path.join(process.cwd(),'visual-vi-v4-artifacts'),{recursive:true});
 
+test('international curated archive keeps primary navigation sticky while scrolling',async({browser})=>{
+  test.setTimeout(90000);
+  const viewports=[
+    ['desktop',{width:1440,height:900}],
+    ['tablet',{width:1024,height:900}],
+    ['mobile',{width:390,height:844}]
+  ];
+  for(const [device,viewport] of viewports){
+    const context=await browser.newContext({viewport,reducedMotion:'reduce'});
+    await context.route('**/*',route=>{
+      try{return new URL(route.request().url()).origin===new URL(base).origin?route.continue():route.abort();}
+      catch(error){return route.abort();}
+    });
+    const page=await context.newPage();
+    const response=await page.goto(`${base}/qilylean/daily-insights.html`,{waitUntil:'load',timeout:30000});
+    expect(response&&response.ok(),`${device}: archive page should resolve`).toBeTruthy();
+    const header=page.locator('body > header.qily-site-header');
+    await expect(header, `${device}: global header should be visible`).toBeVisible();
+    await expect(header, `${device}: header must be identified as a global navigation shell`).toHaveClass(/qily-global-header/);
+    await expect(header.locator('nav.site-nav.qily-global-nav a[href]')).toHaveCount(10);
+    const initial=await header.evaluate(el=>({
+      position:getComputedStyle(el).position,
+      top:Math.round(el.getBoundingClientRect().top),
+      height:Math.round(el.getBoundingClientRect().height)
+    }));
+    expect(initial.position,`${device}: header positioning mode`).toBe('sticky');
+    expect(initial.top,`${device}: header initial top alignment`).toBe(0);
+    expect(initial.height,`${device}: header must have a visible height`).toBeGreaterThan(0);
+    const maxScroll=await page.evaluate(()=>document.documentElement.scrollHeight-window.innerHeight);
+    expect(maxScroll,`${device}: archive should provide a real scroll range`).toBeGreaterThan(300);
+    await page.evaluate(()=>window.scrollTo(0,Math.min(700,document.documentElement.scrollHeight-window.innerHeight)));
+    await expect.poll(()=>page.evaluate(()=>window.scrollY),{message:`${device}: document should scroll`}).toBeGreaterThan(0);
+    await expect.poll(()=>header.evaluate(el=>Math.round(el.getBoundingClientRect().top)),{message:`${device}: global header should remain pinned to the viewport top`}).toBe(0);
+    await expect.poll(()=>header.evaluate(el=>getComputedStyle(el).position),{message:`${device}: sticky positioning must remain active after scroll`}).toBe('sticky');
+    await page.screenshot({path:path.join('visual-vi-v4-artifacts',`daily-insights-sticky-${device}.png`)});
+    await context.close();
+  }
+});
+
+
 test('curated brief contents remain separate usable buttons at every breakpoint',async({browser})=>{
   test.setTimeout(120000);
   const issues=[['2026-09-13',10],['2026-09-20',8],['2026-09-23',8],['2026-09-28',7],['2026-10-11',7]];
