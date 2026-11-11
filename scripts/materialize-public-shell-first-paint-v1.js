@@ -27,6 +27,75 @@ const ORDER=['top','previous','search','current'];
 const LABELS=['回到顶部','上一网页','本站搜索','分享当前'];
 const DOCK_STYLE_ID='qilyDockUnifiedV58Style';
 const DOCK_SPACER_ID='qilyDockBottomSpacerV58';
+
+const HEADER_STYLE_ID='qilyGlobalHeaderFirstPaintV1';
+const HEADER_ROUTES=[
+ ['首页','/'],['能力体系','/capabilities/'],['改善工具','/improvements/'],
+ ['精益生产','/lean-production/'],['代表项目','/projects/'],['信任中心','/trust/'],
+ ['项目合作','/cooperation/'],['知识资产','/knowledge/'],['资源协同','/links/'],['关于我们','/about/']
+];
+const HEADER_CSS=String.raw\`
+.qily-site-header.qily-global-header{position:sticky!important;top:0!important;z-index:8000!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;min-height:70px!important;padding:10px clamp(18px,3.8vw,54px) 10px max(70px,env(safe-area-inset-left))!important;color:#182420!important;background:rgba(255,255,255,.98)!important;border-bottom:1px solid #d5e4e3!important;box-shadow:0 6px 20px rgba(15,75,90,.06)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important}
+.qily-global-header>.qily-brand{display:block!important;flex:0 0 auto!important;width:clamp(168px,14vw,226px)!important;height:34px!important;margin:0!important;padding:0!important;overflow:hidden!important;color:transparent!important;background:url("/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5") left center/contain no-repeat!important;text-indent:-9999px!important;white-space:nowrap!important;text-decoration:none!important}
+.qily-global-header>.qily-global-nav{display:flex!important;flex:0 1 auto!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;max-width:calc(100vw - 330px)!important;margin-left:auto!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;color:#182420!important;white-space:nowrap!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important}
+.qily-global-header>.qily-global-nav a{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;color:#182420!important;background:transparent!important;box-shadow:none!important;font-size:18px!important;font-weight:900!important;line-height:1.2!important;text-decoration:none!important;transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}
+.qily-global-header>.qily-global-nav a:hover,.qily-global-header>.qily-global-nav a:focus-visible{color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;box-shadow:0 8px 18px rgba(15,75,90,.22)!important;outline:none!important;transform:translateY(-2px)!important}
+.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border-color:#ffe39b!important;text-decoration-color:#ffe39b!important;box-shadow:0 7px 18px rgba(15,75,90,.24)!important}
+@media(max-width:900px){.qily-site-header.qily-global-header{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;min-height:auto!important;padding:7px 9px 8px!important}.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:42px!important}.qily-global-header>.qily-global-nav{width:100%!important;max-width:100%!important;margin:0!important;justify-content:flex-start!important;gap:5px!important;overflow-x:auto!important}.qily-global-header>.qily-global-nav a{min-height:34px!important;padding:5px 9px!important;font-size:17.5px!important;border-radius:9px!important}}
+@media(max-width:620px){.qily-global-header>.qily-brand{width:126px!important;height:23px!important}.qily-global-header>.qily-global-nav a{font-size:17.5px!important;padding:5px 7px!important}}
+@media(min-width:901px){html:root body header.qily-site-header.qily-global-header>.qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-size:20px!important;font-weight:900!important;line-height:1.22!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
+@media(max-width:900px){html:root body header.qily-site-header.qily-global-header>.qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-weight:900!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
+\`;
+const HEADER_STYLE_TAG='<style id="'+HEADER_STYLE_ID+'" data-qily-first-paint-header="v2">'+HEADER_CSS+'</style>';
+function modulePathForRelative(relative){
+ const p='/'+relative.replace(/\\/g,'/');
+ if(p==='/index.html'||p==='/')return '/';
+ if(p.startsWith('/capabilities/'))return '/capabilities/';
+ if(p.startsWith('/projects/'))return '/projects/';
+ if(p.startsWith('/experience/'))return '/about/';
+ if(p.startsWith('/improvements/')||/\/(?:execution|papers)\.html$/.test(p)||/\/qilylean\/papers\.html$/.test(p))return '/improvements/';
+ if(p.startsWith('/knowledge/')||p.startsWith('/qilylean/daily/')||/^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(p)||/\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(p))return '/knowledge/';
+ if(p.startsWith('/moments/')||/\/moments\.html$/.test(p))return '/trust/';
+ if(p.startsWith('/links/'))return '/links/';
+ if(p.startsWith('/about/'))return '/about/';
+ if(p.startsWith('/cooperation/'))return '/cooperation/';
+ if(p.startsWith('/trust/')||p.startsWith('/certificates/')||p.startsWith('/legal/'))return '/trust/';
+ if(p.startsWith('/lean-production/'))return '/lean-production/';
+ return '';
+}
+function addClassesToTag(tag,classes){
+ return tag.replace(/^<(\w+)\b([^>]*)>/i,function(full,name,attrs){
+  const m=/\bclass=(["'])(.*?)\1/i.exec(attrs);
+  const merged=[...new Set(((m?m[2]:'')+' '+classes.join(' ')).trim().split(/\s+/).filter(Boolean))].join(' ');
+  const next=m?attrs.replace(m[0],'class="'+merged+'"'):attrs+' class="'+merged+'"';
+  return '<'+name+next+'>';
+ });
+}
+function addAttributeToTag(tag,name,value){
+ if(new RegExp('\\b'+name+'\\s*=', 'i').test(tag))return tag;
+ return tag.replace(/>$/,' '+name+'="'+value+'">');
+}
+function canonicalHeader(relative){
+ const active=modulePathForRelative(relative);
+ const links=HEADER_ROUTES.map(([label,href])=>'<a href="'+href+'"'+(active===href?' aria-current="page"':'')+'>'+label+'</a>').join('');
+ return '<header class="qily-site-header qily-global-header" data-qily-public-shell-first-paint="v2"><a class="qily-brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean｜启力精益</a><nav class="site-nav qily-global-nav" aria-label="QilyLean核心导视">'+links+'</nav></header>';
+}
+function materializeHeader(source,relative){
+ const match=/<header\b[\s\S]*?<\/header>/i.exec(source);
+ if(!match)return canonicalHeader(relative);
+ let header=match[0];
+ const navMatch=/<nav\b([^>]*)>([\s\S]*?)<\/nav>/i.exec(header);
+ const brandMatch=/<a\b[^>]*\bclass=["'][^"']*\b(?:qily-brand|brand)\b[^"']*["'][^>]*>/i.exec(header);
+ const hrefs=navMatch?[...navMatch[2].matchAll(/<a\b[^>]*\bhref=["']([^"']+)["']/gi)].map(m=>m[1]):[];
+ const complete=!!navMatch&&!!brandMatch&&hrefs.length===HEADER_ROUTES.length&&HEADER_ROUTES.every((route,i)=>hrefs[i]===route[1]);
+ if(!complete)return canonicalHeader(relative);
+ header=addClassesToTag(header,['qily-site-header','qily-global-header']);
+ header=header.replace(/<header\b([^>]*)>/i,tag=>addAttributeToTag(tag,'data-qily-public-shell-first-paint','v2'));
+ header=header.replace(/<nav\b([^>]*)>/i,tag=>addAttributeToTag(addClassesToTag(tag,['site-nav','qily-global-nav']),'aria-label','QilyLean核心导视'));
+ header=header.replace(brandMatch[0],addClassesToTag(brandMatch[0],['qily-brand']));
+ return header;
+}
+
 const runtime=fs.readFileSync(path.join(ROOT,'site-dock-share-runtime-v1.js'),'utf8');
 const cssArray=runtime.match(/style\.textContent=(\[[\s\S]*?\])\.join\(''\);/);
 if(!cssArray)throw new Error('The authoritative Dock CSS array is unavailable.');
@@ -61,6 +130,7 @@ function isEligible(relative,source){
 
 function materialize(source,relative){
   if(!isEligible(relative,source))return source;
+  const staticHeader=materializeHeader(source,relative);
   let next=source;
   const isMoments=relative.startsWith('moments/')||relative==='moments.html';
   next=next.replace(/\/site-navigation\.js\?[^"'\s<>]*/g,url=>{
@@ -94,7 +164,8 @@ function materialize(source,relative){
   // Reinsert it at the same head position when another materializer rebuilds its tags.
   next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag.replace(DOCK_RUNTIME_SRC,routeDockRuntime)+'\n';
-  next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+'</head>');
+  next=next.replace(/\s*<style\b[^>]*id=["']qilyGlobalHeaderFirstPaintV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');
+  next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+HEADER_STYLE_TAG+'\n'+'</head>');
   // Resource directory: establish the rail's containing block before any
   // runtime inserts it. R8 stylesheet order alone cannot anchor an absolute
   // rail while the legacy .topbar still lacks the runtime header classes.
@@ -109,7 +180,8 @@ function materialize(source,relative){
     next=next.replace(/<\/head\s*>/i,authorityLink+'\n</head>');
   }
 
-  next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+briefDockMarkup(relative)+'\n');
+  next=next.replace(/<header\b[\s\S]*?<\/header>/i,'');
+  next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+briefDockMarkup(relative)+'\n'+staticHeader+'\n');
   next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
   return next;
 }
@@ -147,5 +219,5 @@ function materializeBridge(source){
   return next;
 }
 
-module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,criticalDockCss,isEligible,materialize};
+module.exports={ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,dockRuntimeSrc,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV,MOMENTS_NAVIGATION_REV,MOMENTS_PARENT_ROUTE,ORDER,LABELS,DOCK_STYLE_ID,DOCK_SPACER_ID,HEADER_STYLE_ID,HEADER_CSS,HEADER_ROUTES,criticalDockCss,isEligible,materialize,materializeHeader};
 if(require.main===module)main();
