@@ -72,16 +72,28 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
     const first=table.querySelector('tbody tr td:first-child');
     const marker=first?.querySelector('.w43-mobile-break');
     const markerRect=marker?.getBoundingClientRect();
-    let phraseTop=0;
-    if(first?.firstChild?.nodeType===Node.TEXT_NODE){
+    let phraseTop=0,phraseText='';
+    if(first){
+     const walker=document.createTreeWalker(first,NodeFilter.SHOW_TEXT,{
+      acceptNode(node){
+       if(!node.textContent.trim())return NodeFilter.FILTER_REJECT;
+       if(node.parentElement?.closest('.w43-mobile-break'))return NodeFilter.FILTER_REJECT;
+       return NodeFilter.FILTER_ACCEPT;
+      }
+     });
+     const phraseNode=walker.nextNode();
+     if(phraseNode){
+      phraseText=phraseNode.textContent.trim();
       const range=document.createRange();
-      range.selectNodeContents(first.firstChild);
+      range.selectNodeContents(phraseNode);
       phraseTop=range.getBoundingClientRect().top;
+     }
     }
     return {
       tableWidth:table.getBoundingClientRect().width,
       ratios:heads.map(v=>v/table.getBoundingClientRect().width),
-      firstText:first?.innerText||'',
+      firstText:first?.textContent?.trim()||'',
+      phraseText,
       markerDisplay:marker?getComputedStyle(marker).display:null,
       phraseTop,
       markerTop:markerRect?.top||0,
@@ -91,6 +103,7 @@ test('W43 governance table uses efficient desktop columns and semantic mobile wr
    console.log('W43_RESPONSIVE_TABLE',JSON.stringify({site:route.site,width,...metrics}));
    expect(metrics,route.url+' governance table exists').toBeTruthy();
    expect(metrics.documentWidth,route.url+' no horizontal overflow').toBeLessThanOrEqual(width+1);
+   expect.soft(metrics.phraseText,route.url+' leading phrase text exists').toBeTruthy();
    if(width<=430){
     expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeGreaterThanOrEqual(.35);
     expect.soft(metrics.ratios[0],route.url+' mobile first column').toBeLessThanOrEqual(.37);
