@@ -233,7 +233,7 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
        section — outline only, for location. */
 #qilyLecPlayer .p-sub .s-cur{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:6px!important;padding:2px 6px!important;margin:0 -6px!important}
 #qily-lecture .chapter .lec-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
-/* v2.6.0 article sentence sync (user request 2026-11-11): the sentence being
+/* v2.6.0 article sentence sync (v2.6.1: wrap anchor + following siblings, see JS) (user request 2026-11-11): the sentence being
    spoken also lights up in the ORIGINAL article text, so the class can follow
    the lecture from the article alone while the player is collapsed. Same
    light gold as the subtitle / chapter-card highlight. */
@@ -828,27 +828,46 @@ var audio = document.getElementById('qilyLecAudio');
           var root = sel ? document.querySelector(sel) : null;
           var spans = [];
           if (root){
-            var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
-            var nodes = [];
-            while (walker.nextNode()) nodes.push(walker.currentNode);
-            nodes.forEach(function(node){
-              var parent = node.parentNode;
-              if (!parent) return;
-              var tag = parent.nodeName;
-              if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
-              var text = node.nodeValue;
-              if (!text || !text.trim()) return;
-              var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
-              if (!parts) return;
-              var frag = document.createDocumentFragment();
-              parts.forEach(function(p){
-                var sp = document.createElement('span');
-                sp.className = 'lec-art-sen';
-                sp.textContent = p;
-                frag.appendChild(sp);
-                spans.push(sp);
+            /* v2.6.1: the anchor may be a HEADING, not a container. On the
+               visual page the anchors are h3s whose paragraphs are SIBLINGS,
+               so wrapping only inside the anchor covered just the heading and
+               no article sentence could ever light up (user report 2026-11-11:
+               visual page "还未闭环"). Wrap the anchor PLUS its following
+               siblings up to the next anchor (or the end of the parent). On
+               the model page the anchors are <section> containers, so the
+               range is just the section itself — same behaviour as v2.6.0. */
+            var nextSel = CHAPTER_ANCHORS[ci + 1];
+            var nextEl = (nextSel && nextSel !== sel) ? document.querySelector(nextSel) : null;
+            var els = [root];
+            var sib = root.nextSibling;
+            while (sib){
+              if (sib === nextEl) break;
+              if (sib.nodeType === 1) els.push(sib);
+              sib = sib.nextSibling;
+            }
+            els.forEach(function(el){
+              var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+              var nodes = [];
+              while (walker.nextNode()) nodes.push(walker.currentNode);
+              nodes.forEach(function(node){
+                var parent = node.parentNode;
+                if (!parent) return;
+                var tag = parent.nodeName;
+                if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+                var text = node.nodeValue;
+                if (!text || !text.trim()) return;
+                var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
+                if (!parts) return;
+                var frag = document.createDocumentFragment();
+                parts.forEach(function(p){
+                  var sp = document.createElement('span');
+                  sp.className = 'lec-art-sen';
+                  sp.textContent = p;
+                  frag.appendChild(sp);
+                  spans.push(sp);
+                });
+                parent.replaceChild(frag, node);
               });
-              parent.replaceChild(frag, node);
             });
           }
           lecArtSpansBySection[ci] = spans;
