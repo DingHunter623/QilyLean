@@ -198,9 +198,21 @@ def main() -> None:
         source_attr = html.escape(source, quote=True)
         style_tag = '<style data-cn-lecture-css="v1" data-cn-lecture-source="' + source_attr + '">' + style + "</style>"
         runtime_tag = '<script data-cn-lecture-runtime="v1" data-cn-lecture-source="' + source_attr + '">' + runtime + "</script>"
-        updated, head_count = re.subn(r"</head\s*>", style_tag + "</head>", updated, count=1, flags=re.I)
+        updated, head_count = re.subn(
+            r"</head\s*>",
+            lambda match: style_tag + match.group(0),
+            updated,
+            count=1,
+            flags=re.I,
+        )
         require(head_count == 1, "Could not install local lecture stylesheet: " + route)
-        updated, body_count = re.subn(r"</body\s*>", runtime_tag + "</body>", updated, count=1, flags=re.I)
+        updated, body_count = re.subn(
+            r"</body\s*>",
+            lambda match: runtime_tag + match.group(0),
+            updated,
+            count=1,
+            flags=re.I,
+        )
         require(body_count == 1, "Could not install local lecture runtime: " + route)
 
         for element_id in ("qily-lecture", "qilyLecChapters", "qilyLecPlayer", "qilyLecMini", "qilyLecAudio"):
