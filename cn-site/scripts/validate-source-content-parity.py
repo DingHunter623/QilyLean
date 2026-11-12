@@ -451,6 +451,29 @@ def verify_semantics(value, row):
 
     resources = row['protected']['translator_resources']
     require(len(resources) == 2 and any('.js?' in item for item in resources) and any('.css?' in item for item in resources), 'Translator assets missing: ' + url)
+    approved_lecture_sources = {
+        'qilylean/daily/2026-11-08.html',
+        'qilylean/daily/2026-10-25.html',
+        'improvements/visual/index.html',
+    }
+    expected_lecture_inputs = {'qilyLecSeek', 'qilyLecSpeed', 'qilyLecPitch', 'qilyLecVolume'}
+    approved_lecture_inputs = set()
+    if row['source'] in approved_lecture_sources:
+        lecture_marker = re.search(
+            r'<!-- QILY-CN-LECTURE-MODULE:START -->[\s\S]*?<!-- QILY-CN-LECTURE-MODULE:END -->',
+            main,
+            re.I,
+        )
+        require(lecture_marker is not None, 'Approved voice player module marker missing: ' + url)
+        range_tags = re.findall(r'<input\b[^>]*>', lecture_marker.group(0), re.I)
+        for input_tag in range_tags:
+            if re.search(r'\btype=["\']range["\']', input_tag, re.I):
+                input_id = re.search(r'\bid=["\']([^"\']+)["\']', input_tag, re.I)
+                if input_id:
+                    approved_lecture_inputs.add(input_id.group(1))
+        require(approved_lecture_inputs == expected_lecture_inputs,
+                'Approved voice player must retain exactly four range controls: ' + url)
+
     for tag, attrs in Nodes(main).nodes:
         classes = set(attrs.get('class', '').split())
         require(attrs.get('id') not in parity.BLOCK_IDS and not classes & parity.BLOCK_CLASSES, 'Excluded commercial block present: ' + url)
@@ -479,7 +502,9 @@ def verify_semantics(value, row):
         if tag == 'form':
             require(False, 'Unadapted source form remains: ' + url)
         if tag == 'input':
-            require(attrs.get('type', 'text') in {'search', 'hidden'}, 'Unadapted source API/contact input remains: ' + url)
+            approved_player_range = attrs.get('type') == 'range' and attrs.get('id') in approved_lecture_inputs
+            require(attrs.get('type', 'text') in {'search', 'hidden'} or approved_player_range,
+                    'Unadapted source API/contact input remains: ' + url)
     if re.fullmatch(r'qilylean/daily/\d{4}-\d{2}-\d{2}\.html', row['source']):
         date = Path(row['source']).stem
         require(url == '/briefs/archive/' + date + '/', 'Brief is assigned outside the knowledge brief archive: ' + url)
@@ -658,6 +683,78 @@ def main():
         require('/mirror-media/' not in text, 'Proxy-dependent source stylesheet returned: ' + row['url'])
         for encoded in re.findall(r'/assets/public-media/([^\s\x22\x27<>)]*)', text):
             referenced_media.add(quote(unquote(urlsplit('/' + html.unescape(encoded)).path.lstrip('/')), safe='/'))
+
+    lecture_modules = manifest.get('lecture_modules', [])
+    expected_lectures = {
+        'qilylean/daily/2026-11-08.html': '/briefs/archive/2026-11-08/',
+        'qilylean/daily/2026-10-25.html': '/briefs/archive/2026-10-25/',
+        'improvements/visual/index.html': '/archive/improvements/visual/',
+    }
+    require({row.get('source') for row in lecture_modules} >= set(expected_lectures),
+            'CN release is missing one or more approved voice-lecture modules')
+    for lecture in lecture_modules:
+        page_value = local_path(lecture['url']).read_text(encoding='utf-8')
+        style_match = re.search(r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>', page_value, re.I)
+        markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(page_value), re.I)
+        runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', page_value, re.I)
+        require(style_match and markup_match and runtime_match, 'CN lecture module is incomplete: ' + lecture['url'])
+        geometry_match = re.search(
+            r'<style\b(?=[^>]*\bdata-cn-lecture-geometry=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>',
+            page_value,
+            re.I,
+        )
+        require(geometry_match is not None
+                and sha(geometry_match.group(1).encode('utf-8')) == lecture['geometry_sha256'],
+                'CN lecture geometry adapter is missing or changed: ' + lecture['url'])
+        require(lecture.get('player_version') == 'v2.6.1'
+                and 'v2.6.1' in style_match.group(1)
+                and 'v2.6.1' in runtime_match.group(1),
+                'CN lecture player is not the latest approved international v2.6.1: ' + lecture['url'])
+        require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256'],
+                'CN lecture stylesheet hash differs: ' + lecture['url'])
+        require(sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256'],
+                'CN lecture markup hash differs: ' + lecture['url'])
+        runtime = runtime_match.group(1)
+        require(sha(runtime.encode('utf-8')) == lecture['runtime_sha256'],
+                'CN lecture runtime hash differs: ' + lecture['url'])
+        for element_id in ('qily-lecture', 'qilyLecChapters', 'qilyLecPlayer', 'qilyLecMini', 'qilyLecAudio'):
+            require(len(re.findall(r'\bid=["\']' + re.escape(element_id) + r'["\']', page_value, re.I)) == 1,
+                    'CN lecture page has a missing or duplicate ID ' + element_id + ': ' + lecture['url'])
+        require(re.search(r'href=["\'][^"\']*#qily-lecture["\']', parity.main_markup(page_value), re.I) is not None,
+                'CN lecture page has no one-click entry from its content: ' + lecture['url'])
+        require(lecture['audio'], 'CN lecture module has no audio chapters: ' + lecture['url'])
+        for audio in lecture['audio']:
+            require(audio['url'] in runtime, 'CN lecture runtime does not reference local audio: ' + audio['source'])
+            encoded = quote(audio['source'], safe='/')
+            referenced_media.add(encoded)
+            require(encoded in manifest['media'], 'CN lecture audio is missing from the media ledger: ' + audio['source'])
+            audio_path = local_path(audio['url'])
+            require(audio_path.is_file()
+                    and audio_path.stat().st_size == audio['bytes']
+                    and parity.file_hash(audio_path) == audio['sha256'],
+                    'CN lecture audio package is missing or corrupt: ' + audio['source'])
+            require(audio.get('decoded_mp3_bytes', 0) > 0
+                    and audio.get('decoded_mp3_sha256'),
+                    'CN lecture audio is not verified as a decoded MP3: ' + audio['source'])
+
+    briefs_index = (CN / 'briefs/index.html').read_text(encoding='utf-8')
+    require('data-qily-cn-lecture-badge="v1"' in briefs_index,
+            'CN curated brief index is missing the approved lecture badge VI')
+    for date in ('2026-11-08', '2026-10-25'):
+        card = re.search(r'<article\b[^>]*data-date="' + date + r'"[^>]*>[\s\S]*?</article>', briefs_index, re.I)
+        require(card is not None and 'data-qily-lecture="available"' in card.group(0)
+                and 'qily-lecture-directory-badge' in card.group(0)
+                and 'qily-lecture-icon' in card.group(0)
+                and f'href="/briefs/archive/{date}/#qily-lecture"' in card.group(0),
+                'CN brief index is missing its one-click lecture badge: ' + date)
+    latest_card = re.search(r'<article\b[^>]*data-date="2026-11-10"[^>]*>[\s\S]*?</article>', briefs_index, re.I)
+    require(latest_card is not None and 'qily-lecture-directory-badge' not in latest_card.group(0),
+            'CN brief index must not advertise a lecture for the 2026-11-10 brief without an audio module')
+    improvement_index = local_path('/archive/improvements/').read_text(encoding='utf-8')
+    require('qily-lecture-directory-badge' in improvement_index
+            and 'qily-lecture-icon' in improvement_index
+            and 'href="/archive/improvements/visual/#qily-lecture"' in improvement_index,
+            'CN improvement index is missing the visual-management lecture entry')
     require(referenced_media <= set(manifest['media']), 'Actual content media missing from ledger: ' + ', '.join(sorted(referenced_media - set(manifest['media']))))
     about = (CN / 'about/index.html').read_text()
     require(sha(parity.main_markup(about).encode()) == manifest['protected']['about_main_sha256'], 'Preserved About/contact content changed')
@@ -695,6 +792,59 @@ def main():
             verify_noncommercial_module_order((ROOT / row['source']).read_text(), remote_value, row['source'], row['url'], row['mode'])
 
         run_parallel(pages, verify_remote_page, args.workers)
+
+        def verify_remote_lecture(lecture):
+            remote_value = read_page(lecture['url']).decode()
+            style_match = re.search(r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>', remote_value, re.I)
+            markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(remote_value), re.I)
+            runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', remote_value, re.I)
+            require(style_match and markup_match and runtime_match,
+                    'Production CN lecture module is incomplete: ' + lecture['url'])
+            geometry_match = re.search(
+                r'<style\b(?=[^>]*\bdata-cn-lecture-geometry=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>',
+                remote_value,
+                re.I,
+            )
+            require(geometry_match is not None
+                    and sha(geometry_match.group(1).encode('utf-8')) == lecture['geometry_sha256'],
+                    'Production CN lecture geometry adapter is missing or changed: ' + lecture['url'])
+            require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256']
+                    and sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256']
+                    and sha(runtime_match.group(1).encode('utf-8')) == lecture['runtime_sha256'],
+                    'Production CN lecture module differs from approved source: ' + lecture['url'])
+            require(re.search(r'href=["\'][^"\']*#qily-lecture["\']', parity.main_markup(remote_value), re.I) is not None,
+                    'Production CN lecture page lost its one-click entry: ' + lecture['url'])
+
+        run_parallel(lecture_modules, verify_remote_lecture, args.workers)
+
+        audio_assets = [audio for lecture in lecture_modules for audio in lecture['audio']]
+        require(len(audio_assets) == 31, 'Production release must contain all 31 approved lecture audio chapters')
+
+        def verify_remote_audio(audio):
+            digest = hashlib.sha256()
+            size = 0
+            with open_url(audio['url']) as response:
+                require(response.status == 200, 'Production lecture audio did not return HTTP 200: ' + audio['source'])
+                require(response.headers.get_content_type() != 'text/html',
+                        'Production lecture audio returned HTML instead of an audio package: ' + audio['source'])
+                for block in iter(lambda: response.read(1024 * 1024), b''):
+                    size += len(block)
+                    digest.update(block)
+            require(size == audio['bytes'] and digest.hexdigest() == audio['sha256'],
+                    'Production lecture audio bytes/hash differ from the approved package: ' + audio['source'])
+
+        run_parallel(audio_assets, verify_remote_audio, args.workers)
+        remote_briefs = read_page('/briefs/').decode()
+        for date in ('2026-11-08', '2026-10-25'):
+            card = re.search(r'<article\b[^>]*data-date="' + date + r'"[^>]*>[\s\S]*?</article>', remote_briefs, re.I)
+            require(card is not None and 'qily-lecture-directory-badge' in card.group(0)
+                    and f'href="/briefs/archive/{date}/#qily-lecture"' in card.group(0),
+                    'Production CN brief directory is missing its lecture entry: ' + date)
+        remote_improvements = read_page('/archive/improvements/').decode()
+        require('qily-lecture-directory-badge' in remote_improvements
+                and 'href="/archive/improvements/visual/#qily-lecture"' in remote_improvements,
+                'Production CN improvement directory is missing the visual lecture entry')
+
         # Also check the canonical homepage URL without a cache-busting parameter.
         with open_url('/') as response:
             home_value = response.read(16 * 1024 * 1024).decode()

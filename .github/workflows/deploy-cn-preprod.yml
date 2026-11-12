@@ -18,6 +18,12 @@ on:
       - 'scripts/guard-approved-cn-contact-vi.py'
       - 'scripts/cn-traffic-kline.spec.js'
       - 'scripts/cn-traffic-production.spec.js'
+      - 'cn-site/scripts/materialize-lecture-parity.py'
+      - 'cn-site/scripts/materialize-practice-assets.sh'
+      - 'cn-site/scripts/build-content-discovery.py'
+      - 'cn-site/scripts/validate-source-content-parity.py'
+      - 'cn-site/nginx/qilylean.cn.conf'
+      - 'scripts/cn-voice-lecture-parity.spec.js'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -120,6 +126,56 @@ jobs:
           python3 scripts/test-cn-release-transfer.py
           python3 scripts/test-cn-source-content-parity.py
           python3 scripts/guard-approved-cn-contact-vi.py --self-test
+
+  cn-content-materialization:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Materialize and validate the complete China-site release, including local lecture audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash cn-site/scripts/materialize-practice-assets.sh
+
+      - name: Set up Node.js for browser-level lecture acceptance
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install Chromium for visual and audio acceptance
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Serve the actual international and China static release trees
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 --directory . >/tmp/qily-intl-preview.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-preview.log 2>&1 &
+          sleep 2
+          curl -fsS http://127.0.0.1:4173/qilylean/daily/2026-11-08.html >/dev/null
+          curl -fsS http://127.0.0.1:4174/briefs/archive/2026-11-08/ >/dev/null
+
+      - name: Verify latest player parity and real mainland-local audio playback
+        env:
+          QILY_INT_BASE: http://127.0.0.1:4173
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: |
+          npx playwright test scripts/cn-voice-lecture-parity.spec.js --reporter=line --workers=1
+
+      - name: Save lecture browser evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-voice-lecture-browser-failure
+          path: test-results/
+          retention-days: 7
 
   inspect-translation:
     if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only

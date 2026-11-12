@@ -61,7 +61,14 @@ GROUPS = OrderedDict([
     }),
 ])
 
-COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4">"""
+COMMON_HEAD = """<link rel="stylesheet" href="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/content-mirror.css?v=20261010-discovery-v2&anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><style data-qily-cn-lecture-badge="v1">
+/* QILY-LECTURE-DIRECTORY-BADGE-V1 | same visual contract as site-vi-standard-v4.css */
+.qily-lecture-directory-badge{display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;min-height:30px!important;padding:5px 10px!important;border:1px solid #c8a25a!important;border-radius:999px!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff8e8!important;font-size:13px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;white-space:nowrap!important}
+.qily-lecture-directory-badge:hover,.qily-lecture-directory-badge:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;outline:2px solid rgba(200,162,90,.24)!important;outline-offset:2px!important}
+.qily-lecture-icon{display:inline-block!important;flex:0 0 17px!important;width:17px!important;height:17px!important;vertical-align:middle!important;fill:none!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+#qilyLectureCta .qily-lecture-icon{width:18px!important;height:18px!important;flex-basis:18px!important}
+.brief-index-actions .qily-lecture-directory-badge{margin-left:8px!important}
+</style><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/site-public-footer-type-v1.css?v=20261021-footer-type-v4">"""
 
 COMMON_SCRIPTS = """<script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about&anchors=20261013-v1"></script>"""
 
@@ -107,11 +114,18 @@ def international_brief_cards(briefs: list[dict]) -> dict[str, str]:
         date, fragment = match.group(1), match.group(0)
         original = f"/qilylean/daily/{date}.html"
         links = re.findall(r'\bhref="([^"]+)"', fragment)
-        if (date in cards or links != [original, original]
+        has_lecture = 'data-qily-lecture="available"' in fragment
+        expected_links = [original, original, original + "#qily-lecture"] if has_lecture else [original, original]
+        has_lecture_badge = 'qily-lecture-directory-badge' in fragment and 'qily-lecture-icon' in fragment
+        if (date in cards or links != expected_links
+                or has_lecture != has_lecture_badge
                 or f'<time datetime="{date}">' not in fragment
                 or '<p class="brief-index-summary">' not in fragment
                 or re.search(r'<(?:script|form|iframe)\b|\bon\w+\s*=', fragment, re.I)):
             raise ValueError(f"International brief directory card violates public-knowledge contract: {date}")
+        if has_lecture:
+            fragment = fragment.replace(f'href="{original}#qily-lecture"',
+                                        f'href="/briefs/archive/{date}/#qily-lecture"')
         cards[date] = fragment.replace(f'href="{original}"', f'href="/briefs/archive/{date}/"')
     if set(cards) != expected:
         raise ValueError(f"International/CN brief metadata mismatch: missing={sorted(expected-set(cards))[:5]}, extra={sorted(set(cards)-expected)[:5]}")

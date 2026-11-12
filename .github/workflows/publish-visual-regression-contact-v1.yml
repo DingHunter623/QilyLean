@@ -88,8 +88,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/materialize-global-language-v3.js
+          node scripts/materialize-public-shell-first-paint-v1.js
+          # Contact-route owns its URL/cache contract; establish it before the shared first-paint shell.
           node scripts/materialize-contact-route-v6.js
+          node scripts/materialize-global-language-v3.js
           node scripts/materialize-global-language-v3.js --check
           node scripts/materialize-contact-route-v6.js --check
           node scripts/validate-visual-system-v2.js --materialized
