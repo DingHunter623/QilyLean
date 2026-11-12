@@ -230,6 +230,11 @@ def main() -> None:
     # must not enter the China personal-site enterprise directory.
     # Preserve the source showcase unchanged and exclude only this named section.
     fragment = re.sub(r'<section class="resource-service resource-tea-placement"[\s\S]*?</section>', "", fragment, count=1)
+    # The hometown knowledge initiative is international-only until the user's separate review approval.
+    # Keep its source placement intact while excluding the complete module from CN directory mirroring.
+    hometown_pattern = r"<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->[\\s\\S]*?<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->\\s*"
+    fragment, hometown_count = re.subn(hometown_pattern, "", fragment, count=1)
+    if hometown_count > 1: raise ValueError("Duplicate international-only hometown knowledge module")
     if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
         raise ValueError("Unexpected non-public directory content")
     fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'
