@@ -42,7 +42,12 @@ function normalizeAudioPaths(runtime) {
   );
 }
 
-test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
+function normalizeMarkup(markup) {
+  // CN's shared interaction-semantics runtime adds this nonvisual marker to controls.
+  return markup.replace(/\sdata-qily-interaction=["'][^"']*["']/g, '');
+}
+
+test('China voice lectures use the latest international player and play local audio'test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
   const internationalBase = process.env.QILY_INT_BASE;
   const chinaBase = process.env.QILY_CN_BASE;
   expect(internationalBase).toBeTruthy();
@@ -71,7 +76,8 @@ test('China voice lectures use the latest international player and play local au
     for (const selector of ['#qily-lecture', '#qilyLecPlayer', '#qilyLecMini', '#qilyLecAudio']) {
       const sourceMarkup = await international.locator(selector).evaluate(element => element.outerHTML);
       const chinaMarkup = await china.locator(selector).evaluate(element => element.outerHTML);
-      expect(chinaMarkup, selector + ' markup must match the international source exactly').toBe(sourceMarkup);
+      expect(normalizeMarkup(chinaMarkup), selector + ' visual markup must match the international source exactly')
+        .toBe(normalizeMarkup(sourceMarkup));
     }
 
     const internationalRuntime = await international.evaluate(() =>
