@@ -228,6 +228,27 @@ def main() -> None:
             require(len(re.findall(r'\bid=["\']' + re.escape(element_id) + r'["\']', updated, re.I)) == 1,
                     "CN lecture page has a missing or duplicate element ID " + element_id + ": " + route)
         updated_main = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
+        require(updated_main is not None, "CN lecture page has no main content: " + route)
+        main_html = updated_main.group(0)
+        if re.search(r'href=["\'][^"\']*#qily-lecture["\']', main_html, re.I) is None:
+            entry = (
+                '<p class="qily-cn-lecture-entry" style="margin:12px 0 18px">'
+                '<a id="qilyLectureCtaCN" class="qily-lecture-directory-badge" href="#qily-lecture">'
+                '<svg class="qily-lecture-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+                '<path d="M3 10v4h4l5 4V6l-5 4H3z"/>'
+                '<path d="M16 9a4 4 0 0 1 0 6"/>'
+                '<path d="M18.5 6.5a8 8 0 0 1 0 11"/>'
+                '</svg><span>语音讲课 · 点击进入</span></a></p>'
+            )
+            heading = re.search(r"</h1\s*>", main_html, re.I)
+            if heading:
+                main_html = main_html[:heading.end()] + entry + main_html[heading.end():]
+            else:
+                main_open = re.search(r"<main\b[^>]*>", main_html, re.I)
+                require(main_open is not None, "CN lecture page main opening tag missing: " + route)
+                main_html = main_html[:main_open.end()] + entry + main_html[main_open.end():]
+            updated = updated[:updated_main.start()] + main_html + updated[updated_main.end():]
+            updated_main = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
         require(updated_main is not None and re.search(r'href=["\'][^"\']*#qily-lecture["\']', updated_main.group(0), re.I) is not None,
                 "CN lecture page lost its one-click content entry: " + route)
 
