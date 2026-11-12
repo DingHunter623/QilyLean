@@ -168,37 +168,37 @@ def main() -> None:
 
         updated = target.read_text(encoding="utf-8")
         updated = re.sub(
-            r'<style\\b(?=[^>]*\\bdata-cn-lecture-css=["\\']v1["\\'])[^>]*>[\\s\\S]*?</style\\s*>',
+            r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>[\s\S]*?</style\s*>',
             "",
             updated,
             flags=re.I,
         )
         updated = re.sub(
-            r'<script\\b(?=[^>]*\\bdata-cn-lecture-runtime=["\\']v1["\\'])[^>]*>[\\s\\S]*?</script\\s*>',
+            r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>[\s\S]*?</script\s*>',
             "",
             updated,
             flags=re.I,
         )
 
-        module_block = START + "\\n" + markup + "\\n" + END
-        main_match = re.search(r"<main\\b[^>]*>[\\s\\S]*?</main\\s*>", updated, re.I)
+        module_block = START + "\n" + markup + "\n" + END
+        main_match = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
         require(main_match is not None, "CN lecture target has no main content: " + route)
         main_html = main_match.group(0)
-        marker_match = re.search(re.escape(START) + r"[\\s\\S]*?" + re.escape(END), main_html, re.I)
+        marker_match = re.search(re.escape(START) + r"[\s\S]*?" + re.escape(END), main_html, re.I)
         if marker_match:
             new_main = main_html[:marker_match.start()] + module_block + main_html[marker_match.end():]
         else:
-            section = re.search(r'<section\\b(?=[^>]*\\bid=["\\']qily-lecture["\\'])[^>]*>', main_html, re.I)
+            section = re.search(r'<section\b(?=[^>]*\bid=["\']qily-lecture["\'])[^>]*>', main_html, re.I)
             require(section is not None, "Sanitized CN lecture section is missing: " + route)
             audio = re.search(
-                r'<audio\\b(?=[^>]*\\bid=["\\']qilyLecAudio["\\'])[^>]*>',
+                r'<audio\b(?=[^>]*\bid=["\']qilyLecAudio["\'])[^>]*>',
                 main_html[section.start():],
                 re.I,
             )
             require(audio is not None, "Sanitized CN lecture audio element is missing: " + route)
             audio_start = section.start() + audio.start()
             audio_after_open = audio_start + audio.end()
-            audio_close = re.search(r"</audio\\s*>", main_html[audio_after_open:], re.I)
+            audio_close = re.search(r"</audio\s*>", main_html[audio_after_open:], re.I)
             require(audio_close is not None, "Sanitized CN lecture audio element is not closed: " + route)
             block_end = audio_after_open + audio_close.end()
             new_main = main_html[:section.start()] + module_block + main_html[block_end:]
