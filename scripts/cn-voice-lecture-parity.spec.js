@@ -44,7 +44,9 @@ function normalizeAudioPaths(runtime) {
 
 function normalizeMarkup(markup) {
   // CN's shared interaction-semantics runtime adds this nonvisual marker to controls.
-  return markup.replace(/\sdata-qily-(?:interaction|arrow-closure)=["'][^"']*["']/g, '');
+  return markup
+    .replace(/\sdata-qily-(?:interaction|arrow-closure)=["'][^"']*["']/g, '')
+    .replace(/\ssrc=["']blob:[^"']+["']/g, ' src="__AUDIO_BLOB__"');
 }
 
 test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
@@ -60,6 +62,9 @@ test('China voice lectures use the latest international player and play local au
     china.on('requestfailed', request => {
       if (request.url().includes('/assets/public-media/')) localAudioFailures.push(request.url());
     });
+    const audioResponsePromise = china.waitForResponse(response =>
+      response.url().includes('/assets/public-media/') && response.url().includes('.mp3.b64?'),
+    );
 
     await Promise.all([
       international.goto(internationalBase + item.source, { waitUntil: 'domcontentloaded' }),
@@ -98,9 +103,6 @@ test('China voice lectures use the latest international player and play local au
     const chinaSnapshot = await playerSnapshot(china);
     expect(chinaSnapshot, 'player computed styles must match the international page').toEqual(internationalSnapshot);
 
-    const audioResponsePromise = china.waitForResponse(response =>
-      response.url().includes('/assets/public-media/') && response.url().includes('.mp3.b64?'),
-    );
     await china.locator('#qilyLecPlayBtn').click();
     const audioResponse = await audioResponsePromise;
     expect(audioResponse.status()).toBe(200);
