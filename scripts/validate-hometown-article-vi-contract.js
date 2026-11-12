@@ -131,8 +131,9 @@ for (const rule of expectedFooter) {
 if (paperStyles.includes('.paper-end-card{padding:clamp(24px,4vw,42px);color:#fff;background:linear-gradient')) {
   throw new Error('Obsolete dark campaign-style footer is prohibited.');
 }
-if (!block.includes('.paper-kicker,#qilyHometownManufacturingPaper .paper-card small{color:var(--qily-v5-gold-text,#b88b45)!important')) {
-  throw new Error('Kicker and card labels must share VI gold-text vocabulary.');
+if (!block.includes('.paper-kicker{color:var(--qily-v5-gold-text,#b88b45)!important') ||
+    !block.includes('.paper-card small{color:var(--qily-v5-green,#0f4b5a)!important')) {
+  throw new Error('Section kicker must use sitewide gold and card labels must use sitewide deep teal.');
 }
 if (!knowledge.includes('data-qily-feedback-return="v1"') ||
     !knowledge.includes('data-qily-flow-direction="feedback"') ||
