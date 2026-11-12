@@ -6,7 +6,7 @@ const tea=read('links/anxi-tea/index.html'),resource=read('links/index.html'),cs
 const images=[...tea.matchAll(/<img\b[^>]*>/gi)].map(m=>m[0]);
 const captions=[...tea.matchAll(/<figcaption\b[^>]*>/gi)].map(m=>m[0]);
 const sections=[...tea.matchAll(/<section\b[^>]*>/gi)];
-const header=tea.match(/<header class="topbar qily-site-header qily-global-header">[\s\S]*?<\/header>/i);
+const header=tea.match(/<header\b(?=[^>]*\bclass=["'][^"']*\btopbar\b[^"']*\bqily-site-header\b[^"']*\bqily-global-header\b[^"']*["'])[^>]*>[\s\S]*?<\/header>/i);
 const nav=header&&header[0].match(/<nav class="nav site-nav qily-global-nav"[^>]*>([\s\S]*?)<\/nav>/i);
 const navHrefs=nav?[...nav[1].matchAll(/href="([^"]+)"/g)].map(m=>m[1]):[];
 const expectedNav=['/','/capabilities/','/improvements/','/lean-production/','/projects/','/trust/','/cooperation/','/knowledge/','/links/','/about/'];
