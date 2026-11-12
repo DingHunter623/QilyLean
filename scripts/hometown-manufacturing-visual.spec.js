@@ -14,7 +14,7 @@ const viewports=[
   {name:'mobile-390',width:390,height:844},
   {name:'mobile-375',width:375,height:812}
 ];
-const expectedArrows=[2,3,2,4];
+const expectedArrows=[2,3,2,5];
 fs.mkdirSync(output,{recursive:true});
 test.setTimeout(180000);
 
@@ -71,15 +71,59 @@ for(const viewport of viewports){
           arrows
         };
       });
+      const style=el=>getComputedStyle(el);
+      const rootColor=sel=>document.querySelector(sel);
+      const rgb=c=>(c.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
+      const luminance=c=>{
+        const channels=rgb(c).map(v=>{const x=v/255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4);});
+        return .2126*channels[0]+.7152*channels[1]+.0722*channels[2];
+      };
+      const contrast=(a,b)=>{const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);};
+      const smallSelectors=[
+        '.paper-kicker','.paper-card small','.paper-callout','.paper-note',
+        '.paper-figure figcaption','.paper-hero-figure figcaption',
+        '.paper-meta span','.paper-source-list li'
+      ];
+      const smallText=smallSelectors.map(selector=>{
+        const el=root.querySelector(selector);
+        return {selector,found:!!el,fontSize:el?parseFloat(style(el).fontSize):null};
+      });
+      const footer=root.querySelector('.paper-end-card');
+      const footerBg=style(footer).backgroundColor;
+      const footerNodes=[
+        '.paper-end-card h2','.paper-end-card p',
+        '.paper-end-actions a.primary','.paper-end-actions a:not(.primary)'
+      ];
+      const footerContrast=footerNodes.map(selector=>{
+        const el=root.querySelector(selector),st=style(el);
+        const bg=selector.includes(' a')?st.backgroundColor:footerBg;
+        const fg=st.webkitTextFillColor&&st.webkitTextFillColor!=='currentcolor'?st.webkitTextFillColor:st.color;
+        return {selector,fg,bg,contrast:contrast(fg,bg)};
+      });
+      const knowledge=root.querySelector('svg[viewBox="0 0 1080 270"]');
+      const feedbackReturn=knowledge.querySelector('[data-qily-feedback-return="v1"]');
+      const feedbackArrow=knowledge.querySelector('[data-qily-flow-direction="feedback"]');
       return {
         clientWidth:document.documentElement.clientWidth,
         scrollWidth:document.documentElement.scrollWidth,
-        diagrams
+        diagrams,smallText,footerBg,footerContrast,
+        feedbackReturn:!!feedbackReturn,
+        feedbackArrow:!!feedbackArrow
       };
     });
 
     expect(report.scrollWidth).toBeLessThanOrEqual(report.clientWidth+1);
     expect(report.diagrams).toHaveLength(4);
+    expect(report.feedbackReturn).toBe(true);
+    expect(report.feedbackArrow).toBe(true);
+    expect(report.footerBg).toBe('rgb(255, 255, 255)');
+    for(const entry of report.smallText){
+      expect(entry.found).toBe(true);
+      expect(entry.fontSize).toBeGreaterThanOrEqual(19.5);
+    }
+    for(const entry of report.footerContrast){
+      expect(entry.contrast).toBeGreaterThanOrEqual(4.5);
+    }
     for(let i=0;i<report.diagrams.length;i++){
       const diagram=report.diagrams[i];
       expect(diagram.svgRect.width).toBeGreaterThan(0);
