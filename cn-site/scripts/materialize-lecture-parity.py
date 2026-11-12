@@ -108,7 +108,7 @@ def main() -> None:
         target = item.out
         require(target.is_file(), "Generated CN lecture page missing: " + str(target))
         source_main = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", raw, re.I)
-        require(source_main is not None and re.search(r'href=["\']#qily-lecture["\']', source_main.group(0), re.I),
+        require(source_main is not None and re.search(r'href=["\'][^"\']*#qily-lecture["\']', source_main.group(0), re.I),
                 "Source page has no one-click lecture entry: " + source)
 
         style, markup, runtime = extract_lecture(raw, source)
@@ -227,7 +227,7 @@ def main() -> None:
             require(len(re.findall(r'\bid=["\']' + re.escape(element_id) + r'["\']', updated, re.I)) == 1,
                     "CN lecture page has a missing or duplicate element ID " + element_id + ": " + route)
         updated_main = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
-        require(updated_main is not None and 'href="#qily-lecture"' in updated_main.group(0),
+        require(updated_main is not None and re.search(r'href=["\'][^"\']*#qily-lecture["\']', updated_main.group(0), re.I) is not None,
                 "CN lecture page lost its one-click content entry: " + route)
 
         target.write_text(updated, encoding="utf-8")

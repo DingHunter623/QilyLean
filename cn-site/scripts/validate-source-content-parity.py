@@ -683,7 +683,7 @@ def main():
         for element_id in ('qily-lecture', 'qilyLecChapters', 'qilyLecPlayer', 'qilyLecMini', 'qilyLecAudio'):
             require(len(re.findall(r'\bid=["\']' + re.escape(element_id) + r'["\']', page_value, re.I)) == 1,
                     'CN lecture page has a missing or duplicate ID ' + element_id + ': ' + lecture['url'])
-        require('href="#qily-lecture"' in parity.main_markup(page_value),
+        require(re.search(r'href=["\'][^"\']*#qily-lecture["\']', parity.main_markup(page_value), re.I) is not None,
                 'CN lecture page has no one-click entry from its content: ' + lecture['url'])
         require(lecture['audio'], 'CN lecture module has no audio chapters: ' + lecture['url'])
         for audio in lecture['audio']:
@@ -759,7 +759,7 @@ def main():
                     and sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256']
                     and sha(runtime_match.group(1).encode('utf-8')) == lecture['runtime_sha256'],
                     'Production CN lecture module differs from approved source: ' + lecture['url'])
-            require('href="#qily-lecture"' in parity.main_markup(remote_value),
+            require(re.search(r'href=["\'][^"\']*#qily-lecture["\']', parity.main_markup(remote_value), re.I) is not None,
                     'Production CN lecture page lost its one-click entry: ' + lecture['url'])
 
         run_parallel(lecture_modules, verify_remote_lecture, args.workers)
