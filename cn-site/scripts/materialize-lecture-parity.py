@@ -160,7 +160,7 @@ def main() -> None:
         runtime, replacements = audio_path_pattern.subn(localize_audio, runtime)
         require(replacements > 0 and audio_records,
                 "No localizable MP3 base64 chapter paths found in lecture runtime: " + source)
-        require("assets/audio/" not in runtime,
+        require(audio_path_pattern.search(runtime) is None,
                 "International-relative audio path remains in CN lecture runtime: " + source)
         require("qilylean.com" not in runtime and "qilylean.cn" not in runtime,
                 "Lecture runtime must not depend on cross-domain fetches: " + source)
