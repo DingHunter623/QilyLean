@@ -22,9 +22,9 @@ START = "<!-- QILY-CN-LECTURE-MODULE:START -->"
 END = "<!-- QILY-CN-LECTURE-MODULE:END -->"
 
 EXPECTED = {
-    "qilylean/daily/2026-11-08.html": "/briefs/archive/2026-11-08/",
-    "qilylean/daily/2026-10-25.html": "/briefs/archive/2026-10-25/",
-    "improvements/visual/index.html": "/archive/improvements/visual/",
+    "qilylean/daily/2026-11-08.html": ("/briefs/archive/2026-11-08/", 10),
+    "qilylean/daily/2026-10-25.html": ("/briefs/archive/2026-10-25/", 12),
+    "improvements/visual/index.html": ("/archive/improvements/visual/", 9),
 }
 
 
@@ -72,7 +72,7 @@ def extract_lecture(raw: str, source: str) -> tuple[str, str, str]:
     require(script_close is not None, "Lecture runtime is not closed: " + source)
     runtime_end = runtime_start + script_close.start()
 
-    markup = raw[section.start():script_start]
+    markup = raw[section.start():script_start].strip()
     runtime = raw[runtime_start:runtime_end]
     for required_id in ("qilyLecChapters", "qilyLecPlayer", "qilyLecMini", "qilyLecAudio"):
         require(re.search(r'\bid=["\']' + re.escape(required_id) + r'["\']', markup, re.I) is not None,
@@ -224,9 +224,11 @@ def main() -> None:
 
     require(set(EXPECTED) <= discovered,
             "Approved lecture sources were not materialized: " + ", ".join(sorted(set(EXPECTED) - discovered)))
-    for source, route in EXPECTED.items():
+    for source, (route, chapter_count) in EXPECTED.items():
         row = next(item for item in modules if item["source"] == source)
         require(row["url"] == route, "Lecture route changed without review: " + source)
+        require(len(row["audio"]) == chapter_count,
+                "Lecture chapter count changed without review: " + source)
 
     manifest["media_files"] = sorted(media_rows.values(), key=lambda row: row["source"])
     manifest["media"] = sorted(media_paths)

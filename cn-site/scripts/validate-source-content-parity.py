@@ -747,6 +747,33 @@ def main():
             verify_noncommercial_module_order((ROOT / row['source']).read_text(), remote_value, row['source'], row['url'], row['mode'])
 
         run_parallel(pages, verify_remote_page, args.workers)
+
+        def verify_remote_lecture(lecture):
+            remote_value = read_page(lecture['url']).decode()
+            style_match = re.search(r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>', remote_value, re.I)
+            markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', remote_value, re.I)
+            runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', remote_value, re.I)
+            require(style_match and markup_match and runtime_match,
+                    'Production CN lecture module is incomplete: ' + lecture['url'])
+            require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256']
+                    and sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256']
+                    and sha(runtime_match.group(1).encode('utf-8')) == lecture['runtime_sha256'],
+                    'Production CN lecture module differs from approved source: ' + lecture['url'])
+            require('href="#qily-lecture"' in parity.main_markup(remote_value),
+                    'Production CN lecture page lost its one-click entry: ' + lecture['url'])
+
+        run_parallel(lecture_modules, verify_remote_lecture, args.workers)
+        remote_briefs = read_page('/briefs/').decode()
+        for date in ('2026-11-08', '2026-10-25'):
+            card = re.search(r'<article\b[^>]*data-date="' + date + r'"[^>]*>[\s\S]*?</article>', remote_briefs, re.I)
+            require(card is not None and 'qily-lecture-directory-badge' in card.group(0)
+                    and f'href="/briefs/archive/{date}/#qily-lecture"' in card.group(0),
+                    'Production CN brief directory is missing its lecture entry: ' + date)
+        remote_improvements = read_page('/archive/improvements/').decode()
+        require('qily-lecture-directory-badge' in remote_improvements
+                and 'href="/archive/improvements/visual/#qily-lecture"' in remote_improvements,
+                'Production CN improvement directory is missing the visual lecture entry')
+
         # Also check the canonical homepage URL without a cache-busting parameter.
         with open_url('/') as response:
             home_value = response.read(16 * 1024 * 1024).decode()
