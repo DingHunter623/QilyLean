@@ -109,6 +109,13 @@ if (!block.includes('#qilyHometownManufacturingPaper svg .vi-flow-arrow{fill:#0f
   throw new Error('All article diagrams must inherit the official QilyLean V4 arrow color and solid geometry.');
 }
 
+if (!block.includes('@media(max-width:1100px)') ||
+    !block.includes('width:1080px!important;') ||
+    !block.includes('overflow-x:auto!important;') ||
+    !block.includes('overscroll-behavior-inline:contain!important;')) {
+  throw new Error('Dense SVG diagrams must remain readable through local horizontal scrolling on tablet/mobile widths.');
+}
+
 console.log('PASS: H1/H2/H3 and normal body copy remain under sitewide VI authority.');
 console.log('PASS: all 15 approved small-text rules are retained at original size +2px.');
 console.log('PASS: all four SVG diagrams preserve title hierarchy and enlarge small labels by +2px.');
