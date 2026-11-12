@@ -199,8 +199,9 @@ def main() -> None:
             audio_start = section.start() + audio.start()
             audio_after_open = audio_start + audio.end()
             audio_close = re.search(r"</audio\s*>", main_html[audio_after_open:], re.I)
-            require(audio_close is not None, "Sanitized CN lecture audio element is not closed: " + route)
-            block_end = audio_after_open + audio_close.end()
+            # The generic content sanitizer serializes audio as a void-like placeholder.
+            # Replace through the opening tag when its closing tag was intentionally omitted.
+            block_end = audio_after_open + audio_close.end() if audio_close else audio_after_open
             new_main = main_html[:section.start()] + module_block + main_html[block_end:]
         updated = updated[:main_match.start()] + new_main + updated[main_match.end():]
         source_attr = html.escape(source, quote=True)
