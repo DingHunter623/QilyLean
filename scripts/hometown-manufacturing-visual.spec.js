@@ -73,7 +73,7 @@ for(const viewport of viewports){
       });
       const style=el=>getComputedStyle(el);
       const rootColor=sel=>document.querySelector(sel);
-      const rgb=c=>(c.match(/[\\d.]+/g)||[]).slice(0,3).map(Number);
+      const rgb=c=>(c.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
       const luminance=c=>{
         const channels=rgb(c).map(v=>{const x=v/255;return x<=.04045?x/12.92:Math.pow((x+.055)/1.055,2.4);});
         return .2126*channels[0]+.7152*channels[1]+.0722*channels[2];
