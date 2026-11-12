@@ -451,6 +451,21 @@ def verify_semantics(value, row):
 
     resources = row['protected']['translator_resources']
     require(len(resources) == 2 and any('.js?' in item for item in resources) and any('.css?' in item for item in resources), 'Translator assets missing: ' + url)
+    lecture_marker = re.search(
+        r'<!-- QILY-CN-LECTURE-MODULE:START -->[\\s\\S]*?<!-- QILY-CN-LECTURE-MODULE:END -->',
+        main,
+        re.I,
+    )
+    expected_lecture_inputs = {'qilyLecSeek', 'qilyLecSpeed', 'qilyLecPitch', 'qilyLecVolume'}
+    approved_lecture_inputs = {
+        attrs.get('id')
+        for tag, attrs in Nodes(lecture_marker.group(0)).nodes
+        if tag == 'input' and attrs.get('type') == 'range'
+    } if lecture_marker else set()
+    if lecture_marker:
+        require(approved_lecture_inputs == expected_lecture_inputs,
+                'Approved voice player must retain exactly four range controls: ' + url)
+
     for tag, attrs in Nodes(main).nodes:
         classes = set(attrs.get('class', '').split())
         require(attrs.get('id') not in parity.BLOCK_IDS and not classes & parity.BLOCK_CLASSES, 'Excluded commercial block present: ' + url)
@@ -479,7 +494,9 @@ def verify_semantics(value, row):
         if tag == 'form':
             require(False, 'Unadapted source form remains: ' + url)
         if tag == 'input':
-            require(attrs.get('type', 'text') in {'search', 'hidden'}, 'Unadapted source API/contact input remains: ' + url)
+            approved_player_range = attrs.get('type') == 'range' and attrs.get('id') in approved_lecture_inputs
+            require(attrs.get('type', 'text') in {'search', 'hidden'} or approved_player_range,
+                    'Unadapted source API/contact input remains: ' + url)
     if re.fullmatch(r'qilylean/daily/\d{4}-\d{2}-\d{2}\.html', row['source']):
         date = Path(row['source']).stem
         require(url == '/briefs/archive/' + date + '/', 'Brief is assigned outside the knowledge brief archive: ' + url)
