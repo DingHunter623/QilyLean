@@ -18,6 +18,10 @@ on:
       - 'scripts/guard-approved-cn-contact-vi.py'
       - 'scripts/cn-traffic-kline.spec.js'
       - 'scripts/cn-traffic-production.spec.js'
+      - 'cn-site/scripts/materialize-lecture-parity.py'
+      - 'cn-site/scripts/materialize-practice-assets.sh'
+      - 'cn-site/scripts/build-content-discovery.py'
+      - 'cn-site/scripts/validate-source-content-parity.py'
   workflow_dispatch:
     inputs:
       inspect_translation_only:
@@ -120,6 +124,22 @@ jobs:
           python3 scripts/test-cn-release-transfer.py
           python3 scripts/test-cn-source-content-parity.py
           python3 scripts/guard-approved-cn-contact-vi.py --self-test
+
+  cn-content-materialization:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Materialize and validate the complete China-site release, including local lecture audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash cn-site/scripts/materialize-practice-assets.sh
 
   inspect-translation:
     if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only

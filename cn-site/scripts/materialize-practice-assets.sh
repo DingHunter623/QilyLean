@@ -125,6 +125,8 @@ PYCNSHARECACHE
   python3 "$CN_ROOT/scripts/validate-app-document-parity.py"
   # Apply the authorized About navigation hierarchy to generated, untracked CN mirror pages.
   node "$REPO_ROOT/scripts/materialize-about-nav-footer-v1.js" --cn-only
+  # Preserve approved lecture players and copy their exact audio bytes to the Tencent-hosted CN release.
+  python3 "$CN_ROOT/scripts/materialize-lecture-parity.py"
   # Prevent a partial rollback: China Trust, the local curated archive, and
   # BASELINE/OWNER content must describe the same international SSOT snapshot.
   python3 - "$REPO_ROOT" "$CN_ROOT" <<'PYCNTRUST'
