@@ -248,14 +248,13 @@ def main() -> None:
                 require(main_open is not None, "CN lecture page main opening tag missing: " + route)
                 main_html = main_html[:main_open.end()] + entry + main_html[main_open.end():]
             updated = updated[:updated_main.start()] + main_html + updated[updated_main.end():]
-            updated_main = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
-        require(updated_main is not None and re.search(r'href=["\'][^"\']*#qily-lecture["\']', updated_main.group(0), re.I) is not None,
+        require(re.search(r'href=["\'][^"\']*#qily-lecture["\']', main_html, re.I) is not None,
                 "CN lecture page lost its one-click content entry: " + route)
 
         target.write_text(updated, encoding="utf-8")
         page_row = next((row for row in manifest.get("pages", []) if row.get("source") == source), None)
         require(page_row is not None, "Source-content manifest page record missing: " + source)
-        page_row["main_sha256"] = sha_bytes(parity.main_markup(updated).encode("utf-8"))
+        page_row["main_sha256"] = sha_bytes(main_html.encode("utf-8"))
         audio_list = sorted(audio_records.values(), key=lambda row: row["source"])
         modules.append({
             "source": source,
