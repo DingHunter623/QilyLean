@@ -207,6 +207,12 @@ def main() -> None:
             updated,
             flags=re.I,
         )
+        updated = re.sub(
+            r'<style\b(?=[^>]*\bdata-cn-lecture-geometry=["\']v1["\'])[^>]*>[\s\S]*?</style\s*>',
+            "",
+            updated,
+            flags=re.I,
+        )
 
         module_block = START + "\n" + markup + "\n" + END
         main_match = re.search(r"<main\b[^>]*>[\s\S]*?</main\s*>", updated, re.I)
@@ -237,9 +243,15 @@ def main() -> None:
         source_attr = html.escape(source, quote=True)
         style_tag = '<style data-cn-lecture-css="v1" data-cn-lecture-source="' + source_attr + '">' + style + "</style>"
         runtime_tag = '<script data-cn-lecture-runtime="v1" data-cn-lecture-source="' + source_attr + '">' + runtime + "</script>"
+        geometry_css = (
+            "@media (min-width:821px){"
+            "#qilyLecPlayer,#qilyLecMini{--qily-dock-footer-h:49px!important}"
+            "}"
+        )
+        geometry_tag = '<style data-cn-lecture-geometry="v1">' + geometry_css + "</style>"
         updated, head_count = re.subn(
             r"</head\s*>",
-            lambda match: style_tag + match.group(0),
+            lambda match: style_tag + geometry_tag + match.group(0),
             updated,
             count=1,
             flags=re.I,
@@ -290,6 +302,7 @@ def main() -> None:
             "source": source,
             "url": route,
             "player_version": "v2.6.1",
+            "geometry_sha256": sha_bytes(geometry_css.encode("utf-8")),
             "style_sha256": sha_bytes(style.encode("utf-8")),
             "markup_sha256": sha_bytes(markup.encode("utf-8")),
             "runtime_sha256": sha_bytes(runtime.encode("utf-8")),

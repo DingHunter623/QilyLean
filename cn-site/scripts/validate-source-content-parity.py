@@ -698,6 +698,14 @@ def main():
         markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(page_value), re.I)
         runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', page_value, re.I)
         require(style_match and markup_match and runtime_match, 'CN lecture module is incomplete: ' + lecture['url'])
+        geometry_match = re.search(
+            r'<style\b(?=[^>]*\bdata-cn-lecture-geometry=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>',
+            page_value,
+            re.I,
+        )
+        require(geometry_match is not None
+                and sha(geometry_match.group(1).encode('utf-8')) == lecture['geometry_sha256'],
+                'CN lecture geometry adapter is missing or changed: ' + lecture['url'])
         require(lecture.get('player_version') == 'v2.6.1'
                 and 'v2.6.1' in style_match.group(1)
                 and 'v2.6.1' in runtime_match.group(1),
@@ -792,6 +800,14 @@ def main():
             runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', remote_value, re.I)
             require(style_match and markup_match and runtime_match,
                     'Production CN lecture module is incomplete: ' + lecture['url'])
+            geometry_match = re.search(
+                r'<style\b(?=[^>]*\bdata-cn-lecture-geometry=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>',
+                remote_value,
+                re.I,
+            )
+            require(geometry_match is not None
+                    and sha(geometry_match.group(1).encode('utf-8')) == lecture['geometry_sha256'],
+                    'Production CN lecture geometry adapter is missing or changed: ' + lecture['url'])
             require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256']
                     and sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256']
                     and sha(runtime_match.group(1).encode('utf-8')) == lecture['runtime_sha256'],
