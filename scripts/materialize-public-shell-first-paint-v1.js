@@ -100,7 +100,7 @@ function materializeHeader(source,relative){
  header=header.replace(/<header\b([^>]*)>/i,tag=>addAttributeToTag(tag,'data-qily-public-shell-first-paint','v2'));
  header=header.replace(/<nav\b([^>]*)>/i,tag=>addAttributeToTag(addClassesToTag(tag,['site-nav','qily-global-nav']),'aria-label','QilyLean核心导视'));
  header=header.replace(brandMatch[0],addClassesToTag(brandMatch[0],['qily-brand']));
- if(hasTranslation&&!header.includes('id="qilyGlobalTranslationDualRouteV2"'))header=header.replace(/<\\/nav>/i,'</nav>'+translationMarkup());
+ if(hasTranslation&&!header.includes('id="qilyGlobalTranslationDualRouteV2"'))header=header.replace(/<\/nav>/i,'</nav>'+translationMarkup());
  return header;
 }
 
