@@ -147,7 +147,7 @@ if (!block.includes('@media(max-width:1100px)') ||
 }
 
 console.log('PASS: H1/H2/H3 and normal body copy remain under sitewide VI authority.');
-console.log('PASS: all 15 approved small-text rules are retained at original size +2px.');
+console.log('PASS: all 16 approved small-text VI token rules are retained.');
 console.log('PASS: all four SVG diagrams preserve title hierarchy and enlarge small labels by +2px.');
 console.log('PASS: all 12 directional arrows use the solid QilyLean V4 arrow geometry, including the feedback return.');
 console.log('PASS: footer uses the shared QilyLean white/gold/teal VI with readable text.');
