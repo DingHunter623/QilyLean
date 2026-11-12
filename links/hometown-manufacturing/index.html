@@ -176,6 +176,21 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyHometownManufacturingPaper .paper-kicker{font-size:15px!important}
 #qilyHometownManufacturingPaper .paper-figure figcaption{font-size:16px!important}
 #qilyHometownManufacturingPaper svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
+@media(max-width:1100px){
+  #qilyHometownManufacturingPaper .paper-hero-figure,
+  #qilyHometownManufacturingPaper .paper-figure{
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-inline:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #qilyHometownManufacturingPaper .paper-hero-figure svg,
+  #qilyHometownManufacturingPaper .paper-figure svg{
+    width:1080px!important;
+    min-width:1080px!important;
+    max-width:none!important;
+  }
+}
 #qilyHometownManufacturingPaper .paper-card small{font-size:14px!important}
 #qilyHometownManufacturingPaper .paper-card p{font-size:17px!important}
 #qilyHometownManufacturingPaper .paper-table,
