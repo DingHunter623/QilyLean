@@ -1,10 +1,11 @@
-name: Hometown Article VI Typography Guard
+name: Hometown Article VI Typography and Visual Guard
 
 on:
   pull_request:
     paths:
       - 'links/hometown-manufacturing/index.html'
       - 'scripts/validate-hometown-article-vi-contract.js'
+      - 'scripts/hometown-manufacturing-visual.spec.js'
       - '.github/workflows/hometown-article-vi-guard.yml'
   push:
     branches: [main]
@@ -21,5 +22,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Enforce article typography and VI boundaries
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Enforce article typography, diagram arrows and responsive VI boundaries
         run: node scripts/validate-hometown-article-vi-contract.js
+      - name: Install browser audit dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local public-site server
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-hometown-http.log 2>&1 &
+          echo $! >/tmp/qily-hometown-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+      - name: Desktop, tablet and mobile article visual regression
+        env:
+          QILY_HOMETOWN_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/hometown-manufacturing-visual.spec.js --reporter=line --workers=1
+      - name: Upload article visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hometown-article-visual-${{ github.run_id }}
+          path: hometown-article-visual-artifacts
+          if-no-files-found: warn
+          retention-days: 14
