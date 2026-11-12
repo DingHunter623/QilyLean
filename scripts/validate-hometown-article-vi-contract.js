@@ -54,16 +54,57 @@ if (block.includes('.paper-end-card') || /\.paper-(?:abstract|section|end-card).
   throw new Error('Article module/title styling must inherit the sitewide VI authority.');
 }
 
-const svgStart = html.indexOf('<svg viewBox="0 0 1080 220"');
-const svgEnd = html.indexOf('</svg>', svgStart);
-if (svgStart < 0 || svgEnd < 0) throw new Error('Regional-path diagram is missing.');
-const svg = html.slice(svgStart, svgEnd + 6);
-const count = (value) => (svg.match(new RegExp('font-size="' + value + '"', 'g')) || []).length;
-if (count(23) !== 3 || count(14) !== 3 || count(16) !== 2 || count(17) !== 1) {
-  throw new Error('Regional-path diagram typography has drifted from its approved hierarchy.');
+const getSvg = (viewBox) => {
+  const start = html.indexOf('<svg viewBox="' + viewBox + '"');
+  const end = html.indexOf('</svg>', start);
+  if (start < 0 || end < 0) throw new Error('Required article diagram is missing: ' + viewBox);
+  return html.slice(start, end + 6);
+};
+const fontCounts = (svg) => {
+  const counts = new Map();
+  for (const match of svg.matchAll(/font-size="(\d+)"/g)) {
+    const size = Number(match[1]);
+    counts.set(size, (counts.get(size) || 0) + 1);
+  }
+  return counts;
+};
+const assertFontCounts = (svg, expected, label) => {
+  const actual = fontCounts(svg);
+  for (const [size, count] of Object.entries(expected)) {
+    if ((actual.get(Number(size)) || 0) !== count) {
+      throw new Error(label + ' typography drift at ' + size + 'px: expected ' + count + ', got ' + (actual.get(Number(size)) || 0));
+    }
+  }
+  const expectedTotal = Object.values(expected).reduce((sum, count) => sum + count, 0);
+  const actualTotal = [...actual.values()].reduce((sum, count) => sum + count, 0);
+  if (actualTotal !== expectedTotal) throw new Error(label + ' contains an unapproved SVG text size.');
+  if ([...actual.keys()].some(size => size < 15)) {
+    throw new Error(label + ' still contains undersized SVG text below 15px.');
+  }
+};
+
+const regional = getSvg('0 0 1080 220');
+assertFontCounts(regional, {23:3,16:3,18:2,19:1}, 'Regional-path diagram');
+const policy = getSvg('0 0 1080 330');
+assertFontCounts(policy, {19:4,17:12,15:4,16:1}, 'Policy-chain diagram');
+const leanAi = getSvg('0 0 1080 570');
+assertFontCounts(leanAi, {18:1,19:7,20:1}, 'Lean/digital/AI architecture diagram');
+const knowledge = getSvg('0 0 1080 270');
+assertFontCounts(knowledge, {19:5,16:11}, 'Knowledge-loop diagram');
+
+const unifiedArrows = [...knowledge.matchAll(/<path\b[^>]*class="vi-flow-arrow"[^>]*data-qily-unified-arrow="v4"[^>]*\/>/g)];
+if (unifiedArrows.length !== 4) {
+  throw new Error('Knowledge-loop diagram must contain four site-standard V4 flow arrows.');
+}
+if (/marker-end=|knowledgeArrow/.test(knowledge)) {
+  throw new Error('Knowledge-loop diagram must not use detached marker-end arrowheads.');
+}
+if (!block.includes('.paper-figure svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}')) {
+  throw new Error('Knowledge-loop arrows must inherit the official QilyLean V4 arrow color and solid geometry.');
 }
 
 console.log('PASS: H1/H2/H3 and normal body copy remain under sitewide VI authority.');
-console.log('PASS: exactly 15 approved small-text rules are retained at original size +2px.');
-console.log('PASS: regional-path diagram preserves node-title hierarchy and +2px small labels.');
+console.log('PASS: all 15 approved small-text rules are retained at original size +2px.');
+console.log('PASS: all four SVG diagrams preserve title hierarchy and enlarge small labels by +2px.');
+console.log('PASS: knowledge-loop uses four solid QilyLean V4 arrows, with no detached marker-end arrowheads.');
 console.log('PASS: no local article end-card palette override; shared VI surfaces remain authoritative.');
