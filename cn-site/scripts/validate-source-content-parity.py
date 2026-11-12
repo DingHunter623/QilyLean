@@ -670,7 +670,7 @@ def main():
     for lecture in lecture_modules:
         page_value = local_path(lecture['url']).read_text(encoding='utf-8')
         style_match = re.search(r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>', page_value, re.I)
-        markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', page_value, re.I)
+        markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(page_value), re.I)
         runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', page_value, re.I)
         require(style_match and markup_match and runtime_match, 'CN lecture module is incomplete: ' + lecture['url'])
         require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256'],
@@ -751,7 +751,7 @@ def main():
         def verify_remote_lecture(lecture):
             remote_value = read_page(lecture['url']).decode()
             style_match = re.search(r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>([\s\S]*?)</style\s*>', remote_value, re.I)
-            markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', remote_value, re.I)
+            markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(remote_value), re.I)
             runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', remote_value, re.I)
             require(style_match and markup_match and runtime_match,
                     'Production CN lecture module is incomplete: ' + lecture['url'])
