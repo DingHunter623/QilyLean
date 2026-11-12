@@ -42,7 +42,8 @@ function materializeHtml(html,file){
   if(isDdzFastRoute(file,next))return next;
   if(!/<\/head>/i.test(next))return next;
   next=next.replace(/\s*<\/head>/i,`\n${LINK}\n${SCRIPT}\n</head>`);
-  return materializePublicFirstPaint(next,file);
+  // Keep generated HTML free of whitespace-only lines; this is formatting-only and makes diff checks deterministic.
+  return materializePublicFirstPaint(next,file).replace(/^[ 	]+$/gm,'');
 }
 function replaceLiteral(file,from,to,required=false){
   const text=read(file);

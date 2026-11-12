@@ -78,8 +78,9 @@ jobs:
           # Otherwise a source-level cache-version change can be misreported as a visual regression
           # before the build materializer has had a chance to update index.html.
           node scripts/enforce-aircraft-home-hero.js
-          node scripts/materialize-global-language-v3.js
+          # Contact-route owns its URL/cache contract; establish it before the shared first-paint shell.
           node scripts/materialize-contact-route-v6.js
+          node scripts/materialize-global-language-v3.js
           node scripts/materialize-global-language-v3.js --check
           node scripts/materialize-contact-route-v6.js --check
 
