@@ -44,7 +44,7 @@ function normalizeAudioPaths(runtime) {
 
 function normalizeMarkup(markup) {
   // CN's shared interaction-semantics runtime adds this nonvisual marker to controls.
-  return markup.replace(/\sdata-qily-interaction=["'][^"']*["']/g, '');
+  return markup.replace(/\sdata-qily-(?:interaction|arrow-closure)=["'][^"']*["']/g, '');
 }
 
 test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
