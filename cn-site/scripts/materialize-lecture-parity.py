@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CN = ROOT / "cn-site"
 sys.path.insert(0, str(CN / "scripts"))
 mirror = importlib.import_module("materialize-public-content-mirror")
+parity = importlib.import_module("materialize-source-content-parity")
 
 MANIFEST = CN / "archive" / "source-content-parity.json"
 MEDIA_MANIFEST = CN / "archive" / "media-manifest.txt"
@@ -167,34 +168,41 @@ def main() -> None:
 
         updated = target.read_text(encoding="utf-8")
         updated = re.sub(
-            re.escape(START) + r"[\s\S]*?" + re.escape(END),
+            r'<style\\b(?=[^>]*\\bdata-cn-lecture-css=["\\']v1["\\'])[^>]*>[\\s\\S]*?</style\\s*>',
             "",
             updated,
             flags=re.I,
         )
         updated = re.sub(
-            r'<style\b(?=[^>]*\bdata-cn-lecture-css=["\']v1["\'])[^>]*>[\s\S]*?</style\s*>',
-            "",
-            updated,
-            flags=re.I,
-        )
-        updated = re.sub(
-            r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>[\s\S]*?</script\s*>',
+            r'<script\\b(?=[^>]*\\bdata-cn-lecture-runtime=["\\']v1["\\'])[^>]*>[\\s\\S]*?</script\\s*>',
             "",
             updated,
             flags=re.I,
         )
 
-        module_block = START + "\n" + markup + "\n" + END
-        updated, main_count = re.subn(
-            r"</main\s*>",
-            lambda match: match.group(0) + "\n" + module_block,
-            updated,
-            count=1,
-            flags=re.I,
-        )
-        require(main_count == 1, "Could not place lecture module after page main: " + route)
-
+        module_block = START + "\\n" + markup + "\\n" + END
+        main_match = re.search(r"<main\\b[^>]*>[\\s\\S]*?</main\\s*>", updated, re.I)
+        require(main_match is not None, "CN lecture target has no main content: " + route)
+        main_html = main_match.group(0)
+        marker_match = re.search(re.escape(START) + r"[\\s\\S]*?" + re.escape(END), main_html, re.I)
+        if marker_match:
+            new_main = main_html[:marker_match.start()] + module_block + main_html[marker_match.end():]
+        else:
+            section = re.search(r'<section\\b(?=[^>]*\\bid=["\\']qily-lecture["\\'])[^>]*>', main_html, re.I)
+            require(section is not None, "Sanitized CN lecture section is missing: " + route)
+            audio = re.search(
+                r'<audio\\b(?=[^>]*\\bid=["\\']qilyLecAudio["\\'])[^>]*>',
+                main_html[section.start():],
+                re.I,
+            )
+            require(audio is not None, "Sanitized CN lecture audio element is missing: " + route)
+            audio_start = section.start() + audio.start()
+            audio_after_open = audio_start + audio.end()
+            audio_close = re.search(r"</audio\\s*>", main_html[audio_after_open:], re.I)
+            require(audio_close is not None, "Sanitized CN lecture audio element is not closed: " + route)
+            block_end = audio_after_open + audio_close.end()
+            new_main = main_html[:section.start()] + module_block + main_html[block_end:]
+        updated = updated[:main_match.start()] + new_main + updated[main_match.end():]
         source_attr = html.escape(source, quote=True)
         style_tag = '<style data-cn-lecture-css="v1" data-cn-lecture-source="' + source_attr + '">' + style + "</style>"
         runtime_tag = '<script data-cn-lecture-runtime="v1" data-cn-lecture-source="' + source_attr + '">' + runtime + "</script>"
@@ -223,6 +231,9 @@ def main() -> None:
                 "CN lecture page lost its one-click content entry: " + route)
 
         target.write_text(updated, encoding="utf-8")
+        page_row = next((row for row in manifest.get("pages", []) if row.get("source") == source), None)
+        require(page_row is not None, "Source-content manifest page record missing: " + source)
+        page_row["main_sha256"] = sha_bytes(parity.main_markup(updated).encode("utf-8"))
         audio_list = sorted(audio_records.values(), key=lambda row: row["source"])
         modules.append({
             "source": source,
