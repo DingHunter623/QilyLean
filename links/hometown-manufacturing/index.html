@@ -175,7 +175,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyHometownManufacturingPaper .paper-toc a{font-size:16px!important}
 #qilyHometownManufacturingPaper .paper-kicker{font-size:15px!important}
 #qilyHometownManufacturingPaper .paper-figure figcaption{font-size:16px!important}
-#qilyHometownManufacturingPaper .paper-figure svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
+#qilyHometownManufacturingPaper svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
 #qilyHometownManufacturingPaper .paper-card small{font-size:14px!important}
 #qilyHometownManufacturingPaper .paper-card p{font-size:17px!important}
 #qilyHometownManufacturingPaper .paper-table,
@@ -251,7 +251,8 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
               <linearGradient id="regionalLine" x1="0" x2="1"><stop offset="0" stop-color="#ffe39b"/><stop offset="1" stop-color="#8bd6d0"/></linearGradient>
             </defs>
             <path d="M145 94 C300 94 330 94 475 94 S760 94 925 94" fill="none" stroke="url(#regionalLine)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M460 84 L478 94 L460 104 M910 84 L928 94 L910 104" fill="none" stroke="#ffe39b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M455 91 H467 V86 L480 94 L467 102 V97 H455 Z"/>
+            <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M845 91 H857 V86 L870 94 L857 102 V97 H845 Z"/>
             <g>
               <circle cx="145" cy="94" r="48" fill="#0f4b5a" stroke="#ffe39b" stroke-width="3"/>
               <circle cx="145" cy="94" r="35" fill="none" stroke="#8bd6d0" stroke-width="1.5" stroke-dasharray="3 5"/>
@@ -315,13 +316,15 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
           <svg viewBox="0 0 1080 330" role="img" aria-labelledby="policyChainTitle policyChainDesc">
             <title id="policyChainTitle">制造业政策落地链条</title>
             <desc id="policyChainDesc">国家十五五战略、省级制造强省规划、区域产业基础和企业工程行动形成由方向到实施的链条。</desc>
-            <defs><marker id="policyArrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6" fill="#178b94"/></marker></defs>
+            
             <g font-family="Microsoft YaHei, sans-serif">
               <rect x="18" y="38" width="235" height="220" rx="12" fill="#eef8f6" stroke="#b8d9d4" stroke-width="2"/>
               <rect x="286" y="38" width="235" height="220" rx="12" fill="#f8f4e9" stroke="#d8c18e" stroke-width="2"/>
               <rect x="554" y="38" width="235" height="220" rx="12" fill="#eef8f6" stroke="#b8d9d4" stroke-width="2"/>
               <rect x="822" y="38" width="240" height="220" rx="12" fill="#073c47" stroke="#073c47" stroke-width="2"/>
-              <path d="M255 148 H279 M523 148 H547 M791 148 H815" stroke="#178b94" stroke-width="3" marker-end="url(#policyArrow)"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M255 145 H267 V140 L280 148 L267 156 V151 H255 Z"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M523 145 H535 V140 L548 148 L535 156 V151 H523 Z"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M791 145 H803 V140 L816 148 L803 156 V151 H791 Z"/>
               <text x="135" y="78" text-anchor="middle" fill="#0f4b5a" font-size="19" font-weight="900">国家战略</text>
               <text x="135" y="115" text-anchor="middle" fill="#344845" font-size="17">十五五规划纲要</text>
               <text x="135" y="147" text-anchor="middle" fill="#344845" font-size="17">人工智能+制造</text>
@@ -397,13 +400,11 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
               <rect x="38" y="120" width="1004" height="92" rx="10" fill="#eaf6f3" stroke="#9fcac3" stroke-width="2"/>
               <text x="68" y="151" fill="#0f4b5a" font-size="19" font-weight="900">LEAN｜精益流程层</text>
               <text x="68" y="184" fill="#344845" font-size="19">价值流分析 · 标准作业 · 标准工时 · 线平衡 · SMED · TPM · 质量源头控制 · 目视化 · PDCA</text>
-              <path d="M540 213 V235" stroke="#178b94" stroke-width="4"/>
-              <path d="M530 228 L540 240 L550 228" fill="none" stroke="#178b94" stroke-width="3"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M537 213 H543 V228 H548 L540 241 L532 228 H537 Z"/>
               <rect x="38" y="244" width="1004" height="92" rx="10" fill="#f8f4e9" stroke="#d8c18e" stroke-width="2"/>
               <text x="68" y="275" fill="#785a2c" font-size="19" font-weight="900">DATA & SYSTEM｜数据与系统层</text>
               <text x="68" y="308" fill="#344845" font-size="19">设备与传感器 · 工业网络/边缘网关 · 主数据 · ERP · MES/MOM · APS · QMS · WMS · EAM/CMMS · 能源管理</text>
-              <path d="M540 337 V359" stroke="#178b94" stroke-width="4"/>
-              <path d="M530 352 L540 364 L550 352" fill="none" stroke="#178b94" stroke-width="3"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M537 337 H543 V352 H548 L540 365 L532 352 H537 Z"/>
               <rect x="38" y="368" width="1004" height="92" rx="10" fill="#eaf6f3" stroke="#9fcac3" stroke-width="2"/>
               <text x="68" y="399" fill="#0f4b5a" font-size="19" font-weight="900">AI & INTELLIGENCE｜智能应用层</text>
               <text x="68" y="432" fill="#344845" font-size="19">机器视觉质检 · 异常检测 · 预测性维护 · 排产优化 · 质量分析 · 能耗优化 · 工艺知识助手 · 工业智能体</text>
