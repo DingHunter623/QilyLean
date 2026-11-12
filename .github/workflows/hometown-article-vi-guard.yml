@@ -1,0 +1,25 @@
+name: Hometown Article VI Typography Guard
+
+on:
+  pull_request:
+    paths:
+      - 'links/hometown-manufacturing/index.html'
+      - 'scripts/validate-hometown-article-vi-contract.js'
+      - '.github/workflows/hometown-article-vi-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'links/hometown-manufacturing/index.html'
+      - 'scripts/validate-hometown-article-vi-contract.js'
+      - '.github/workflows/hometown-article-vi-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enforce article typography and VI boundaries
+        run: node scripts/validate-hometown-article-vi-contract.js
