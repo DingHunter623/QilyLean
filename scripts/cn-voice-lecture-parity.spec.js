@@ -47,7 +47,7 @@ function normalizeMarkup(markup) {
   return markup.replace(/\sdata-qily-interaction=["'][^"']*["']/g, '');
 }
 
-test('China voice lectures use the latest international player and play local audio'test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
+test('China voice lectures use the latest international player and play local audio', async ({ browser }) => {
   const internationalBase = process.env.QILY_INT_BASE;
   const chinaBase = process.env.QILY_CN_BASE;
   expect(internationalBase).toBeTruthy();
