@@ -146,13 +146,15 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 .paper-source-list li{padding:8px 0;color:#344845;border-bottom:1px solid var(--paper-line);font-size:15px;line-height:1.8}
 .paper-source-list a{color:var(--paper-forest);font-weight:850;text-decoration:underline;text-decoration-color:#9cc9c3;text-underline-offset:3px}
 .paper-note{margin-top:20px;padding:17px 19px;border:1px dashed #9fc8c1;color:var(--paper-muted);background:#f7fbfa;font-size:14px;line-height:1.8}
-.paper-end{padding:34px 0 54px}
-.paper-end-card{padding:clamp(24px,4vw,42px);color:#fff;background:linear-gradient(125deg,#073c47,#0f4b5a 58%,#178b94)}
-.paper-end-card h2{margin:0 0 12px;color:#fff;font-size:clamp(27px,3vw,38px)}
-.paper-end-card p{margin:0;color:#e4f1ee;font-size:17px;line-height:1.9}
-.paper-end-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
-.paper-end-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:9px 17px;border:1px solid rgba(255,255,255,.8);border-radius:999px;color:#fff;text-decoration:none;font-weight:900}
-.paper-end-actions a.primary{border-color:#ffe39b;color:#17322d;background:#ffe39b}
+/* Shared QilyLean VI: white content card + gold accent, no independent dark campaign footer. */
+#qilyHometownManufacturingPaper .paper-end{padding:34px 0 54px;background:var(--qily-v5-soft,#f4faf8)}
+#qilyHometownManufacturingPaper .paper-end-card{padding:clamp(24px,4vw,42px);color:var(--qily-v5-ink,#182420)!important;background:var(--qily-v5-white,#fff)!important;border:1px solid var(--qily-v5-line,#bfd6d2);border-left:5px solid var(--qily-v5-gold,#caa15f);box-shadow:0 10px 26px rgba(15,75,90,.06)}
+#qilyHometownManufacturingPaper .paper-end-card h2{margin:0 0 12px;color:var(--qily-v5-green,#0f4b5a)!important;-webkit-text-fill-color:var(--qily-v5-green,#0f4b5a)!important}
+#qilyHometownManufacturingPaper .paper-end-card p{margin:0;color:var(--qily-v5-copy,#3f5e5d)!important;-webkit-text-fill-color:var(--qily-v5-copy,#3f5e5d)!important;line-height:1.82}
+#qilyHometownManufacturingPaper .paper-end-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+#qilyHometownManufacturingPaper .paper-end-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 17px;border:1px solid var(--qily-v5-green,#0f4b5a)!important;border-radius:8px;color:var(--qily-v5-green,#0f4b5a)!important;-webkit-text-fill-color:var(--qily-v5-green,#0f4b5a)!important;background:var(--qily-v5-white,#fff)!important;text-decoration:none;font-size:var(--qily-v5-small,20px);font-weight:800}
+#qilyHometownManufacturingPaper .paper-end-actions a.primary{border-color:var(--qily-v5-gold,#caa15f)!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;background:var(--qily-v5-gold-light,#ffe39b)!important}
+#qilyHometownManufacturingPaper .paper-end-actions a:focus-visible{outline:3px solid var(--qily-v5-gold,#caa15f);outline-offset:3px}
 @media(max-width:850px){.paper-grid.three{grid-template-columns:1fr 1fr}.paper-step-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.paper-wrap,.paper-section-inner{width:min(100% - 28px,1180px)}.paper-grid,.paper-grid.three,.paper-step-grid{grid-template-columns:1fr}.paper-abstract h2{font-size:25px}.paper-section p,.paper-section ul,.paper-section ol{font-size:16px}.paper-toc{display:grid;grid-template-columns:1fr 1fr}.paper-toc a{justify-content:center;text-align:center}}
 </style>
@@ -165,16 +167,17 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
  * Do not add local font-size overrides for headings or normal body copy.
  */
 #qilyHometownManufacturingPaper>.hero{padding:clamp(34px,4vw,48px) clamp(18px,4vw,58px)!important;background:linear-gradient(118deg,#073c47,#0f4b5a 55%,#178b94)!important}
-#qilyHometownManufacturingPaper>.hero .eyebrow{font-size:17px!important}
-#qilyHometownManufacturingPaper>.hero .stage{font-size:16px!important}
-#qilyHometownManufacturingPaper .paper-meta span{font-size:15px!important}
+#qilyHometownManufacturingPaper>.hero .eyebrow{font-size:var(--qily-v5-section-kicker,21px)!important}
+#qilyHometownManufacturingPaper>.hero .stage{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-meta span{font-size:var(--qily-v5-small,20px)!important}
 #qilyHometownManufacturingPaper .paper-hero-diagram{padding:22px 0 20px!important;background:#f4faf8!important}
 #qilyHometownManufacturingPaper .paper-hero-figure{margin:0!important;padding:clamp(18px,2.4vw,26px)!important;border:1px solid #d5e4e3!important;background:#fff!important;box-shadow:0 10px 26px rgba(15,75,90,.06)!important}
-#qilyHometownManufacturingPaper .paper-hero-figure figcaption{color:#415e5b!important;font-size:15px!important;line-height:1.75!important}
-#qilyHometownManufacturingPaper .paper-keywords{font-size:17px!important}
-#qilyHometownManufacturingPaper .paper-toc a{font-size:16px!important}
-#qilyHometownManufacturingPaper .paper-kicker{font-size:15px!important}
-#qilyHometownManufacturingPaper .paper-figure figcaption{font-size:16px!important}
+#qilyHometownManufacturingPaper .paper-hero-figure figcaption{color:#415e5b!important;font-size:var(--qily-v5-small,20px)!important;line-height:1.75!important}
+#qilyHometownManufacturingPaper .paper-keywords{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-toc a{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-kicker{font-size:var(--qily-v5-section-kicker,21px)!important}
+#qilyHometownManufacturingPaper .paper-callout{font-size:var(--qily-v5-small,20px)!important;line-height:1.75!important}
+#qilyHometownManufacturingPaper .paper-figure figcaption{font-size:var(--qily-v5-small,20px)!important}
 #qilyHometownManufacturingPaper svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
 @media(max-width:1100px){
   #qilyHometownManufacturingPaper .paper-hero-figure,
@@ -191,15 +194,16 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     max-width:none!important;
   }
 }
-#qilyHometownManufacturingPaper .paper-card small{font-size:14px!important}
-#qilyHometownManufacturingPaper .paper-card p{font-size:17px!important}
+#qilyHometownManufacturingPaper .paper-card small{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-card p{font-size:var(--qily-v5-small,20px)!important}
 #qilyHometownManufacturingPaper .paper-table,
 #qilyHometownManufacturingPaper .paper-table th,
-#qilyHometownManufacturingPaper .paper-table td{font-size:17px!important}
-#qilyHometownManufacturingPaper .paper-step b{font-size:16px!important}
-#qilyHometownManufacturingPaper .paper-step p{font-size:17px!important}
-#qilyHometownManufacturingPaper .paper-source-list li{font-size:17px!important}
-#qilyHometownManufacturingPaper .paper-note{font-size:16px!important}
+#qilyHometownManufacturingPaper .paper-table td{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-step b{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-step p{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-source-list li{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-note{font-size:var(--qily-v5-small,20px)!important}
+#qilyHometownManufacturingPaper .paper-kicker,#qilyHometownManufacturingPaper .paper-card small{color:var(--qily-v5-gold-text,#b88b45)!important;-webkit-text-fill-color:var(--qily-v5-gold-text,#b88b45)!important;line-height:1.5!important}
 </style>
 <link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure&rail=20261008-nav-gap-v1">
 <script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="/site-visual-runtime-r8.js?v=20261010-r8-runtime-v4-header-metrics"></script>
@@ -273,19 +277,19 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
               <circle cx="145" cy="94" r="48" fill="#0f4b5a" stroke="#ffe39b" stroke-width="3"/>
               <circle cx="145" cy="94" r="35" fill="none" stroke="#8bd6d0" stroke-width="1.5" stroke-dasharray="3 5"/>
               <text x="145" y="89" text-anchor="middle" fill="#fff" font-size="23" font-weight="900">醴陵</text>
-              <text x="145" y="116" text-anchor="middle" fill="#ffe39b" font-size="16">起点</text>
+              <text x="145" y="116" text-anchor="middle" fill="#ffe39b" font-size="18">起点</text>
             </g>
             <g>
               <circle cx="535" cy="94" r="48" fill="#0f4b5a" stroke="#8bd6d0" stroke-width="3"/>
               <circle cx="535" cy="94" r="35" fill="none" stroke="#ffe39b" stroke-width="1.5" stroke-dasharray="3 5"/>
               <text x="535" y="89" text-anchor="middle" fill="#fff" font-size="23" font-weight="900">株洲</text>
-              <text x="535" y="116" text-anchor="middle" fill="#ffe39b" font-size="16">拓展</text>
+              <text x="535" y="116" text-anchor="middle" fill="#ffe39b" font-size="18">拓展</text>
             </g>
             <g>
               <circle cx="925" cy="94" r="48" fill="#0f4b5a" stroke="#ffe39b" stroke-width="3"/>
               <circle cx="925" cy="94" r="35" fill="none" stroke="#8bd6d0" stroke-width="1.5" stroke-dasharray="3 5"/>
               <text x="925" y="89" text-anchor="middle" fill="#fff" font-size="23" font-weight="900">湖南</text>
-              <text x="925" y="116" text-anchor="middle" fill="#ffe39b" font-size="16">扩展</text>
+              <text x="925" y="116" text-anchor="middle" fill="#ffe39b" font-size="18">扩展</text>
             </g>
             <text x="340" y="57" text-anchor="middle" fill="#315f64" font-size="18">产业场景与知识资源</text>
             <text x="735" y="57" text-anchor="middle" fill="#315f64" font-size="18">成熟内容与实践经验</text>
@@ -361,7 +365,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
               <text x="942" y="147" text-anchor="middle" fill="#e8f4f1" font-size="17">数据采集与系统集成</text>
               <text x="942" y="179" text-anchor="middle" fill="#e8f4f1" font-size="17">AI场景试点与价值验证</text>
               <text x="942" y="224" text-anchor="middle" fill="#ffe39b" font-size="15" font-weight="800">形成可验收成果</text>
-              <text x="540" y="302" text-anchor="middle" fill="#5f7474" font-size="16">政策不是口号：必须转译为企业的流程、数据、场景、指标与责任人</text>
+              <text x="540" y="302" text-anchor="middle" fill="#5f7474" font-size="18">政策不是口号：必须转译为企业的流程、数据、场景、指标与责任人</text>
             </g>
           </svg>
           <figcaption>政策方向与企业工程任务之间，需要产业服务、专业知识和企业内部管理共同完成“转译”。</figcaption>
@@ -565,14 +569,15 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
               <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M632 115 H646 V110 L659 118 L646 126 V121 H632 Z"/>
               <path class="vi-flow-arrow" data-qily-unified-arrow="v4" d="M847 115 H861 V110 L874 118 L861 126 V121 H847 Z"/>
               <g text-anchor="middle">
-                <text x="108" y="95" fill="#0f4b5a" font-size="19" font-weight="900">政策研究</text><text x="108" y="128" fill="#5f7474" font-size="16">识别方向与约束</text><text x="108" y="151" fill="#5f7474" font-size="16">核对权威来源</text>
-                <text x="323" y="95" fill="#0f4b5a" font-size="19" font-weight="900">知识整理</text><text x="323" y="128" fill="#5f7474" font-size="16">论文 / 课程 / 工具</text><text x="323" y="151" fill="#5f7474" font-size="16">形成可复用内容</text>
-                <text x="538" y="95" fill="#0f4b5a" font-size="19" font-weight="900">开放学习</text><text x="538" y="128" fill="#5f7474" font-size="16">官网 / 语音 / 视频</text><text x="538" y="151" fill="#5f7474" font-size="16">让知识易于获取</text>
-                <text x="753" y="95" fill="#0f4b5a" font-size="19" font-weight="900">现场试用</text><text x="753" y="128" fill="#5f7474" font-size="16">结合企业实际</text><text x="753" y="151" fill="#5f7474" font-size="16">验证方法适用性</text>
-                <text x="970" y="95" fill="#ffe39b" font-size="19" font-weight="900">反馈迭代</text><text x="970" y="128" fill="#e4f1ee" font-size="16">收集学习问题</text><text x="970" y="151" fill="#e4f1ee" font-size="16">更新知识资源</text>
+                <text x="108" y="95" fill="#0f4b5a" font-size="19" font-weight="900">政策研究</text><text x="108" y="128" fill="#5f7474" font-size="18">识别方向与约束</text><text x="108" y="151" fill="#5f7474" font-size="18">核对权威来源</text>
+                <text x="323" y="95" fill="#0f4b5a" font-size="19" font-weight="900">知识整理</text><text x="323" y="128" fill="#5f7474" font-size="18">论文 / 课程 / 工具</text><text x="323" y="151" fill="#5f7474" font-size="18">形成可复用内容</text>
+                <text x="538" y="95" fill="#0f4b5a" font-size="19" font-weight="900">开放学习</text><text x="538" y="128" fill="#5f7474" font-size="18">官网 / 语音 / 视频</text><text x="538" y="151" fill="#5f7474" font-size="18">让知识易于获取</text>
+                <text x="753" y="95" fill="#0f4b5a" font-size="19" font-weight="900">现场试用</text><text x="753" y="128" fill="#5f7474" font-size="18">结合企业实际</text><text x="753" y="151" fill="#5f7474" font-size="18">验证方法适用性</text>
+                <text x="970" y="95" fill="#ffe39b" font-size="19" font-weight="900">反馈迭代</text><text x="970" y="128" fill="#e4f1ee" font-size="18">收集学习问题</text><text x="970" y="151" fill="#e4f1ee" font-size="18">更新知识资源</text>
               </g>
-              <path d="M970 190 V226 H108 V190" fill="none" stroke="#178b94" stroke-width="2.5" stroke-dasharray="6 5"/>
-              <text x="540" y="251" text-anchor="middle" fill="#5f7474" font-size="16">企业反馈与授权案例回流，推动知识持续校正和升级</text>
+              <path data-qily-feedback-return="v1" d="M970 190 V226 H108 V213" fill="none" stroke="#0f4b5a" stroke-width="2.5" stroke-dasharray="6 5"/>
+              <path class="vi-flow-arrow" data-qily-unified-arrow="v4" data-qily-flow-direction="feedback" aria-label="反馈结果回流至政策研究" d="M105 213 H111 V200 H116 L108 185 L100 200 H105 Z"/>
+              <text x="540" y="251" text-anchor="middle" fill="#5f7474" font-size="18">企业反馈与授权案例回流，推动知识持续校正和升级</text>
             </g>
           </svg>
           <figcaption>图4｜知识传播不是单向发布，而是以学习反馈和经过授权的实践结果持续修正内容。</figcaption>
