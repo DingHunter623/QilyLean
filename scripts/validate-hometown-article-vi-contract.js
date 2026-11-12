@@ -82,29 +82,35 @@ const assertFontCounts = (svg, expected, label) => {
     throw new Error(label + ' still contains undersized SVG text below 15px.');
   }
 };
+const assertUnifiedArrows = (svg, expectedCount, label) => {
+  const arrows = [...svg.matchAll(/<path\b[^>]*class="vi-flow-arrow"[^>]*data-qily-unified-arrow="v4"[^>]*\/>/g)];
+  if (arrows.length !== expectedCount) {
+    throw new Error(label + ' must contain ' + expectedCount + ' site-standard V4 flow arrows; found ' + arrows.length + '.');
+  }
+  if (/marker-end=|policyArrow|knowledgeArrow/.test(svg)) {
+    throw new Error(label + ' still uses a detached marker-end arrowhead.');
+  }
+};
 
 const regional = getSvg('0 0 1080 220');
 assertFontCounts(regional, {23:3,16:3,18:2,19:1}, 'Regional-path diagram');
+assertUnifiedArrows(regional, 2, 'Regional-path diagram');
 const policy = getSvg('0 0 1080 330');
 assertFontCounts(policy, {19:4,17:12,15:4,16:1}, 'Policy-chain diagram');
+assertUnifiedArrows(policy, 3, 'Policy-chain diagram');
 const leanAi = getSvg('0 0 1080 570');
 assertFontCounts(leanAi, {18:1,19:7,20:1}, 'Lean/digital/AI architecture diagram');
+assertUnifiedArrows(leanAi, 2, 'Lean/digital/AI architecture diagram');
 const knowledge = getSvg('0 0 1080 270');
 assertFontCounts(knowledge, {19:5,16:11}, 'Knowledge-loop diagram');
+assertUnifiedArrows(knowledge, 4, 'Knowledge-loop diagram');
 
-const unifiedArrows = [...knowledge.matchAll(/<path\b[^>]*class="vi-flow-arrow"[^>]*data-qily-unified-arrow="v4"[^>]*\/>/g)];
-if (unifiedArrows.length !== 4) {
-  throw new Error('Knowledge-loop diagram must contain four site-standard V4 flow arrows.');
-}
-if (/marker-end=|knowledgeArrow/.test(knowledge)) {
-  throw new Error('Knowledge-loop diagram must not use detached marker-end arrowheads.');
-}
-if (!block.includes('.paper-figure svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}')) {
-  throw new Error('Knowledge-loop arrows must inherit the official QilyLean V4 arrow color and solid geometry.');
+if (!block.includes('#qilyHometownManufacturingPaper svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}')) {
+  throw new Error('All article diagrams must inherit the official QilyLean V4 arrow color and solid geometry.');
 }
 
 console.log('PASS: H1/H2/H3 and normal body copy remain under sitewide VI authority.');
 console.log('PASS: all 15 approved small-text rules are retained at original size +2px.');
 console.log('PASS: all four SVG diagrams preserve title hierarchy and enlarge small labels by +2px.');
-console.log('PASS: knowledge-loop uses four solid QilyLean V4 arrows, with no detached marker-end arrowheads.');
+console.log('PASS: all 11 directional arrows use the solid QilyLean V4 arrow geometry.');
 console.log('PASS: no local article end-card palette override; shared VI surfaces remain authoritative.');
