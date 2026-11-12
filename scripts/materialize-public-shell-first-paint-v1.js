@@ -192,7 +192,7 @@ function materialize(source,relative){
   next=next.replace(/<header\b[\s\S]*?<\/header>/i,'');
   next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+briefDockMarkup(relative)+'\n'+staticHeader+'\n');
   next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
-  return next;
+  return next.replace(/^[ \t]+$/gm,'');
 }
 
 function main(){

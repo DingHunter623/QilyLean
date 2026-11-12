@@ -42,6 +42,7 @@ jobs:
           node --check scripts/enforce-site-vi-v4.js
           node --check scripts/vi-v4-formal.spec.js
           node --check scripts/public-shell-first-paint.spec.js
+          node scripts/materialize-public-shell-first-paint-v1.js
           node scripts/validate-public-shell-first-paint-v1.js
           node scripts/enforce-site-vi-v4.js --write
           git diff --check
