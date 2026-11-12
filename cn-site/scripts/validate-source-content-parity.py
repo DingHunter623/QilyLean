@@ -451,18 +451,26 @@ def verify_semantics(value, row):
 
     resources = row['protected']['translator_resources']
     require(len(resources) == 2 and any('.js?' in item for item in resources) and any('.css?' in item for item in resources), 'Translator assets missing: ' + url)
-    lecture_marker = re.search(
-        r'<!-- QILY-CN-LECTURE-MODULE:START -->[\\s\\S]*?<!-- QILY-CN-LECTURE-MODULE:END -->',
-        main,
-        re.I,
-    )
+    approved_lecture_sources = {
+        'qilylean/daily/2026-11-08.html',
+        'qilylean/daily/2026-10-25.html',
+        'improvements/visual/index.html',
+    }
     expected_lecture_inputs = {'qilyLecSeek', 'qilyLecSpeed', 'qilyLecPitch', 'qilyLecVolume'}
-    approved_lecture_inputs = {
-        attrs.get('id')
-        for tag, attrs in Nodes(lecture_marker.group(0)).nodes
-        if tag == 'input' and attrs.get('type') == 'range'
-    } if lecture_marker else set()
-    if lecture_marker:
+    approved_lecture_inputs = set()
+    if row['source'] in approved_lecture_sources:
+        lecture_marker = re.search(
+            r'<!-- QILY-CN-LECTURE-MODULE:START -->[\s\S]*?<!-- QILY-CN-LECTURE-MODULE:END -->',
+            main,
+            re.I,
+        )
+        require(lecture_marker is not None, 'Approved voice player module marker missing: ' + url)
+        range_tags = re.findall(r'<input\b[^>]*>', lecture_marker.group(0), re.I)
+        for input_tag in range_tags:
+            if re.search(r'\btype=["\']range["\']', input_tag, re.I):
+                input_id = re.search(r'\bid=["\']([^"\']+)["\']', input_tag, re.I)
+                if input_id:
+                    approved_lecture_inputs.add(input_id.group(1))
         require(approved_lecture_inputs == expected_lecture_inputs,
                 'Approved voice player must retain exactly four range controls: ' + url)
 
@@ -690,6 +698,10 @@ def main():
         markup_match = re.search(r'<!-- QILY-CN-LECTURE-MODULE:START -->([\s\S]*?)<!-- QILY-CN-LECTURE-MODULE:END -->', parity.main_markup(page_value), re.I)
         runtime_match = re.search(r'<script\b(?=[^>]*\bdata-cn-lecture-runtime=["\']v1["\'])[^>]*>([\s\S]*?)</script\s*>', page_value, re.I)
         require(style_match and markup_match and runtime_match, 'CN lecture module is incomplete: ' + lecture['url'])
+        require(lecture.get('player_version') == 'v2.6.1'
+                and 'v2.6.1' in style_match.group(1)
+                and 'v2.6.1' in runtime_match.group(1),
+                'CN lecture player is not the latest approved international v2.6.1: ' + lecture['url'])
         require(sha(style_match.group(1).encode('utf-8')) == lecture['style_sha256'],
                 'CN lecture stylesheet hash differs: ' + lecture['url'])
         require(sha(markup_match.group(1).strip().encode('utf-8')) == lecture['markup_sha256'],
@@ -708,6 +720,14 @@ def main():
             encoded = quote(audio['source'], safe='/')
             referenced_media.add(encoded)
             require(encoded in manifest['media'], 'CN lecture audio is missing from the media ledger: ' + audio['source'])
+            audio_path = local_path(audio['url'])
+            require(audio_path.is_file()
+                    and audio_path.stat().st_size == audio['bytes']
+                    and parity.file_hash(audio_path) == audio['sha256'],
+                    'CN lecture audio package is missing or corrupt: ' + audio['source'])
+            require(audio.get('decoded_mp3_bytes', 0) > 0
+                    and audio.get('decoded_mp3_sha256'),
+                    'CN lecture audio is not verified as a decoded MP3: ' + audio['source'])
 
     briefs_index = (CN / 'briefs/index.html').read_text(encoding='utf-8')
     require('data-qily-cn-lecture-badge="v1"' in briefs_index,
@@ -780,6 +800,24 @@ def main():
                     'Production CN lecture page lost its one-click entry: ' + lecture['url'])
 
         run_parallel(lecture_modules, verify_remote_lecture, args.workers)
+
+        audio_assets = [audio for lecture in lecture_modules for audio in lecture['audio']]
+        require(len(audio_assets) == 31, 'Production release must contain all 31 approved lecture audio chapters')
+
+        def verify_remote_audio(audio):
+            digest = hashlib.sha256()
+            size = 0
+            with open_url(audio['url']) as response:
+                require(response.status == 200, 'Production lecture audio did not return HTTP 200: ' + audio['source'])
+                require(response.headers.get_content_type() != 'text/html',
+                        'Production lecture audio returned HTML instead of an audio package: ' + audio['source'])
+                for block in iter(lambda: response.read(1024 * 1024), b''):
+                    size += len(block)
+                    digest.update(block)
+            require(size == audio['bytes'] and digest.hexdigest() == audio['sha256'],
+                    'Production lecture audio bytes/hash differ from the approved package: ' + audio['source'])
+
+        run_parallel(audio_assets, verify_remote_audio, args.workers)
         remote_briefs = read_page('/briefs/').decode()
         for date in ('2026-11-08', '2026-10-25'):
             card = re.search(r'<article\b[^>]*data-date="' + date + r'"[^>]*>[\s\S]*?</article>', remote_briefs, re.I)

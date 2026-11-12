@@ -2,6 +2,8 @@
 """Materialize the approved international voice-lecture modules and exact audio bytes on CN."""
 from __future__ import annotations
 
+import base64
+import binascii
 import hashlib
 import html
 import importlib
@@ -46,6 +48,19 @@ def sha_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def decode_mp3_base64(path: Path, source: str) -> tuple[int, str]:
+    encoded = re.sub(rb"\s+", b"", path.read_bytes())
+    try:
+        decoded = base64.b64decode(encoded, validate=True)
+    except binascii.Error as error:
+        raise SystemExit("Invalid base64 audio chapter: " + source) from error
+    is_mp3 = decoded.startswith(b"ID3") or (
+        len(decoded) > 2 and decoded[0] == 0xFF and (decoded[1] & 0xE0) == 0xE0
+    )
+    require(is_mp3 and len(decoded) > 1024, "Audio chapter is not a valid MP3 payload: " + source)
+    return len(decoded), sha_bytes(decoded)
+
+
 def extract_lecture(raw: str, source: str) -> tuple[str, str, str]:
     styles = list(re.finditer(
         r'<style\b(?=[^>]*\bid=["\']qilyLectureStyle["\'])[^>]*>([\s\S]*?)</style\s*>',
@@ -53,6 +68,7 @@ def extract_lecture(raw: str, source: str) -> tuple[str, str, str]:
     ))
     require(len(styles) == 1, "Expected exactly one qilyLectureStyle: " + source)
     style = styles[0].group(1)
+    require("v2.6.1" in style, "International lecture CSS is not the approved v2.6.1 player: " + source)
 
     section = re.search(
         r'<section\b(?=[^>]*\bid=["\']qily-lecture["\'])[^>]*>',
@@ -75,6 +91,10 @@ def extract_lecture(raw: str, source: str) -> tuple[str, str, str]:
 
     markup = raw[section.start():script_start].strip()
     runtime = raw[runtime_start:runtime_end]
+    require("v2.6.1" in runtime and "function fetchChapterData" in runtime and "atob(" in runtime,
+            "International lecture runtime is not the approved v2.6.1 audio player: " + source)
+    require("lec-art-sen" in style and "lec-art-sen" in runtime,
+            "International lecture sentence-follow visual behavior is missing: " + source)
     for required_id in ("qilyLecChapters", "qilyLecPlayer", "qilyLecMini", "qilyLecAudio"):
         require(re.search(r'\bid=["\']' + re.escape(required_id) + r'["\']', markup, re.I) is not None,
                 "Lecture player element missing " + required_id + ": " + source)
@@ -85,6 +105,9 @@ def extract_lecture(raw: str, source: str) -> tuple[str, str, str]:
 
 def main() -> None:
     require(MANIFEST.is_file(), "Source-content manifest missing; run materialize-source-content-parity.py first")
+    nginx_config = (CN / "nginx" / "qilylean.cn.conf").read_text(encoding="utf-8")
+    require(r"location ~* \.mp3\.b64$ {" in nginx_config and "default_type text/plain;" in nginx_config,
+            "Tencent Nginx must serve the local lecture audio package as text/plain")
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     media_rows = {row["source"]: row for row in manifest.get("media_files", [])}
     media_paths = set(manifest.get("media", []))
@@ -133,6 +156,7 @@ def main() -> None:
             require(original.is_file() and original.stat().st_size > 0,
                     "Original lecture audio asset missing: " + relative)
             digest = sha_file(original)
+            decoded_mp3_bytes, decoded_mp3_sha256 = decode_mp3_base64(original, relative)
             encoded = quote(relative, safe="/")
             local_url = "/assets/public-media/" + encoded + "?v=" + digest[:16]
 
@@ -147,6 +171,8 @@ def main() -> None:
                 "url": local_url,
                 "sha256": digest,
                 "bytes": original.stat().st_size,
+                "decoded_mp3_bytes": decoded_mp3_bytes,
+                "decoded_mp3_sha256": decoded_mp3_sha256,
             }
             media_paths.add(encoded)
             media_lines.add(encoded)
@@ -155,6 +181,8 @@ def main() -> None:
                 "url": local_url,
                 "sha256": digest,
                 "bytes": original.stat().st_size,
+                "decoded_mp3_bytes": decoded_mp3_bytes,
+                "decoded_mp3_sha256": decoded_mp3_sha256,
             }
             return match.group("quote") + local_url + match.group("quote")
 
@@ -261,6 +289,7 @@ def main() -> None:
         modules.append({
             "source": source,
             "url": route,
+            "player_version": "v2.6.1",
             "style_sha256": sha_bytes(style.encode("utf-8")),
             "markup_sha256": sha_bytes(markup.encode("utf-8")),
             "runtime_sha256": sha_bytes(runtime.encode("utf-8")),
@@ -284,11 +313,13 @@ def main() -> None:
 
     total_bytes = sum(row["bytes"] for module in modules for row in module["audio"])
     total_chapters = sum(len(module["audio"]) for module in modules)
+    decoded_audio_bytes = sum(row["decoded_mp3_bytes"] for module in modules for row in module["audio"])
     print(json.dumps({
         "ok": True,
         "lecture_pages": len(modules),
         "audio_chapters": total_chapters,
         "audio_bytes": total_bytes,
+        "decoded_audio_bytes": decoded_audio_bytes,
         "routes": [row["url"] for row in modules],
     }, ensure_ascii=False))
 

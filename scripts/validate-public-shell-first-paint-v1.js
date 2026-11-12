@@ -86,9 +86,9 @@ for(const relative of files){
 
 
   if(/site-translation-safe-runtime-v1\.js|site-global-language-v3\.js/.test(source)){
-    assert(header[1].includes('id="qilyGlobalTranslationDualRouteV2"'),\`${relative}: international translation utility must be static\`);
-    assert(header[1].includes('data-qily-static-first-paint="v1"'),\`${relative}: international translation utility first-paint marker missing\`);
-    assert(head[1].includes(TRANSLATION_CSS_HREF),\`${relative}: translation utility stylesheet must load before paint\`);
+    assert(header[1].includes('id="qilyGlobalTranslationDualRouteV2"'),`${relative}: international translation utility must be static`);
+    assert(header[1].includes('data-qily-static-first-paint="v1"'),`${relative}: international translation utility first-paint marker missing`);
+    assert(head[1].includes(TRANSLATION_CSS_HREF),`${relative}: translation utility stylesheet must load before paint`);
   }
 
   const actions=[...dock[1].matchAll(/<button\b[^>]*\bdata-action=["']([^"']+)["'][^>]*>([\s\S]*?)<\/button>/gi)];
