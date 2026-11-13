@@ -16,7 +16,10 @@ import server
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--production', action='store_true')
+parser.add_argument('--pre-switch', action='store_true', help='Compare public assets to the currently served release before changing the site symlink')
 args = parser.parse_args()
+if args.pre_switch and not args.production:
+    parser.error('--pre-switch is valid only with --production')
 keys = json.loads(Path('/etc/qilylean-cn/translate.json').read_text()) if args.production else server.credentials()
 if not args.production:
     directory = os.environ.get('CREDENTIALS_DIRECTORY')
@@ -27,6 +30,13 @@ if not args.production:
                 'quote_wrapper': len(value) > 1 and value[0] in '\x22\x27`' and value[-1] == value[0],
                 'normalized_changed': value != keys[name]}
     print(json.dumps({'credential_format': {name: copied_format(name) for name in raw_keys}}))
+def approved_public_asset_bytes(name, pre_switch=False, live_root=Path('/var/www/qilylean-cn/current'), staged_dir=Path(__file__).parent):
+    """Strict byte owner for the two distinct phases of atomic CN deployment."""
+    if name not in ('cn-translate-baidu-v1.js', 'cn-translate-baidu-v1.css'):
+        raise ValueError('Unexpected public translator asset')
+    root = live_root / 'assets' if pre_switch else staged_dir
+    return (root / name).read_bytes()
+
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 interfaces = json.loads(subprocess.check_output(['ip', '-j', 'link']))
 tunnels = [item['ifname'] for item in interfaces if item.get('link_type') in ('wireguard', 'tun', 'gre', 'ipip') or item['ifname'].startswith(('tun', 'wg', 'tailscale'))]
@@ -79,9 +89,9 @@ if args.production:
             name = urllib.parse.urlsplit(asset).path.rsplit('/', 1)[1]
             with opener.open('https://qilylean.cn' + asset, timeout=30) as response:
                 actual = response.read()
-            assert actual == Path(__file__).with_name(name).read_bytes(), 'Public translator resource differs from approved local asset'
+            assert actual == approved_public_asset_bytes(name, pre_switch=args.pre_switch), 'Public translator resource differs from the expected active release asset'
         pages.append({'route': route, 'cache_control': cache, 'translator_assets': assets, 'exact_asset_bytes': True})
-    evidence['mainland_public_pages'] = {'dns_addresses': addresses, 'pages': pages}
+    evidence['mainland_public_pages'] = {'dns_addresses': addresses, 'pages': pages, 'asset_comparison': 'currently-active-release' if args.pre_switch else 'staged-new-release'}
     # Compare real values only inside this root process. Never print values, matches or lines.
     variants = set()
     for value in list(keys.values()) + list(server.normalize_credentials(keys).values()):
