@@ -12,7 +12,7 @@ import sys
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import unquote, urljoin, urlparse, urlsplit
 
 SCRIPT=Path(__file__).with_name("materialize-brief-visual-parity.py")
 sys.dont_write_bytecode=True
@@ -220,6 +220,31 @@ class RendererRegression(unittest.TestCase):
         content,svg_count,visual_nodes=visual.sanitize_main(text)
         self.assertIn('制造工程方法',content)
         self.assertEqual(svg_count,0)
+
+    def test_approved_voice_lectures_extract_cleanly_for_china(self):
+        # Owner authorization 2026-11-13, [cn-clone-approved]: only these
+        # three lectures carry a player on China. The extractor must fail
+        # closed on any unexpected markup, external URL or missing part, and
+        # must only accept the approved v2.6.1 player.
+        lecture_spec=importlib.util.spec_from_file_location('cn_lecture_parity',Path(__file__).with_name('materialize-lecture-parity.py'))
+        lecture=importlib.util.module_from_spec(lecture_spec)
+        lecture_spec.loader.exec_module(lecture)
+        expected={'qilylean/daily/2026-11-08.html':10,'qilylean/daily/2026-10-25.html':12,'improvements/visual/index.html':9}
+        for source,chapters in expected.items():
+            raw=(visual.ROOT/source).read_text(encoding='utf-8')
+            style,markup,runtime=lecture.extract_lecture(raw,source)
+            self.assertIn('v2.6.1',style)
+            self.assertIn('v2.6.1',runtime)
+            self.assertIn('lec-art-sen',style)
+            self.assertIn('lec-art-sen',runtime)
+            for element_id in ('qily-lecture','qilyLecChapters','qilyLecPlayer','qilyLecMini','qilyLecAudio'):
+                self.assertIn('id="'+element_id+'"',markup)
+            self.assertNotIn('qilylean.com',runtime)
+            audio=re.findall(r'["\'](?:\./)?assets/audio/[^"\']+?\.mp3\.b64["\']',runtime)
+            self.assertEqual(len(audio),chapters)
+            for quoted in audio:
+                relative=unquote(urlsplit(urljoin('/'+source,quoted.strip('"\'') ) ).path).lstrip('/')
+                self.assertTrue((visual.ROOT/relative).is_file(),relative)
 
 
 def validate_generated_corpus():

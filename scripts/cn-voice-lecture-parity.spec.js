@@ -43,9 +43,13 @@ function normalizeAudioPaths(runtime) {
 }
 
 function normalizeMarkup(markup) {
-  // CN's shared interaction-semantics runtime adds this nonvisual marker to controls.
+  // Both sites' runtimes add nonvisual data-qily-* markers to controls
+  // (interaction semantics, contrast guards, arrow closure). They are not
+  // part of the authored lecture player — the player markup carries no
+  // data-qily-* attributes of its own — and China does not ship the
+  // international contrast guard, so strip them before comparing.
   return markup
-    .replace(/\sdata-qily-(?:interaction|arrow-closure)=["'][^"']*["']/g, '')
+    .replace(/\sdata-qily-[a-z0-9-]+=["'][^"']*["']/g, '')
     .replace(/\ssrc=["']blob:[^"']+["']/g, ' src="__AUDIO_BLOB__"');
 }
 
@@ -73,6 +77,23 @@ test('China voice lectures use the latest international player and play local au
 
     await expect(international.locator('#qilyLecPlayer')).toBeAttached();
     await expect(china.locator('#qilyLecPlayer')).toBeAttached();
+
+    // The player loads chapter 0 on init (loadChapter(0, false)) in two
+    // async steps: it fetches the first base64 package and assigns a blob
+    // URL to the audio element, then the browser loads the blob metadata and
+    // the loadedmetadata handler rewrites the duration line from "0:00" to
+    // the chapter length. The two pages fetch from different origins, so
+    // comparing live player markup before both initial loads settle catches
+    // one page mid-load and the other settled — a race, not a parity defect.
+    // Wait for the duration line to leave its "0:00" placeholder on both
+    // pages before comparing markup; that proves the blob fetch AND the
+    // metadata handler have both run.
+    for (const page of [international, china]) {
+      await page.waitForFunction(() => {
+        const duration = document.querySelector('#qilyLecDurTime');
+        return duration && duration.textContent !== '0:00';
+      }, null, { timeout: 20000 });
+    }
 
     const internationalCss = await international.locator('#qilyLectureStyle').textContent();
     const chinaCss = await china.locator('style[data-cn-lecture-css="v1"]').textContent();
