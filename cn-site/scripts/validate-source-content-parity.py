@@ -497,7 +497,15 @@ def verify_semantics(value, row):
 
     for tag, attrs in Nodes(main).nodes:
         classes = set(attrs.get('class', '').split())
-        require(attrs.get('id') not in parity.BLOCK_IDS and not classes & parity.BLOCK_CLASSES, 'Excluded commercial block present: ' + url)
+        # Single owner-approved nonprofit exception: a complete public research
+        # card on the CN resources page, not the international conversion network.
+        approved_hometown = (url == '/resources/' and tag == 'section'
+                            and attrs.get('id') == 'qilyHometownManufacturingKnowledge'
+                            and attrs.get('data-qily-public-knowledge') == 'hometown-manufacturing'
+                            and classes & parity.BLOCK_CLASSES == {'qily-resource-network'})
+        excluded = classes & parity.BLOCK_CLASSES
+        require(attrs.get('id') not in parity.BLOCK_IDS and
+                (not excluded or approved_hometown), 'Excluded commercial block present: ' + url)
         require(not any(name.lower().startswith('on') for name in attrs), 'Source executable handler remains: ' + url)
         if tag == 'a':
             parsed = urlsplit(attrs.get('href', ''))
