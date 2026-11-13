@@ -223,6 +223,126 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 @media(min-width:901px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-size:20px!important;font-weight:900!important;line-height:1.22!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
 @media(max-width:900px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-weight:900!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
 </style>
+<style id="qilyLectureStyle">
+/* QilyLean lecture player for hometown-manufacturing article (links/hometown-manufacturing). Scoped to #qily-lecture / #qilyLecPlayer only; does not touch site styles. */
+#qily-lecture, #qilyLecPlayer{
+  --lec-bg:#f2f5f7; --lec-surface:#ffffff; --lec-surface2:#e9eff3; --lec-ink:#15222e; --lec-ink2:#43545f; --lec-line:#d5dee4;
+  --lec-brand:#0f4b5a; --lec-brand-ink:#ffffff; --lec-accent:#178b94; --lec-accent-soft:#e3f0ee;
+  --lec-player-bg:#0f4b5a; --lec-player-ink:#f4f8f7; --lec-player-ink2:#cfe3de; --lec-player-line:#2a6b78; --lec-gold:#c8a25a; --lec-gold-light:#ffe39b;
+}
+@media (prefers-color-scheme: dark){
+  #qily-lecture, #qilyLecPlayer{
+    --lec-bg:#0c1319; --lec-surface:#141f29; --lec-surface2:#1a2835; --lec-ink:#e7eef3; --lec-ink2:#a7b7c2; --lec-line:#263646;
+    --lec-brand:#8fd0d4; --lec-brand-ink:#073c47; --lec-accent:#8fd0d4; --lec-accent-soft:#14333a;
+    --lec-player-bg:#073c47; --lec-player-ink:#eef4f8; --lec-player-ink2:#bcd6d2; --lec-player-line:#1e5a66;
+  }
+}
+#qilyLectureCta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid #c8a25a;background:#0f4b5a;color:#fff;padding:8px 16px;border-radius:999px}
+#qilyLectureCta:hover{background:#178b94}
+#qily-lecture .qily-lecture-intro{font-size:15.5px;color:var(--lec-ink2)}
+#qily-lecture .chapter{background:var(--lec-surface);border:1px solid var(--lec-line);border-radius:14px;padding:18px 20px;margin-top:12px;transition:border-color .2s}
+#qily-lecture .chapter.active{border-color:var(--lec-accent);box-shadow:0 0 0 1px var(--lec-accent) inset}
+#qily-lecture .chapter-head{display:flex;align-items:center;gap:12px}
+#qily-lecture .ch-num{flex:none;width:40px;height:40px;border-radius:10px;background:var(--lec-surface2);color:var(--lec-brand);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+#qily-lecture .chapter.active .ch-num{background:var(--lec-accent);color:var(--lec-brand-ink)}
+#qily-lecture .chapter h3{margin:0;font-size:17.5px;line-height:1.4;flex:1}
+#qily-lecture .ch-play{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lec-line);background:var(--lec-surface);color:var(--lec-brand);font:inherit;font-size:13.5px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer}
+#qily-lecture .ch-play:hover{border-color:var(--lec-brand)}
+#qily-lecture .chapter.active .ch-play{background:var(--lec-brand);color:var(--lec-brand-ink);border-color:var(--lec-brand)}
+#qily-lecture .chapter p{margin:10px 0 0;font-size:15.5px;color:var(--lec-ink)}
+#qily-lecture .deliverable{margin-top:12px;background:var(--lec-surface2);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--lec-ink2)}
+#qily-lecture .deliverable b{color:var(--lec-brand)}
+#qily-lecture .chapter.sub-flash{box-shadow:0 0 0 2px var(--lec-gold)}
+/* v2.4 follow-the-article: the original section being lectured gets a light-gold background (kept for the whole chapter) plus a gold outline. */
+.lec-follow{background:rgba(255,227,155,.38) !important;outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px;transition:background-color .2s ease}
+#qilyLecPlayer .p-follow{display:inline-flex;margin:8px 0 0 0;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer .p-follow[aria-pressed="false"]{opacity:.6}
+#qilyLecPlayer{position:fixed;left:0;right:0;bottom:var(--qily-dock-footer-h,50px);z-index:50;background:var(--lec-player-bg);color:var(--lec-player-ink);border-top:3px solid var(--lec-gold);box-shadow:0 -10px 34px rgba(5,18,30,.35)}
+#qilyLecPlayer{transition:transform .2s ease,opacity .2s ease}
+#qilyLecPlayer.qily-lec-collapsed{transform:translateY(120%);opacity:0;pointer-events:none}
+#qilyLecPlayer .p-collapse{position:absolute;top:-13px;right:14px;z-index:2;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 12px;background:var(--lec-player-bg);border:1px solid var(--lec-gold);color:var(--lec-player-ink);font:inherit;font-size:12px;font-weight:700;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(5,18,30,.25);white-space:nowrap}
+#qilyLecPlayer .p-collapse:hover{border-color:var(--lec-gold-light)}
+#qilyLecMini{position:fixed;right:12px;bottom:calc(var(--qily-dock-footer-h,50px) + 12px);z-index:51;display:none;align-items:center;gap:8px;max-width:min(78vw,340px);background:var(--lec-player-bg);color:var(--lec-player-ink);border:1px solid var(--lec-player-line);border-top:3px solid var(--lec-gold);border-radius:999px;padding:8px 8px 8px 10px;box-shadow:0 8px 24px rgba(5,18,30,.35);cursor:pointer}
+#qilyLecMini.show{display:flex}
+#qilyLecMini .m-play{flex:none;width:34px;height:34px;border-radius:50%;border:none;background:var(--lec-gold);color:#073c47;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#qilyLecMini .m-title{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecMini .m-expand{flex:none;font-size:13px;color:var(--lec-gold-light);font-weight:900;white-space:nowrap}
+#qilyLecPlayer .player-inner{max-width:880px;margin:0 auto;padding:10px 16px 10px}
+#qilyLecPlayer .p-row{display:flex;align-items:center;gap:10px}
+#qilyLecPlayer .p-now{flex:1;min-width:0}
+#qilyLecPlayer .p-now .k{font-size:11.5px;color:var(--lec-gold-light);font-weight:900;letter-spacing:.12em}
+#qilyLecPlayer .p-now .t{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecPlayer .p-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);display:flex;align-items:center;justify-content:center;cursor:pointer}
+#qilyLecPlayer .p-btn:hover{border-color:var(--lec-gold-light)}
+#qilyLecPlayer .p-btn.main{width:48px;height:48px;background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+#qilyLecPlayer .p-btn svg{width:20px;height:20px;fill:currentColor}
+#qilyLecPlayer .p-btn.main svg{width:24px;height:24px}
+#qilyLecPlayer .p-seek{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--lec-player-ink2);font-variant-numeric:tabular-nums}
+#qilyLecPlayer input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:var(--lec-player-line);outline:none;cursor:pointer}
+#qilyLecPlayer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+#qilyLecPlayer input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff}
+#qilyLecPlayer .p-seek input{flex:1}
+#qilyLecPlayer .p-sub{margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.07);border:1px solid var(--lec-player-line);border-radius:10px;cursor:pointer}
+#qilyLecPlayer .p-sub:hover{border-color:var(--lec-gold)}
+#qilyLecPlayer .p-sub .s-cur{font-size:14.5px;line-height:1.5;color:var(--lec-player-ink);min-height:44px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#qilyLecPlayer .p-sub .s-next{font-size:12.5px;line-height:1.4;color:var(--lec-player-ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecPlayer .p-controls{display:none;flex-wrap:wrap;gap:8px 22px;margin-top:10px;align-items:flex-end}
+#qilyLecPlayer .p-controls.open{display:flex}
+/* Settings popover (unified 2026-11-11, user-demanded): the settings panel
+   (.p-controls) floats as a popover directly above the player when open, so
+   the player keeps its collapsed height whether settings are open or closed.
+   Cloned from the visual page v2.4.9 rule; applied to all three lectures. */
+#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;height:186px!important;box-sizing:border-box!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
+#qilyLecPlayer .ctl{min-width:150px;flex:1}
+#qilyLecPlayer .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--lec-player-ink2);margin-bottom:5px}
+#qilyLecPlayer .ctl label output{color:var(--lec-player-ink);font-weight:700;font-variant-numeric:tabular-nums}
+#qilyLecPlayer .ctl input{width:100%;background:var(--lec-player-line)}
+#qilyLecPlayer .chips{display:flex;gap:6px;flex-wrap:wrap}
+#qilyLecPlayer .chip{border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer .chip.on{background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+#qilyLecPlayer .p-toggle{display:inline-flex;margin-top:8px;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer button:focus-visible,#qilyLecPlayer input:focus-visible,#qilyLecMini:focus-visible{outline:2px solid var(--lec-gold-light);outline-offset:2px}
+@media (max-width:640px){
+  #qilyLecPlayer .ctl{min-width:44%}
+  #qilyLecPlayer .p-sub .s-cur{font-size:14px;min-height:42px}
+}
+
+/* v2.5.0 KTV-style sentence highlight (both lectures), user-approved 2026-11-11.
+   v2.5.2 fix: subtitle .s-cur was rgba(255,227,155,.22) — over the dark-teal
+   player that renders as grey-green, not light gold (browser task 0e0fafea).
+   Use solid #ffe39b + dark ink, same as the chapter-card sentence highlight:
+   Lecture text gets a synchronized background per sentence being spoken,
+   like KTV lyrics — NOT the whole module/card filled.
+   (1) Subtitle current sentence (.s-cur) gets a light-gold tint.
+   (2) Chapter-card text is split into sentence spans; the sentence being
+       spoken gets .on (light-gold bg, dark ink).
+   (3) Follow-the-article (.lec-follow) no longer fills the whole article
+       section — outline only, for location. */
+#qilyLecPlayer .p-sub .s-cur{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:6px!important;padding:2px 6px!important;margin:0 -6px!important}
+#qily-lecture .chapter .lec-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+/* v2.6.0 article sentence sync (v2.6.1: wrap anchor + following siblings, see JS) (user request 2026-11-11): the sentence being
+   spoken also lights up in the ORIGINAL article text, so the class can follow
+   the lecture from the article alone while the player is collapsed. Same
+   light gold as the subtitle / chapter-card highlight. */
+.lec-art-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+.lec-follow{background:transparent!important;outline:2px solid #c8a25a!important;outline-offset:6px!important;border-radius:10px!important}
+/* Buttons de-emphasized (2026-11-11, user-demanded): font size matches the
+   subtitle above (~15px), not the oversized 20-21px; smaller padding and no
+   min-height compress the player so the buttons don't stand out. */
+#qilyLecPlayer .p-follow, #qilyLecPlayer .p-toggle{font-size:15px!important;line-height:1.4!important;min-height:0!important;padding:4px 10px!important;font-weight:600!important;margin-top:6px!important}
+</style>
+<style id="qilyHScrollClipV1">
+/* v2.5.1 horizontal-scrollbar root-cause fix (model page), 2026-11-11:
+   site-header-axis-v1.css gives header.qily-site-header::before width:100vw;
+   on desktop Chrome 100vw includes the vertical scrollbar width, so the
+   pseudo-element overflows ~7-8px horizontally and triggers a horizontal
+   scrollbar (~14px), which pushes the fixed player+dock up ~15px. The visual
+   page has no such header and already clips (site-closure-bundle-v24).
+   Fix: clip horizontal overflow at document level (same approach as the
+   visual page). Use clip, NOT hidden — clip preserves position:sticky. */
+html{overflow-x:clip!important}
+html body{overflow-x:clip!important}
+</style>
 </head>
 <body class="qily-pro-v24">
 <nav id="floatDock" class="qily-float-dock qily-page-action-nav" aria-label="页面快捷导航" data-qily-first-paint-dock="v1" data-qily-standalone-dock="v5.8" data-qily-dock-layout="fixed-bottom-footer-navigation" data-qily-stable-order="top,previous,search,current" data-qily-unified-public-module="v5.8-fixed-bottom-footer-navigation">
@@ -255,7 +375,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="hero" data-qily-vi-v4-hero="118deg">
       <div class="inner">
         <span class="eyebrow">PUBLIC KNOWLEDGE INITIATIVE｜公益知识传播</span>
-        <h1>精益改善与数智化：给家乡制造业的一点思考</h1>
+        <h1 id="hometownTitle">精益改善与数智化：给家乡制造业的一点思考</h1>
         <p class="lead">立足醴陵 · 服务株洲 · 面向湖南</p>
         <p class="paper-hero-note">公益知识传播为主。</p>
         <div class="stage">政策研究 · 工业工程 · 数智化技术 · 本土产业应用</div>
@@ -308,7 +428,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-intro">
       <div class="paper-wrap">
         <div class="paper-abstract">
-          <h2>摘要</h2>
+          <h2 id="hometown-section-0">摘要</h2>
           <p>在“十五五”时期制造业高质量发展、人工智能与实体经济深度融合、湖南加快建设国家重要先进制造业高地的背景下，中小制造企业面临的关键问题，已不只是设备自动化或软件系统上线，而是如何把生产流程、管理标准、工业数据、软件系统与人工智能应用组织成可持续创造价值的工程体系。本文结合国家及湖南省公开政策文件、醴陵产业基础与制造业工程实践，提出“精益改善先行、数据治理筑基、场景应用牵引、人工智能增效、安全治理护航”的渐进式转型框架，并从陶瓷、电瓷、玻璃、通用设备、轨道交通装备及电子制造等典型场景，梳理可落地的改善方向、技术架构、指标体系和90天试点路径。文章同时提出以开放论文、语音课程、工具模板和脱敏案例为载体的公益知识传播机制，探索让专业知识从个人经验转化为家乡制造业可共享、可复用的学习资源。</p>
           <div class="paper-keywords"><strong>关键词：</strong>新型工业化；十五五；精益生产；工业工程；中小企业数字化转型；人工智能+制造；智能工厂；工业数据治理；公益知识传播</div>
         </div>
@@ -321,7 +441,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="research-background">
       <div class="paper-section-inner">
         <span class="paper-kicker">01｜RESEARCH BACKGROUND</span>
-        <h2>一、研究背景：制造业转型进入“系统能力竞争”阶段</h2>
+        <h2 id="hometown-section-1">一、研究背景：制造业转型进入“系统能力竞争”阶段</h2>
         <p>2026年是国家“十五五”规划开局之年。制造业发展正从单点设备升级、局部自动化改造，逐步走向研发设计、生产制造、质量控制、供应链协同、运营管理和绿色低碳的系统性升级。人工智能、工业互联网、边缘计算、机器视觉、数字孪生和工业软件不断成熟，推动制造系统从“可视化”向“可分析、可预测、可优化”演进。</p>
         <p>但技术进步并不意味着企业只要采购一套MES、部署一台服务器或接入一个大模型，就能自然获得智能制造能力。实际工程中，若工艺路线不稳定、标准工时缺失、设备停机原因编码不统一、BOM与现场用料不一致、质量缺陷定义混乱，系统采集到的可能只是大量不可比较、不可追溯、不可用于决策的数据。此时继续叠加算法，容易把基础管理问题数字化、复杂化。</p>
         <p>因此，本文的基本判断是：制造业数智化的起点应当是业务问题和流程价值，而不是技术采购清单。精益生产解决流程浪费和标准化问题，工业工程建立节拍、工时、产能与资源配置的量化基础，数字化系统负责形成可信数据链，人工智能在数据和场景成熟后提供预测、识别、优化与知识辅助能力。</p>
@@ -334,7 +454,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section alt" id="policy-map">
       <div class="paper-section-inner">
         <span class="paper-kicker">02｜POLICY & STRATEGY</span>
-        <h2>二、政策与战略：国家方向正在转化为企业级工程任务</h2>
+        <h2 id="hometown-section-2">二、政策与战略：国家方向正在转化为企业级工程任务</h2>
         <p>国家层面的“十五五”规划纲要将建设现代化产业体系、推进数字中国、实施“人工智能+”行动、促进实体经济和数字经济深度融合列为重要发展方向。工信部等八部门出台的“人工智能+制造”专项行动，则进一步把方向细化为算力、模型、数据、重点行业场景、智能工厂和安全治理等任务。</p>
         <div class="paper-figure">
           <div class="paper-figure-title">图2｜国家—省级—区域—企业的政策落地链条</div>
@@ -395,7 +515,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="local-industry">
       <div class="paper-section-inner">
         <span class="paper-kicker">03｜LOCAL INDUSTRIAL FOUNDATION</span>
-        <h2>三、区域产业基础：让知识分享贴近醴陵与株洲的真实场景</h2>
+        <h2 id="hometown-section-3">三、区域产业基础：让知识分享贴近醴陵与株洲的真实场景</h2>
         <p>公益知识传播要避免脱离产业实际。醴陵经开区官方于2026年1月披露，园区2025年技工贸收入为1014.42亿元，规模以上工业企业营收为674.97亿元；园区现有企业1282家、规上工业企业457家、高新技术企业231家。上述为经开区公开披露的园区口径数据，并非醴陵全市所有企业的统计口径。</p>
         <p>醴陵经开区公开产业定位包括非金属矿物制品业、陶瓷及配套产业、电力电瓷电器、玻璃产业，以及通用设备制造等方向。湖南省制造强省“十五五”规划同时将轨道交通装备产业明确为以株洲集群为核心，推进高端化、智能化、绿色化、融合化和国际化发展。</p>
         <div class="paper-grid three">
@@ -411,7 +531,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section alt" id="framework">
       <div class="paper-section-inner">
         <span class="paper-kicker">04｜ENGINEERING FRAMEWORK</span>
-        <h2>四、总体框架：精益改善、工业数据与人工智能协同</h2>
+        <h2 id="hometown-section-4">四、总体框架：精益改善、工业数据与人工智能协同</h2>
         <p>建议把制造业数智化理解为五个相互依赖的层次：价值目标层定义企业要改善什么；精益流程层明确如何稳定、标准化地创造价值；数据与系统层建立可信的数据链；智能应用层使用算法与模型提升识别、预测和优化能力；治理与安全层确保系统可靠、数据合规、责任清晰。</p>
         <figure class="paper-figure">
           <div class="paper-figure-title">图3｜“精益 × 数据 × AI × 安全”协同架构</div>
@@ -453,7 +573,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="architecture">
       <div class="paper-section-inner">
         <span class="paper-kicker">05｜TECHNICAL ARCHITECTURE</span>
-        <h2>五、技术架构：从设备连接到工业智能体的工程路径</h2>
+        <h2 id="hometown-section-5">五、技术架构：从设备连接到工业智能体的工程路径</h2>
         <p>面向中小制造企业，建议采用“设备层—边缘连接层—数据平台层—业务应用层—智能分析层—安全治理层”的分层架构。并不要求企业一次性建设全部层级，重点是接口边界清晰、数据定义一致、后续能够扩展。</p>
         <div class="paper-grid">
           <article class="paper-card"><small>LAYER 01｜设备与感知</small><h3>设备、传感器与质量检测</h3><p>PLC、CNC、机器人、仪器仪表、温度/压力/振动/电流传感器、条码/RFID、工业相机、测试设备。先确认设备信号是否可用、采样周期是否满足场景需要。</p></article>
@@ -480,7 +600,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section alt" id="scenarios">
       <div class="paper-section-inner">
         <span class="paper-kicker">06｜INDUSTRY SCENARIOS</span>
-        <h2>六、产业应用场景：把技术转化为现场可验证的问题</h2>
+        <h2 id="hometown-section-6">六、产业应用场景：把技术转化为现场可验证的问题</h2>
         <div class="paper-table-wrap">
           <table class="paper-table">
             <thead><tr><th>产业 / 场景</th><th>优先改善问题</th><th>可用技术与方法</th><th>建议观察指标</th></tr></thead>
@@ -501,7 +621,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="roadmap">
       <div class="paper-section-inner">
         <span class="paper-kicker">07｜IMPLEMENTATION ROADMAP</span>
-        <h2>七、实施路线：从一个问题、一道工序、一条产线开始</h2>
+        <h2 id="hometown-section-7">七、实施路线：从一个问题、一道工序、一条产线开始</h2>
         <p>建议企业不要将数字化转型理解为一次性的大型系统采购。更可控的做法是以经营目标为牵引，选择一个产品族、一条产线或一个关键工序，先完成基线测量和标准化，再开展数据采集、系统连接与智能应用试点。</p>
         <div class="paper-step-grid">
           <article class="paper-step"><b>01</b><strong>业务诊断</strong><p>明确当前最影响交付、质量、成本、设备效率或安全的一个问题，确定责任人和改善边界。</p></article>
@@ -531,7 +651,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section alt" id="metrics">
       <div class="paper-section-inner">
         <span class="paper-kicker">08｜MEASUREMENT SYSTEM</span>
-        <h2>八、评价体系：从“上线了什么”转向“改善了什么”</h2>
+        <h2 id="hometown-section-8">八、评价体系：从“上线了什么”转向“改善了什么”</h2>
         <p>数智化项目的评价不能只看系统模块数量、设备联网数量或看板数量。应将运营指标、数据质量指标和模型质量指标分开管理，并在试点开始前冻结统计口径。</p>
         <div class="paper-table-wrap">
           <table class="paper-table">
@@ -555,7 +675,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="public-knowledge">
       <div class="paper-section-inner">
         <span class="paper-kicker">09｜OPEN KNOWLEDGE SHARING</span>
-        <h2>九、公益知识传播：把个人经验转化为区域共享资源</h2>
+        <h2 id="hometown-section-9">九、公益知识传播：把个人经验转化为区域共享资源</h2>
         <p>制造业知识传播的价值，不在于发布了多少篇文章，而在于知识是否被理解、是否能被正确使用、是否帮助企业形成改善。对于中小企业而言，获得一份清晰的标准工时模板、一堂讲透OEE口径的课程，或一套能用于现场问题分析的检查表，往往比阅读大量抽象概念更有帮助。</p>
         <p>基于这一认识，QilyLean｜启力精益提出“立足醴陵、服务株洲、面向湖南”的公益知识传播方向。平台定位是公开知识资源的整理、研究和分享入口，不代表政府部门、园区或行业协会，不以企业聘用、商业订单或咨询业务转化为目标。衡量传播的唯一标准，是知识是否被理解、被正确使用、是否帮到了企业。</p>
         <div class="paper-figure">
@@ -599,7 +719,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section alt" id="governance">
       <div class="paper-section-inner">
         <span class="paper-kicker">10｜SECURITY & GOVERNANCE</span>
-        <h2>十、安全与治理：让技术创新建立在可靠边界之上</h2>
+        <h2 id="hometown-section-10">十、安全与治理：让技术创新建立在可靠边界之上</h2>
         <ul>
           <li><strong>数据权属与保密：</strong>企业生产数据、客户资料、产品图纸、工艺参数和经营数据应明确权属、使用目的、访问范围、保存周期和销毁规则。未经授权，不得用于公开论文、模型训练或对外演示。</li>
           <li><strong>IT/OT网络安全：</strong>生产控制网络与办公网络应根据风险进行分区隔离，远程维护实行审批、身份验证和日志审计；不应将PLC、CNC或关键控制系统直接暴露于公网。</li>
@@ -615,13 +735,15 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     <section class="paper-section" id="conclusion">
       <div class="paper-section-inner">
         <span class="paper-kicker">11｜CONCLUSION</span>
-        <h2>十一、结论：让知识从个人积累走向区域共享</h2>
+        <h2 id="hometown-section-11">十一、结论：让知识从个人积累走向区域共享</h2>
         <p>“十五五”时期，制造业的竞争将越来越体现为技术创新、流程效率、数据能力、产业链协同和绿色低碳能力的综合竞争。国家与湖南省的政策部署，为传统制造业改造提升、中小企业数智化转型和人工智能场景应用提供了清晰方向；醴陵和株洲也拥有值得持续研究与传播的产业基础。</p>
         <p>对于中小制造企业，最现实的路径不是追逐概念，而是从一个真实问题出发：先用精益方法识别浪费、稳定流程，再用工业工程建立标准与量化基线，用数字化工具形成可信数据，最后在适当场景中引入算法和人工智能，并以质量、交付、成本、效率、能耗和安全指标验证结果。</p>
         <p>对于知识传播者，真正重要的，是持续提供准确、可理解、可复用的专业内容。论文、语音课程、视频和实操工具只有进入学习者的思考与企业现场，才可能转化为实际价值。</p>
         <div class="paper-callout"><strong>让专业知识走进家乡制造业。</strong><br>立足醴陵，服务株洲，面向湖南。让知识源于实践、回到实践；让改善从现场发生，让价值在协同中形成。</div>
       </div>
     </section>
+
+<p><a id="qilyLectureCta" href="#qily-lecture">▶ 收听讲课音频 · 全文十七段，约 25 分钟</a></p>
 
     <section class="paper-section alt" id="references">
       <div class="paper-section-inner">
@@ -650,7 +772,569 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
         </div>
       </div>
     </section>
-  </main>
+  <section id="qily-lecture" class="module-section knowledge-brief-section" aria-labelledby="qilyLectureTitle">
+<div class="module-inner lean-brief-copy"><div class="module-heading"><h2 id="qilyLectureTitle">讲课音频 · 全文重讲版</h2></div>
+<p class="qily-lecture-intro">本篇专题研究论文配有全文讲课音频：从制造业转型进入系统能力竞争讲起，依次走完政策与战略、区域产业基础、总体框架、技术架构、产业应用场景、实施路线、评价体系、公益知识传播和安全治理，最后回到让知识从个人积累走向区域共享的结论，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文十七段，约 25 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。播放时原文也会跟着讲课自动滚动到正在讲的那一段，正在讲的那一段会以浅金色底色标出来；点播放器里的“跟随原文”可以开关跟随，你自己滚动页面后，本段不再自动抢，到下一段再跟上。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
+<div id="qilyLecChapters"></div>
+<div aria-hidden="true" style="height:200px"></div>
+</div>
+</section>
+
+<div class="player" id="qilyLecPlayer" role="region" aria-label="讲课音频播放器">
+<button class="p-collapse" id="qilyLecCollapseBtn" aria-label="收起播放器">▾ 收起</button>
+<div class="player-inner">
+<div class="p-row">
+<button class="p-btn" id="qilyLecPrevBtn" aria-label="上一段"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
+<button class="p-btn main" id="qilyLecPlayBtn" aria-label="播放或暂停"><svg id="qilyLecPlayIcon" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><svg id="qilyLecPauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
+<button class="p-btn" id="qilyLecNextBtn" aria-label="下一段"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l10.5-7z"/></svg></button>
+<div class="p-now"><div class="k" id="qilyLecNowStep">讲课音频 · 已就绪</div><div class="t" id="qilyLecNowTitle">精益改善与数智化：给家乡制造业的一点思考 — 全文重讲版</div></div>
+</div>
+<div class="p-seek"><span id="qilyLecCurTime">0:00</span><input type="range" id="qilyLecSeek" min="0" max="100" step="0.1" value="0" aria-label="播放进度" /><span id="qilyLecDurTime">0:00</span></div>
+<div class="p-sub" id="qilyLecSub" role="button" tabindex="0" aria-label="字幕：点一下定位到原文段落"><div class="s-cur" id="qilyLecSubCur">点播放开始，字幕会跟读同步显示。</div><div class="s-next" id="qilyLecSubNext">点字幕可定位到原文段落</div></div>
+<button class="p-follow" id="qilyLecFollowBtn" aria-pressed="true">跟随原文：开</button>
+<button class="p-toggle" id="qilyLecCtlToggle" aria-expanded="false">语速 / 音调 / 音量设置</button>
+<div class="p-controls" id="qilyLecControls">
+<div class="ctl"><label>语速 <output id="qilyLecSpeedOut">1.00×</output></label><input type="range" id="qilyLecSpeed" min="0.5" max="2" step="0.05" value="1" aria-label="语速" /></div>
+<div class="ctl" style="flex:none"><label>倍速快捷</label><div class="chips" id="qilyLecSpeedChips"><button class="chip" data-speed="0.75">0.75×</button><button class="chip on" data-speed="1">1.0×</button><button class="chip" data-speed="1.25">1.25×</button><button class="chip" data-speed="1.5">1.5×</button><button class="chip" data-speed="2">2.0×</button></div></div>
+<div class="ctl"><label>音调（半音） <output id="qilyLecPitchOut">原调</output></label><input type="range" id="qilyLecPitch" min="-4" max="4" step="0.5" value="0" aria-label="音调" /></div>
+<div class="ctl"><label>音量 <output id="qilyLecVolOut">100%</output></label><input type="range" id="qilyLecVolume" min="0" max="1" step="0.05" value="1" aria-label="音量" /></div>
+<div class="ctl" style="flex:none"><label>&nbsp;</label><button class="chip" id="qilyLecResetBtn">语速 / 音调复位</button></div>
+</div>
+</div>
+</div>
+<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">▴ 展开</span></div>
+<audio id="qilyLecAudio" preload="metadata"></audio>
+<script>
+var CHAPTERS = [
+        { step:"开场", title:"一句话先说清：先把流程做对，再把数据做真", src:"assets/audio/full00.mp3.b64",
+          text:"大家好，我是丁启利。今天我们一起学习，课题叫《精益改善与数智化：给家乡制造业的一点思考》。这篇文章要回答的，其实就是一个问题，中小制造企业到底怎么做数智化。这堂课的答案只有一句话，先把流程做对，再把数据做真。接下来，我们就顺着这篇文章的思路，把关键的地方从头到尾讲清楚。" },
+        { step:"第一部分", title:"制造业转型，进入系统能力竞争", src:"assets/audio/full01.mp3.b64",
+          text:"先说背景。二零二六年是十五五规划的开局之年，制造业正在从单点设备升级、局部自动化改造，走向研发、制造、质量、供应链、运营和绿色低碳的系统性升级。人工智能、工业互联网、边缘计算、机器视觉、数字孪生、工业软件都在成熟，制造系统正在从看得见，走向能分析、能预测、能优化。但是，技术进步不等于企业买一套系统、部署一台服务器、接一个大模型，就自然有了智能制造能力。实际工程里，如果工艺路线还不稳定，标准工时还没有，停机原因的编码各说各的，物料清单和现场实际用料对不上号，质量缺陷的定义也是一团乱，系统采回来的，只会是大量没法比较、没法追溯、没法用来做决策的数据。这时候再往上叠加算法，只会把基础管理问题数字化、复杂化。所以这篇文章的基本判断是，制造业数智化的起点，应当是业务问题和流程价值，而不是技术采购清单。" },
+        { step:"第二部分", title:"国家方向，正在变成企业级工程任务", src:"assets/audio/full02.mp3.b64",
+          text:"第二部分，政策与战略。国家十五五规划纲要，把建设现代化产业体系、推进数字中国、实施人工智能加行动、促进实体经济和数字经济深度融合，列为重要发展方向。工信部等八个部门的人工智能加制造专项行动，又把方向细化成算力、模型、数据、重点行业场景、智能工厂和安全治理这些具体任务。中小企业发展的十五五规划，强调中小企业要数智化、绿色化发展，路子是分级改造，优先采用小快轻准的场景化工具。湖南制造强省十五五规划提出智赋万企，到二零三零年，重点建设不少于两千家基础级、八百家先进级、五十家卓越级以上智能工厂。湖南还要求规上工业企业做数字化转型通用评估，到二零二六年年底，完成评估的企业不少于一万五千家，覆盖率达到百分之七十。这里要特别分清一件事，政策目标不等于已经实现成果。上面这些数量，都是政策文件提出的阶段性目标，不代表到现在已经全部完成。智能工厂梯度培育也有申报条件、评审和认定程序，不能简单理解为所有企业都必须申报领航级。" },
+        { step:"第三部分", title:"先看家乡：醴陵和株洲有什么", src:"assets/audio/full03.mp3.b64",
+          text:"第三部分，区域产业基础。公益知识传播要避免脱离产业实际，先看醴陵和株洲到底有什么。醴陵经开区公开披露，园区二零二五年技工贸收入一千多亿，规模以上工业企业营收六百七十多亿，园区现有企业一千二百多家，规上工业企业四百五十多家，高新技术企业二百三十多家。注意，这是经开区公开的园区口径数据，不是醴陵全市所有企业的统计口径。醴陵经开区的产业定位，包括非金属矿物制品业、陶瓷及配套产业、电力电瓷电器、玻璃产业，还有通用设备制造。湖南制造强省十五五规划，同时把轨道交通装备产业明确为以株洲集群为核心，推进高端化、智能化、绿色化、融合化和国际化发展。这里有一个区域化传播原则，同一套精益和数智化方法，需要结合产品特性、工艺路线、设备类型、质量风险和能源结构重新设计。陶瓷窑炉、玻璃生产、机械加工、轨道交通装备和电子装配，不能用一张通用数字化改造清单解决所有问题。" },
+        { step:"第四部分", title:"五层框架：先定目标，再谈技术", src:"assets/audio/full04.mp3.b64",
+          text:"第四部分，总体框架。建议把制造业数智化理解成五个相互依赖的层次。价值目标层，定义企业要改善什么。精益流程层，明确如何稳定、标准化地创造价值。数据与系统层，建立可信的数据链。智能应用层，用算法与模型提升识别、预测和优化能力。治理与安全层，确保系统可靠、数据合规、责任清晰。这篇文章提出的渐进式转型框架，就是精益改善先行、数据治理筑基、场景应用牵引、人工智能增效、安全治理护航。先说精益流程层。精益管理的重点，是识别客户价值、减少等待与搬运、降低过量生产和返工、缩短换型时间、稳定标准作业。工业工程则把改善转化为可以计算的工时、节拍、产能、设备负荷、人员配置和生产线平衡。如果企业还没有稳定的工艺路线、标准工时和停机分类，应当先补齐基础管理，而不是直接拿人工智能去替代现场分析。再说数据与系统层。数据不仅要采得到，还要定义一致、来源明确、时间准确、能够关联。设备、产品、工单、批次、质量、停机和能耗这些数据模型，都要建立统一规则。否则，同一个指标可能因为分母、统计周期、产品组合和停机口径不同，算出没法比较的结果。",
+          deliverable:"本段要点：五层各有分工；渐进式框架是精益先行、数据筑基、场景牵引、人工智能增效、安全护航。" },
+        { step:"第五部分", title:"智能应用与治理：模型输出必须经过验证", src:"assets/audio/full05.mp3.b64",
+          text:"第五部分，先接上前面两层，智能应用层和治理层。人工智能适合在有足够数据、明确目标和可验证反馈的场景里发挥作用。比如，机器视觉可以辅助外观缺陷识别，设备时序数据可以用于异常检测和预测性维护，排产系统可以在订单、工艺路线、产能和换型约束比较完整时辅助排产，基于经过审核的作业指导书、维修记录和质量文件，还可以建设检索增强的知识助手，帮工程师检索资料、整理问题、生成初步分析。治理层要记住一条，模型输出必须经过验证。涉及产品放行、关键工艺参数变更、设备安全联锁和高风险操作的决策，要保留授权人员审核、确定性控制逻辑和可追溯记录。人工智能可以提出异常提示、分析建议和优化候选方案，但不能替代企业法定安全责任、质量责任和现场管理责任。" },
+        { step:"第六部分", title:"六层架构：接口清晰，才能扩展", src:"assets/audio/full06.mp3.b64",
+          text:"第六部分，技术架构。面向中小制造企业，建议采用设备层、边缘连接层、数据平台层、业务应用层、智能分析层、安全治理层的分层架构。并不要求企业一次性建设全部层级，重点是接口边界清晰、数据定义一致、后续能够扩展。设备与感知层，先确认设备信号是否可用、采样周期是否满足场景需要。工业连接与边缘计算层，按设备能力选择协议或者厂商接口，用边缘网关做协议转换、数据缓存、初步过滤和本地告警，避免把控制网络直接暴露到公网。工业数据基础层，建立设备、产品、工艺、工单、批次、质量、停机和能耗数据模型，通过数据字典、质量规则、血缘关系和权限管理保证数据可以解释、可以追溯。制造业务系统层，企业资源计划管订单、物料和财务，制造执行承接制造执行，排产辅助、质量管理、仓储管理、设备资产与维修各管一摊，系统之间要明确主数据责任和接口边界。分析与人工智能层，先用规则、统计分析和过程能力分析，再按需要引入机器学习、机器视觉、时序预测、优化算法、检索增强生成和工业智能体，模型要有版本、评价集和回滚机制。安全与运营治理层，建立网络分区、最小权限、账号管理、日志审计、备份恢复、供应商远程接入审批、模型输出复核和变更控制。",
+          deliverable:"本段要点：六层架构分阶段建；数据治理五条最低要求；人工智能场景先过四道门槛。" },
+        { step:"第六部分", title:"数据治理五条线，人工智能先过门槛", src:"assets/audio/full07.mp3.b64",
+          text:"接上技术架构，再说两条底线。工业数据治理有五条最低要求。先说标识统一：设备、产品、工单、批次都要用稳定的编码，工序和人员也要用同一套编码，避免同一个对象出现多套名称。统一口径，统一时间粒度、计量单位、良品定义、停机分类、计划与实际的统计边界。质量规则，检查完整性、准确性、及时性、一致性和可追溯性，关键的数据项要明确由谁负责。数据关联，建立订单、产品、物料清单、工艺路线、设备、批次、质量结果的关联关系。权限与留痕，数据访问遵循最小必要原则，重要数据修改保留操作者、时间、原因和审批记录。人工智能场景选择也有技术门槛。预测性维护需要有足够的设备状态数据和故障记录。机器视觉需要稳定的成像条件、缺陷标签和可复核样本。智能排产需要准确的工艺路线、标准工时、设备能力、交期和换型约束。知识助手需要经过审核的文档、版本管理和权限隔离。如果输入数据和业务定义不可靠，模型准确率再高，也难以转化为稳定的经营价值。" },
+        { step:"第七部分", title:"六类场景上：陶瓷、玻璃、装备、轨道交通", src:"assets/audio/full08.mp3.b64",
+          text:"第七部分，产业应用场景，先说前四类。陶瓷和电瓷，优先改善工艺参数稳定性、批次质量、窑炉能耗、设备故障和质量追溯，可用的办法包括过程参数采集、批次追溯、缺陷分类、能耗分析、设备状态监测和过程统计控制，看的指标是一次合格率、批次追溯完整率、单位合格品能耗和非计划停机时间。玻璃制造，优先改善关键工艺波动、设备可靠性、能源利用和质量缺陷识别，可用的办法包括时序数据分析、机器视觉辅助检测、设备预测维护、能源计量与分项分析，看的指标是良品率、单位能耗、设备可动率、缺陷率和计划达成率。通用设备制造，优先改善多品种排产、换型换模、工序等待、刀具与设备管理，可用的办法是标准工时、换模换线、排产辅助、刀具寿命管理和工序追溯，看的指标是换型时间、设备综合效率、计划达成率、在制品周转天数和准时交付率。轨道交通装备，优先改善长流程追溯、工程变更、供应商质量和关键部件可靠性，可用的办法是产品谱系追溯、质量门、工程变更管理、供应商质量协同和试验数据分析，看的指标是追溯完整率、一次交检合格率、问题闭环周期和供应商来料质量。",
+          deliverable:"本段要点：六类场景各有优先改善问题；场景是结合区域产业方向提出的研究建议，实施前必须现场诊断验证。" },
+        { step:"第七部分", title:"六类场景下：电子制造、离散制造", src:"assets/audio/full09.mp3.b64",
+          text:"产业应用场景，再说后两类。电子制造和线路板组装，优先改善物料齐套、设备状态、换线损失、工序质量和批次追溯，可用的办法是表面贴装设备数据采集、检测数据关联、物料条码、线平衡和异常看板，看的指标是单位小时产量、一次通过率、设备综合效率、换线时间和缺料停线时长。最后是中小型离散制造，优先改善现场信息不透明、标准不统一、计划与实际脱节，可用的办法是标准作业、条码报工、轻量化制造执行系统、可视化看板和异常闭环，看的指标是报工及时率、数据完整率、计划达成率和异常响应时间。上面这些场景，是结合区域产业方向和制造工程方法提出的研究建议。不同企业的设备、产品、工艺和客户质量要求存在差异，实施前必须进行现场诊断、风险评估和数据可用性验证。",
+          deliverable:"本段要点：电子制造与离散制造场景；场景是研究建议，实施前必须现场诊断验证。" },
+        { step:"第八部分", title:"从一个问题、一条产线开始", src:"assets/audio/full10.mp3.b64",
+          text:"第八部分，实施路线。建议企业不要把数字化转型理解成一次性的大型系统采购。更可控的做法，是以经营目标为牵引，选择一个产品族、一条产线或者一个关键工序，先完成基线测量和标准化，再开展数据采集、系统连接与智能应用试点。具体分六步。第一步，业务诊断，明确当前最影响交付、质量、成本、设备效率或者安全的一个问题，确定责任人和改善边界。第二步，流程标准化，梳理价值流、工艺路线、标准工时、设备能力、质量标准和异常分类，建立可以比较的基线。第三步，数据筑基，统一编码、时间戳、数据字典和采集规则，优先利用现有设备接口、条码和轻量化采集方式。第四步，场景试点，选择一个可以测量的场景，例如停机分析、质量缺陷追溯、物料齐套或者换型时间，建立前后对比。第五步，系统集成，按需要打通企业资源计划、制造执行、质量管理、仓储管理、设备数据和看板，明确主数据与接口责任。第六步，人工智能增效与复制，在数据成熟后引入预测、识别或者优化模型，经过验证后固化标准，再评估是否向其他产线复制。",
+          deliverable:"本段要点：六步从问题出发；九十天首轮试点分五个阶段，每阶段有交付和门判断；九十天是小范围试点周期，不是整厂转型周期。" },
+        { step:"第九部分", title:"九十天首轮试点：五个阶段，五个门", src:"assets/audio/full11.mp3.b64",
+          text:"第九部分，建议的九十天首轮试点，分五个阶段。第一到十五天，做项目章程、现场诊断、价值流梳理、指标定义和基线采样，门判断是问题是否真实、指标是否可测、负责人是否明确。第十六到三十天，做标准作业、工艺与设备编码、停机和缺陷代码、数据字典，门判断是数据定义是否一致、现场是否能持续执行。第三十一到六十天，做单线数据采集、异常看板、系统接口和每日复盘，门判断是数据完整性、及时性和现场使用率是否达标。第六十一到七十五天，选取一个人工智能或者算法辅助场景，开展离线验证和受控试用，门判断是是否优于现行方法，误报和漏报风险是否可以接受。第七十六到九十天，做前后对比、标准固化、收益核算和复制评审，门判断是收益是否可以核验，是否具备规模化复制条件。这里要说明边界，九十天是一个小范围试点与验证周期，不代表九十天就可以完成整厂智能化转型。企业要根据产品复杂度、设备接口、信息化基础和安全要求调整周期。" },
+        { step:"第十部分", title:"从上线了什么，转向改善了什么", src:"assets/audio/full12.mp3.b64",
+          text:"第十部分，评价体系。数智化项目的评价，不能只看系统模块数量、设备联网数量或者看板数量。应当将运营指标、数据质量指标和模型质量指标分开管理，并且在试点开始前冻结统计口径。运营指标里，设备综合效率等于时间开动率乘以性能开动率，再乘以合格品率，用来识别设备可动性、速度损失和质量损失，计划生产时间、停机分类和理想节拍必须统一。一次通过率等于首次检验合格数量除以首次投入检验数量，用来识别返工、报废和工序质量损失，不得把返修后合格混入首次合格。计划达成率等于按统一口径完成的计划数量除以计划数量，用来评估排产、物料和执行协同。换型时间、单位能耗这些指标，也要按统一口径定义清楚。数据质量指标里，数据完整率等于有效采集点数量除以应采集点数量，追溯完整率等于具备规定全链路追溯信息的批次除以总批次，同时还要关注准确性、及时性和一致性。模型质量指标里，人工智能模型的精确率和召回率，用来评价识别模型的误报与漏报，高风险场景要优先控制漏报，并且保留人工复核。项目收益核算要区分实际现金节约、避免损失、产能释放和管理效率提升。产能释放不应未经核算就等同于新增利润。估算值、阶段性验证值和财务核定值要分别标注。只有统计边界、数据来源和责任人明确，改善成果才具备可复核性。",
+          deliverable:"本段要点：评价分运营、数据质量、模型质量三类；收益分实际现金节约、避免损失、产能释放、管理效率提升，分别标注。" },
+        { step:"第十一部分", title:"把个人经验，变成区域共享资源", src:"assets/audio/full13.mp3.b64",
+          text:"第十一部分，公益知识传播。制造业知识传播的价值，不在于发布了多少篇文章，而在于知识是否被理解、是否能被正确使用、是否帮助企业形成改善。对于中小企业而言，获得一份清晰的标准工时模板、一堂讲透设备综合效率口径的课程，或者一套能用于现场问题分析的检查表，往往比阅读大量抽象概念更有帮助。基于这个认识，启力精益提出立足醴陵、服务株洲、面向湖南的公益知识传播方向。平台定位是公开知识资源的整理、研究和分享入口，不代表政府部门、园区或者行业协会，不以企业聘用、商业订单或者咨询业务转化为目标。衡量传播的唯一标准，是知识是否被理解、被正确使用、是否帮到了企业。传播有四种载体，政策与研究论文、语音讲课与视频课程、实操工具与脱敏案例，还有以学习反馈和经过授权的实践结果持续修正内容。传播范围按醴陵先行、株洲同步准备、成熟后扩展湖南推进。公开课程和选定资源尽可能免费开放。涉及企业内部数据、图纸、工艺参数和人员信息的内容，必须取得授权或者完成充分脱敏。",
+          deliverable:"本段要点：四种载体是论文、语音课程、工具模板、脱敏案例；传播范围按醴陵先行、株洲同步准备、成熟后扩展湖南推进；公开课程和选定资源尽可能免费开放。" },
+        { step:"第十二部分", title:"技术越先进，边界越要清楚", src:"assets/audio/full14.mp3.b64",
+          text:"第十二部分，安全与治理。让技术创新建立在可靠边界之上。第一，数据权属与保密。企业生产数据、客户资料、产品图纸、工艺参数和经营数据，要明确权属、使用目的、访问范围、保存周期和销毁规则。未经授权，不得用于公开论文、模型训练或者对外演示。第二，生产控制网络与办公网络要根据风险进行分区隔离，远程维护实行审批、身份验证和日志审计，不应把可编程控制器、数控机床或者关键控制系统直接暴露于公网。第三，人工智能模型治理，要明确模型版本、训练和测试数据来源、评价指标、适用边界和失效条件，建立漂移监测、人工复核、回滚和停用机制。第四，人机协同。人工智能输出用于辅助识别、分析和建议。关键质量放行、工艺变更、设备安全控制和高风险作业，必须遵循现行制度、标准和授权流程。第五，知识产权，要尊重企业技术秘密、软件许可、论文版权和图片版权，引用政策与标准时保留出处，公开案例前取得必要授权。第六，公益传播边界，不将知识分享表述为政府指定、官方认证或者园区背书，不公开未经核实的企业排名、改善收益和合作关系。安全底线是，人工智能不能替代法定安全管理责任、设备安全联锁、质量授权和现场专业判断。技术越先进，越需要明确数据边界、权限边界、责任边界和失效处置机制。" },
+        { step:"第十三部分", title:"结论：让知识从个人积累走向区域共享", src:"assets/audio/full15.mp3.b64",
+          text:"第十三部分，结论。十五五时期，制造业的竞争将越来越体现为技术创新、流程效率、数据能力、产业链协同和绿色低碳能力的综合竞争。国家与湖南省的政策部署，为传统制造业改造提升、中小企业数智化转型和人工智能场景应用提供了清晰方向。醴陵和株洲也拥有值得持续研究与传播的产业基础。对于中小制造企业，最现实的路径不是追逐概念，而是从一个真实问题出发，先用精益方法识别浪费、稳定流程，再用工业工程建立标准与量化基线，用数字化工具形成可信数据，最后在适当场景中引入算法和人工智能，并且以质量、交付、成本、效率、能耗和安全指标验证结果。对于知识传播者，真正重要的，是持续提供准确、可以理解、可以复用的专业内容。论文、语音课程、视频和实操工具，只有进入学习者的思考与企业现场，才可能转化为实际价值。让专业知识走进家乡制造业。立足醴陵，服务株洲，面向湖南。让知识源于实践、回到实践，让改善从现场发生，让价值在协同中形成。" },
+        { step:"收尾", title:"留一个作业：找一个真实问题，走一遍六步", src:"assets/audio/full16.mp3.b64",
+          text:"最后收个尾。这堂课我们从头到尾走了一遍，记住三个判断。第一，制造业数智化的起点是业务问题和流程价值，不是技术采购清单，先把流程做对，再把数据做真。第二，渐进式转型的框架是精益改善先行、数据治理筑基、场景应用牵引、人工智能增效、安全治理护航。第三，评价要从上线了什么，转向改善了什么，收益要可以核验，标准要可以复制。最后，我留一个作业给大家：请你回到自己的企业，找一个最影响交付、质量、成本或者设备效率的真实问题，按这堂课的六步走一遍，先做业务诊断，再做流程标准化，定好一个可以测量的指标，跑一个九十天的小范围试点，看看前后对比能不能算得出来。讲到这里，大家有什么要提问的？政策怎么转译、场景怎么选、九十天试点怎么做，都可以提出来，我们一起讨论。" }
+      ];
+            /* v2.6.1: where each lecture chapter lives in the ORIGINAL article text.
+         0 开场 -> h1 title, 1 背景 -> 摘要, 2 政策 -> section 二， 3 区域 -> section 三，
+         4-5 框架 -> section 四， 6-7 技术架构 -> section 五， 8-9 场景 -> section 六，
+         10-11 路线 -> section 七， 12 评价 -> section 八， 13 传播 -> section 九，
+         14 安全 -> section 十， 15-16 结论/收尾 -> section 十一. */
+      var CHAPTER_ANCHORS = ["#hometownTitle", "#hometown-section-0", "#hometown-section-2", "#hometown-section-3", "#hometown-section-4", "#hometown-section-4", "#hometown-section-5", "#hometown-section-5", "#hometown-section-6", "#hometown-section-6", "#hometown-section-7", "#hometown-section-7", "#hometown-section-8", "#hometown-section-9", "#hometown-section-10", "#hometown-section-11", "#hometown-section-11"];
+var audio = document.getElementById('qilyLecAudio');
+
+      var current = 0, speed = 1, pitch = 0;
+
+      /* ---- subtitles: sentence split (char-weighted) + sync ---- */
+      var lastRate = null, lastSubIdx = -1;
+      function splitSentences(t){
+        var m = t.match(/[^。！？；…]+[。！？；…]*/g);
+        return m ? m : [t];
+      }
+      CHAPTERS.forEach(function(ch){
+        ch.sentences = splitSentences(ch.text);
+        var total = 0, cum = [0];
+        ch.sentences.forEach(function(s){ total += s.length; cum.push(total); });
+        ch.cum = cum.map(function(v){ return total ? v / total : 0; });
+      });
+      function subIndexFor(ch){
+        if (!audio.duration || !isFinite(audio.duration) || audio.duration <= 0) return 0;
+        var p = Math.min(1, Math.max(0, audio.currentTime / audio.duration));
+        var idx = 0;
+        for (var k = 0; k < ch.sentences.length; k++){ if (p >= ch.cum[k]) idx = k; }
+        return idx;
+      }
+      function updateSubtitle(force){
+        var ch = CHAPTERS[current];
+        var idx = subIndexFor(ch);
+        if (!force && idx === lastSubIdx) return;
+        lastSubIdx = idx;
+        var cur = document.getElementById('qilyLecSubCur');
+        var nxt = document.getElementById('qilyLecSubNext');
+        if (!cur || !nxt) return;
+        cur.textContent = ch.sentences[idx] || '';
+        var nextTxt = ch.sentences[idx + 1];
+        nxt.textContent = nextTxt ? nextTxt : (current < CHAPTERS.length - 1 ? '本段完 · 将自动接下一段' : '本段完 · 全文结束');
+        var card = document.getElementById('qilyLecCh-' + current);
+        if (card){
+          var spans = card.querySelectorAll('.lec-sen');
+          for (var j = 0; j < spans.length; j++) spans[j].classList.toggle('on', j === idx);
+        }
+        lecHighlightArticleSentence(current, idx);
+      }
+      /* play() can reject when called outside a user gesture (iOS Safari):
+         surface it honestly instead of failing silently. */
+      function safePlay(){
+        var p;
+        try{ p = audio.play(); }catch(err){ p = null; }
+        if (p && p.catch) p.catch(function(){
+          setPlayUI(false);
+          document.getElementById('qilyLecNowStep').textContent = '讲课音频 · ' + CHAPTERS[current].step + '（' + (current + 1) + ' / ' + CHAPTERS.length + '）· 点播放继续';
+        });
+      }
+      /* Shared fetch+decode for loadChapter and preloadChapter. */
+      function fetchChapterData(ch, i, stepLabel){
+        fetch(ch.src).then(function(r){ if(!r.ok) throw new Error('audio load failed'); return r.text(); }).then(function(b64){
+          var bin = atob(b64.replace(/\s+/g, ''));
+          var bytes = new Uint8Array(bin.length);
+          for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+          ch.blobUrl = URL.createObjectURL(new Blob([bytes], {type: 'audio/mpeg'}));
+          ch.loading = false;
+          if (current !== i){
+            if (ch.wantPlay){ ch.wantPlay = false; loadChapter(i, true); }
+            return;
+          }
+          audio.src = ch.blobUrl;
+          audio.load();
+          applyRate();
+          document.getElementById('qilyLecNowStep').textContent = stepLabel;
+          updateSubtitle(true);
+          if (ch.wantPlay){ ch.wantPlay = false; safePlay(); }
+        }).catch(function(){
+          ch.loading = false;
+          if (current !== i){
+            if (ch.wantPlay){ ch.wantPlay = false; document.getElementById('qilyLecNowStep').textContent = '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）· 加载失败，请重试'; }
+            return;
+          }
+          document.getElementById('qilyLecNowStep').textContent = stepLabel + ' · 加载失败，请重试';
+        });
+      }
+      /* Download the next chapter in the background while the current one
+         plays, so tapping "next" hits the cached path and play() still runs
+         inside the tap gesture. */
+      function preloadChapter(i){
+        if (i < 0 || i >= CHAPTERS.length) return;
+        var ch = CHAPTERS[i];
+        if (ch.blobUrl || ch.loading) return;
+        ch.loading = true; ch.wantPlay = false;
+        fetchChapterData(ch, i, '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）');
+      }
+      /* Step to a chapter without skipping: if the target is still loading,
+         just queue the play and wait for its fetch instead of advancing again. */
+      function goTo(i, autoplay){
+        if (i < 0) i = 0;
+        if (i > CHAPTERS.length - 1) i = CHAPTERS.length - 1;
+        var ch = CHAPTERS[i];
+        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        loadChapter(i, autoplay);
+      }
+      /* A rapid second tap on prev/next (within 1s) is one intended step, not
+         two: ignore it. Deliberate steps more than 1s apart still work, and
+         auto-advance on chapter end bypasses this guard. */
+      var lastNavAt = 0;
+      function navGuard(){
+        var now = Date.now();
+        if (now - lastNavAt < 1000) return false;
+        lastNavAt = now;
+        return true;
+      }
+
+      /* build chapter cards */
+      var list = document.getElementById('qilyLecChapters');
+      CHAPTERS.forEach(function(ch, i){
+        var el = document.createElement('article');
+        el.className = 'chapter'; el.id = 'qilyLecCh-' + i;
+        var html = '<div class="chapter-head"><div class="ch-num">' + (i===0 ? '序' : (i===CHAPTERS.length-1 ? '结' : i)) + '</div>' +
+          '<h3>' + ch.step + ' · ' + ch.title + '</h3>' +
+          '<button class="ch-play" data-play="' + i + '">▶ 播放本段</button></div>' +
+          '<p>' + ch.sentences.map(function(s){ return '<span class="lec-sen">' + s + '</span>'; }).join('') + '</p>';
+        if (ch.deliverable) html += '<div class="deliverable"><b>交付物与易错点：</b>' + ch.deliverable + '</div>';
+        el.innerHTML = html;
+        list.appendChild(el);
+      });
+
+      function fmt(s){ if(!isFinite(s)) s = 0; s = Math.max(0, Math.floor(s)); return Math.floor(s/60) + ':' + ('0' + (s%60)).slice(-2); }
+
+      function applyRate(){
+        /* Speed uses pitch-preserving time-stretch. When a pitch shift is
+           requested, pitch-preserving is switched off and the rate is
+           compounded so the pitch moves by the chosen semitones.
+           The rate is only re-applied when it actually changed: setting
+           playbackRate on every timeupdate can interrupt playback on iOS. */
+        var rate = (pitch === 0) ? speed : speed * Math.pow(2, pitch / 12);
+        var preserve = (pitch === 0);
+        if (audio.preservesPitch !== preserve){
+          audio.preservesPitch = preserve;
+          audio.mozPreservesPitch = preserve;
+          audio.webkitPreservesPitch = preserve;
+        }
+        if (lastRate !== rate){ audio.playbackRate = rate; lastRate = rate; }
+        document.getElementById('qilyLecSpeedOut').textContent = speed.toFixed(2) + '×';
+        document.getElementById('qilyLecPitchOut').textContent = pitch === 0 ? '原调' : (pitch > 0 ? '+' : '') + pitch + ' 半音';
+        var chips = document.querySelectorAll('#qilyLecSpeedChips .chip');
+        chips.forEach(function(c){ c.classList.toggle('on', Math.abs(parseFloat(c.dataset.speed) - speed) < 0.01); });
+      }
+
+      function loadChapter(i, autoplay){
+        clearAutoNext();
+        current = i;
+        lastRate = null;
+        lastSubIdx = -1;
+        var ch = CHAPTERS[i];
+        var stepLabel = '讲课音频 · ' + ch.step + '（' + (i+1) + ' / ' + CHAPTERS.length + '）';
+        document.getElementById('qilyLecNowStep').textContent = stepLabel;
+        document.getElementById('qilyLecNowTitle').textContent = ch.title;
+        syncMini();
+        document.querySelectorAll('#qily-lecture .lec-sen.on').forEach(function(sp){ sp.classList.remove('on'); });
+        updateSubtitle(true);
+        document.querySelectorAll('#qily-lecture .chapter').forEach(function(el, j){ el.classList.toggle('active', j === i); });
+        document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === i && !audio.paused) ? '⏸ 播放中' : '▶ 播放本段'; });
+        followChapter(i, autoplay || !audio.paused);
+        if (ch.blobUrl){
+          audio.src = ch.blobUrl;
+          audio.load();
+          applyRate();
+          if (autoplay) safePlay();
+          return;
+        }
+        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        ch.loading = true;
+        ch.wantPlay = autoplay;
+        document.getElementById('qilyLecNowStep').textContent = stepLabel + ' · 加载中…';
+        fetchChapterData(ch, i, stepLabel);
+      }
+
+      function setPlayUI(playing){
+        document.getElementById('qilyLecPlayIcon').style.display = playing ? 'none' : '';
+        document.getElementById('qilyLecPauseIcon').style.display = playing ? '' : 'none';
+        document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === current && playing) ? '⏸ 播放中' : '▶ 播放本段'; });
+        syncMini();
+      }
+
+      document.getElementById('qilyLecPlayBtn').addEventListener('click', function(){
+        if (!audio.src) { loadChapter(current, true); return; }
+        if (audio.paused) safePlay(); else audio.pause();
+      });
+      document.getElementById('qilyLecPrevBtn').addEventListener('click', function(){ if (navGuard()) goTo(current - 1, true); });
+      document.getElementById('qilyLecNextBtn').addEventListener('click', function(){ if (navGuard()) goTo(current + 1, true); });
+      list.addEventListener('click', function(e){
+        var b = e.target.closest('[data-play]'); if(!b) return;
+        var i = parseInt(b.dataset.play, 10);
+        if (i === current && audio.src){ if (audio.paused) safePlay(); else audio.pause(); }
+        else loadChapter(i, true);
+      });
+
+      audio.addEventListener('play', function(){ clearAutoNext(); setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
+      audio.addEventListener('pause', function(){ setPlayUI(false); });
+      audio.addEventListener('loadedmetadata', function(){
+        document.getElementById('qilyLecDurTime').textContent = fmt(audio.duration);
+        updateSubtitle(true);
+      });
+      audio.addEventListener('timeupdate', function(){
+        document.getElementById('qilyLecCurTime').textContent = fmt(audio.currentTime);
+        if (audio.duration) document.getElementById('qilyLecSeek').value = (audio.currentTime / audio.duration) * 100;
+        updateSubtitle(false);
+        if (audio.duration && audio.duration - audio.currentTime < 10) preloadChapter(current + 1);
+      });
+      /* Auto-advance rule (user-set 2026-11-11, 1.5s from 2026-11-11 21:15):
+         when a segment ends, pause 1.5 seconds, then automatically play the
+         next segment. The 1.5s gap is a short breathing pause between
+         segments, not a stall — the next chapter is preloaded during the
+         pause so the switch is immediate. If the user navigates or presses
+         play during the pause, the timer is cancelled and no auto-advance
+         happens. */
+      var autoNextTimer = null;
+      function clearAutoNext(){ if (autoNextTimer){ clearTimeout(autoNextTimer); autoNextTimer = null; } }
+      audio.addEventListener('ended', function(){
+        if (current >= CHAPTERS.length - 1){ setPlayUI(false); return; }
+        var endedIdx = current;
+        var nextIdx = current + 1;
+        preloadChapter(nextIdx);
+        var stepEl = document.getElementById('qilyLecNowStep');
+        stepEl.textContent = '本段完 · 1.5 秒后自动接下一段';
+        autoNextTimer = setTimeout(function(){
+          autoNextTimer = null;
+          if (current === endedIdx && audio.paused) goTo(nextIdx, true);
+        }, 1500);
+      });
+
+      document.getElementById('qilyLecSeek').addEventListener('input', function(e){
+        if (audio.duration) audio.currentTime = (parseFloat(e.target.value) / 100) * audio.duration;
+      });
+      document.getElementById('qilyLecSpeed').addEventListener('input', function(e){
+        speed = parseFloat(e.target.value); applyRate();
+      });
+      document.getElementById('qilyLecSpeedChips').addEventListener('click', function(e){
+        var c = e.target.closest('[data-speed]'); if(!c) return;
+        speed = parseFloat(c.dataset.speed);
+        document.getElementById('qilyLecSpeed').value = speed; applyRate();
+      });
+      document.getElementById('qilyLecPitch').addEventListener('input', function(e){
+        pitch = parseFloat(e.target.value); applyRate();
+      });
+      document.getElementById('qilyLecVolume').addEventListener('input', function(e){
+        audio.volume = parseFloat(e.target.value);
+        document.getElementById('qilyLecVolOut').textContent = Math.round(audio.volume * 100) + '%';
+      });
+      document.getElementById('qilyLecResetBtn').addEventListener('click', function(){
+        speed = 1; pitch = 0;
+        document.getElementById('qilyLecSpeed').value = 1;
+        document.getElementById('qilyLecPitch').value = 0;
+        applyRate();
+      });
+      document.getElementById('qilyLecCtlToggle').addEventListener('click', function(){
+        var c = document.getElementById('qilyLecControls');
+        var open = c.classList.toggle('open');
+        this.setAttribute('aria-expanded', open);
+        this.textContent = open ? '收起语速 / 音调 / 音量设置' : '语速 / 音调 / 音量设置';
+      });
+
+      /* ---- player auto-hide / pop-out ---- */
+      var playerEl = document.getElementById('qilyLecPlayer');
+      var miniEl = document.getElementById('qilyLecMini');
+      var miniPlayEl = document.getElementById('qilyLecMiniPlay');
+      var miniTitleEl = document.getElementById('qilyLecMiniTitle');
+      var collapseBtn = document.getElementById('qilyLecCollapseBtn');
+      function syncMini(){
+        if (!miniTitleEl || !miniPlayEl) return;
+        var ch = CHAPTERS[current];
+        miniTitleEl.textContent = '讲课音频 · ' + ch.step + ' — ' + ch.title;
+        miniPlayEl.textContent = audio.paused ? '▶' : '⏸';
+      }
+      function setCollapsed(collapsed, manual){
+        playerEl.classList.toggle('qily-lec-collapsed', collapsed);
+        miniEl.classList.toggle('show', collapsed);
+        collapseBtn.textContent = collapsed ? '▴ 展开' : '▾ 收起';
+        if (manual){ try{ localStorage.setItem('qilyLecCollapsed', collapsed ? '1' : '0'); }catch(e){} }
+        syncMini();
+      }
+      collapseBtn.addEventListener('click', function(){ setCollapsed(true, true); });
+      miniEl.addEventListener('click', function(e){
+        if (e.target === miniPlayEl){
+          if (!audio.src){ loadChapter(current, true); }
+          else if (audio.paused){ safePlay(); } else { audio.pause(); }
+          return;
+        }
+        setCollapsed(false, true);
+      });
+      miniEl.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setCollapsed(false, true); }
+      });
+      try{
+        if (localStorage.getItem('qilyLecCollapsed') === '1'){ setCollapsed(true, false); }
+      }catch(e){}
+
+      /* ---- subtitle click: jump to the matching chapter card in the article ---- */
+      (function(){
+        var sub = document.getElementById('qilyLecSub');
+        if (!sub) return;
+        function jumpToCard(){
+          var card = document.getElementById('qilyLecCh-' + current);
+          if (!card) return;
+          card.scrollIntoView({behavior: 'smooth', block: 'center'});
+          card.classList.add('sub-flash');
+          setTimeout(function(){ card.classList.remove('sub-flash'); }, 1400);
+        }
+        sub.addEventListener('click', jumpToCard);
+        sub.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); jumpToCard(); }
+        });
+      })();
+
+      /* ---- v2.4 follow-the-article: scroll the original text in sync ----
+         While the lecture plays, the matching original section scrolls into
+         view and gets a light-gold background (kept for the whole chapter,
+         moving to the next section when the chapter changes), so the reader
+         can follow the article without staying in the lecture section. Chapter-level sync only:
+         the lecture is a re-teaching, not a verbatim reading, so sentences
+         have no one-to-one article anchor. A manual scroll suspends the
+         follow for the current chapter only; the next chapter resumes it.
+         The toggle is remembered per browser. */
+      var followOn = true, followSuspended = false, followTarget = null;
+      try{ if (localStorage.getItem('qilyLecFollow') === '0') followOn = false; }catch(e){}
+      function followLabel(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        b.setAttribute('aria-pressed', followOn ? 'true' : 'false');
+        b.textContent = followOn ? '跟随原文：开' : '跟随原文：关';
+      }
+      function scrollToArticle(i){
+        if (!followOn || followSuspended) return;
+        var sel = CHAPTER_ANCHORS[i];
+        var el = sel ? document.querySelector(sel) : null;
+        if (!el) return;
+        if (followTarget && followTarget !== el) followTarget.classList.remove('lec-follow');
+        followTarget = el;
+        el.classList.add('lec-follow');
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+      }
+      function followChapter(i, playing){
+        followSuspended = false;
+        if (playing) scrollToArticle(i);
+      }
+      ['wheel', 'touchmove'].forEach(function(ev){
+        window.addEventListener(ev, function(){
+          if (!audio.paused) followSuspended = true;
+        }, {passive: true});
+      });
+      (function(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        followLabel();
+        b.addEventListener('click', function(){
+          followOn = !followOn;
+          try{ localStorage.setItem('qilyLecFollow', followOn ? '1' : '0'); }catch(e){}
+          followLabel();
+          if (!followOn && followTarget) followTarget.classList.remove('lec-follow');
+          if (followOn && !audio.paused){ followSuspended = false; scrollToArticle(current); }
+        });
+      })();
+
+
+      /* ---- v2.6.0 article sentence sync: highlight the sentence being spoken
+         in the ORIGINAL article text, so the class can follow from the article
+         alone while the player is collapsed. The lecture re-teaches rather than
+         reading verbatim, so each lecture sentence is matched to the article
+         sentence in the same section with the longest shared run of characters
+         (longest common substring); a match needs >= 8 shared characters, else
+         no article highlight for that sentence (subtitle + chapter card still
+         highlight). Sentence spans are built once at load; matching is lazy
+         and cached per (chapter, sentence). */
+      function lecStripPunct(t){
+        return t.replace(/[。！？；…，、：；""''（）《》【】·—…\s]/g, '');
+      }
+      function lecLCS(a, b){
+        var m = a.length, n = b.length;
+        if (!m || !n) return 0;
+        var prev = [], cur = [], best = 0, i, j;
+        for (j = 0; j <= n; j++){ prev[j] = 0; cur[j] = 0; }
+        for (i = 1; i <= m; i++){
+          for (j = 1; j <= n; j++){
+            if (a.charAt(i - 1) === b.charAt(j - 1)){
+              cur[j] = prev[j - 1] + 1;
+              if (cur[j] > best) best = cur[j];
+            } else {
+              cur[j] = 0;
+            }
+          }
+          var tmp = prev; prev = cur; cur = tmp;
+          for (j = 0; j <= n; j++) cur[j] = 0;
+        }
+        return best;
+      }
+      var lecArtSpansBySection = [];
+      function lecWrapArticleSentences(){
+        CHAPTER_ANCHORS.forEach(function(sel, ci){
+          var root = sel ? document.querySelector(sel) : null;
+          var spans = [];
+          if (root){
+            /* v2.6.1: the anchor may be a HEADING, not a container. On the
+               visual page the anchors are h3s whose paragraphs are SIBLINGS,
+               so wrapping only inside the anchor covered just the heading and
+               no article sentence could ever light up (user report 2026-11-11:
+               visual page "还未闭环"). Wrap the anchor PLUS its following
+               siblings up to the next anchor (or the end of the parent). On
+               the model page the anchors are <section> containers, so the
+               range is just the section itself — same behaviour as v2.6.0. */
+            var nextSel = CHAPTER_ANCHORS[ci + 1];
+            var nextEl = (nextSel && nextSel !== sel) ? document.querySelector(nextSel) : null;
+            var els = [root];
+            var sib = root.nextSibling;
+            while (sib){
+              if (sib === nextEl) break;
+              if (sib.nodeType === 1) els.push(sib);
+              sib = sib.nextSibling;
+            }
+            els.forEach(function(el){
+              var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+              var nodes = [];
+              while (walker.nextNode()) nodes.push(walker.currentNode);
+              nodes.forEach(function(node){
+                var parent = node.parentNode;
+                if (!parent) return;
+                var tag = parent.nodeName;
+                if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+                var text = node.nodeValue;
+                if (!text || !text.trim()) return;
+                var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
+                if (!parts) return;
+                var frag = document.createDocumentFragment();
+                parts.forEach(function(p){
+                  var sp = document.createElement('span');
+                  sp.className = 'lec-art-sen';
+                  sp.textContent = p;
+                  frag.appendChild(sp);
+                  spans.push(sp);
+                });
+                parent.replaceChild(frag, node);
+              });
+            });
+          }
+          lecArtSpansBySection[ci] = spans;
+        });
+      }
+      function lecArticleSpanFor(chIdx, senIdx){
+        var ch = CHAPTERS[chIdx];
+        if (!ch.artMap) ch.artMap = {};
+        if (ch.artMap.hasOwnProperty(senIdx)) return ch.artMap[senIdx];
+        var best = null, bestScore = 0;
+        var key = lecStripPunct(ch.sentences[senIdx] || '');
+        var spans = lecArtSpansBySection[chIdx] || [];
+        if (key.length >= 8){
+          for (var i = 0; i < spans.length; i++){
+            var cand = lecStripPunct(spans[i].textContent);
+            if (!cand) continue;
+            var score = lecLCS(key, cand);
+            if (score > bestScore){ bestScore = score; best = spans[i]; }
+          }
+        }
+        var found = (bestScore >= 8) ? best : null;
+        ch.artMap[senIdx] = found;
+        return found;
+      }
+      var lecLastArtSpan = null;
+      function lecHighlightArticleSentence(chIdx, senIdx){
+        var span = lecArticleSpanFor(chIdx, senIdx);
+        if (lecLastArtSpan && lecLastArtSpan !== span) lecLastArtSpan.classList.remove('on');
+        lecLastArtSpan = span;
+        if (!span) return;
+        span.classList.add('on');
+        if (followOn && !followSuspended){
+          var r = span.getBoundingClientRect();
+          if (r.top < 80 || r.bottom > window.innerHeight - 320){
+            span.scrollIntoView({behavior: 'smooth', block: 'center'});
+          }
+        }
+      }
+      lecWrapArticleSentences();
+
+      loadChapter(0, false);
+</script>
+</main>
 <div id="qilyDockBottomSpacerV58" aria-hidden="true"></div>
 </body>
 </html>
