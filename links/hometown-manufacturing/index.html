@@ -213,12 +213,17 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
   --lec-bg:#f2f5f7; --lec-surface:#ffffff; --lec-surface2:#e9eff3; --lec-ink:#15222e; --lec-ink2:#43545f; --lec-line:#d5dee4;
   --lec-brand:#0f4b5a; --lec-brand-ink:#ffffff; --lec-accent:#178b94; --lec-accent-soft:#e3f0ee;
   --lec-player-bg:#0f4b5a; --lec-player-ink:#f4f8f7; --lec-player-ink2:#cfe3de; --lec-player-line:#2a6b78; --lec-gold:#c8a25a; --lec-gold-light:#ffe39b;
+  /* QILY-LECTURE-VISUAL-GUARD-20261114: mirror the model page's rendered
+     values (see guard block below). h3 fill and intro colour come from the
+     model's contrast-guard, not from the lecture variables. */
+  --lec-h3-fill:#0f4b5a; --lec-intro:#43545f;
 }
 @media (prefers-color-scheme: dark){
   #qily-lecture, #qilyLecPlayer{
     --lec-bg:#0c1319; --lec-surface:#141f29; --lec-surface2:#1a2835; --lec-ink:#e7eef3; --lec-ink2:#a7b7c2; --lec-line:#263646;
     --lec-brand:#8fd0d4; --lec-brand-ink:#073c47; --lec-accent:#8fd0d4; --lec-accent-soft:#14333a;
     --lec-player-bg:#073c47; --lec-player-ink:#eef4f8; --lec-player-ink2:#bcd6d2; --lec-player-line:#1e5a66;
+    --lec-h3-fill:#ffffff; --lec-intro:#173f49;
   }
 }
 #qilyLectureCta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid #c8a25a;background:#0f4b5a;color:#fff;padding:8px 16px;border-radius:999px}
@@ -324,6 +329,50 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 #qilyLecPlayer .p-collapse{position:absolute!important;top:-13px!important;right:14px!important;left:auto!important;z-index:2!important}
 #qilyLecMini{position:fixed!important;right:12px!important;bottom:calc(var(--qily-dock-footer-h,50px) + 12px)!important;z-index:51!important;display:none!important}
 #qilyLecMini.show{display:flex!important}
+
+/* QILY-LECTURE-VISUAL-GUARD-20261114: re-assert the lecture's own colours
+   against site-wide !important catch-alls. Root cause (found 2026-11-14 by
+   rendering hometown vs model side by side and tracing the winning rules):
+   this page loads site-core-visual-bundle-v1.css and
+   site-visual-closure-v1.css, which the model page (2026-11-08) does NOT
+   load. Their catch-all rules hijack the lecture player:
+   - site-core-visual-bundle-v1.css `html body button:not(...)` forces EVERY
+     button to deep-teal bg + white text !important (all player buttons and
+     every chapter "播放本段" button); `.module-section p` forces every
+     paragraph inside #qily-lecture to #496565 !important; the h/b rule
+     forces headings and <b> to #073c47 !important.
+   - site-visual-closure-v1.css `button{min-height:44px}` stretches every
+     lecture button (collapse 26px→44px, prev/next 40px→44px, mini play
+     34px→44px, chapter buttons →44px).
+   The model renders the lecture's own values because it never loads those
+   bundles. This guard restates the lecture's own values with !important so
+   the hometown page renders pixel-identical to the model in both colour
+   schemes. --lec-h3-fill / --lec-intro mirror the model's contrast-guard
+   results (h3 fill #fff dark / #0f4b5a light; intro #173f49 dark /
+   #43545f light). The mini-bar play button is transparent + #073c47 (not
+   gold) because that is the model's rendered value. Do NOT remove this
+   block when cloning the player; any page that loads the two bundles above
+   needs it. */
+#qily-lecture .chapter p{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+#qily-lecture .chapter h3{color:#0f4b5a!important;-webkit-text-fill-color:var(--lec-h3-fill)!important}
+#qily-lecture #qilyLectureTitle{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+#qily-lecture .qily-lecture-intro{color:var(--lec-intro)!important;-webkit-text-fill-color:var(--lec-intro)!important}
+#qily-lecture .deliverable b{color:var(--lec-brand)!important;-webkit-text-fill-color:var(--lec-brand)!important}
+#qily-lecture .ch-play{background:var(--lec-surface)!important;color:var(--lec-brand)!important;border-color:var(--lec-line)!important;-webkit-text-fill-color:var(--lec-brand)!important;min-height:0!important;line-height:normal!important}
+#qily-lecture .chapter.active .ch-play{background:var(--lec-brand)!important;color:var(--lec-brand-ink)!important;border-color:var(--lec-brand)!important;-webkit-text-fill-color:var(--lec-brand-ink)!important;min-height:0!important;line-height:normal!important}
+#qilyLecPlayer .p-btn{background:transparent!important;color:var(--lec-player-ink)!important;border-color:var(--lec-player-line)!important;-webkit-text-fill-color:var(--lec-player-ink)!important;min-height:0!important}
+#qilyLecPlayer .p-btn.main{background:var(--lec-gold)!important;color:#073c47!important;border-color:var(--lec-gold)!important;-webkit-text-fill-color:#073c47!important;min-height:0!important}
+#qilyLecPlayer .p-collapse{background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border-color:var(--lec-gold)!important;-webkit-text-fill-color:var(--lec-player-ink)!important;min-height:0!important}
+#qilyLecPlayer .p-follow{background:transparent!important;color:var(--lec-player-ink)!important;border-color:var(--lec-player-line)!important;-webkit-text-fill-color:var(--lec-player-ink)!important}
+#qilyLecPlayer .p-toggle{background:transparent!important;color:var(--lec-player-ink)!important;border-color:var(--lec-player-line)!important;-webkit-text-fill-color:var(--lec-player-ink)!important}
+#qilyLecPlayer .chip{min-height:0!important;line-height:normal!important}
+#qilyLecPlayer .chip.on{min-height:0!important;line-height:normal!important}
+#qilyLecMini .m-play{background:transparent!important;color:#073c47!important;border-color:#073c47!important;-webkit-text-fill-color:#073c47!important;min-height:0!important}
+/* Container font size: the model inherits 16px; this page's body inherits
+   18.5px from a site-wide rule. The lecture's children all set their own
+   px sizes, but pin the containers too so no em-based drift can appear. */
+#qilyLecPlayer{font-size:16px!important}
+#qilyLecMini{font-size:16px!important}
 </style>
 <style id="qilyHScrollClipV1">
 /* v2.5.1 horizontal-scrollbar root-cause fix (model page), 2026-11-11:
@@ -758,7 +807,7 @@ html body{overflow-x:clip!important}
       </div>
     </section>
 
-<p><a id="qilyLectureCta" href="#qily-lecture">▶ 收听讲课音频 · 全文十七段，约 25 分钟</a></p>
+<div class="paper-section-inner"><p><a id="qilyLectureCta" href="#qily-lecture">▶ 收听讲课音频 · 全文十七段，约 25 分钟</a></p></div>
 
     <section class="paper-section alt" id="references">
       <div class="paper-section-inner">
@@ -928,6 +977,11 @@ var audio = document.getElementById('qilyLecAudio');
           for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
           ch.blobUrl = URL.createObjectURL(new Blob([bytes], {type: 'audio/mpeg'}));
           ch.loading = false;
+          /* v2.6.2 (2026-11-14): preload the NEXT chapter as soon as this one
+             is ready, so tapping next/prev finds it already downloaded
+             instead of starting a cold fetch. The <10s and on-play preloads
+             remain as fallbacks; preloadChapter() no-ops if already loaded. */
+          preloadChapter(i + 1);
           if (current !== i){
             if (ch.wantPlay){ ch.wantPlay = false; loadChapter(i, true); }
             return;
@@ -958,21 +1012,32 @@ var audio = document.getElementById('qilyLecAudio');
         fetchChapterData(ch, i, '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）');
       }
       /* Step to a chapter without skipping: if the target is still loading,
-         just queue the play and wait for its fetch instead of advancing again. */
+         just queue the play and wait for its fetch instead of advancing again.
+         v2.6.2 (2026-11-14): a tap on next/prev must NEVER be silent — show
+         "正在加载下一段/上一段…" immediately so the user sees the tap was
+         heard, then play the target as soon as its fetch completes. */
       function goTo(i, autoplay){
         if (i < 0) i = 0;
         if (i > CHAPTERS.length - 1) i = CHAPTERS.length - 1;
         var ch = CHAPTERS[i];
-        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        if (ch.loading){
+          ch.wantPlay = ch.wantPlay || autoplay;
+          var dir = (i > current) ? '下一段' : (i < current ? '上一段' : '本段');
+          document.getElementById('qilyLecNowStep').textContent = '正在加载' + dir + ' · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）…';
+          return;
+        }
         loadChapter(i, autoplay);
       }
-      /* A rapid second tap on prev/next (within 1s) is one intended step, not
-         two: ignore it. Deliberate steps more than 1s apart still work, and
-         auto-advance on chapter end bypasses this guard. */
+      /* A rapid second tap on prev/next (within 300ms) is one intended step,
+         not two: ignore it. Deliberate steps more than 300ms apart still
+         work, and auto-advance on chapter end bypasses this guard.
+         v2.6.2 (2026-11-14): 1s was too long — a normal single tap after a
+         loading tap felt dead. 300ms still blocks accidental double-taps
+         while letting deliberate steps through. */
       var lastNavAt = 0;
       function navGuard(){
         var now = Date.now();
-        if (now - lastNavAt < 1000) return false;
+        if (now - lastNavAt < 300) return false;
         lastNavAt = now;
         return true;
       }
@@ -1353,6 +1418,10 @@ var audio = document.getElementById('qilyLecAudio');
       lecWrapArticleSentences();
 
       loadChapter(0, false);
+      /* v2.6.2 (2026-11-14): start downloading chapter 1 immediately on page
+         load (in parallel with chapter 0), so the first "next" tap finds it
+         ready instead of starting a cold fetch. */
+      preloadChapter(1);
 </script>
 </main>
 <div id="qilyDockBottomSpacerV58" aria-hidden="true"></div>
