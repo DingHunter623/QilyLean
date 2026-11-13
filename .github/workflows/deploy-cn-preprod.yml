@@ -124,6 +124,7 @@ jobs:
       - name: Test private artifact transfer, deterministic archive and resumable integrity
         run: |
           python3 scripts/test-cn-release-transfer.py
+          python3 scripts/test-cn-translation-phase-gate.py
           python3 scripts/test-cn-source-content-parity.py
           python3 scripts/guard-approved-cn-contact-vi.py --self-test
 
@@ -669,7 +670,7 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           # Reuse systemd LoadCredential on the host; do not reinstall the working
           # service, replace credentials, or rewrite its Nginx /translate route.
-          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production --pre-switch'
 
       - name: Deploy release on mainland server
         id: static-release
@@ -1653,7 +1654,7 @@ jobs:
           touch "$STATE/failed"
           for attempt in $(seq 1 90); do
             if test -f "$STATE/rolled-back"; then
-              sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production
+              sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production --pre-switch
               echo 'PASS: prior content restored and retained Youdao translation verified.'
               exit 0
             fi
