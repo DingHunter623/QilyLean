@@ -72,18 +72,22 @@ def electrical_recommendations(original: str) -> str:
         anchor = '<div class="toolbar">'
         if original.count(anchor) != 1: raise ValueError("Directory search toolbar missing or duplicated")
         original = original.replace(anchor, block + anchor, 1)
-    # Keep the three independent entry modules in the same requested order.
+    # Keep the four approved public entry modules in the user's requested order.
     bridge_pattern = r'<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->\s*'
+    hometown_pattern = r'<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->[\s\S]*?<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->\s*'
     navigation_pattern = r'<div class="notice" id="navigationPartnerLinks">[\s\S]*?</div>\s*'
     bridge_block = re.search(bridge_pattern, original)
+    hometown_block = re.search(hometown_pattern, original)
     navigation_block = re.search(navigation_pattern, original)
-    if not bridge_block or not navigation_block:
-        raise ValueError("Reciprocal bridge or navigation module missing")
-    original = re.sub(bridge_pattern, '', original)
-    original = re.sub(navigation_pattern, '', original)
-    original = re.sub(pattern, '', original)
-    original = original.replace('<div class="toolbar">', bridge_block.group(0) + block + navigation_block.group(0) + '<div class="toolbar">', 1)
-    if not original.index('id="qilyChinaKnowledgeBridge"') < original.index('id="electricalRecommendations"') < original.index('id="navigationPartnerLinks"'):
+    if not bridge_block or not hometown_block or not navigation_block:
+        raise ValueError("Approved bridge, hometown article or navigation module missing")
+    original = re.sub(bridge_pattern, '', original, count=1)
+    original = re.sub(hometown_pattern, '', original, count=1)
+    original = re.sub(navigation_pattern, '', original, count=1)
+    original = re.sub(pattern, '', original, count=1)
+    ordered = bridge_block.group(0) + hometown_block.group(0) + block + navigation_block.group(0)
+    original = original.replace('<div class="toolbar">', ordered + '<div class="toolbar">', 1)
+    if not (original.index('id="qilyChinaKnowledgeBridge"') < original.index('id="qilyHometownManufacturingKnowledge"') < original.index('id="electricalRecommendations"') < original.index('id="navigationPartnerLinks"')):
         raise ValueError("Public resource modules are out of order")
     original = re.sub(r'<link id="qilyElectricalReferencesStyles"[^>]*>\s*', '', original)
     version = hashlib.sha256(RECOMMENDATION_STYLE.read_bytes()).hexdigest()[:12]
@@ -230,17 +234,17 @@ def main() -> None:
     # must not enter the China personal-site enterprise directory.
     # Preserve the source showcase unchanged and exclude only this named section.
     fragment = re.sub(r'<section class="resource-service resource-tea-placement"[\s\S]*?</section>', "", fragment, count=1)
-    # The hometown knowledge initiative is international-only until the user's separate review approval.
-    # Keep its source placement intact while excluding the complete module from CN directory mirroring.
+    # [cn-clone-approved] 2026-11-13 — approved public hometown learning initiative.
     hometown_start = "<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->"
     hometown_end = "<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->"
-    hometown_starts, hometown_ends = fragment.count(hometown_start), fragment.count(hometown_end)
-    if hometown_starts != hometown_ends or hometown_starts > 1:
-        raise ValueError("Duplicate or incomplete international-only hometown knowledge module")
-    hometown_pattern = r"<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->[\s\S]*?<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->\s*"
-    fragment, hometown_count = re.subn(hometown_pattern, "", fragment, count=1)
-    if hometown_count != hometown_starts:
-        raise ValueError("International-only hometown knowledge exclusion did not match its source boundary")
+    if fragment.count(hometown_start) != 1 or fragment.count(hometown_end) != 1:
+        raise ValueError("Expected a single approved hometown knowledge section")
+    excluded = "或咨询转化"
+    if fragment.count(excluded) != 1:
+        raise ValueError("Approved entry disclaimer drifted")
+    fragment = fragment.replace(excluded, "", 1)
+    if fragment.count('href="/links/hometown-manufacturing/"') != 1:
+        raise ValueError("Public paper destination is missing")
     if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
         raise ValueError("Unexpected non-public directory content")
     fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'
@@ -303,6 +307,9 @@ def main() -> None:
     page = re.sub(r'<style id="qilyCnTechResearchDirectoryV1">[\s\S]*?</style>\s*', "", page)
     page = re.sub(r'<link id="qilyCnTechDirectorySourceStyles"[^>]*>\s*', "", page)
     page = page.replace("</head>", '<link id="qilyCnTechDirectorySourceStyles" rel="stylesheet" href="/assets/cn-public-tech-directory-v1.css?v=' + version + '">\n</head>', 1)
+    if 'id="qilyCnHometownPublicKnowledgeVi"' not in page:
+        page = page.replace('</head>', '<link id="qilyCnHometownPublicKnowledgeVi" rel="stylesheet" href="/assets/cn-hometown-resource-network-v1.css?v=20261113-accepted-vi">\n</head>', 1)
+
     page, count = re.subn(r"(/assets/cn-public-tech-directory-v1\.js\?v=)[^\s\"']+", lambda match: match.group(1) + version, page)
     if count != 1: raise ValueError("China search runtime reference missing")
     page = re.sub(r'(<meta name="description" content=")[^"]*(">)', r'\g<1>全球100家科技企业官网目录、五类产业资料检索与公开知识入口。\2', page)
