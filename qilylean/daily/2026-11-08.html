@@ -248,6 +248,16 @@ html body.qily-knowledge-brief-page .qv-links a:is(:hover,:focus-visible){backgr
    subtitle above (~15px), not the oversized 20-21px; smaller padding and no
    min-height compress the player so the buttons don't stand out. */
 #qilyLecPlayer .p-follow, #qilyLecPlayer .p-toggle{font-size:15px!important;line-height:1.4!important;min-height:0!important;padding:4px 10px!important;font-weight:600!important;margin-top:6px!important}
+
+/* QILY-LECTURE-PLAYER-HARDEN-20261114: pin player / collapse-button / mini-bar
+   geometry. Same proven !important hardening as the visual lecture
+   (improvements/visual/), which Hunter confirmed renders correctly.
+   The model player lacked it, so site-wide CSS could push the "收起" button
+   to the left edge (defect a) and hide the collapsed mini bar (defect b). */
+#qilyLecPlayer{position:fixed!important;left:0!important;right:0!important;bottom:var(--qily-dock-footer-h,50px)!important;z-index:50!important}
+#qilyLecPlayer .p-collapse{position:absolute!important;top:-13px!important;right:14px!important;left:auto!important;z-index:2!important}
+#qilyLecMini{position:fixed!important;right:12px!important;bottom:calc(var(--qily-dock-footer-h,50px) + 12px)!important;z-index:51!important;display:none!important}
+#qilyLecMini.show{display:flex!important}
 </style>
 <link id="qilyDailyBriefLayoutGuardV1" rel="stylesheet" href="/site-daily-brief-layout-guard-v1.css?v=20261013-legacy-tag-contrast-v10">
 <style id="qilyDailyBriefSequenceOffV1">
