@@ -1653,7 +1653,7 @@ jobs:
           touch "$STATE/failed"
           for attempt in $(seq 1 90); do
             if test -f "$STATE/rolled-back"; then
-              sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production
+              sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production --pre-switch
               echo 'PASS: prior content restored and retained Youdao translation verified.'
               exit 0
             fi
