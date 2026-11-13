@@ -930,6 +930,11 @@ var audio = document.getElementById('qilyLecAudio');
                 if (!parent) return;
                 var tag = parent.nodeName;
                 if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+                /* QILY-LECTURE-SVG-TEXT-20261114: never wrap text inside SVG.
+                   An HTML <span> is not renderable inside SVG <text>; wrapping
+                   figure labels in <span class="lec-art-sen"> makes them
+                   invisible (hometown Fig2/Fig3/Fig4, 2026-11-14). */
+                if (parent.closest && parent.closest('svg')) return;
                 var text = node.nodeValue;
                 if (!text || !text.trim()) return;
                 var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
