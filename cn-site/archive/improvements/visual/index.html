@@ -1,0 +1,955 @@
+<!doctype html><html data-qily-vi-version="4.0" lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>目视化不是贴标识，而是现场管理语言的统一｜QilyLean 改善经验｜精益制造经验分享｜QilyLean | 启力精益</title><meta name="description" content="QilyLean从6S标识、区域通道、安全警示、质量看板、设备状态、仓储物流与工位管理出发，说明目视化如何统一现场管理语言并支撑异常识别与执行闭环。"><meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"><link rel="canonical" href="https://qilylean.cn/archive/improvements/visual/"><link rel="stylesheet" href="/assets/destination-shell/assets/site.css?v=6a8887d71bfb" data-cn-destination-origin="/assets/site.css?v=20260923-cn-personal-v3-reading"><link rel="stylesheet" href="/assets/destination-shell/assets/portal.css?v=67cbdc5474a0" data-cn-destination-origin="/assets/portal.css?v=20260923-portal-v2-reading"><link rel="stylesheet" href="/assets/destination-shell/assets/content-mirror.css?v=05d764678c7b" data-cn-destination-origin="/assets/content-mirror.css?v=20261010-full-content-v1&amp;anchors=20261013-v1"><link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20261017-cn-mainland-nmt-v2"><link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/destination-shell/assets/qilylean-vi-v2.css?v=81a93d079b1d" data-cn-destination-origin="/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"><link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v=20261023-cn-public-footer-source-v1"><link id="qilyPublicFooterTypeV1" rel="stylesheet" href="/assets/destination-shell/site-public-footer-type-v1.css?v=9f79915141cb" data-cn-destination-origin="/site-public-footer-type-v1.css?v=20261021-footer-type-v4"><link rel="stylesheet" href="/assets/destination-shell/assets/nonbrief-visual-parity.css?v=8b9e808f0ba8" data-cn-destination-origin="/assets/nonbrief-visual-parity.css?v=20261016-action-spacing-v4"><link rel="stylesheet" data-cn-public-interactions="cn-public-interactions-v1" href="/assets/destination-shell/assets/public-content-interactions.css?v=973c598bcd64" data-cn-destination-origin="/assets/public-content-interactions.css?v=25170df09c17"><link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10">
+<style data-cn-source-css="v1">:where(main[data-cn-source-content]){--ink:#182420;--muted:#5f7474;--line:#d5e4e3;--paper:#f3faf9;--white:#fff;--forest:#0f4b5a;--teal:#178b94;--copper:#caa15f;--plum:#9e4a34;--shadow:0 20px 55px rgba(15,75,90,.16)}
+:where(main[data-cn-source-content]) *{box-sizing:border-box}
+:where(main[data-cn-source-content]):is(body,main){font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper);font-size:16.5px;line-height:1.72}
+:where(main[data-cn-source-content]) a{color:inherit}
+:where(main[data-cn-source-content]) .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px clamp(18px,4vw,56px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+:where(main[data-cn-source-content]) .brand{display:flex;align-items:center;gap:10px;color:var(--forest);font-weight:850}
+:where(main[data-cn-source-content]) .brand-mark{display:none}
+:where(main[data-cn-source-content]) .nav{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}
+:where(main[data-cn-source-content]) .nav a{text-decoration:none}
+:where(main[data-cn-source-content]) .nav a:hover{color:var(--teal)}
+:where(main[data-cn-source-content]) .hero{padding:clamp(42px,6vw,78px) clamp(18px,4vw,68px);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}
+:where(main[data-cn-source-content]) .hero-inner{width:min(1180px,100%);margin:auto}
+:where(main[data-cn-source-content]) .eyebrow{color:#ffe8ad;font-size:14px;font-weight:850}
+:where(main[data-cn-source-content]) .hero h1{margin:10px 0 14px;font-size:clamp(36px,4.8vw,66px);line-height:1.05}
+:where(main[data-cn-source-content]) .lead{max-width:960px;color:#fff3df;font-size:clamp(18px,1.5vw,22px)}
+:where(main[data-cn-source-content]) .section{padding:clamp(42px,6vw,76px) clamp(18px,4vw,56px);background:#fff;border-bottom:1px solid var(--line)}
+:where(main[data-cn-source-content]) .section.alt{background:#eef5f2}
+:where(main[data-cn-source-content]) .section-inner{width:min(1180px,100%);margin:auto}
+:where(main[data-cn-source-content]) .section-head{max-width:920px;margin-bottom:24px}
+:where(main[data-cn-source-content]) .section h2{margin:0 0 10px;color:var(--forest);font-size:clamp(27px,3vw,42px);line-height:1.18}
+:where(main[data-cn-source-content]) .section-head p{margin:0;color:var(--muted)}
+:where(main[data-cn-source-content]) .paper-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+:where(main[data-cn-source-content]) .paper-card{display:flex;flex-direction:column;min-height:260px;padding:20px;border:1px solid var(--line);background:#fff;border-top:4px solid var(--teal);box-shadow:var(--shadow)}
+:where(main[data-cn-source-content]) .paper-card:nth-child(2n){border-top-color:var(--copper)}
+:where(main[data-cn-source-content]) .paper-card:nth-child(3n){border-top-color:var(--plum)}
+:where(main[data-cn-source-content]) .paper-card small{color:var(--copper);font-weight:850}
+:where(main[data-cn-source-content]) .paper-card h3{margin:8px 0 10px;color:var(--forest);font-size:19px;line-height:1.36}
+:where(main[data-cn-source-content]) .paper-card p{margin:0 0 16px;color:var(--muted)}
+:where(main[data-cn-source-content]) .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}
+:where(main[data-cn-source-content]) .tag{display:inline-flex;padding:4px 9px;border:1px solid var(--line);background:#f7fbf7;color:#46615f;font-size:13px}
+:where(main[data-cn-source-content]) .button,:where(main[data-cn-source-content]) .share-button{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:40px;margin-top:16px;padding:8px 15px;border:1px solid rgba(23,139,148,.35);border-radius:999px;color:#fff;background:var(--forest);text-decoration:none;font-weight:850;font:inherit;cursor:pointer}
+:where(main[data-cn-source-content]) .button:hover,:where(main[data-cn-source-content]) .share-button:hover{background:var(--teal)}
+:where(main[data-cn-source-content]) .article{padding:34px 0;border-top:1px solid var(--line)}
+:where(main[data-cn-source-content]) .article:first-child{border-top:0}
+:where(main[data-cn-source-content]) .article[id]{scroll-margin-top:96px}
+:where(main[data-cn-source-content]) .article h2{color:var(--forest);font-size:clamp(26px,3vw,40px)}
+:where(main[data-cn-source-content]) .subtitle{margin:-4px 0 14px;color:var(--teal);font-weight:850}
+:where(main[data-cn-source-content]) .meta{margin-bottom:14px;color:var(--muted);font-size:14px}
+:where(main[data-cn-source-content]) .share-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 22px}
+:where(main[data-cn-source-content]) .share-row .share-button{margin-top:0;color:#17443b;background:#ffe39b;border-color:#f5c861}
+:where(main[data-cn-source-content]) .share-row .share-button:hover{background:#f5c861}
+:where(main[data-cn-source-content]) .share-status{color:var(--teal);font-size:14px;font-weight:800}
+:where(main[data-cn-source-content]) .article h3{margin:28px 0 9px;color:#17443b;font-size:22px}
+:where(main[data-cn-source-content]) .article p{margin:0 0 13px;color:#344845}
+:where(main[data-cn-source-content]) .toc{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+:where(main[data-cn-source-content]) .toc a{padding:7px 11px;border:1px solid rgba(255,232,173,.5);color:#fff8ea;background:rgba(255,255,255,.08);text-decoration:none;font-size:14px;font-weight:800}
+:where(main[data-cn-source-content]) .footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}
+:where(main[data-cn-source-content]) .footer-inner{width:min(1180px,100%);margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:980px){:where(main[data-cn-source-content]) .paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+:where(main[data-cn-source-content]) .topbar{align-items:flex-start;flex-direction:column}}
+@media(max-width:700px){:where(main[data-cn-source-content]) .paper-grid{grid-template-columns:1fr}
+:where(main[data-cn-source-content]) .button,:where(main[data-cn-source-content]) .share-button{width:100%}
+:where(main[data-cn-source-content]) .hero{padding-top:34px}
+:where(main[data-cn-source-content]) .topbar{position:static}
+:where(main[data-cn-source-content]) .share-row{align-items:stretch;flex-direction:column}
+:where(main[data-cn-source-content]) .share-status{min-height:20px}}
+:where(main[data-cn-source-content]) .article-hub{padding:30px clamp(18px,4vw,56px);color:#fff;background:linear-gradient(120deg,rgba(14,76,91,.98),rgba(25,123,130,.94) 54%,rgba(43,103,118,.96))}
+:where(main[data-cn-source-content]) .article-hub-inner{width:min(1180px,100%);margin:auto}
+:where(main[data-cn-source-content]) .article-hub .hub-back{display:inline-flex;margin-bottom:8px;color:#ffe8ad;text-decoration:none;font-size:14px;font-weight:850}
+:where(main[data-cn-source-content]) .article-hub h1{margin:2px 0 8px;font-size:clamp(30px,3.6vw,48px);line-height:1.12}
+:where(main[data-cn-source-content]) .article-hub .hub-lead{margin:0;color:#fff3df;font-size:clamp(17px,1.35vw,20px)}
+:where(main[data-cn-source-content]) .article-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+:where(main[data-cn-source-content]) .article-links a{display:inline-flex;align-items:center;min-height:38px;padding:7px 11px;border:1px solid rgba(255,232,173,.5);color:#fff8ea;background:rgba(255,255,255,.08);text-decoration:none;font-size:14px;font-weight:800;transition:transform .16s ease,background-color .16s ease,color .16s ease}
+:where(main[data-cn-source-content]) .article-links a:hover,:where(main[data-cn-source-content]) .article-links a:focus-visible,:where(main[data-cn-source-content]) .article-links a[aria-current="page"]{color:#17322d;background:#ffe39b;outline:none;transform:translateY(-1px)}
+:where(main[data-cn-source-content]) .article-page-content .article{padding-top:0}
+@media(max-width:700px){:where(main[data-cn-source-content]) .article-links{display:grid;grid-template-columns:1fr 1fr}
+:where(main[data-cn-source-content]) .article-links a{justify-content:center;text-align:center}
+:where(main[data-cn-source-content]) .article-hub{padding-top:24px}}</style><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-link-standard-v2.css?v=32aa15717dcd"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-navigation-four-border-v3.css?v=271fd8713464"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-dark-surface-contrast-v1.css?v=6a203bb9b209"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-bottom-alignment-v1.css?v=341529afc926"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-closure-bundle-v24.css?v=f3a44a613fe7"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-core-visual-bundle-v1.css?v=e2fafa09298d"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-closure-v1.css?v=628e1bbe7083"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-closure-v2.css?v=4edcf283767a"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-readability-v4.css?v=9e2d7b4b38f9"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-hero-primary-contrast-v1.css?v=03e81c852808"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-interaction-continuity-v1.css?v=a0f37504dcd3"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-governance-v2.css?v=0b794778a94a"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-content-axis-v1.css?v=e66963c3a367"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-floating-dock-standard-v1.css?v=627c7deaa89a"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-contact-field-hierarchy-v1.css?v=cecc9ccf9eac"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-floating-dock-gold-v1.css?v=6a833d667c40"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-header-axis-v1.css?v=b547ec94a477"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-interaction-contrast-guard-v1.css?v=217dcb5a931d"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-content-contrast-guard-v1.css?v=f96a09ad6bd1"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-unified-visual-governance-v1.css?v=8c84cf68695b"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-regression-closure-v1.css?v=995772b7d3b2"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-stability-recovery-v1.css?v=3aedf6c6e2c4"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-public-redline-closure-v1.css?v=0b94f7eeb59f"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-public-redline-closure-v2.css?v=7c1873fd6e6d"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-interaction-semantics-v1.css?v=4fd08b09c867"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-system-v2.css?v=2255ce5d093c"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-responsive-containment-v1.css?v=9bfc4078869d"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-header-project-integrity-v2.css?v=298a7634fc38"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-components-v1.css?v=25b5089348a0"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-brand-home-feedback-v1.css?v=9c1c9fdfd1a4"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-translation-public-ui-v1.css?v=019a8fb7ced3"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-readability-v5.css?v=806818408e05"><style data-cn-source-css="v1">:where(main[data-cn-source-content]) #qily-lecture,:where(main[data-cn-source-content]) #qilyLecPlayer{--lec-bg:#f2f5f7;--lec-surface:#ffffff;--lec-surface2:#e9eff3;--lec-ink:#15222e;--lec-ink2:#43545f;--lec-line:#d5dee4;--lec-brand:#0f4b5a;--lec-brand-ink:#ffffff;--lec-accent:#178b94;--lec-accent-soft:#e3f0ee;--lec-player-bg:#0f4b5a;--lec-player-ink:#f4f8f7;--lec-player-ink2:#cfe3de;--lec-player-line:#2a6b78;--lec-gold:#c8a25a;--lec-gold-light:#ffe39b}
+@media (prefers-color-scheme: dark){:where(main[data-cn-source-content]) #qily-lecture,:where(main[data-cn-source-content]) #qilyLecPlayer{--lec-bg:#0c1319;--lec-surface:#141f29;--lec-surface2:#1a2835;--lec-ink:#e7eef3;--lec-ink2:#a7b7c2;--lec-line:#263646;--lec-brand:#8fd0d4;--lec-brand-ink:#073c47;--lec-accent:#8fd0d4;--lec-accent-soft:#14333a;--lec-player-bg:#073c47;--lec-player-ink:#eef4f8;--lec-player-ink2:#bcd6d2;--lec-player-line:#1e5a66}}
+:where(main[data-cn-source-content]) #qilyLectureCta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid #c8a25a;background:#0f4b5a;color:#fff;padding:8px 16px;border-radius:999px}
+:where(main[data-cn-source-content]) #qilyLectureCta:hover{background:#178b94}
+:where(main[data-cn-source-content]) #qily-lecture .qily-lecture-intro{font-size:15.5px;color:var(--lec-ink2)}
+:where(main[data-cn-source-content]) #qily-lecture .chapter{background:var(--lec-surface);border:1px solid var(--lec-line);border-radius:14px;padding:18px 20px;margin-top:12px;transition:border-color .2s}
+:where(main[data-cn-source-content]) #qily-lecture .chapter.active{border-color:var(--lec-accent);box-shadow:0 0 0 1px var(--lec-accent) inset}
+:where(main[data-cn-source-content]) #qily-lecture .chapter-head{display:flex;align-items:center;gap:12px}
+:where(main[data-cn-source-content]) #qily-lecture .ch-num{flex:none;width:40px;height:40px;border-radius:10px;background:var(--lec-surface2);color:var(--lec-brand);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+:where(main[data-cn-source-content]) #qily-lecture .chapter.active .ch-num{background:var(--lec-accent);color:var(--lec-brand-ink)}
+:where(main[data-cn-source-content]) #qily-lecture .chapter h3{margin:0;font-size:17.5px;line-height:1.4;flex:1}
+:where(main[data-cn-source-content]) #qily-lecture .ch-play{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lec-line);background:var(--lec-surface);color:var(--lec-brand);font:inherit;font-size:13.5px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer}
+:where(main[data-cn-source-content]) #qily-lecture .ch-play:hover{border-color:var(--lec-brand)}
+:where(main[data-cn-source-content]) #qily-lecture .chapter.active .ch-play{background:var(--lec-brand);color:var(--lec-brand-ink);border-color:var(--lec-brand)}
+:where(main[data-cn-source-content]) #qily-lecture .chapter p{margin:10px 0 0;font-size:15.5px;color:var(--lec-ink)}
+:where(main[data-cn-source-content]) #qily-lecture .deliverable{margin-top:12px;background:var(--lec-surface2);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--lec-ink2)}
+:where(main[data-cn-source-content]) #qily-lecture .deliverable b{color:var(--lec-brand)}
+:where(main[data-cn-source-content]) #qily-lecture .chapter.sub-flash{box-shadow:0 0 0 2px var(--lec-gold)}
+:where(main[data-cn-source-content]) .lec-follow{background:rgba(255,227,155,.38) !important;outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px;transition:background-color .2s ease}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-follow{display:inline-flex;margin:8px 0 0 0;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-follow[aria-pressed="false"]{opacity:.6}
+:where(main[data-cn-source-content]) #qilyLecPlayer{position:fixed;left:0;right:0;bottom:var(--qily-dock-footer-h,50px);z-index:50;background:var(--lec-player-bg);color:var(--lec-player-ink);border-top:3px solid var(--lec-gold);box-shadow:0 -10px 34px rgba(5,18,30,.35)}
+:where(main[data-cn-source-content]) #qilyLecPlayer{transition:transform .2s ease,opacity .2s ease}
+:where(main[data-cn-source-content]) #qilyLecPlayer.qily-lec-collapsed{transform:translateY(120%);opacity:0;pointer-events:none}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-collapse{position:absolute;top:-13px;right:14px;z-index:2;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 12px;background:var(--lec-player-bg);border:1px solid var(--lec-gold);color:var(--lec-player-ink);font:inherit;font-size:12px;font-weight:700;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(5,18,30,.25);white-space:nowrap}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-collapse:hover{border-color:var(--lec-gold-light)}
+:where(main[data-cn-source-content]) #qilyLecMini{position:fixed;right:12px;bottom:calc(var(--qily-dock-footer-h,50px) + 12px);z-index:51;display:none;align-items:center;gap:8px;max-width:min(78vw,340px);background:var(--lec-player-bg);color:var(--lec-player-ink);border:1px solid var(--lec-player-line);border-top:3px solid var(--lec-gold);border-radius:999px;padding:8px 8px 8px 10px;box-shadow:0 8px 24px rgba(5,18,30,.35);cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecMini.show{display:flex}
+:where(main[data-cn-source-content]) #qilyLecMini .m-play{flex:none;width:34px;height:34px;border-radius:50%;border:none;background:var(--lec-gold);color:#073c47;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{flex:none;font-size:13px;color:var(--lec-gold-light);font-weight:900;white-space:nowrap}
+:where(main[data-cn-source-content]) #qilyLecPlayer .player-inner{max-width:880px;margin:0 auto;padding:10px 16px 10px}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-row{display:flex;align-items:center;gap:10px}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-now{flex:1;min-width:0}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-now .k{font-size:11.5px;color:var(--lec-gold-light);font-weight:900;letter-spacing:.12em}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-now .t{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);display:flex;align-items:center;justify-content:center;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn:hover{border-color:var(--lec-gold-light)}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn.main{width:48px;height:48px;background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn svg{width:20px;height:20px;fill:currentColor}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn.main svg{width:24px;height:24px}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-seek{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--lec-player-ink2);font-variant-numeric:tabular-nums}
+:where(main[data-cn-source-content]) #qilyLecPlayer input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:var(--lec-player-line);outline:none;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+:where(main[data-cn-source-content]) #qilyLecPlayer input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-seek input{flex:1}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub{margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.07);border:1px solid var(--lec-player-line);border-radius:10px;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub:hover{border-color:var(--lec-gold)}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub .s-cur{font-size:14.5px;line-height:1.5;color:var(--lec-player-ink);min-height:44px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub .s-next{font-size:12.5px;line-height:1.4;color:var(--lec-player-ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-controls{display:none;flex-wrap:wrap;gap:8px 22px;margin-top:10px;align-items:flex-end}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-controls.open{display:flex}
+:where(main[data-cn-source-content]) #qilyLecPlayer .ctl{min-width:150px;flex:1}
+:where(main[data-cn-source-content]) #qilyLecPlayer .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--lec-player-ink2);margin-bottom:5px}
+:where(main[data-cn-source-content]) #qilyLecPlayer .ctl label output{color:var(--lec-player-ink);font-weight:700;font-variant-numeric:tabular-nums}
+:where(main[data-cn-source-content]) #qilyLecPlayer .ctl input{width:100%;background:var(--lec-player-line)}
+:where(main[data-cn-source-content]) #qilyLecPlayer .chips{display:flex;gap:6px;flex-wrap:wrap}
+:where(main[data-cn-source-content]) #qilyLecPlayer .chip{border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer .chip.on{background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-toggle{display:inline-flex;margin-top:8px;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+:where(main[data-cn-source-content]) #qilyLecPlayer button:focus-visible,:where(main[data-cn-source-content]) #qilyLecPlayer input:focus-visible,:where(main[data-cn-source-content]) #qilyLecMini:focus-visible{outline:2px solid var(--lec-gold-light);outline-offset:2px}
+@media (max-width:640px){:where(main[data-cn-source-content]) #qilyLecPlayer .ctl{min-width:44%}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub .s-cur{font-size:14px;min-height:42px}}
+:where(main[data-cn-source-content]) #qilyLectureCta{display:inline-flex!important;align-items:center!important;gap:6px!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:1px solid #c8a25a!important;background:#0f4b5a!important;color:#fff!important;padding:8px 16px!important;border-radius:999px!important}
+:where(main[data-cn-source-content]) #qily-lecture .chapter.active .ch-play{background:var(--lec-brand)!important;color:var(--lec-brand-ink)!important;border-color:var(--lec-brand)!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer{position:fixed!important;left:0!important;right:0!important;bottom:var(--qily-dock-footer-h,50px)!important;z-index:50!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border-top:3px solid var(--lec-gold)!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .player-inner{max-width:880px!important;margin:0 auto!important;padding:10px 16px 10px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-row{display:flex!important;align-items:center!important;gap:10px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-collapse{position:absolute!important;top:-13px!important;right:14px!important;left:auto!important;z-index:2!important;display:inline-flex!important;align-items:center!important;gap:4px!important;height:26px!important;min-height:26px!important;max-height:26px!important;padding:0 13px!important;background:var(--lec-player-bg)!important;border:1px solid var(--lec-gold)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:18px!important;font-weight:700!important;border-radius:999px!important;cursor:pointer!important;box-shadow:0 2px 8px rgba(5,18,30,.25)!important;white-space:nowrap!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn{flex:none!important;width:40px!important;min-width:40px!important;height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:50%!important;border:1px solid var(--lec-player-line)!important;background:transparent!important;color:var(--lec-player-ink)!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn.main{width:48px!important;min-width:48px!important;height:48px!important;min-height:48px!important;max-height:48px!important;background:var(--lec-gold)!important;border-color:var(--lec-gold)!important;color:#073c47!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn svg{width:20px!important;height:20px!important;fill:currentColor!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-btn.main svg{width:24px!important;height:24px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-follow{display:inline-flex!important;margin:8px 0 0 0!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:15px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:48px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-toggle{display:inline-flex!important;margin-top:8px!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:15px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:48px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-seek{display:flex!important;align-items:center!important;gap:10px!important;margin-top:8px!important;font-size:12.5px!important;color:var(--lec-player-ink2)!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub{margin-top:8px!important;padding:7px 10px!important;background:rgba(255,255,255,.07)!important;border:1px solid var(--lec-player-line)!important;border-radius:10px!important;cursor:pointer!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-controls{display:none!important;flex-wrap:wrap!important;gap:8px 22px!important;margin-top:10px!important;align-items:flex-end!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-controls.open{display:flex!important}
+:where(main[data-cn-source-content]) #qilyLecMini{position:fixed!important;right:12px!important;bottom:calc(var(--qily-dock-footer-h,50px) + 12px)!important;z-index:51!important;display:none!important;align-items:center!important;gap:8px!important;max-width:min(78vw,340px)!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:999px!important;padding:8px 8px 8px 10px!important;box-shadow:0 8px 24px rgba(5,18,30,.35)!important;cursor:pointer!important}
+:where(main[data-cn-source-content]) #qilyLecMini.show{display:flex!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-play{flex:none!important;width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;max-height:34px!important;border-radius:50%!important;border:none!important;background:var(--lec-gold)!important;color:#073c47!important;font-size:14px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{flex:1!important;min-width:0!important;font-size:13px!important;font-weight:700!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{flex:none!important;font-size:13px!important;color:var(--lec-gold-light)!important;font-weight:900!important;white-space:nowrap!important}
+:where(main[data-cn-source-content]) #qilyLecMini{background:transparent!important;background-color:transparent!important;border:none!important;border-top:none!important;box-shadow:none!important;color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-play{background:transparent!important;background-color:transparent!important;color:#073c47!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{font-size:18px!important;color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{font-size:18px!important;color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecMini{-webkit-text-fill-color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-play{-webkit-text-fill-color:#073c47!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-collapse{font-size:19px!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-play{font-size:20px!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{font-size:22px!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{font-size:22px!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-title{font-size:20px!important}
+:where(main[data-cn-source-content]) #qilyLecMini .m-expand{font-size:20px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-follow{font-size:21px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-toggle{font-size:21px!important}
+:where(main[data-cn-source-content]) #qily-lecture .chapter p{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+:where(main[data-cn-source-content]) #qily-lecture .chapter h3{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;height:186px!important;box-sizing:border-box!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-sub .s-cur{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:6px!important;padding:2px 6px!important;margin:0 -6px!important}
+:where(main[data-cn-source-content]) #qily-lecture .chapter .lec-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+:where(main[data-cn-source-content]) .lec-art-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+:where(main[data-cn-source-content]) .lec-follow{background:transparent!important;outline:2px solid #c8a25a!important;outline-offset:6px!important;border-radius:10px!important}
+:where(main[data-cn-source-content]) #qilyLecPlayer .p-follow,:where(main[data-cn-source-content]) #qilyLecPlayer .p-toggle{font-size:15px!important;line-height:1.4!important;min-height:0!important;padding:4px 10px!important;font-weight:600!important;margin-top:6px!important}</style><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-vi-standard-v4.css?v=4bea1998ee9c"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/source-content/site-visual-authority-r8.css?v=b0144937e646"><link rel="stylesheet" data-cn-source-css="v1" href="/assets/public-content-interactions.css?v=25170df09c17"><link id="qilyCnSitewideVisualParityV1" rel="stylesheet" href="/assets/cn-sitewide-visual-parity-v1.css?v=20261027-cn-kicker-font-regular-v1&kicker=21px-v2&raster=20261028-section-gold-v1">
+<style data-cn-lecture-css="v1" data-cn-lecture-source="improvements/visual/index.html">
+/* QilyLean lecture player for visual article (improvements/visual). Scoped to #qily-lecture / #qilyLecPlayer only; does not touch site styles. */
+#qily-lecture, #qilyLecPlayer{
+  --lec-bg:#f2f5f7; --lec-surface:#ffffff; --lec-surface2:#e9eff3; --lec-ink:#15222e; --lec-ink2:#43545f; --lec-line:#d5dee4;
+  --lec-brand:#0f4b5a; --lec-brand-ink:#ffffff; --lec-accent:#178b94; --lec-accent-soft:#e3f0ee;
+  --lec-player-bg:#0f4b5a; --lec-player-ink:#f4f8f7; --lec-player-ink2:#cfe3de; --lec-player-line:#2a6b78; --lec-gold:#c8a25a; --lec-gold-light:#ffe39b;
+}
+@media (prefers-color-scheme: dark){
+  #qily-lecture, #qilyLecPlayer{
+    --lec-bg:#0c1319; --lec-surface:#141f29; --lec-surface2:#1a2835; --lec-ink:#e7eef3; --lec-ink2:#a7b7c2; --lec-line:#263646;
+    --lec-brand:#8fd0d4; --lec-brand-ink:#073c47; --lec-accent:#8fd0d4; --lec-accent-soft:#14333a;
+    --lec-player-bg:#073c47; --lec-player-ink:#eef4f8; --lec-player-ink2:#bcd6d2; --lec-player-line:#1e5a66;
+  }
+}
+#qilyLectureCta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid #c8a25a;background:#0f4b5a;color:#fff;padding:8px 16px;border-radius:999px}
+#qilyLectureCta:hover{background:#178b94}
+#qily-lecture .qily-lecture-intro{font-size:15.5px;color:var(--lec-ink2)}
+#qily-lecture .chapter{background:var(--lec-surface);border:1px solid var(--lec-line);border-radius:14px;padding:18px 20px;margin-top:12px;transition:border-color .2s}
+#qily-lecture .chapter.active{border-color:var(--lec-accent);box-shadow:0 0 0 1px var(--lec-accent) inset}
+#qily-lecture .chapter-head{display:flex;align-items:center;gap:12px}
+#qily-lecture .ch-num{flex:none;width:40px;height:40px;border-radius:10px;background:var(--lec-surface2);color:var(--lec-brand);font-weight:900;display:flex;align-items:center;justify-content:center;font-size:15px}
+#qily-lecture .chapter.active .ch-num{background:var(--lec-accent);color:var(--lec-brand-ink)}
+#qily-lecture .chapter h3{margin:0;font-size:17.5px;line-height:1.4;flex:1}
+#qily-lecture .ch-play{flex:none;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--lec-line);background:var(--lec-surface);color:var(--lec-brand);font:inherit;font-size:13.5px;font-weight:700;padding:7px 13px;border-radius:999px;cursor:pointer}
+#qily-lecture .ch-play:hover{border-color:var(--lec-brand)}
+#qily-lecture .chapter.active .ch-play{background:var(--lec-brand);color:var(--lec-brand-ink);border-color:var(--lec-brand)}
+#qily-lecture .chapter p{margin:10px 0 0;font-size:15.5px;color:var(--lec-ink)}
+#qily-lecture .deliverable{margin-top:12px;background:var(--lec-surface2);border-radius:10px;padding:10px 14px;font-size:13.5px;color:var(--lec-ink2)}
+#qily-lecture .deliverable b{color:var(--lec-brand)}
+#qily-lecture .chapter.sub-flash{box-shadow:0 0 0 2px var(--lec-gold)}
+/* v2.4 follow-the-article: the original section being lectured gets a light-gold background (kept for the whole chapter) plus a gold outline. */
+.lec-follow{background:rgba(255,227,155,.38) !important;outline:2px solid #c8a25a !important;outline-offset:6px;border-radius:10px;transition:background-color .2s ease}
+#qilyLecPlayer .p-follow{display:inline-flex;margin:8px 0 0 0;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer .p-follow[aria-pressed="false"]{opacity:.6}
+#qilyLecPlayer{position:fixed;left:0;right:0;bottom:var(--qily-dock-footer-h,50px);z-index:50;background:var(--lec-player-bg);color:var(--lec-player-ink);border-top:3px solid var(--lec-gold);box-shadow:0 -10px 34px rgba(5,18,30,.35)}
+#qilyLecPlayer{transition:transform .2s ease,opacity .2s ease}
+#qilyLecPlayer.qily-lec-collapsed{transform:translateY(120%);opacity:0;pointer-events:none}
+#qilyLecPlayer .p-collapse{position:absolute;top:-13px;right:14px;z-index:2;display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 12px;background:var(--lec-player-bg);border:1px solid var(--lec-gold);color:var(--lec-player-ink);font:inherit;font-size:12px;font-weight:700;border-radius:999px;cursor:pointer;box-shadow:0 2px 8px rgba(5,18,30,.25);white-space:nowrap}
+#qilyLecPlayer .p-collapse:hover{border-color:var(--lec-gold-light)}
+#qilyLecMini{position:fixed;right:12px;bottom:calc(var(--qily-dock-footer-h,50px) + 12px);z-index:51;display:none;align-items:center;gap:8px;max-width:min(78vw,340px);background:var(--lec-player-bg);color:var(--lec-player-ink);border:1px solid var(--lec-player-line);border-top:3px solid var(--lec-gold);border-radius:999px;padding:8px 8px 8px 10px;box-shadow:0 8px 24px rgba(5,18,30,.35);cursor:pointer}
+#qilyLecMini.show{display:flex}
+#qilyLecMini .m-play{flex:none;width:34px;height:34px;border-radius:50%;border:none;background:var(--lec-gold);color:#073c47;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#qilyLecMini .m-title{flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecMini .m-expand{flex:none;font-size:13px;color:var(--lec-gold-light);font-weight:900;white-space:nowrap}
+#qilyLecPlayer .player-inner{max-width:880px;margin:0 auto;padding:10px 16px 10px}
+#qilyLecPlayer .p-row{display:flex;align-items:center;gap:10px}
+#qilyLecPlayer .p-now{flex:1;min-width:0}
+#qilyLecPlayer .p-now .k{font-size:11.5px;color:var(--lec-gold-light);font-weight:900;letter-spacing:.12em}
+#qilyLecPlayer .p-now .t{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecPlayer .p-btn{flex:none;width:40px;height:40px;border-radius:50%;border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);display:flex;align-items:center;justify-content:center;cursor:pointer}
+#qilyLecPlayer .p-btn:hover{border-color:var(--lec-gold-light)}
+#qilyLecPlayer .p-btn.main{width:48px;height:48px;background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+#qilyLecPlayer .p-btn svg{width:20px;height:20px;fill:currentColor}
+#qilyLecPlayer .p-btn.main svg{width:24px;height:24px}
+#qilyLecPlayer .p-seek{display:flex;align-items:center;gap:10px;margin-top:8px;font-size:12.5px;color:var(--lec-player-ink2);font-variant-numeric:tabular-nums}
+#qilyLecPlayer input[type=range]{-webkit-appearance:none;appearance:none;height:6px;border-radius:99px;background:var(--lec-player-line);outline:none;cursor:pointer}
+#qilyLecPlayer input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+#qilyLecPlayer input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--lec-gold);border:2px solid #fff}
+#qilyLecPlayer .p-seek input{flex:1}
+#qilyLecPlayer .p-sub{margin-top:8px;padding:7px 10px;background:rgba(255,255,255,.07);border:1px solid var(--lec-player-line);border-radius:10px;cursor:pointer}
+#qilyLecPlayer .p-sub:hover{border-color:var(--lec-gold)}
+#qilyLecPlayer .p-sub .s-cur{font-size:14.5px;line-height:1.5;color:var(--lec-player-ink);min-height:44px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#qilyLecPlayer .p-sub .s-next{font-size:12.5px;line-height:1.4;color:var(--lec-player-ink2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#qilyLecPlayer .p-controls{display:none;flex-wrap:wrap;gap:8px 22px;margin-top:10px;align-items:flex-end}
+#qilyLecPlayer .p-controls.open{display:flex}
+#qilyLecPlayer .ctl{min-width:150px;flex:1}
+#qilyLecPlayer .ctl label{display:flex;justify-content:space-between;font-size:12px;color:var(--lec-player-ink2);margin-bottom:5px}
+#qilyLecPlayer .ctl label output{color:var(--lec-player-ink);font-weight:700;font-variant-numeric:tabular-nums}
+#qilyLecPlayer .ctl input{width:100%;background:var(--lec-player-line)}
+#qilyLecPlayer .chips{display:flex;gap:6px;flex-wrap:wrap}
+#qilyLecPlayer .chip{border:1px solid var(--lec-player-line);background:transparent;color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:5px 10px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer .chip.on{background:var(--lec-gold);border-color:var(--lec-gold);color:#073c47}
+#qilyLecPlayer .p-toggle{display:inline-flex;margin-top:8px;align-items:center;gap:6px;background:none;border:1px solid var(--lec-player-line);color:var(--lec-player-ink);font:inherit;font-size:12.5px;font-weight:700;padding:6px 12px;border-radius:999px;cursor:pointer}
+#qilyLecPlayer button:focus-visible,#qilyLecPlayer input:focus-visible,#qilyLecMini:focus-visible{outline:2px solid var(--lec-gold-light);outline-offset:2px}
+@media (max-width:640px){
+  #qilyLecPlayer .ctl{min-width:44%}
+  #qilyLecPlayer .p-sub .s-cur{font-size:14px;min-height:42px}
+}
+/* v2.4.3 player hardening (visual article), revised from pixel measurements
+   (browser tasks 906bc5c5 + 8974d9d3, 2026-11-10): the model page's rendering is
+   the player CSS PLUS shared/model rules that enlarge buttons and text
+   (body text 20px, h3 24px, follow buttons 48px, collapse 78px, ch-play
+   51x148px). Restating the player CSS values alone makes this page SMALLER
+   than the model. So this block locks the MODEL'S MEASURED values instead.
+   Rules that would clobber the active chapter state or the shared enlargements
+   are deliberately omitted. Do not re-add lecture font-size locks: the lecture
+   text is already uniform (20px body / 24px h3 on both pages). */
+#qilyLectureCta{display:inline-flex!important;align-items:center!important;gap:6px!important;font-size:14px!important;font-weight:700!important;text-decoration:none!important;border:1px solid #c8a25a!important;background:#0f4b5a!important;color:#fff!important;padding:8px 16px!important;border-radius:999px!important}
+#qily-lecture .chapter.active .ch-play{background:var(--lec-brand)!important;color:var(--lec-brand-ink)!important;border-color:var(--lec-brand)!important}
+#qilyLecPlayer{position:fixed!important;left:0!important;right:0!important;bottom:var(--qily-dock-footer-h,50px)!important;z-index:50!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border-top:3px solid var(--lec-gold)!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important}
+#qilyLecPlayer .player-inner{max-width:880px!important;margin:0 auto!important;padding:10px 16px 10px!important}
+#qilyLecPlayer .p-row{display:flex!important;align-items:center!important;gap:10px!important}
+#qilyLecPlayer .p-collapse{position:absolute!important;top:-13px!important;right:14px!important;left:auto!important;z-index:2!important;display:inline-flex!important;align-items:center!important;gap:4px!important;height:26px!important;min-height:26px!important;max-height:26px!important;padding:0 13px!important;background:var(--lec-player-bg)!important;border:1px solid var(--lec-gold)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:18px!important;font-weight:700!important;border-radius:999px!important;cursor:pointer!important;box-shadow:0 2px 8px rgba(5,18,30,.25)!important;white-space:nowrap!important}
+#qilyLecPlayer .p-btn{flex:none!important;width:40px!important;min-width:40px!important;height:40px!important;min-height:40px!important;max-height:40px!important;border-radius:50%!important;border:1px solid var(--lec-player-line)!important;background:transparent!important;color:var(--lec-player-ink)!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+#qilyLecPlayer .p-btn.main{width:48px!important;min-width:48px!important;height:48px!important;min-height:48px!important;max-height:48px!important;background:var(--lec-gold)!important;border-color:var(--lec-gold)!important;color:#073c47!important}
+#qilyLecPlayer .p-btn svg{width:20px!important;height:20px!important;fill:currentColor!important}
+#qilyLecPlayer .p-btn.main svg{width:24px!important;height:24px!important}
+#qilyLecPlayer .p-follow{display:inline-flex!important;margin:8px 0 0 0!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:15px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:48px!important}
+#qilyLecPlayer .p-toggle{display:inline-flex!important;margin-top:8px!important;align-items:center!important;gap:6px!important;background:none!important;border:1px solid var(--lec-player-line)!important;color:var(--lec-player-ink)!important;font:inherit!important;font-size:15px!important;font-weight:700!important;padding:6px 12px!important;border-radius:999px!important;cursor:pointer!important;min-height:48px!important}
+#qilyLecPlayer .p-seek{display:flex!important;align-items:center!important;gap:10px!important;margin-top:8px!important;font-size:12.5px!important;color:var(--lec-player-ink2)!important}
+#qilyLecPlayer .p-sub{margin-top:8px!important;padding:7px 10px!important;background:rgba(255,255,255,.07)!important;border:1px solid var(--lec-player-line)!important;border-radius:10px!important;cursor:pointer!important}
+#qilyLecPlayer .p-controls{display:none!important;flex-wrap:wrap!important;gap:8px 22px!important;margin-top:10px!important;align-items:flex-end!important}
+#qilyLecPlayer .p-controls.open{display:flex!important}
+#qilyLecMini{position:fixed!important;right:12px!important;bottom:calc(var(--qily-dock-footer-h,50px) + 12px)!important;z-index:51!important;display:none!important;align-items:center!important;gap:8px!important;max-width:min(78vw,340px)!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:999px!important;padding:8px 8px 8px 10px!important;box-shadow:0 8px 24px rgba(5,18,30,.35)!important;cursor:pointer!important}
+#qilyLecMini.show{display:flex!important}
+#qilyLecMini .m-play{flex:none!important;width:34px!important;min-width:34px!important;height:34px!important;min-height:34px!important;max-height:34px!important;border-radius:50%!important;border:none!important;background:var(--lec-gold)!important;color:#073c47!important;font-size:14px!important;line-height:1!important;display:flex!important;align-items:center!important;justify-content:center!important;cursor:pointer!important}
+#qilyLecMini .m-title{flex:1!important;min-width:0!important;font-size:13px!important;font-weight:700!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#qilyLecMini .m-expand{flex:none!important;font-size:13px!important;color:var(--lec-gold-light)!important;font-weight:900!important;white-space:nowrap!important}
+
+
+/* v2.4.4 mini-bar hardening (visual article), from pixel measurements
+   (browser task 8c19d13e, 2026-11-10 21:23-21:32): the model page renders the
+   mini bar TRANSPARENT (no background/border/shadow, page mint gradient shows
+   through), .m-play as a bare dark-teal triangle (NO gold disc), .m-title
+   ~18-20px and .m-expand ~18-19px dark text. The v2.4.3 block restated the
+   player CSS values (dark-teal bg, gold disc, 13px) and this page still renders
+   a white capsule with an invisible play glyph, so lock the model's MEASURED
+   values with literal colours (not var()). */
+#qilyLecMini{background:transparent!important;background-color:transparent!important;border:none!important;border-top:none!important;box-shadow:none!important;color:#15222e!important}
+#qilyLecMini .m-play{background:transparent!important;background-color:transparent!important;color:#073c47!important}
+#qilyLecMini .m-title{font-size:18px!important;color:#15222e!important}
+#qilyLecMini .m-expand{font-size:18px!important;color:#15222e!important}
+
+/* v2.4.5 mini-bar + font-size hardening (visual article), from pixel measurements
+   (browser tasks eea28d53 + a5f71104, 2026-11-10 22:23-22:37): v2.4.4 fixed the white
+   capsule (mini bar is now transparent like the model) and audio plays fine
+   (the earlier no-sound was a transient deploy-propagation miss; re-test 22:36
+   heard the opening, 0:00->0:19, total 0:31). Two residuals remain: (1) font sizes
+   still ~2px small (A glyph ~19px, B ~17px) — the model renders ~19px, so bump
+   .m-title/.m-expand/.p-collapse from 18px to 19px. (2) .m-play triangle still
+   invisible in normal state: the interaction contrast guard marks the button
+   data-qily-interaction-contrast="light" and its CSS forces
+   -webkit-text-fill-color:#ffffff, which outranks plain `color` in Blink.
+   Override BOTH color and -webkit-text-fill-color with literal values.
+   (Deploy retry: the 5b18915 Pages deploy failed at the deploy step; this
+   no-op comment re-triggers a clean single-push deploy.) */
+#qilyLecMini{-webkit-text-fill-color:#15222e!important}
+#qilyLecMini .m-play{-webkit-text-fill-color:#073c47!important}
+#qilyLecMini .m-title{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+#qilyLecMini .m-expand{font-size:19px!important;-webkit-text-fill-color:#15222e!important}
+#qilyLecPlayer .p-collapse{font-size:19px!important}
+
+/* v2.4.6 mini-bar font sizes (visual article), from pixel measurements
+   (browser task 305dd99d, 2026-11-10 23:16-23:26): v2.4.5 fixed the white
+   capsule and made the play triangle visible (same dark-teal #073C47 as the
+   model) and the collapse width now matches (80 vs 81px). Remaining gap is
+   glyph size: the model renders its mini-bar title at ~20px glyph height
+   and its play triangle at ~17px, while this page (at 19px font-size) renders
+   ~16-17px / ~12px. Glyph height runs ~0.85-0.9x the font-size, so the model's
+   true font-size is ~22px, not 19px. Bump .m-title/.m-expand to 22px and
+   .m-play (triangle) to 20px. .p-collapse stays at 19px (width already
+   matched, text only ~1px short). */
+#qilyLecMini .m-play{font-size:20px!important}
+#qilyLecMini .m-title{font-size:22px!important}
+#qilyLecMini .m-expand{font-size:22px!important}
+
+/* v2.4.7 mini-bar font sizes (visual article), from pixel measurements
+   (browser task e57b259a, 2026-11-10 23:39-23:46): v2.4.6 set .m-title and
+   .m-expand to 22px, which overshot — the model renders ~19-20px glyph
+   height, this page now renders ~21-22px (about 2px too big). Step back to
+   20px. .m-play stays at 20px (its triangle already matches the model
+   exactly, 15x17px, same colour). .p-collapse stays at 19px (width 82 vs
+   83px, matched). */
+#qilyLecMini .m-title{font-size:20px!important}
+#qilyLecMini .m-expand{font-size:20px!important}
+
+/* v2.4.8 buttons + chapter colours (visual article), from user screenshots
+   (2026-11-11 00:18/00:21) and browser task 874c541b (00:21-00:23).
+   (1) Buttons: the two player buttons "跟随原文" and "语速/音调/音量设置"
+   render at ~19px glyph on the model but only ~14-15px here. v2.4.3 locked
+   them to the player-CSS value 15px, but the model renders larger because a
+   shared stylesheet enlarges buttons — same mistake as the mini bar (lock
+   measured values, not player-CSS values). Bump .p-follow/.p-toggle to 21px.
+   (2) Chapter colours: the chapter body text renders dim muted teal
+   rgb(73,101,101) #496565 here, but bright off-white rgb(231,238,243)
+   #e7eef3 on the model (dark cards, user screenshots, pixel-sampled).
+   Root cause: site-core-visual-bundle-v1.css forces `p` inside card-like
+   containers to var(--qily-read-copy) #496565 with !important, overriding
+   the player rule `.chapter p{color:var(--lec-ink)}`. Restore the player's
+   own mode-aware ink variable with ID specificity + !important, for both
+   colour and -webkit-text-fill-color, on .chapter p and .chapter h3. */
+#qilyLecPlayer .p-follow{font-size:21px!important}
+#qilyLecPlayer .p-toggle{font-size:21px!important}
+#qily-lecture .chapter p{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+#qily-lecture .chapter h3{color:var(--lec-ink)!important;-webkit-text-fill-color:var(--lec-ink)!important}
+
+/* v2.4.9 player height fixed (visual article), user-demanded 2026-11-11 01:21:
+   "播放器界面的高矮与播放语速无关，必须检讨并整改。"
+   Root cause accepted: the settings panel (.p-controls) sits in normal flow,
+   so opening it grows the player by ~170px (258px collapsed -> 429px expanded,
+   browser task 9fc7a866). The speed value never caused the height; the panel
+   being in flow did. Fix: take .p-controls out of flow when open — it floats
+   as a popover directly above the player, so the player keeps the model's
+   collapsed height (258px) whether settings are open or closed. Panel is
+   centred to the 880px content width, styled as part of the player. */
+#qilyLecPlayer .p-controls.open{position:absolute!important;bottom:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;width:min(880px,calc(100% - 32px))!important;height:186px!important;box-sizing:border-box!important;margin-top:0!important;padding:12px 14px!important;background:var(--lec-player-bg)!important;color:var(--lec-player-ink)!important;border:1px solid var(--lec-player-line)!important;border-top:3px solid var(--lec-gold)!important;border-radius:12px!important;box-shadow:0 -10px 34px rgba(5,18,30,.35)!important;z-index:51!important}
+
+/* v2.5.0 KTV-style sentence highlight (both lectures), user-approved 2026-11-11.
+   v2.5.2 fix: subtitle .s-cur was rgba(255,227,155,.22) — over the dark-teal
+   player that renders as grey-green, not light gold (browser task 0e0fafea).
+   Use solid #ffe39b + dark ink, same as the chapter-card sentence highlight:
+   Lecture text gets a synchronized background per sentence being spoken,
+   like KTV lyrics — NOT the whole module/card filled.
+   (1) Subtitle current sentence (.s-cur) gets a light-gold tint.
+   (2) Chapter-card text is split into sentence spans; the sentence being
+       spoken gets .on (light-gold bg, dark ink).
+   (3) Follow-the-article (.lec-follow) no longer fills the whole article
+       section — outline only, for location. */
+#qilyLecPlayer .p-sub .s-cur{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:6px!important;padding:2px 6px!important;margin:0 -6px!important}
+#qily-lecture .chapter .lec-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+/* v2.6.0 article sentence sync (v2.6.1: wrap anchor + following siblings, see JS) (user request 2026-11-11): the sentence being
+   spoken also lights up in the ORIGINAL article text, so the class can follow
+   the lecture from the article alone while the player is collapsed. Same
+   light gold as the subtitle / chapter-card highlight. */
+.lec-art-sen.on{background:#ffe39b!important;color:#15222e!important;-webkit-text-fill-color:#15222e!important;border-radius:4px!important;padding:1px 3px!important;margin:0 -3px!important}
+.lec-follow{background:transparent!important;outline:2px solid #c8a25a!important;outline-offset:6px!important;border-radius:10px!important}
+/* Buttons de-emphasized (2026-11-11, user-demanded): font size matches the
+   subtitle above (~15px), not the oversized 20-21px; smaller padding and no
+   min-height compress the player so the buttons don't stand out. */
+#qilyLecPlayer .p-follow, #qilyLecPlayer .p-toggle{font-size:15px!important;line-height:1.4!important;min-height:0!important;padding:4px 10px!important;font-weight:600!important;margin-top:6px!important}
+</style><style data-cn-lecture-geometry="v1">@media (min-width:821px){#qilyLecPlayer,#qilyLecMini{--qily-dock-footer-h:49px!important}}</style></head><body data-qily-site="cn" data-cn-source-parity="v1" data-cn-public-kind="content"><a class="skip" href="#main">跳到主要内容</a><header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><div class="qily-cn-nav-shell" data-qily-cn-nav-shell="v7"><nav class="nav" aria-label="主导航" data-qily-cn-nav-contract="20260926-v7-bridge" id="qilyCnPrimaryNavigation" data-qily-cn-nav-rail="static-v1"><a href="/" data-qily-nav-key="home">首页</a><a href="/archive/profile/capabilities/" data-qily-nav-key="capabilities">能力体系</a><a href="/archive/profile/tools/" data-qily-nav-key="tools" aria-current="page">改善工具</a><a href="/lean/" data-qily-nav-key="lean">精益生产</a><a href="/notes/" data-qily-nav-key="projects">代表项目</a><a href="/trust/" data-qily-nav-key="trust">信任中心</a><a href="/knowledge/" data-qily-nav-key="knowledge">知识资产</a><a href="/resources/" data-qily-nav-key="resources">资源协同</a><a href="/about/" data-qily-nav-key="contact">关于我们</a></nav><div class="qily-primary-nav-scroll-rail" role="scrollbar" aria-label="一级导航左右滑动条" aria-controls="qilyCnPrimaryNavigation" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0%" aria-disabled="true" tabindex="-1" data-qily-nav-overflow="false"><span class="qily-primary-nav-scroll-thumb" aria-hidden="true"></span></div></div><div id="qilyCnTranslateV3" class="qily-cn-translate" data-qily-static-first-paint="v1" data-qily-header-utility="translation" data-qily-translation-provider="qilylean-api" data-qily-translation-engine="youdao" translate="no" role="group" aria-label="网页翻译"><span class="qily-cn-translate__mark" aria-hidden="true">🌐</span><select class="qily-cn-translate__select" aria-label="选择网站语言"><option value="zh-CN">中文简体</option><option value="zh-TW">中文繁体</option><option value="en">English</option><option value="__more__">其他</option></select><span class="qily-cn-translate__provider">站内翻译</span><div class="qily-cn-language-more" hidden role="dialog" aria-label="更多翻译语言"></div></div></div></header><main id="main" data-cn-source-content="improvements/visual/index.html" data-cn-source-body-class="qily-pro-v24" data-cn-source-from-body="false" data-cn-source-scrollbar-gutter="stable" data-cn-source-body-data-qily-vi-shell="v4-formal">
+    <section class="article-hub" data-qily-vi-v4-hero="118deg">
+      <div class="article-hub-inner">
+        <a class="hub-back qily-route-action" href="/archive/profile/tools/" data-qily-interaction="route">← 返回改善经验清单</a>
+        <h1>改善经验</h1>
+        <p class="hub-lead">目视化不是贴标识，而是现场管理语言的统一</p>
+        <nav class="article-links" aria-label="改善经验六大模块"><a href="/archive/improvements/vsm/" data-qily-interaction="route" class="qily-route-action">01 VSM价值流</a><a href="/archive/improvements/standard-time/" data-qily-interaction="route" class="qily-route-action">02 标准工时</a><a href="/archive/improvements/smed/" data-qily-interaction="route" class="qily-route-action">03 SMED换模</a><a href="/archive/improvements/erp-mes/" data-qily-interaction="route" class="qily-route-action">04 ERP/MES协同</a><a href="/archive/improvements/ie-data/" data-qily-interaction="route" class="qily-route-action">05 IE数据底座</a><a href="/archive/improvements/visual/" aria-current="page" data-qily-interaction="route" class="qily-route-action">06 目视化语言</a></nav>
+      </div>
+    </section>
+    <section class="section article-page-content">
+      <div class="section-inner">
+        <article class="article" id="visual"><h2 id="visualTitle">目视化不是贴标识，而是现场管理语言的统一</h2><div class="subtitle">从6S标识到公司级现场沟通系统</div><div class="meta">撰写：丁启利｜栏目：制造改善实践</div><div class="share-row"><button class="share-button" data-title="目视化不是贴标识，而是现场管理语言的统一" data-target="visual" data-public-share="">转发本文</button><span class="share-status" aria-live="polite"></span></div><h3 id="visual-section-0">一、常见误区：把目视化做成“贴纸工程”</h3><p>许多企业导入6S和目视化时，会快速制作大量标识牌、通道线、区域牌、警示贴和宣传看板。短期看现场变整齐了，但一段时间后，标识破损、内容失效、责任不清、现场不执行，目视化又变成一次性工程。</p><p>问题不在于贴标识本身，而在于没有回答三个问题：标识服务什么管理目的？谁使用这些信息？异常出现后如何响应？如果不能支持安全、效率、质量、交付和协同，标识再多也只是视觉装饰。</p><h3 id="visual-section-1">二、目视化的本质：让现场状态被看见、被理解、被行动</h3><p>目视化管理的核心，是把隐藏在经验、口头沟通和个人记忆中的管理信息显性化。人员应该一眼看清区域归属，物料应该一眼看清状态，设备应该一眼看清点检和异常，通道应该一眼看清边界，安全风险应该一眼被识别，生产进度应该一眼可判断。</p><p>因此，目视化不是单纯美化，而是现场沟通系统。它通过颜色、形状、文字、图标、位置和标准格式，让不同部门、不同班次、不同层级人员使用同一套现场语言。</p><h3 id="visual-section-2">三、设计原则：少而准、统一、可维护、能闭环</h3><p>第一，少而准。标识不是越多越好，应优先覆盖安全风险、区域边界、物料状态、质量控制点、设备点检和异常反馈。第二，统一。颜色、字体、尺寸、图标、安装高度和命名规则应统一，否则现场会产生理解偏差。</p><p>第三，可维护。目视化内容必须有责任人、更新频次和维护标准。第四，能闭环。问题看板、异常标识和红牌管理必须连接责任人、完成时间和复盘机制。不能闭环的目视化，最终会变成失效信息。</p><h3 id="visual-section-3">四、应用场景：从公司级看板到工位级细节</h3><p>公司级目视化可用于展示精益理念、经营指标、改善项目、6S状态和安全红线。车间级目视化可用于通道、区域、设备、工位、物料、品质、消防、安全和人员动线。仓储目视化可用于库位、物料状态、先进先出、温湿度、待检、合格、不合格和呆滞物料。</p><p>工位级目视化更关注作业指导、工装定位、物料摆放、良品不良品区分、防错提示和异常呼叫。越靠近现场作业，目视化越要简洁、准确、易懂，不能让员工为了看懂标识而增加认知负担。</p><h3 id="visual-section-4">五、与6S稽查结合：目视化必须进入日常管理机制</h3><p>目视化如果没有稽查机制，很快会失效。6S稽查不应只检查地面是否干净、物品是否摆齐，还应检查标识是否准确、区域是否一致、文件与现场是否匹配、通道是否被占用、安全警示是否有效、点检记录是否真实。</p><p>建议建立红线管控、重点抽查、问题闭环和月度复盘机制。对于安全、通道、消防、静电防护、文件一致性和点检真实性等底线问题，应明确红线标准。对于一般问题，则通过清单化整改和责任人闭环逐步改善。</p><h3 id="visual-section-5">六、从项目交付到体系沉淀：目视化要有版本管理</h3><p>目视化项目常涉及设计、制作、安装、验收和维护。如果没有版本管理，后续一旦组织架构、区域用途、工艺路线或安全要求变化，现场标识很容易失效。</p><p>较好的做法是建立目视化台账，包括标识名称、位置、尺寸、材质、责任部门、制作日期、版本状态和维护周期。公司级看板、车间门牌、区域标识、安全提示、玻璃门防撞贴、仓库看板等都应纳入统一管理。这样，目视化就从一次性交付变成持续运营资产。</p><h3 id="visual-section-6">七、结论：目视化是现场管理语言，不是现场装饰</h3><p>真正有效的目视化管理，应让现场问题更容易被发现，让正确行为更容易发生，让异常响应更快，让跨部门沟通成本更低。它不是贴标识、刷油漆、做看板的简单组合，而是企业现场管理语言的统一。</p><p>当目视化与6S稽查、安全管理、品质控制、设备点检、物料状态和改善闭环结合起来，它就能成为制造现场最基础、最直接、最有穿透力的管理系统。</p><p><a id="qilyLectureCta" href="#qily-lecture"><svg class="qily-lecture-icon" viewbox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 13v-1a9 9 0 0 1 18 0v1"></path><rect x="3" y="12" width="4" height="8" rx="2"></rect><rect x="17" y="12" width="4" height="8" rx="2"></rect></svg>语音讲课 · 全文九段，约 9 分钟</a></p></article>
+      </div>
+    </section>
+<!-- QILY-CN-LECTURE-MODULE:START -->
+<section id="qily-lecture" class="module-section knowledge-brief-section" aria-labelledby="qilyLectureTitle">
+<div class="module-inner lean-brief-copy"><div class="module-heading"><h2 id="qilyLectureTitle">讲课音频 · 全文重讲版</h2></div>
+<p class="qily-lecture-intro">本篇改善经验配有全文讲课音频：从贴纸工程的误区讲起，定下三个问题的标尺，依次走完四项设计原则、四级应用场景、六S稽查结合和版本管理，最后回到现场管理语言的结论，从头到尾讲一遍全文，抓重点讲，不照着原文念。全文九段，约 9 分钟，3 号声音录制，全程中文讲，英文词按英文读、英文字母按字母读。点任意一段可单独收听，播完自动接下一段；用底部播放器可以控制播放、进度、语速和音调。语速调节不改变音调；调音调时播放速度会随之微变。播放时播放器里会同步显示字幕，当前一句在上、下一句在下，点字幕可以定位到原文段落。播放时原文也会跟着讲课自动滚动到正在讲的那一段，正在讲的那一段会以浅金色底色标出来；点播放器里的“跟随原文”可以开关跟随，你自己滚动页面后，本段不再自动抢，到下一段再跟上。语速、音调、音量默认收起来，点“语速 / 音调 / 音量设置”展开。播放器平时固定在页面底部，点播放器右上角的“收起”可以把它收起来，变成右下角一个小按钮，点“展开”随时弹回来。</p>
+<div id="qilyLecChapters"></div>
+<div aria-hidden="true" style="height:200px"></div>
+</div>
+</section>
+
+<div class="player" id="qilyLecPlayer" role="region" aria-label="讲课音频播放器">
+<button class="p-collapse" id="qilyLecCollapseBtn" aria-label="收起播放器">▾ 收起</button>
+<div class="player-inner">
+<div class="p-row">
+<button class="p-btn" id="qilyLecPrevBtn" aria-label="上一段"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9.5 12z"/></svg></button>
+<button class="p-btn main" id="qilyLecPlayBtn" aria-label="播放或暂停"><svg id="qilyLecPlayIcon" viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg><svg id="qilyLecPauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg></button>
+<button class="p-btn" id="qilyLecNextBtn" aria-label="下一段"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l10.5-7z"/></svg></button>
+<div class="p-now"><div class="k" id="qilyLecNowStep">讲课音频 · 已就绪</div><div class="t" id="qilyLecNowTitle">目视化不是贴标识，而是现场管理语言的统一 — 全文重讲版</div></div>
+</div>
+<div class="p-seek"><span id="qilyLecCurTime">0:00</span><input type="range" id="qilyLecSeek" min="0" max="100" step="0.1" value="0" aria-label="播放进度" /><span id="qilyLecDurTime">0:00</span></div>
+<div class="p-sub" id="qilyLecSub" role="button" tabindex="0" aria-label="字幕：点一下定位到原文段落"><div class="s-cur" id="qilyLecSubCur">点播放开始，字幕会跟读同步显示。</div><div class="s-next" id="qilyLecSubNext">点字幕可定位到原文段落</div></div>
+<button class="p-follow" id="qilyLecFollowBtn" aria-pressed="true">跟随原文：开</button>
+<button class="p-toggle" id="qilyLecCtlToggle" aria-expanded="false">语速 / 音调 / 音量设置</button>
+<div class="p-controls" id="qilyLecControls">
+<div class="ctl"><label>语速 <output id="qilyLecSpeedOut">1.00×</output></label><input type="range" id="qilyLecSpeed" min="0.5" max="2" step="0.05" value="1" aria-label="语速" /></div>
+<div class="ctl" style="flex:none"><label>倍速快捷</label><div class="chips" id="qilyLecSpeedChips"><button class="chip" data-speed="0.75">0.75×</button><button class="chip on" data-speed="1">1.0×</button><button class="chip" data-speed="1.25">1.25×</button><button class="chip" data-speed="1.5">1.5×</button><button class="chip" data-speed="2">2.0×</button></div></div>
+<div class="ctl"><label>音调（半音） <output id="qilyLecPitchOut">原调</output></label><input type="range" id="qilyLecPitch" min="-4" max="4" step="0.5" value="0" aria-label="音调" /></div>
+<div class="ctl"><label>音量 <output id="qilyLecVolOut">100%</output></label><input type="range" id="qilyLecVolume" min="0" max="1" step="0.05" value="1" aria-label="音量" /></div>
+<div class="ctl" style="flex:none"><label>&nbsp;</label><button class="chip" id="qilyLecResetBtn">语速 / 音调复位</button></div>
+</div>
+</div>
+</div>
+<div id="qilyLecMini" role="button" tabindex="0" aria-label="展开讲课音频播放器"><button class="m-play" id="qilyLecMiniPlay" aria-label="播放或暂停">▶</button><span class="m-title" id="qilyLecMiniTitle">讲课音频 · 开场</span><span class="m-expand">▴ 展开</span></div>
+<audio id="qilyLecAudio" preload="metadata"></audio>
+<!-- QILY-CN-LECTURE-MODULE:END -->
+
+  </main><footer class="footer"><div class="footer-inner"><nav id="floatDock" class="footer-actions qily-float-dock qily-page-action-nav" aria-label="精益制造经验分享页面快捷导航" data-qily-footer-contract="top,previous,search,current" data-qily-standalone-dock="v5.8" data-qily-dock-layout="fixed-bottom-footer-navigation"><button type="button" class="qily-float-btn qily-float-top" data-action="top" data-qily-footer-action="top" aria-label="回到顶部" title="回到顶部" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>回到顶部</span></span></button><button type="button" class="qily-float-btn qily-float-previous" data-action="previous" data-qily-footer-action="previous" aria-label="上一网页" title="上一网页" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>上一网页</span></span></button><button type="button" class="qily-float-btn qily-float-search" data-action="search" data-qily-footer-action="search" aria-label="本站搜索" title="本站搜索" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>本站搜索</span></span></button><button type="button" class="qily-float-btn qily-float-current" data-action="current" data-qily-footer-action="current" aria-label="分享当前" title="分享当前" data-qily-label-owner="dock-v5.8-footer"><span class="qily-dock-label" aria-hidden="true"><span>分享当前</span></span></button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer><script defer src="/assets/cn-translate-baidu-v1.js?v=20261017-cn-mainland-nmt-v2"></script><script defer src="/assets/cn-footer-actions-v1.js?v=20261023-cn-public-footer-source-v1&share=20261028-cn-copy-first-v1"></script><script defer src="/assets/cn-nav-rail-v1.js?v=20261021-nav-rail-v23-about&anchors=20261013-v1&aboutcareer=20261021-about-contact-career-v1"></script><script defer data-cn-native-prefetch="v2" src="/assets/site-native-prefetch-v1.js?v=b0feaac1aee8"></script>
+<script defer data-cn-source-runtime="v1" src="/assets/public-content-interactions.js?v=23f82e035fa2"></script><script data-cn-lecture-runtime="v1" data-cn-lecture-source="improvements/visual/index.html">
+var CHAPTERS = [
+        { step:"开场", title:"一句话先说清：目视化是现场的语言", src:"/assets/public-media/improvements/visual/assets/audio/full00.mp3.b64?v=189665f87428e185",
+          text:"大家好，我是丁启利。今天我们一起学习，课题叫《目视化不是贴标识，而是现场管理语言的统一》。这篇文章要回答的，其实就是一个问题，目视化到底是什么。这堂课的答案只有一句话，目视化不是贴标识，而是现场管理语言的统一。接下来，我们就顺着这篇文章的思路，把关键的地方从头到尾讲清楚。" },
+        { step:"引子", title:"先看一个现场：贴满标识，问题还在", src:"/assets/public-media/improvements/visual/assets/audio/full01.mp3.b64?v=262f46b9cfd8e87a",
+          text:"先说一个现场常见的现象。很多企业一导入六S和目视化，第一步就是做标识，先把现场贴满，一口气做一大批。刚做完的时候，现场看起来确实整齐了。可是过上一段时间再去看，情况就变了。牌子破了。内容过期了。责任人是谁，没人说得清。现场也不照着执行，目视化又变成了一次性工程。问题出在哪里？不在贴牌子本身。先问三个问题。这块牌子服务什么管理目的？谁来用它上面的信息？异常出现以后谁来响应？如果一块牌子不能支持安全、效率、质量、交付和协同，贴得再多，也只是视觉装饰。这三个问题，就是这堂课的一条标尺，后面讲的每一项原则、每一个场景，都拿这三个问题去量。" },
+        { step:"核心判断", title:"被看见、被理解、被行动", src:"/assets/public-media/improvements/visual/assets/audio/full02.mp3.b64?v=6325012ca8673695",
+          text:"所以先定一个核心判断。目视化的本质，是让现场状态被看见、被理解、被行动。很多管理信息，本来藏在三个地方，藏在老师傅的经验里，藏在口头交代里，藏在个人的记忆里。目视化要做的，就是把这些信息显性化，变成人人看得懂的现场语言。人员要一眼看清区域归属，物料要一眼看清状态，设备要一眼看清点检和异常，通道要一眼看清边界，安全风险要一眼被识别，生产进度要一眼能判断。做到这一步，目视化就不再是美化，而是现场沟通系统。它靠颜色、形状、文字、图标、位置和标准格式，让不同部门、不同班次、不同层级的人，用同一套语言说话。记住这个判断，后面所有的做法，都是为了它服务的。" },
+        { step:"第一部分", title:"四项设计原则：少而准、统一、可维护、能闭环", src:"/assets/public-media/improvements/visual/assets/audio/full03.mp3.b64?v=4dd700a8b81757c6",
+          text:"第一部分，四项设计原则，少而准、统一、可维护、能闭环。第一，少而准。标识不是越多越好，要优先覆盖六类地方，安全风险、区域边界、物料状态、质量控制点、设备点检和异常反馈。判断一块牌子该不该做，就问它对着这六类里的哪一类，对不上，就先不做。第二，统一。颜色、字体、尺寸、图标、安装高度、命名规则，全部要统一。不统一，现场就会产生理解偏差，同一个颜色，在这个车间是合格，在那个车间是待检，员工就不知道该信哪一个。第三，可维护。每一处目视化内容，都要有责任人、更新频次和维护标准。没有责任人，牌子破了没人修，内容过期了没人换，目视化迟早失效。第四，能闭环。问题看板、异常标识和红牌管理，必须连上三样东西，责任人、完成时间、复盘机制。不能闭环的目视化，最后都会变成失效信息。这四条里，最容易被忽略的是第四条，很多人把目视化做完就以为做完了，其实做完只是开始，闭环才是目视化真正起作用的地方。",
+          deliverable:"本段要点：少而准对六类地方，统一防理解偏差，可维护靠责任人和频次，能闭环靠责任人、完成时间和复盘。" },
+        { step:"第二部分", title:"四级场景：从公司看板到工位细节", src:"/assets/public-media/improvements/visual/assets/audio/full04.mp3.b64?v=30efbcbe9ca303d6",
+          text:"第二部分，应用场景，从公司级看板到工位级细节，分四级。公司级，看的是精益理念、经营指标、改善项目、六S状态和安全红线，对象是管理层和来访者，要的是方向一致。车间级，看的是通道、区域、设备、工位、物料、品质、消防、安全和人员动线，对象是车间管理者和班组长，要的是现场受控。仓储级，看的是库位、物料状态、先进先出、温湿度、待检、合格、不合格和呆滞物料，对象是仓管和领料的人，要的是账物一致，拿不错、放不乱。工位级，看的是作业指导、工装定位、物料摆放、良品和不良品区分、防错提示和异常呼叫，对象是操作员工，要的是拿起来就能干，干错了马上能发现。这里有一个总原则，越靠近现场作业，目视化越要简洁、准确、易懂，不能让员工为了看懂一块牌子，再增加认知负担。我以前做过一个智能模具库，一千二百多副模具，每一副都有身份，扫码就知道它在哪个库位、什么状态，找模具从翻箱倒柜变成一到五分钟，这就是物料状态一眼看清的样子。",
+          deliverable:"本段要点：四级场景各有对象和目的；越靠近作业，目视化越要简洁。" },
+        { step:"第三部分", title:"没有稽查，目视化很快失效", src:"/assets/public-media/improvements/visual/assets/audio/full05.mp3.b64?v=c8c5501ed5f68789",
+          text:"第三部分，目视化必须进入日常管理机制，跟六S稽查结合。没有稽查机制的目视化，很快会失效。六S稽查不能只查地面干不干净、物品摆得齐不齐，还要查六件事，标识是不是准确，区域是不是一致，文件和现场是不是匹配，通道有没有被占用，安全警示有没有效，点检记录是不是真实。前面三件查的是目视化本身准不准，后面三件查的是现场有没有按目视化在管。建议建立四项机制，红线管控、重点抽查、问题闭环和月度复盘。安全、通道、消防、静电防护、文件一致性和点检真实性，这些是底线问题，要明确红线标准，碰了红线就要马上处理。一般问题，就走清单整改，定好责任人，一个一个闭环，逐步改善。记住，稽查不是为了扣分，是为了让目视化一直是活的，一直是准的。",
+          deliverable:"本段要点：稽查查六件事；底线问题走红线，一般问题走清单整改加责任人闭环。" },
+        { step:"第四部分", title:"从一次交付，变成持续运营的资产", src:"/assets/public-media/improvements/visual/assets/audio/full06.mp3.b64?v=d21feab9b823db7d",
+          text:"第四部分，从项目交付到体系沉淀，目视化要有版本管理。一个目视化项目，要走设计、制作、安装、验收和维护五个环节。如果没有版本管理，一旦组织架构变了、区域用途变了、工艺路线变了、安全要求变了，现场的标识很快就失效了。比较好的做法，是建立一本目视化台账，每一块标识都要记清楚。叫什么名字，放在哪里，多大尺寸，什么材质，归哪个部门管，什么时候做的，现在是什么版本，多久维护一次。公司级看板、车间门牌、区域标识、安全提示、玻璃门防撞贴、仓库看板，全部纳入统一管理。这样，目视化就从一次性交付，变成了持续运营的资产。做改善的人要记住，交付不是终点，交付之后还能不能管得住、跟得上变化，才是体系有没有沉淀下来。",
+          deliverable:"本段要点：台账记八项；目视化从一次性交付变成持续运营资产。" },
+        { step:"第五部分", title:"结论：现场管理语言，不是现场装饰", src:"/assets/public-media/improvements/visual/assets/audio/full07.mp3.b64?v=69ed169680226bbf",
+          text:"第五部分，结论。真正有效的目视化管理，要做到四件事，让现场问题更容易被发现，让正确行为更容易发生，让异常响应更快，让跨部门沟通成本更低。它不是贴标识、刷油漆、做看板的简单组合，而是企业现场管理语言的统一。当目视化跟六S稽查、安全管理、品质控制、设备点检、物料状态和改善闭环结合起来，它就能成为制造现场最基础、最直接、最有穿透力的管理系统。" },
+        { step:"收尾", title:"留一个作业：找一块标识，问它三个问题", src:"/assets/public-media/improvements/visual/assets/audio/full08.mp3.b64?v=8dc502b723fb4ee3",
+          text:"最后收个尾。目视化不是贴标识，而是现场管理语言的统一。记住三个问题，标识服务什么目的，谁使用这些信息，异常出现后怎么响应。记住四项原则，少而准、统一、可维护、能闭环。记住四级场景，公司、车间、仓储、工位，各有对象，各有目的。记住两件事，没有稽查，目视化会失效；没有版本管理，目视化留不下来。最后，我留一个作业给大家：请你走到自己的现场，找一块标识，问它三个问题，它服务什么管理目的，谁在用它上面的信息，异常出现以后谁来响应，答不上来，这块标识就是要整改的第一块。讲到这里，大家有什么要提问的？目视化怎么做、标准怎么定、稽查怎么查，都可以提出来，我们一起讨论。" }
+      ];
+            /* v2.4: where each lecture chapter lives in the ORIGINAL article text.
+         0 开场 -> article title, 1 引子 -> section 一， 2 核心判断 -> section 二，
+         3-7 -> sections 三-七 in order, 8 收尾 -> section 七. */
+      var CHAPTER_ANCHORS = ["#visualTitle", "#visual-section-0", "#visual-section-1", "#visual-section-2", "#visual-section-3", "#visual-section-4", "#visual-section-5", "#visual-section-6", "#visual-section-6"];
+var audio = document.getElementById('qilyLecAudio');
+
+      var current = 0, speed = 1, pitch = 0;
+
+      /* ---- subtitles: sentence split (char-weighted) + sync ---- */
+      var lastRate = null, lastSubIdx = -1;
+      function splitSentences(t){
+        var m = t.match(/[^。！？；…]+[。！？；…]*/g);
+        return m ? m : [t];
+      }
+      CHAPTERS.forEach(function(ch){
+        ch.sentences = splitSentences(ch.text);
+        var total = 0, cum = [0];
+        ch.sentences.forEach(function(s){ total += s.length; cum.push(total); });
+        ch.cum = cum.map(function(v){ return total ? v / total : 0; });
+      });
+      function subIndexFor(ch){
+        if (!audio.duration || !isFinite(audio.duration) || audio.duration <= 0) return 0;
+        var p = Math.min(1, Math.max(0, audio.currentTime / audio.duration));
+        var idx = 0;
+        for (var k = 0; k < ch.sentences.length; k++){ if (p >= ch.cum[k]) idx = k; }
+        return idx;
+      }
+      function updateSubtitle(force){
+        var ch = CHAPTERS[current];
+        var idx = subIndexFor(ch);
+        if (!force && idx === lastSubIdx) return;
+        lastSubIdx = idx;
+        var cur = document.getElementById('qilyLecSubCur');
+        var nxt = document.getElementById('qilyLecSubNext');
+        if (!cur || !nxt) return;
+        cur.textContent = ch.sentences[idx] || '';
+        var nextTxt = ch.sentences[idx + 1];
+        nxt.textContent = nextTxt ? nextTxt : (current < CHAPTERS.length - 1 ? '本段完 · 将自动接下一段' : '本段完 · 全文结束');
+        var card = document.getElementById('qilyLecCh-' + current);
+        if (card){
+          var spans = card.querySelectorAll('.lec-sen');
+          for (var j = 0; j < spans.length; j++) spans[j].classList.toggle('on', j === idx);
+        }
+        lecHighlightArticleSentence(current, idx);
+      }
+      /* play() can reject when called outside a user gesture (iOS Safari):
+         surface it honestly instead of failing silently. */
+      function safePlay(){
+        var p;
+        try{ p = audio.play(); }catch(err){ p = null; }
+        if (p && p.catch) p.catch(function(){
+          setPlayUI(false);
+          document.getElementById('qilyLecNowStep').textContent = '讲课音频 · ' + CHAPTERS[current].step + '（' + (current + 1) + ' / ' + CHAPTERS.length + '）· 点播放继续';
+        });
+      }
+      /* Shared fetch+decode for loadChapter and preloadChapter. */
+      function fetchChapterData(ch, i, stepLabel){
+        fetch(ch.src).then(function(r){ if(!r.ok) throw new Error('audio load failed'); return r.text(); }).then(function(b64){
+          var bin = atob(b64.replace(/\s+/g, ''));
+          var bytes = new Uint8Array(bin.length);
+          for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
+          ch.blobUrl = URL.createObjectURL(new Blob([bytes], {type: 'audio/mpeg'}));
+          ch.loading = false;
+          if (current !== i){
+            if (ch.wantPlay){ ch.wantPlay = false; loadChapter(i, true); }
+            return;
+          }
+          audio.src = ch.blobUrl;
+          audio.load();
+          applyRate();
+          document.getElementById('qilyLecNowStep').textContent = stepLabel;
+          updateSubtitle(true);
+          if (ch.wantPlay){ ch.wantPlay = false; safePlay(); }
+        }).catch(function(){
+          ch.loading = false;
+          if (current !== i){
+            if (ch.wantPlay){ ch.wantPlay = false; document.getElementById('qilyLecNowStep').textContent = '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）· 加载失败，请重试'; }
+            return;
+          }
+          document.getElementById('qilyLecNowStep').textContent = stepLabel + ' · 加载失败，请重试';
+        });
+      }
+      /* Download the next chapter in the background while the current one
+         plays, so tapping "next" hits the cached path and play() still runs
+         inside the tap gesture. */
+      function preloadChapter(i){
+        if (i < 0 || i >= CHAPTERS.length) return;
+        var ch = CHAPTERS[i];
+        if (ch.blobUrl || ch.loading) return;
+        ch.loading = true; ch.wantPlay = false;
+        fetchChapterData(ch, i, '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）');
+      }
+      /* Step to a chapter without skipping: if the target is still loading,
+         just queue the play and wait for its fetch instead of advancing again. */
+      function goTo(i, autoplay){
+        if (i < 0) i = 0;
+        if (i > CHAPTERS.length - 1) i = CHAPTERS.length - 1;
+        var ch = CHAPTERS[i];
+        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        loadChapter(i, autoplay);
+      }
+      /* A rapid second tap on prev/next (within 1s) is one intended step, not
+         two: ignore it. Deliberate steps more than 1s apart still work, and
+         auto-advance on chapter end bypasses this guard. */
+      var lastNavAt = 0;
+      function navGuard(){
+        var now = Date.now();
+        if (now - lastNavAt < 1000) return false;
+        lastNavAt = now;
+        return true;
+      }
+
+      /* build chapter cards */
+      var list = document.getElementById('qilyLecChapters');
+      CHAPTERS.forEach(function(ch, i){
+        var el = document.createElement('article');
+        el.className = 'chapter'; el.id = 'qilyLecCh-' + i;
+        var html = '<div class="chapter-head"><div class="ch-num">' + (i===0 ? '序' : (i===CHAPTERS.length-1 ? '结' : i)) + '</div>' +
+          '<h3>' + ch.step + ' · ' + ch.title + '</h3>' +
+          '<button class="ch-play" data-play="' + i + '">▶ 播放本段</button></div>' +
+          '<p>' + ch.sentences.map(function(s){ return '<span class="lec-sen">' + s + '</span>'; }).join('') + '</p>';
+        if (ch.deliverable) html += '<div class="deliverable"><b>交付物与易错点：</b>' + ch.deliverable + '</div>';
+        el.innerHTML = html;
+        list.appendChild(el);
+      });
+
+      function fmt(s){ if(!isFinite(s)) s = 0; s = Math.max(0, Math.floor(s)); return Math.floor(s/60) + ':' + ('0' + (s%60)).slice(-2); }
+
+      function applyRate(){
+        /* Speed uses pitch-preserving time-stretch. When a pitch shift is
+           requested, pitch-preserving is switched off and the rate is
+           compounded so the pitch moves by the chosen semitones.
+           The rate is only re-applied when it actually changed: setting
+           playbackRate on every timeupdate can interrupt playback on iOS. */
+        var rate = (pitch === 0) ? speed : speed * Math.pow(2, pitch / 12);
+        var preserve = (pitch === 0);
+        if (audio.preservesPitch !== preserve){
+          audio.preservesPitch = preserve;
+          audio.mozPreservesPitch = preserve;
+          audio.webkitPreservesPitch = preserve;
+        }
+        if (lastRate !== rate){ audio.playbackRate = rate; lastRate = rate; }
+        document.getElementById('qilyLecSpeedOut').textContent = speed.toFixed(2) + '×';
+        document.getElementById('qilyLecPitchOut').textContent = pitch === 0 ? '原调' : (pitch > 0 ? '+' : '') + pitch + ' 半音';
+        var chips = document.querySelectorAll('#qilyLecSpeedChips .chip');
+        chips.forEach(function(c){ c.classList.toggle('on', Math.abs(parseFloat(c.dataset.speed) - speed) < 0.01); });
+      }
+
+      function loadChapter(i, autoplay){
+        clearAutoNext();
+        current = i;
+        lastRate = null;
+        lastSubIdx = -1;
+        var ch = CHAPTERS[i];
+        var stepLabel = '讲课音频 · ' + ch.step + '（' + (i+1) + ' / ' + CHAPTERS.length + '）';
+        document.getElementById('qilyLecNowStep').textContent = stepLabel;
+        document.getElementById('qilyLecNowTitle').textContent = ch.title;
+        syncMini();
+        document.querySelectorAll('#qily-lecture .lec-sen.on').forEach(function(sp){ sp.classList.remove('on'); });
+        updateSubtitle(true);
+        document.querySelectorAll('#qily-lecture .chapter').forEach(function(el, j){ el.classList.toggle('active', j === i); });
+        document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === i && !audio.paused) ? '⏸ 播放中' : '▶ 播放本段'; });
+        followChapter(i, autoplay || !audio.paused);
+        if (ch.blobUrl){
+          audio.src = ch.blobUrl;
+          audio.load();
+          applyRate();
+          if (autoplay) safePlay();
+          return;
+        }
+        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        ch.loading = true;
+        ch.wantPlay = autoplay;
+        document.getElementById('qilyLecNowStep').textContent = stepLabel + ' · 加载中…';
+        fetchChapterData(ch, i, stepLabel);
+      }
+
+      function setPlayUI(playing){
+        document.getElementById('qilyLecPlayIcon').style.display = playing ? 'none' : '';
+        document.getElementById('qilyLecPauseIcon').style.display = playing ? '' : 'none';
+        document.querySelectorAll('#qily-lecture [data-play]').forEach(function(b, j){ b.textContent = (j === current && playing) ? '⏸ 播放中' : '▶ 播放本段'; });
+        syncMini();
+      }
+
+      document.getElementById('qilyLecPlayBtn').addEventListener('click', function(){
+        if (!audio.src) { loadChapter(current, true); return; }
+        if (audio.paused) safePlay(); else audio.pause();
+      });
+      document.getElementById('qilyLecPrevBtn').addEventListener('click', function(){ if (navGuard()) goTo(current - 1, true); });
+      document.getElementById('qilyLecNextBtn').addEventListener('click', function(){ if (navGuard()) goTo(current + 1, true); });
+      list.addEventListener('click', function(e){
+        var b = e.target.closest('[data-play]'); if(!b) return;
+        var i = parseInt(b.dataset.play, 10);
+        if (i === current && audio.src){ if (audio.paused) safePlay(); else audio.pause(); }
+        else loadChapter(i, true);
+      });
+
+      audio.addEventListener('play', function(){ clearAutoNext(); setPlayUI(true); preloadChapter(current + 1); scrollToArticle(current); });
+      audio.addEventListener('pause', function(){ setPlayUI(false); });
+      audio.addEventListener('loadedmetadata', function(){
+        document.getElementById('qilyLecDurTime').textContent = fmt(audio.duration);
+        updateSubtitle(true);
+      });
+      audio.addEventListener('timeupdate', function(){
+        document.getElementById('qilyLecCurTime').textContent = fmt(audio.currentTime);
+        if (audio.duration) document.getElementById('qilyLecSeek').value = (audio.currentTime / audio.duration) * 100;
+        updateSubtitle(false);
+        if (audio.duration && audio.duration - audio.currentTime < 10) preloadChapter(current + 1);
+      });
+      /* Auto-advance rule (user-set 2026-11-11, 1.5s from 2026-11-11 21:15):
+         when a segment ends, pause 1.5 seconds, then automatically play the
+         next segment. The 1.5s gap is a short breathing pause between
+         segments, not a stall — the next chapter is preloaded during the
+         pause so the switch is immediate. If the user navigates or presses
+         play during the pause, the timer is cancelled and no auto-advance
+         happens. */
+      var autoNextTimer = null;
+      function clearAutoNext(){ if (autoNextTimer){ clearTimeout(autoNextTimer); autoNextTimer = null; } }
+      audio.addEventListener('ended', function(){
+        if (current >= CHAPTERS.length - 1){ setPlayUI(false); return; }
+        var endedIdx = current;
+        var nextIdx = current + 1;
+        preloadChapter(nextIdx);
+        var stepEl = document.getElementById('qilyLecNowStep');
+        stepEl.textContent = '本段完 · 1.5 秒后自动接下一段';
+        autoNextTimer = setTimeout(function(){
+          autoNextTimer = null;
+          if (current === endedIdx && audio.paused) goTo(nextIdx, true);
+        }, 1500);
+      });
+
+      document.getElementById('qilyLecSeek').addEventListener('input', function(e){
+        if (audio.duration) audio.currentTime = (parseFloat(e.target.value) / 100) * audio.duration;
+      });
+      document.getElementById('qilyLecSpeed').addEventListener('input', function(e){
+        speed = parseFloat(e.target.value); applyRate();
+      });
+      document.getElementById('qilyLecSpeedChips').addEventListener('click', function(e){
+        var c = e.target.closest('[data-speed]'); if(!c) return;
+        speed = parseFloat(c.dataset.speed);
+        document.getElementById('qilyLecSpeed').value = speed; applyRate();
+      });
+      document.getElementById('qilyLecPitch').addEventListener('input', function(e){
+        pitch = parseFloat(e.target.value); applyRate();
+      });
+      document.getElementById('qilyLecVolume').addEventListener('input', function(e){
+        audio.volume = parseFloat(e.target.value);
+        document.getElementById('qilyLecVolOut').textContent = Math.round(audio.volume * 100) + '%';
+      });
+      document.getElementById('qilyLecResetBtn').addEventListener('click', function(){
+        speed = 1; pitch = 0;
+        document.getElementById('qilyLecSpeed').value = 1;
+        document.getElementById('qilyLecPitch').value = 0;
+        applyRate();
+      });
+      document.getElementById('qilyLecCtlToggle').addEventListener('click', function(){
+        var c = document.getElementById('qilyLecControls');
+        var open = c.classList.toggle('open');
+        this.setAttribute('aria-expanded', open);
+        this.textContent = open ? '收起语速 / 音调 / 音量设置' : '语速 / 音调 / 音量设置';
+      });
+
+      /* ---- player auto-hide / pop-out ---- */
+      var playerEl = document.getElementById('qilyLecPlayer');
+      var miniEl = document.getElementById('qilyLecMini');
+      var miniPlayEl = document.getElementById('qilyLecMiniPlay');
+      var miniTitleEl = document.getElementById('qilyLecMiniTitle');
+      var collapseBtn = document.getElementById('qilyLecCollapseBtn');
+      function syncMini(){
+        if (!miniTitleEl || !miniPlayEl) return;
+        var ch = CHAPTERS[current];
+        miniTitleEl.textContent = '讲课音频 · ' + ch.step + ' — ' + ch.title;
+        miniPlayEl.textContent = audio.paused ? '▶' : '⏸';
+      }
+      function setCollapsed(collapsed, manual){
+        playerEl.classList.toggle('qily-lec-collapsed', collapsed);
+        miniEl.classList.toggle('show', collapsed);
+        collapseBtn.textContent = collapsed ? '▴ 展开' : '▾ 收起';
+        if (manual){ try{ localStorage.setItem('qilyLecCollapsed', collapsed ? '1' : '0'); }catch(e){} }
+        syncMini();
+      }
+      collapseBtn.addEventListener('click', function(){ setCollapsed(true, true); });
+      miniEl.addEventListener('click', function(e){
+        if (e.target === miniPlayEl){
+          if (!audio.src){ loadChapter(current, true); }
+          else if (audio.paused){ safePlay(); } else { audio.pause(); }
+          return;
+        }
+        setCollapsed(false, true);
+      });
+      miniEl.addEventListener('keydown', function(e){
+        if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setCollapsed(false, true); }
+      });
+      try{
+        if (localStorage.getItem('qilyLecCollapsed') === '1'){ setCollapsed(true, false); }
+      }catch(e){}
+
+      /* ---- subtitle click: jump to the matching chapter card in the article ---- */
+      (function(){
+        var sub = document.getElementById('qilyLecSub');
+        if (!sub) return;
+        function jumpToCard(){
+          var card = document.getElementById('qilyLecCh-' + current);
+          if (!card) return;
+          card.scrollIntoView({behavior: 'smooth', block: 'center'});
+          card.classList.add('sub-flash');
+          setTimeout(function(){ card.classList.remove('sub-flash'); }, 1400);
+        }
+        sub.addEventListener('click', jumpToCard);
+        sub.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); jumpToCard(); }
+        });
+      })();
+
+      /* ---- v2.4 follow-the-article: scroll the original text in sync ----
+         While the lecture plays, the matching original section scrolls into
+         view and gets a light-gold background (kept for the whole chapter,
+         moving to the next section when the chapter changes), so the reader
+         can follow the article without staying in the lecture section. Chapter-level sync only:
+         the lecture is a re-teaching, not a verbatim reading, so sentences
+         have no one-to-one article anchor. A manual scroll suspends the
+         follow for the current chapter only; the next chapter resumes it.
+         The toggle is remembered per browser. */
+      var followOn = true, followSuspended = false, followTarget = null;
+      try{ if (localStorage.getItem('qilyLecFollow') === '0') followOn = false; }catch(e){}
+      function followLabel(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        b.setAttribute('aria-pressed', followOn ? 'true' : 'false');
+        b.textContent = followOn ? '跟随原文：开' : '跟随原文：关';
+      }
+      function scrollToArticle(i){
+        if (!followOn || followSuspended) return;
+        var sel = CHAPTER_ANCHORS[i];
+        var el = sel ? document.querySelector(sel) : null;
+        if (!el) return;
+        if (followTarget && followTarget !== el) followTarget.classList.remove('lec-follow');
+        followTarget = el;
+        el.classList.add('lec-follow');
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        el.scrollIntoView({behavior: reduce ? 'auto' : 'smooth', block: 'start'});
+      }
+      function followChapter(i, playing){
+        followSuspended = false;
+        if (playing) scrollToArticle(i);
+      }
+      ['wheel', 'touchmove'].forEach(function(ev){
+        window.addEventListener(ev, function(){
+          if (!audio.paused) followSuspended = true;
+        }, {passive: true});
+      });
+      (function(){
+        var b = document.getElementById('qilyLecFollowBtn');
+        if (!b) return;
+        followLabel();
+        b.addEventListener('click', function(){
+          followOn = !followOn;
+          try{ localStorage.setItem('qilyLecFollow', followOn ? '1' : '0'); }catch(e){}
+          followLabel();
+          if (!followOn && followTarget) followTarget.classList.remove('lec-follow');
+          if (followOn && !audio.paused){ followSuspended = false; scrollToArticle(current); }
+        });
+      })();
+
+
+      /* ---- v2.6.0 article sentence sync: highlight the sentence being spoken
+         in the ORIGINAL article text, so the class can follow from the article
+         alone while the player is collapsed. The lecture re-teaches rather than
+         reading verbatim, so each lecture sentence is matched to the article
+         sentence in the same section with the longest shared run of characters
+         (longest common substring); a match needs >= 8 shared characters, else
+         no article highlight for that sentence (subtitle + chapter card still
+         highlight). Sentence spans are built once at load; matching is lazy
+         and cached per (chapter, sentence). */
+      function lecStripPunct(t){
+        return t.replace(/[。！？；…，、：；""''（）《》【】·—…\s]/g, '');
+      }
+      function lecLCS(a, b){
+        var m = a.length, n = b.length;
+        if (!m || !n) return 0;
+        var prev = [], cur = [], best = 0, i, j;
+        for (j = 0; j <= n; j++){ prev[j] = 0; cur[j] = 0; }
+        for (i = 1; i <= m; i++){
+          for (j = 1; j <= n; j++){
+            if (a.charAt(i - 1) === b.charAt(j - 1)){
+              cur[j] = prev[j - 1] + 1;
+              if (cur[j] > best) best = cur[j];
+            } else {
+              cur[j] = 0;
+            }
+          }
+          var tmp = prev; prev = cur; cur = tmp;
+          for (j = 0; j <= n; j++) cur[j] = 0;
+        }
+        return best;
+      }
+      var lecArtSpansBySection = [];
+      function lecWrapArticleSentences(){
+        CHAPTER_ANCHORS.forEach(function(sel, ci){
+          var root = sel ? document.querySelector(sel) : null;
+          var spans = [];
+          if (root){
+            /* v2.6.1: the anchor may be a HEADING, not a container. On the
+               visual page the anchors are h3s whose paragraphs are SIBLINGS,
+               so wrapping only inside the anchor covered just the heading and
+               no article sentence could ever light up (user report 2026-11-11:
+               visual page "还未闭环"). Wrap the anchor PLUS its following
+               siblings up to the next anchor (or the end of the parent). On
+               the model page the anchors are <section> containers, so the
+               range is just the section itself — same behaviour as v2.6.0. */
+            var nextSel = CHAPTER_ANCHORS[ci + 1];
+            var nextEl = (nextSel && nextSel !== sel) ? document.querySelector(nextSel) : null;
+            var els = [root];
+            var sib = root.nextSibling;
+            while (sib){
+              if (sib === nextEl) break;
+              if (sib.nodeType === 1) els.push(sib);
+              sib = sib.nextSibling;
+            }
+            els.forEach(function(el){
+              var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+              var nodes = [];
+              while (walker.nextNode()) nodes.push(walker.currentNode);
+              nodes.forEach(function(node){
+                var parent = node.parentNode;
+                if (!parent) return;
+                var tag = parent.nodeName;
+                if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+                var text = node.nodeValue;
+                if (!text || !text.trim()) return;
+                var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
+                if (!parts) return;
+                var frag = document.createDocumentFragment();
+                parts.forEach(function(p){
+                  var sp = document.createElement('span');
+                  sp.className = 'lec-art-sen';
+                  sp.textContent = p;
+                  frag.appendChild(sp);
+                  spans.push(sp);
+                });
+                parent.replaceChild(frag, node);
+              });
+            });
+          }
+          lecArtSpansBySection[ci] = spans;
+        });
+      }
+      function lecArticleSpanFor(chIdx, senIdx){
+        var ch = CHAPTERS[chIdx];
+        if (!ch.artMap) ch.artMap = {};
+        if (ch.artMap.hasOwnProperty(senIdx)) return ch.artMap[senIdx];
+        var best = null, bestScore = 0;
+        var key = lecStripPunct(ch.sentences[senIdx] || '');
+        var spans = lecArtSpansBySection[chIdx] || [];
+        if (key.length >= 8){
+          for (var i = 0; i < spans.length; i++){
+            var cand = lecStripPunct(spans[i].textContent);
+            if (!cand) continue;
+            var score = lecLCS(key, cand);
+            if (score > bestScore){ bestScore = score; best = spans[i]; }
+          }
+        }
+        var found = (bestScore >= 8) ? best : null;
+        ch.artMap[senIdx] = found;
+        return found;
+      }
+      var lecLastArtSpan = null;
+      function lecHighlightArticleSentence(chIdx, senIdx){
+        var span = lecArticleSpanFor(chIdx, senIdx);
+        if (lecLastArtSpan && lecLastArtSpan !== span) lecLastArtSpan.classList.remove('on');
+        lecLastArtSpan = span;
+        if (!span) return;
+        span.classList.add('on');
+        if (followOn && !followSuspended){
+          var r = span.getBoundingClientRect();
+          if (r.top < 80 || r.bottom > window.innerHeight - 320){
+            span.scrollIntoView({behavior: 'smooth', block: 'center'});
+          }
+        }
+      }
+      lecWrapArticleSentences();
+
+      loadChapter(0, false);
+</script></body></html>
