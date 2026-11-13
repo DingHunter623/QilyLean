@@ -155,6 +155,7 @@ for slug in ('owner', 'baseline'):
     assert f'/archive/knowledge/terminology/{slug}/' in term, f'China OPL link missing: {slug}'
 print('PASS: same-release China Trust / source SSOT totals, dates, latest brief and two local OPLs.')
 PYCNTRUST
+  python3 "$CN_ROOT/scripts/validate-hometown-clone.py"
   python3 "$CN_ROOT/scripts/validate-source-content-parity.py"
   exit 0
 fi
