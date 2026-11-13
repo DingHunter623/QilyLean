@@ -236,7 +236,15 @@
     if(!hero||!core||!method){d.documentElement.classList.remove('qily-home-layout-pending');return;}
 
     d.body.setAttribute('data-qily-home-conversion','v1');
-    transformHero(hero);
+    /* QILY-HERO-SPEED-20261113: the approved conversion Hero is materialized directly
+     * into index.html (see scripts/enforce-aircraft-home-hero.js). Rebuilding it here
+     * destroys the first-paint <img> nodes and restarts their downloads from zero,
+     * which is why the hero images lagged seconds on every load. Skip the rebuild
+     * when the static Hero is already converted; fall back to rebuilding only when
+     * the static markup is not the converted Hero (old cache or other state). */
+    var heroAlreadyConverted=hero.getAttribute('data-qily-home-conversion-hero')==='v1'
+      &&!!hero.querySelector('.qily-home-conversion-hero__inner');
+    if(!heroAlreadyConverted)transformHero(hero);
     setCoreCopy(core);
     method=transformMethod(method);
 
