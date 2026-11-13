@@ -536,6 +536,11 @@ var audio = document.getElementById('qilyLecAudio');
           for (var k = 0; k < bin.length; k++) bytes[k] = bin.charCodeAt(k);
           ch.blobUrl = URL.createObjectURL(new Blob([bytes], {type: 'audio/mpeg'}));
           ch.loading = false;
+          /* v2.6.2 (2026-11-14): preload the NEXT chapter as soon as this one
+             is ready, so tapping next/prev finds it already downloaded
+             instead of starting a cold fetch. The <10s and on-play preloads
+             remain as fallbacks; preloadChapter() no-ops if already loaded. */
+          preloadChapter(i + 1);
           if (current !== i){
             if (ch.wantPlay){ ch.wantPlay = false; loadChapter(i, true); }
             return;
@@ -566,21 +571,32 @@ var audio = document.getElementById('qilyLecAudio');
         fetchChapterData(ch, i, '讲课音频 · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）');
       }
       /* Step to a chapter without skipping: if the target is still loading,
-         just queue the play and wait for its fetch instead of advancing again. */
+         just queue the play and wait for its fetch instead of advancing again.
+         v2.6.2 (2026-11-14): a tap on next/prev must NEVER be silent — show
+         "正在加载下一段/上一段…" immediately so the user sees the tap was
+         heard, then play the target as soon as its fetch completes. */
       function goTo(i, autoplay){
         if (i < 0) i = 0;
         if (i > CHAPTERS.length - 1) i = CHAPTERS.length - 1;
         var ch = CHAPTERS[i];
-        if (ch.loading){ ch.wantPlay = ch.wantPlay || autoplay; return; }
+        if (ch.loading){
+          ch.wantPlay = ch.wantPlay || autoplay;
+          var dir = (i > current) ? '下一段' : (i < current ? '上一段' : '本段');
+          document.getElementById('qilyLecNowStep').textContent = '正在加载' + dir + ' · ' + ch.step + '（' + (i + 1) + ' / ' + CHAPTERS.length + '）…';
+          return;
+        }
         loadChapter(i, autoplay);
       }
-      /* A rapid second tap on prev/next (within 1s) is one intended step, not
-         two: ignore it. Deliberate steps more than 1s apart still work, and
-         auto-advance on chapter end bypasses this guard. */
+      /* A rapid second tap on prev/next (within 300ms) is one intended step,
+         not two: ignore it. Deliberate steps more than 300ms apart still
+         work, and auto-advance on chapter end bypasses this guard.
+         v2.6.2 (2026-11-14): 1s was too long — a normal single tap after a
+         loading tap felt dead. 300ms still blocks accidental double-taps
+         while letting deliberate steps through. */
       var lastNavAt = 0;
       function navGuard(){
         var now = Date.now();
-        if (now - lastNavAt < 1000) return false;
+        if (now - lastNavAt < 300) return false;
         lastNavAt = now;
         return true;
       }
@@ -956,6 +972,10 @@ var audio = document.getElementById('qilyLecAudio');
       lecWrapArticleSentences();
 
       loadChapter(0, false);
+      /* v2.6.2 (2026-11-14): start downloading chapter 1 immediately on page
+         load (in parallel with chapter 0), so the first "next" tap finds it
+         ready instead of starting a cold fetch. */
+      preloadChapter(1);
 </script>
 <section class="knowledge-brief-top-nav"><div class="module-inner"><nav class="brief-adjacent bottom" aria-label="简报翻页"><a href="/qilylean/daily/2026-11-01.html">← 上一期</a><a class="directory" href="/qilylean/daily-insights.html">返回精选简报目录</a><a href="/qilylean/daily/2026-11-10.html">下一期 →</a></nav></div></section>
 </main>
