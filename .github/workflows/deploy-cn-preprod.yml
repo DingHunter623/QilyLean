@@ -669,7 +669,7 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           # Reuse systemd LoadCredential on the host; do not reinstall the working
           # service, replace credentials, or rewrite its Nginx /translate route.
-          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production --pre-switch'
 
       - name: Deploy release on mainland server
         id: static-release
