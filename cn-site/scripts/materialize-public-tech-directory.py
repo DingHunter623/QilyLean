@@ -303,6 +303,9 @@ def main() -> None:
     page = re.sub(r'<style id="qilyCnTechResearchDirectoryV1">[\s\S]*?</style>\s*', "", page)
     page = re.sub(r'<link id="qilyCnTechDirectorySourceStyles"[^>]*>\s*', "", page)
     page = page.replace("</head>", '<link id="qilyCnTechDirectorySourceStyles" rel="stylesheet" href="/assets/cn-public-tech-directory-v1.css?v=' + version + '">\n</head>', 1)
+    if 'id="qilyCnHometownPublicKnowledgeVi"' not in page:
+        page = page.replace('</head>', '<link id="qilyCnHometownPublicKnowledgeVi" rel="stylesheet" href="/assets/cn-hometown-resource-network-v1.css?v=20261113-accepted-vi">\n</head>', 1)
+
     page, count = re.subn(r"(/assets/cn-public-tech-directory-v1\.js\?v=)[^\s\"']+", lambda match: match.group(1) + version, page)
     if count != 1: raise ValueError("China search runtime reference missing")
     page = re.sub(r'(<meta name="description" content=")[^"]*(">)', r'\g<1>全球100家科技企业官网目录、五类产业资料检索与公开知识入口。\2', page)
