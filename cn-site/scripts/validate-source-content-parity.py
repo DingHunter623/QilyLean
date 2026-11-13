@@ -245,6 +245,27 @@ def verify_semantics(value, row):
     require(canonical == ['https://qilylean.cn' + url], 'CN canonical mismatch: ' + url)
     require('湘ICP备2026041143号-1' in value and '湘公网安备43020002000443号' in value, 'Protected filings missing: ' + url)
 
+    lecture_chapters = {
+        'qilylean/daily/2026-11-08.html': 10,
+        'qilylean/daily/2026-10-25.html': 12,
+        'improvements/visual/index.html': 9,
+    }
+    if row['source'] in lecture_chapters:
+        # Owner-approved voice lectures (2026-11-13, [cn-clone-approved]):
+        # only these three lectures carry a player on China. The player is
+        # self-contained: the verbatim model CSS/module/runtime installed by
+        # materialize-lecture-parity.py, with audio served from the China
+        # public-media byte ledger. The manifest-level lecture checks below
+        # verify hashes; this checks the page itself carries the module.
+        require('<!-- QILY-CN-LECTURE-MODULE:START -->' in value, 'Approved voice lecture module missing from China page: ' + url)
+        require('data-cn-lecture-css="v1"' in value and 'data-cn-lecture-runtime="v1"' in value, 'Approved voice lecture player assets missing from China page: ' + url)
+        require('id="qilyLecPlayer"' in value and 'id="qilyLecAudio"' in value, 'Lecture player missing from China page: ' + url)
+        lecture_runtime = re.search(r'<script\b[^>]*data-cn-lecture-runtime=[\x22\x27]v1[\x22\x27][^>]*>([\s\S]*?)</script>', value, re.I)
+        require(lecture_runtime is not None, 'Lecture player runtime missing from China page: ' + url)
+        require('qilylean.com' not in lecture_runtime.group(1), 'Lecture runtime still references the international site: ' + url)
+        require('src:"assets/audio/' not in lecture_runtime.group(1) and 'src:"./assets/audio/' not in lecture_runtime.group(1), 'Lecture audio still points at international paths: ' + url)
+        require(lecture_runtime.group(1).count('/assets/public-media/') >= lecture_chapters[row['source']], 'Lecture audio segments missing from China page: ' + url)
+
     if row['source'] == 'experience/index.html':
         require(url == '/archive/profile/experience/', 'Career mirror must use its approved China-local route')
         consulting = re.search(r"<article\b(?=[^>]*\bid=[\"']career-2019-2025[\"'])[\s\S]*?</article>", main, re.I)
