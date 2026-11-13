@@ -44,7 +44,9 @@ require(target.count('<footer class="footer">')==1,"Original CN public footer mi
 require("https://qilylean.com/links/hometown-manufacturing/" not in target,"International canonical leaked into CN page")
 require(directory.count("QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START")==1,"CN resources module missing/duplicated")
 require(directory.count('href="/links/hometown-manufacturing/"')==1,"CN article link missing/duplicated")
-require(directory.index("QILY-CHINA-KNOWLEDGE-BRIDGE:END")<directory.index("QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START")<directory.index("QILY-ELECTRICAL-REFERENCES:START"),"Directory module placement drifted")
+positions={key:directory.index(key) for key in ("QILY-CHINA-KNOWLEDGE-BRIDGE:END","QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START","QILY-ELECTRICAL-REFERENCES:START")}
+require(positions["QILY-CHINA-KNOWLEDGE-BRIDGE:END"]<positions["QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START"]<positions["QILY-ELECTRICAL-REFERENCES:START"],
+        "Directory module placement drifted: "+str(positions))
 require('id="qilyCnHometownPublicKnowledgeVi"' in directory,"Directory VI stylesheet missing")
 require(cn_style.strip().split("\n",1)[-1]==source_style[:source_style.index("html body main section.hero")].strip(),
         "Resource knowledge card CSS no longer matches accepted international VI")
