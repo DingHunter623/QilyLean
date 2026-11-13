@@ -72,18 +72,22 @@ def electrical_recommendations(original: str) -> str:
         anchor = '<div class="toolbar">'
         if original.count(anchor) != 1: raise ValueError("Directory search toolbar missing or duplicated")
         original = original.replace(anchor, block + anchor, 1)
-    # Keep the three independent entry modules in the same requested order.
+    # Keep the four approved public entry modules in the user's requested order.
     bridge_pattern = r'<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->\s*'
+    hometown_pattern = r'<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->[\s\S]*?<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->\s*'
     navigation_pattern = r'<div class="notice" id="navigationPartnerLinks">[\s\S]*?</div>\s*'
     bridge_block = re.search(bridge_pattern, original)
+    hometown_block = re.search(hometown_pattern, original)
     navigation_block = re.search(navigation_pattern, original)
-    if not bridge_block or not navigation_block:
-        raise ValueError("Reciprocal bridge or navigation module missing")
-    original = re.sub(bridge_pattern, '', original)
-    original = re.sub(navigation_pattern, '', original)
-    original = re.sub(pattern, '', original)
-    original = original.replace('<div class="toolbar">', bridge_block.group(0) + block + navigation_block.group(0) + '<div class="toolbar">', 1)
-    if not original.index('id="qilyChinaKnowledgeBridge"') < original.index('id="electricalRecommendations"') < original.index('id="navigationPartnerLinks"'):
+    if not bridge_block or not hometown_block or not navigation_block:
+        raise ValueError("Approved bridge, hometown article or navigation module missing")
+    original = re.sub(bridge_pattern, '', original, count=1)
+    original = re.sub(hometown_pattern, '', original, count=1)
+    original = re.sub(navigation_pattern, '', original, count=1)
+    original = re.sub(pattern, '', original, count=1)
+    ordered = bridge_block.group(0) + hometown_block.group(0) + block + navigation_block.group(0)
+    original = original.replace('<div class="toolbar">', ordered + '<div class="toolbar">', 1)
+    if not (original.index('id="qilyChinaKnowledgeBridge"') < original.index('id="qilyHometownManufacturingKnowledge"') < original.index('id="electricalRecommendations"') < original.index('id="navigationPartnerLinks"')):
         raise ValueError("Public resource modules are out of order")
     original = re.sub(r'<link id="qilyElectricalReferencesStyles"[^>]*>\s*', '', original)
     version = hashlib.sha256(RECOMMENDATION_STYLE.read_bytes()).hexdigest()[:12]
