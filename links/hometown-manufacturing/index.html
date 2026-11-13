@@ -820,7 +820,7 @@ html body{overflow-x:clip!important}
 <audio id="qilyLecAudio" preload="metadata"></audio>
 <script>
 var CHAPTERS = [
-        { step:"开场", title:"一句话先说清：先把流程做对，再把数据做真", src:"assets/audio/full00.mp3.b64",
+        { step:"开场", title:"从头到尾，抓住重点讲", src:"assets/audio/full00.mp3.b64",
           text:"大家好，我是丁启利。今天我们一起学习，课题叫《精益改善与数智化：给家乡制造业的一点思考》。这篇文章要回答的，其实就是一个问题，中小制造企业到底怎么做数智化。这堂课的答案只有一句话，先把流程做对，再把数据做真。接下来，我们就顺着这篇文章的思路，把关键的地方从头到尾讲清楚。" },
         { step:"第一部分", title:"制造业转型，进入系统能力竞争", src:"assets/audio/full01.mp3.b64",
           text:"先说背景。二零二六年是十五五规划的开局之年，制造业正在从单点设备升级、局部自动化改造，走向研发、制造、质量、供应链、运营和绿色低碳的系统性升级。人工智能、工业互联网、边缘计算、机器视觉、数字孪生、工业软件都在成熟，制造系统正在从看得见，走向能分析、能预测、能优化。但是，技术进步不等于企业买一套系统、部署一台服务器、接一个大模型，就自然有了智能制造能力。实际工程里，如果工艺路线还不稳定，标准工时还没有，停机原因的编码各说各的，物料清单和现场实际用料对不上号，质量缺陷的定义也是一团乱，系统采回来的，只会是大量没法比较、没法追溯、没法用来做决策的数据。这时候再往上叠加算法，只会把基础管理问题数字化、复杂化。所以这篇文章的基本判断是，制造业数智化的起点，应当是业务问题和流程价值，而不是技术采购清单。" },
@@ -1292,6 +1292,11 @@ var audio = document.getElementById('qilyLecAudio');
                 if (!parent) return;
                 var tag = parent.nodeName;
                 if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'NOSCRIPT') return;
+                /* QILY-LECTURE-SVG-TEXT-20261114: never wrap text inside SVG.
+                   An HTML <span> is not renderable inside SVG <text>; wrapping
+                   figure labels in <span class="lec-art-sen"> makes them
+                   invisible (hometown Fig2/Fig3/Fig4, 2026-11-14). */
+                if (parent.closest && parent.closest('svg')) return;
                 var text = node.nodeValue;
                 if (!text || !text.trim()) return;
                 var parts = text.match(/[^。！？；…]+[。！？；…]*/g);
