@@ -362,3 +362,22 @@ main#main:has(.qily-about-career)>section.page-hero .hero-eyebrow{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC",
               "PingFang SC","Microsoft YaHei",Arial,sans-serif!important;
 }
+
+/* QILY-CN-PRIMARY-NAV-SINGLE-LINE-20261113
+ * CN primary-nav parity with qilylean.com (Hunter: nav layout must match
+ * .com exactly). Root cause: the destination-shell base rule sets
+ * .nav{flex-wrap:wrap}, so the nine CN nav links wrapped to two lines at
+ * desktop widths. .com instead uses flex-wrap:nowrap + native horizontal
+ * scroll (site-header-axis-v1.css), so it stays one line. The only
+ * flex-wrap:nowrap rule for .nav on CN lives inside @media(max-width:720px)
+ * and never applies at desktop; the mirrored .com header-axis CSS cannot
+ * apply either (its selectors require header.qily-site-header, CN uses
+ * header.site-header). Force the v7 primary nav to the .com single-line
+ * scroll behaviour. Scoped to #qilyCnPrimaryNavigation only; in-page navs
+ * untouched. The CN scroll rail (cn-nav-rail-v1.js) measures
+ * scrollWidth/clientWidth and enables itself once the nav overflows.
+ */
+html body header.site-header .qily-cn-nav-shell{flex:1 1 0;min-width:0}
+html body header.site-header #qilyCnPrimaryNavigation{display:flex;flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;justify-content:flex-start;align-items:center;gap:8px;padding-bottom:4px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+html body header.site-header #qilyCnPrimaryNavigation>a{flex:0 0 auto}
+html body header.site-header .brand,html body header.site-header .qily-cn-translate{flex-shrink:0}
