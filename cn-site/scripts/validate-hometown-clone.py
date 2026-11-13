@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Strict public paper parity: international article content + native CN shell."""
 from pathlib import Path
+import hashlib
 import re
 import sys
 
@@ -11,6 +12,7 @@ directory=(root/"cn-site/resources/index.html").read_text(encoding="utf-8")
 sitemap=(root/"cn-site/sitemap.xml").read_text(encoding="utf-8")
 cn_style=(root/"cn-site/assets/cn-hometown-resource-network-v1.css").read_text(encoding="utf-8")
 source_style=(root/"site-resource-network-v1.css").read_text(encoding="utf-8")
+source_directory=(root/"links/index.html").read_text(encoding="utf-8")
 
 def require(ok, message):
     if not ok: raise AssertionError(message)
@@ -44,6 +46,19 @@ require(target.count('<footer class="footer">')==1,"Original CN public footer mi
 require("https://qilylean.com/links/hometown-manufacturing/" not in target,"International canonical leaked into CN page")
 require(directory.count("QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START")==1,"CN resources module missing/duplicated")
 require(directory.count('href="/links/hometown-manufacturing/"')==1,"CN article link missing/duplicated")
+card_pattern=r'<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START -->[\s\S]*?<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->'
+require(re.search(card_pattern,source_directory).group(0)==re.search(card_pattern,directory).group(0),
+        "Approved public-knowledge card must retain the exact source wording and markup")
+require('qilyCnHometownViParity' not in target,"Retired handwritten heading overrides remain")
+for doc,basename in ((target,'cn-hometown-paper-source.css'),(directory,'cn-hometown-card-source.css')):
+    asset=root/'cn-site/assets'/basename
+    expected='/assets/'+basename+'?v='+hashlib.sha256(asset.read_bytes()).hexdigest()[:16]
+    require(doc.count('id="qilyCnHometownSourceCascade"')==1 and expected in doc,
+            "Missing or stale isolated source cascade: "+basename)
+    runtime=root/'cn-site/assets/cn-hometown-content-runtime.js'
+    runtime_url='/assets/'+runtime.name+'?v='+hashlib.sha256(runtime.read_bytes()).hexdigest()[:16]
+    require(doc.count('data-cn-hometown-content-runtime="v1"')==1 and runtime_url in doc,
+            "Missing or stale source table/grid/diagram adapter")
 positions={key:directory.index(key) for key in ("QILY-CHINA-KNOWLEDGE-BRIDGE:END","QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START","QILY-ELECTRICAL-REFERENCES:START")}
 require(positions["QILY-CHINA-KNOWLEDGE-BRIDGE:END"]<positions["QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:START"]<positions["QILY-ELECTRICAL-REFERENCES:START"],
         "Directory module placement drifted: "+str(positions))

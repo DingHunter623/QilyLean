@@ -50,6 +50,7 @@ python3 "$CN_ROOT/scripts/materialize-nonbrief-visual-parity.py"
 python3 "$CN_ROOT/scripts/materialize-public-interactions.py"
 # Synchronize non-commercial public directory from the international SSOT.
 python3 "$CN_ROOT/scripts/materialize-public-tech-directory.py" --cn-only
+python3 "$CN_ROOT/scripts/materialize-hometown-clone.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
 
 # Ensure two new independent OPL lessons, the glossary entries and the
@@ -155,6 +156,10 @@ for slug in ('owner', 'baseline'):
     assert f'/archive/knowledge/terminology/{slug}/' in term, f'China OPL link missing: {slug}'
 print('PASS: same-release China Trust / source SSOT totals, dates, latest brief and two local OPLs.')
 PYCNTRUST
+  # Reassert the isolated paper/card cascade after shared style materializers.
+  # The resource main already contains its exact source card before its parity
+  # fingerprint is recorded; this pass preserves that main and the native shell.
+  python3 "$CN_ROOT/scripts/materialize-hometown-clone.py"
   python3 "$CN_ROOT/scripts/validate-hometown-clone.py"
   python3 "$CN_ROOT/scripts/validate-source-content-parity.py"
   exit 0

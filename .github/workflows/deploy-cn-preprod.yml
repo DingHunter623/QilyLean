@@ -170,6 +170,12 @@ jobs:
         run: |
           npx playwright test scripts/cn-voice-lecture-parity.spec.js --reporter=line --workers=1
 
+      - name: Verify approved hometown article and resource-card source parity
+        env:
+          QILY_GLOBAL_BASE: http://127.0.0.1:4173
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/cn-hometown-source-parity.spec.js --reporter=line --workers=1
+
       - name: Save lecture browser evidence on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -720,7 +726,9 @@ jobs:
           EXPECTED="$3"
           # Keep the previous static release until all public verification passes.
           # An abandoned/terminated CI run cannot leave unaccepted content active.
-          for attempt in $(seq 1 1350); do
+          # Exact-source and browser gates allow 40 + 30 minutes; reserve
+          # another 20 for article parity, evidence upload and acceptance.
+          for attempt in $(seq 1 2700); do
             if test -f "$STATE/committed"; then touch "$STATE/accepted"; exit 0; fi
             if test -f "$STATE/failed"; then break; fi
             sleep 2
@@ -1018,6 +1026,28 @@ jobs:
           path: |
             test-results
             playwright-report
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Verify hometown production content and seven-width source presentation
+        if: steps.source-parity.outputs.enabled == 'true'
+        timeout-minutes: 10
+        env:
+          QILY_GLOBAL_BASE: https://qilylean.com
+          QILY_CN_BASE: https://qilylean.cn
+        run: |
+          python3 scripts/verify-cn-hometown-production.py
+          npx playwright test scripts/cn-hometown-source-parity.spec.js --reporter=line --workers=1 --trace=on
+
+      - name: Preserve hometown production acceptance evidence
+        if: always() && steps.source-parity.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-hometown-production-${{ github.run_id }}
+          path: |
+            hometown-production-evidence/
+            hometown-source-parity-artifacts/
+            test-results/cn-hometown-source-parity-*/
           if-no-files-found: warn
           retention-days: 30
 

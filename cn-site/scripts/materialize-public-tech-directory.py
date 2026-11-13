@@ -239,13 +239,15 @@ def main() -> None:
     hometown_end = "<!-- QILY-HOMETOWN-MANUFACTURING-KNOWLEDGE:END -->"
     if fragment.count(hometown_start) != 1 or fragment.count(hometown_end) != 1:
         raise ValueError("Expected a single approved hometown knowledge section")
-    excluded = "或咨询转化"
-    if fragment.count(excluded) != 1:
+    disclaimer = "不以企业聘用、商业订单或咨询转化为目标"
+    if fragment.count(disclaimer) != 1:
         raise ValueError("Approved entry disclaimer drifted")
-    fragment = fragment.replace(excluded, "", 1)
     if fragment.count('href="/links/hometown-manufacturing/"') != 1:
         raise ValueError("Public paper destination is missing")
-    if source.FORBIDDEN.search(fragment) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", fragment):
+    # This exact approved sentence rejects commercial goals. Keep its source
+    # wording intact; exempt only that negative statement in the audit copy.
+    audited = fragment.replace(disclaimer, "", 1)
+    if source.FORBIDDEN.search(audited) or re.search(r"<\s*(?:script|form|iframe)\b|industryResourceService|links/(?:network|onboarding)|/cooperation/", audited):
         raise ValueError("Unexpected non-public directory content")
     fragment = '<main id="main" data-qily-public-tech-directory="v2">\n' + fragment.strip() + '\n</main>'
     for names in re.findall(r'class="([^"]+)"', fragment): PUBLIC_CLASSES.update(names.split())
