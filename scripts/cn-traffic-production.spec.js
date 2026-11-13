@@ -42,7 +42,7 @@ async function measure(page){
   });
 }
 for(const width of (process.env.QILY_CN_TRAFFIC_WIDTHS||'320,390,820,1440').split(',').map(Number))test('CN production statistics match approved international VI and independent PV '+width,async({page,context,request},testInfo)=>{
-  test.setTimeout(150000);
+  test.setTimeout(300000);
   await page.setViewportSize({width,height:980});
   if(preview)await previewRoutes(page);
   const calls=[],payloads=[],pending=[],loadedResources=new Map();
@@ -84,10 +84,9 @@ for(const width of (process.env.QILY_CN_TRAFFIC_WIDTHS||'320,390,820,1440').spli
   for(const days of [14,7]){
     await page.getByRole('button',{name:'近'+days+'日',exact:true}).click();
     await expect(page.getByRole('button',{name:'近'+days+'日',exact:true})).toHaveAttribute('aria-pressed','true');
-    // The chart label only updates after draw(), which waits for every 6h-bucket
-    // fetch of the selected range (up to 55 slots from countapi, 6 concurrent,
-    // ~0.3-1s each). The 5s default is too short in CI; give it 30s.
-    await expect(page.locator('#traffic svg')).toHaveAttribute('aria-label',new RegExp('近'+days+'日中国站'),{timeout:30000});
+    // Selection updates immediately; drawing waits for up to 56 bucket reads
+    // with six workers and a 7.5s request timeout (up to 75s without cache).
+    await expect(page.locator('#traffic svg')).toHaveAttribute('aria-label',new RegExp('近'+days+'日中国站'),{timeout:90000});
   }
   await Promise.all(pending);
   expect(calls.some(url=>url.includes('/hit/qilylean_cn_sitewide_pageviews_20261029'))).toBe(true);

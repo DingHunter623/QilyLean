@@ -163,6 +163,9 @@ for (const width of [1440, 390]) {
     { id: 'qilylean-home', url: 'https://qilylean.cn/archive/profile/capabilities/#qilylean-home', qr: '/assets/qilylean-cn-home-download-qr.svg', file: 'QilyLean_CN_Home_v1.0.0_API36_INSTALL.apk' },
   ]) {
     test(`${product.id}: QR, clipboard fallback and real APK download at ${width}px`, async ({ browser }, testInfo) => {
+      // Includes page loading, a complete APK download/hash, clipboard checks
+      // and browser teardown; a single 30s test budget races normal transfers.
+      test.setTimeout(120000);
       const context = await browser.newContext({ permissions: ['clipboard-read', 'clipboard-write'] });
       const page = await context.newPage();
       await page.addInitScript(() => Object.defineProperty(navigator, 'share', { value: undefined, configurable: true }));
