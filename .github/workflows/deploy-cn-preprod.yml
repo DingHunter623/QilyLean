@@ -124,6 +124,7 @@ jobs:
       - name: Test private artifact transfer, deterministic archive and resumable integrity
         run: |
           python3 scripts/test-cn-release-transfer.py
+          python3 scripts/test-cn-translation-phase-gate.py
           python3 scripts/test-cn-source-content-parity.py
           python3 scripts/guard-approved-cn-contact-vi.py --self-test
 
