@@ -654,3 +654,51 @@ test('China shared footer has no desktop axis overflow at 1588 on every represen
    for(const link of g.items.slice(-2)){expect(link.border,route+' filing button border').toBe('0px');expect(link.background,route+' filing background').toBe('rgba(0, 0, 0, 0)');}
  }
 });
+
+
+/* QILY-CN-PRIMARY-NAV-PARITY-20261113 | 2026-11-13 rollback (防呆).
+ * The CN primary nav wrapped to TWO lines while .com stays on ONE line
+ * (horizontal scroll on overflow). Root cause: acc6aa9 (2026-11-09 15:38 UTC)
+ * created cn-site/assets/site.css with .nav{flex-wrap:wrap} and
+ * flex-wrap:nowrap only inside @media(max-width:720px), so on desktop the
+ * nine CN nav links wrap; .com sets flex-wrap:nowrap on the header nav.
+ * No check compared the CN nav to .com, so the drift shipped. PR #832
+ * restored the single line with an override in
+ * cn-site/assets/cn-sitewide-visual-parity-v1.css scoped to
+ * #qilyCnPrimaryNavigation. This test is the live rendered guard: it runs in
+ * the CN deploy pipeline (deploy-cn-preprod.yml step 27, "Verify CN
+ * production VI") and FAILS the deploy (rollback) when the live CN nav items
+ * or single-line behaviour differ from .com. The static source-level guard
+ * is scripts/validate-cn-primary-nav-parity.js, which runs on every PR via
+ * scripts/validate-visual-authority-r8.js.
+ * The ONE deliberate difference: 项目合作 is a commercial route with no CN
+ * target page (/cooperation/ is 404 on CN), so CN carries nine items, .com
+ * ten, in the same order. Any other difference fails. */
+test('China primary nav matches international items and stays on one line at desktop widths',async({page})=>{
+  test.setTimeout(120000);
+  const expectedCn=['首页','能力体系','改善工具','精益生产','代表项目','信任中心','知识资产','资源协同','关于我们'];
+  const expectedCom=[...expectedCn.slice(0,6),'项目合作',...expectedCn.slice(6)];
+  for(const width of [1600,1280]){
+    await page.setViewportSize({width,height:960});
+    await settledGoto(page,intBase+'/',{waitUntil:'load',timeout:45000});
+    await page.evaluate(()=>document.fonts.ready);
+    const comItems=(await page.locator('header nav a').allTextContents()).map(s=>s.trim()).filter(Boolean);
+    expect(comItems,width+'px .com primary nav items').toEqual(expectedCom);
+    await settledGoto(page,cnBase+'/',{waitUntil:'load',timeout:45000});
+    await page.evaluate(()=>document.fonts.ready);
+    const cnItems=(await page.locator('header nav a').allTextContents()).map(s=>s.trim()).filter(Boolean);
+    expect(cnItems,width+'px .cn primary nav items').toEqual(expectedCn);
+    // Single-line: every visible nav link shares one row, and the nav does
+    // not grow vertically (wrap would add a second row of link tops and
+    // increase scrollHeight beyond clientHeight).
+    const geo=await page.evaluate(()=>{
+      const nav=document.querySelector('header nav');
+      const links=[...nav.querySelectorAll('a')].filter(a=>a.offsetParent!==null);
+      const tops=links.map(a=>Math.round(a.getBoundingClientRect().top));
+      const cs=getComputedStyle(nav);
+      return {tops,navHeight:nav.getBoundingClientRect().height,scrollHeight:nav.scrollHeight,clientHeight:nav.clientHeight,flexWrap:cs.flexWrap,overflowX:cs.overflowX};
+    });
+    expect(new Set(geo.tops).size,width+'px .cn nav links must share one row (tops='+geo.tops.join(',')+')').toBe(1);
+    expect(geo.scrollHeight,width+'px .cn nav must not wrap vertically: '+JSON.stringify(geo)).toBeLessThanOrEqual(geo.clientHeight+1);
+  }
+});

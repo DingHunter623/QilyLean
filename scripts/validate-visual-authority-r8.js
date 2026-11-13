@@ -98,4 +98,16 @@ if(isolated!==1)throw new Error(`DDZ V155 fast-route isolation regression: ${iso
 if(duplicates)throw new Error(`R8 duplicate authority references detected: ${duplicates}`);
 if(cnIsolated<27)throw new Error(`CN local visual-owner coverage regression: ${cnIsolated}`);
 
+// QILY-CN-PRIMARY-NAV-PARITY-20261113 | 2026-11-13 rollback: the CN primary
+// nav wrapped to two lines (acc6aa9 created cn-site/assets/site.css with
+// .nav{flex-wrap:wrap}) and no check caught it, because nothing compared the
+// CN nav to .com. Run the CN primary-nav parity guard here so it executes on
+// every PR to main and every push to main via the
+// enforce-visual-authority-r8 workflow. It throws (fails CI) when the CN nav
+// items or the single-line override drift from .com. The live rendered
+// behaviour is additionally guarded by the Playwright test in
+// scripts/redline-navigation-footer-parity.spec.js, which runs in the CN
+// deploy pipeline (deploy-cn-preprod.yml step 27) and fails the deploy.
+execFileSync('node', [path.join(root, 'scripts', 'validate-cn-primary-nav-parity.js')], {cwd: root, stdio: 'inherit'});
+
 console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155/V158 remains one explicitly isolated bundled fast route with deterministic current first paint; 1180 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
