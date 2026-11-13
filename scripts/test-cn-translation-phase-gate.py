@@ -14,7 +14,7 @@ tree = ast.parse(source)
 functions = [node for node in tree.body if isinstance(node, ast.FunctionDef)
              and node.name == 'approved_public_asset_bytes']
 assert len(functions) == 1, 'Public translator asset verification helper missing'
-namespace = {'Path': Path}
+namespace = {'Path': Path, '__file__': str(ROOT / 'services/cn-translation/verify-production.py')}
 code = compile(ast.Module(body=functions, type_ignores=[]),
                '<isolated-asset-verification>', 'exec')
 exec(code, namespace)
