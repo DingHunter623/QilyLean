@@ -35,7 +35,7 @@ require(source.count("<svg")==target.count("<svg")==4,"Four original SVG figures
 require(source_main.count('data-qily-unified-arrow="v4"')==cn_main.count('data-qily-unified-arrow="v4"')==12,
         "All V4 diagram arrows must match")
 require('data-qily-flow-direction="feedback"' in cn_main,"Knowledge-feedback loop missing")
-require('<title>让专业知识走进家乡制造业：' in target,"Exact approved headline missing")
+require('<title>精益改善与数智化：给家乡制造业的一点思考 | QilyLean</title>' in target,"Exact approved headline missing")
 require('<link rel="canonical" href="https://qilylean.cn/links/hometown-manufacturing/">' in target,"China canonical missing")
 require('data-qily-site="cn"' in target,"China site identity missing")
 require('data-qily-nav-key="resources" aria-current="page"' in target,"Native CN navigation mismatch")
