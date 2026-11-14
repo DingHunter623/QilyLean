@@ -171,7 +171,79 @@ html body main#main .qily-journey-reading p{font-size:18.5px;line-height:1.9;ove
 html body main#main .qily-journey-reading h2{font-size:clamp(26px,2.3vw,34px);line-height:1.4;margin-top:34px}
 html body main#main .qily-journey-reading .qily-journey-byline{font-weight:700}
 html body main#main .qily-journey-reading .qily-journey-context{border-left:3px solid #caa15f;padding-left:18px}
-html body main#main .qily-journey-reading .qily-journey-return{margin-top:42px}
+/* Editorial article return: shared QilyLean VI semantic contract.
+   A textual navigation link, not a new button style. No public shell overrides. */
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return{
+  margin:36px 0 0!important;
+  padding:22px 0 8px!important;
+  border-top:1px solid #cfe0dd!important;
+  text-align:left!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link,
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:link,
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:visited{
+  display:inline-flex!important;
+  flex-wrap:wrap!important;
+  gap:9px!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  box-sizing:border-box!important;
+  width:auto!important;max-width:100%!important;min-width:0!important;
+  min-height:48px!important;
+  margin:0!important;padding:9px 16px!important;
+  border:0!important;border-left:4px solid #caa15f!important;border-radius:0 5px 5px 0!important;
+  background:#f3f8f7!important;
+  color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  font-size:18.5px!important;font-weight:800!important;line-height:1.45!important;
+  text-decoration:none!important;
+  box-shadow:none!important;
+  cursor:pointer!important;
+  transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link .qily-editorial-route-arrow{
+  color:#a47531!important;-webkit-text-fill-color:#a47531!important;
+  font-size:22px!important;font-weight:900!important;line-height:1!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link .qily-editorial-route-label{
+  color:inherit!important;-webkit-text-fill-color:inherit!important;
+  font:inherit!important;
+  text-decoration:underline!important;
+  text-decoration-color:#a88b5f!important;
+  text-decoration-thickness:1.5px!important;
+  text-underline-offset:4px!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:hover,
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:focus-visible{
+  background:#e7f1ef!important;
+  color:#073c47!important;-webkit-text-fill-color:#073c47!important;
+  border-left-color:#a47531!important;
+  box-shadow:0 5px 16px rgba(15,75,90,.1)!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:hover .qily-editorial-route-label,
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:focus-visible .qily-editorial-route-label{
+  text-decoration-color:#caa15f!important;
+  text-decoration-thickness:2.5px!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:focus-visible{
+  outline:3px solid rgba(202,161,95,.8)!important;
+  outline-offset:3px!important;
+}
+html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link:active{
+  background:#dceae7!important;
+  border-left-color:#0f4b5a!important;
+  box-shadow:inset 0 2px 3px rgba(7,60,71,.08)!important;
+}
+@media(max-width:620px){
+  html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link{
+    font-size:18px!important;min-height:48px!important;
+    padding:10px 12px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html:root:root body main#main .qily-journey-reading > nav.qily-journey-return > a.qily-editorial-route-link{
+    transition:none!important;
+  }
+}
 @media(max-width:600px){html body main#main .qily-journey-reading p{font-size:18.5px;line-height:1.85}}
 </style></head>
 <body class="qily-about-intl">
@@ -255,7 +327,7 @@ html body main#main .qily-journey-reading .qily-journey-return{margin-top:42px}
 <p>与时俱进，是主动拥抱未来；居安思危，是始终保持清醒；知行合一，是让思想落实为行动；持续改善，是让行动不断创造价值。</p>
 <p>人生有限，探索无限。不以抵达定义成功，不以得失丈量人生。</p>
 <p>活在途中……身有所处，心无止境。</p>
-<p>改善没有终点，协同创造价值！</p></section><p class="qily-journey-return"><a href="/about/#brand-philosophy">返回品牌理念与关于我们 →</a></p></article></div></section></main>
+<p>改善没有终点，协同创造价值！</p></section><nav class="qily-journey-return" aria-label="文章返回导航"><a class="qily-editorial-route-link" data-qily-link-vi="editorial-return-v1" href="/about/#brand-philosophy"><span class="qily-editorial-route-arrow" aria-hidden="true">←</span><span class="qily-editorial-route-label">返回品牌理念与关于我们</span></a></nav></article></div></section></main>
 <script>
 (function(){
   function copyText(value){
