@@ -156,8 +156,16 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 @media(max-width:900px){html:root body header.qily-site-header.qily-global-header .qily-global-nav>a[href]{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;font-weight:900!important;letter-spacing:0!important;-webkit-font-smoothing:auto!important;text-rendering:auto!important}}
 </style>
 <style id="qilyJourneyReadingVI20261114">
-/* Page-local reading width only; existing site VI, public header and footer remain authoritative. */
-html body main#main .qily-journey-reading{max-width:920px;margin:0 auto}
+/* Full-width content parity: inherit the site's authoritative 1180px parent axis.
+   No nested 920px reading column; never alter global header/footer or site gutters. */
+html:root body main#main .content.article-shell>.article-body.qily-journey-reading{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin-inline:0!important;
+}
 html body main#main .qily-journey-reading .qily-journey-section{margin-block:32px}
 html body main#main .qily-journey-reading p{font-size:18.5px;line-height:1.9;overflow-wrap:anywhere}
 html body main#main .qily-journey-reading h2{font-size:clamp(26px,2.3vw,34px);line-height:1.4;margin-top:34px}
