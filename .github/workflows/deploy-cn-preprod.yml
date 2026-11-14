@@ -472,7 +472,20 @@ jobs:
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
+      - name: Incremental sync release (rsync --checksum)
+        id: incremental-sync
+        timeout-minutes: 30
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          SOURCE_PARITY: ${{ steps.source-parity.outputs.enabled }}
+        run: |
+          set -euo pipefail
+          bash scripts/cn-incremental-deploy.sh
+
       - name: Stage release bundle on mainland server
+        if: steps.incremental-sync.outputs.incremental_ok != 'true'
         timeout-minutes: 240
         shell: bash
         env:
@@ -680,6 +693,7 @@ jobs:
 
       - name: Deploy release on mainland server
         id: static-release
+        if: steps.incremental-sync.outputs.incremental_ok != 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -1666,7 +1680,7 @@ jobs:
           retention-days: 30
 
       - name: Restore previous static release after failed acceptance
-        if: (failure() || cancelled()) && steps.static-release.outcome != 'skipped' && steps.source-parity.outputs.enabled == 'true'
+        if: (failure() || cancelled()) && (steps.static-release.outcome != 'skipped' || steps.incremental-sync.outcome == 'failure') && steps.source-parity.outputs.enabled == 'true'
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
