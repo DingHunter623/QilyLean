@@ -31,7 +31,7 @@ require(cn_main.replace('href="/resources/"','href="/links/"')==source_main,
         "CN research article body differs from its approved international content")
 for name in ("qilyHometownManufacturingPaperStyles","qilyHometownManufacturingRefinementV1"):
     require(style(source,name)==style(target,name), "Published article CSS differs: "+name)
-require(source.count("<svg")==target.count("<svg")==4,"Four original SVG figures must be retained")
+require(len(re.findall(r'<svg[^>]*role="img"',source))==len(re.findall(r'<svg[^>]*role="img"',target))==4,"Four original SVG figures must be retained")
 require(source_main.count('data-qily-unified-arrow="v4"')==cn_main.count('data-qily-unified-arrow="v4"')==12,
         "All V4 diagram arrows must match")
 require('data-qily-flow-direction="feedback"' in cn_main,"Knowledge-feedback loop missing")
