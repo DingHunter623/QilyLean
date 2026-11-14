@@ -51,6 +51,18 @@
  *          in cn-site/assets/qilylean-vi-v2.css (the rule that actually wins
  *          the cascade today), plus the shell-creation code that makes it
  *          match (materialize script and cn-nav-rail-v1.js).
+ *   3. Pseudo-label line-height parity (added 2026-11-14 after deploy run
+ *      43538457714 failed the VI step and rolled back, taking PR #832 off
+ *      production): the /lean/ link renders its label through a ::before
+ *      pseudo-element (font-size:0 on the link itself, QILY-CN-TRANSLATED-
+ *      NAV-V1 in qilylean-vi-v2.css). That ::before used line-height:1.22
+ *      while every sibling link inherits the body line-height 1.72, so
+ *      /lean/ rendered 10px shorter and 5px lower — and the deploy
+ *      pipeline's Playwright guard (all nav link tops equal, at 1600/1280)
+ *      failed on the HOME page and rolled the deploy back. Neither PR #832
+ *      (nav wrap only) nor this guard (flex-wrap/overflow-x only) covered
+ *      it, so the loop never closed. Both layers below pin the ::before
+ *      line-height to 1.72; either layer regressing fails this guard.
  *
  * This script is invoked by scripts/validate-visual-authority-r8.js, which
  * the enforce-visual-authority-r8 workflow runs on every PR to main and on
@@ -170,6 +182,27 @@ if (!materializeJs.includes('qily-cn-nav-shell')) {
 }
 if (!railJs.includes("className='qily-cn-nav-shell'") && !railJs.includes('className="qily-cn-nav-shell"')) {
   fail('cn-site/assets/cn-nav-rail-v1.js: no longer creates the .qily-cn-nav-shell wrapper at runtime — the VI single-line rule has nothing to match when the materialize step is bypassed');
+}
+
+// --- 3. Pseudo-label line-height parity -------------------------------------
+// The /lean/ link hides its DOM text (font-size:0) and shows a ::before
+// pseudo-label. If the ::before line-height differs from the siblings'
+// inherited body line-height (1.72), that link sits lower than the rest and
+// the deploy pipeline's Playwright guard (all nav link tops equal) fails the
+// VI step and rolls the deploy back — as run 43538457714 did on 2026-11-14.
+const beforeRule = viCss.match(/\.nav>a\[href="\/lean\/"\]::before,[\s\S]*?\{([\s\S]*?)\}/);
+if (!beforeRule) {
+  fail('cn-site/assets/qilylean-vi-v2.css: missing pseudo-label ::before rule for /lean/ (QILY-CN-TRANSLATED-NAV-V1 is gone)');
+} else if (!/line-height\s*:\s*1\.72\s*!important/.test(beforeRule[1])) {
+  fail('cn-site/assets/qilylean-vi-v2.css: pseudo-label ::before line-height is not 1.72 — the /lean/ link will sit 5px lower than its siblings and the deploy VI guard (equal nav link tops) will fail and roll back');
+}
+if (!parityCss.includes('QILY-CN-PRIMARY-NAV-PSEUDO-LABEL-LINE-HEIGHT-20261114')) {
+  fail('cn-site/assets/cn-sitewide-visual-parity-v1.css: missing QILY-CN-PRIMARY-NAV-PSEUDO-LABEL-LINE-HEIGHT-20261114 override — the home page (whose vi-v2 is a materialized transform) has no second-layer line-height pin');
+} else {
+  const parityBefore = parityCss.match(/#qilyCnPrimaryNavigation>a\[href="\/lean\/"\]::before,[\s\S]*?line-height\s*:\s*([0-9.]+)\s*!important/);
+  if (!parityBefore || parityBefore[1] !== '1.72') {
+    fail('cn-site/assets/cn-sitewide-visual-parity-v1.css: pseudo-label ::before override line-height is not 1.72 — the home page nav will fail the deploy VI guard (equal nav link tops)');
+  }
 }
 
 if (failures.length) {
