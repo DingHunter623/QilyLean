@@ -228,6 +228,18 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 }
 #qilyLectureCta{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;text-decoration:none;border:1px solid #c8a25a;background:#0f4b5a;color:#fff;padding:8px 16px;border-radius:999px}
 #qilyLectureCta:hover{background:#178b94}
+/* QILY-LECTURE-CTA-TOP-20261114: the lecture CTA now sits at the top of the
+   page (hero, below the title) on every lecture, per the site-wide standard
+   set 2026-11-14: top placement, text visible in normal state, never at the
+   bottom. The bottom pill had no defence against site-wide anchor rules:
+   site-link-standard-v2.css forces every #-anchor hover outside .hero to
+   gold bg + dark text, and the pill's plain (non-!important) colour could be
+   darkened by browser state on a real device while a fresh render still
+   showed white. Pin normal + hover with !important so the button is
+   dark-teal/white in normal state and teal on hover, exactly like the
+   2026-11-08 model, on every page that loads the site-wide CSS. */
+#qilyLectureCta{background:#0f4b5a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#c8a25a!important;text-decoration:none!important}
+#qilyLectureCta:hover{background:#178b94!important;color:#fff!important;-webkit-text-fill-color:#fff!important;border-color:#c8a25a!important}
 #qily-lecture .qily-lecture-intro{font-size:15.5px;color:var(--lec-ink2)}
 #qily-lecture .chapter{background:var(--lec-surface);border:1px solid var(--lec-line);border-radius:14px;padding:18px 20px;margin-top:12px;transition:border-color .2s}
 #qily-lecture .chapter.active{border-color:var(--lec-accent);box-shadow:0 0 0 1px var(--lec-accent) inset}
@@ -445,7 +457,7 @@ html body{overflow-x:clip!important}
         <p class="paper-hero-note">公益知识传播为主。</p>
         <div class="stage">政策研究 · 工业工程 · 数智化技术 · 本土产业应用</div>
         <div class="paper-meta">
-          <span>专题研究论文</span><span>政策信息截至 2026年11月12日</span><span>作者：丁启利</span>
+          <span>专题研究论文</span><span>政策信息截至 2026年11月12日</span><span>作者：丁启利</span><a id="qilyLectureCta" href="#qily-lecture"><svg class="qily-lecture-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 13v-1a9 9 0 0 1 18 0v1"/><rect x="3" y="12" width="4" height="8" rx="2"/><rect x="17" y="12" width="4" height="8" rx="2"/></svg>语音讲课 · 全文十七段，约 25 分钟</a>
         </div>
 
       </div>
@@ -807,8 +819,6 @@ html body{overflow-x:clip!important}
         <div class="paper-callout"><strong>让专业知识走进家乡制造业。</strong><br>立足醴陵，服务株洲，面向湖南。让知识源于实践、回到实践；让改善从现场发生，让价值在协同中形成。</div>
       </div>
     </section>
-
-<div class="paper-section-inner"><p><a id="qilyLectureCta" href="#qily-lecture">▶ 收听讲课音频 · 全文十七段，约 25 分钟</a></p></div>
 
     <section class="paper-section alt" id="references">
       <div class="paper-section-inner">
