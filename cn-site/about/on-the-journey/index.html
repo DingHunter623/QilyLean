@@ -43,8 +43,16 @@ html:root:root body[data-qily-site="cn"] main#main .qily-unified-about-contact .
 
   <script defer data-qily-traffic-loader="v1" src="/assets/site-traffic-stats-v1.js?v=20261110-traffic-loader-v1"></script>
 <meta property="og:type" content="article"><meta property="og:site_name" content="QilyLean｜启力精益"><meta property="og:title" content="活在途中……｜从生命重启到思想觉醒"><meta property="og:description" content="与时俱进，居安思危；知行合一，持续改善。"><meta property="og:url" content="https://qilylean.cn/about/on-the-journey/"><style id="qilyJourneyReadingVI20261114">
-/* Page-local reading width only; existing site VI, public header and footer remain authoritative. */
-html body main#main .qily-journey-reading{max-width:920px;margin:0 auto}
+/* Full-width content parity: inherit the site's authoritative 1180px parent axis.
+   No nested 920px reading column; never alter global header/footer or site gutters. */
+html:root body main#main .content.article-shell>.article-body.qily-journey-reading{
+  display:block!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin-inline:0!important;
+}
 html body main#main .qily-journey-reading .qily-journey-section{margin-block:32px}
 html body main#main .qily-journey-reading p{font-size:18.5px;line-height:1.9;overflow-wrap:anywhere}
 html body main#main .qily-journey-reading h2{font-size:clamp(26px,2.3vw,34px);line-height:1.4;margin-top:34px}
