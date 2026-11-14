@@ -430,6 +430,12 @@ html:root body .nav>a[href="/standardization/"]::before{content:'标准体系'}
 html:root body .nav>a[href="/factory/"]::before{content:'工厂规划'}
 html:root body .nav>a[href="/digital/"]::before{content:'数智工厂'}
 html:root body .nav>a[href="/methods/"]::before{content:'改善工具'}
+/* QILY-CN-PRIMARY-NAV-PSEUDO-LABEL-LINE-HEIGHT-20261114
+ * The pseudo labels must share the nav's inherited line-height (1.72, from
+ * html:root body above). 1.22 made the /lean/ link 10px shorter and 5px lower
+ * than its siblings, so the deploy guard (all nav link tops equal) failed and
+ * run 43538457714 rolled back. Keep in sync with the body line-height.
+ */
 html:root body .nav>a[href="/lean/"]::before,
 html:root body .nav>a[href="/ie/"]::before,
 html:root body .nav>a[href="/standardization/"]::before,
@@ -438,7 +444,7 @@ html:root body .nav>a[href="/digital/"]::before,
 html:root body .nav>a[href="/methods/"]::before{
   display:inline-block!important;
   font-size:var(--qily-cn-primary-nav-font-size)!important;
-  line-height:1.22!important;
+  line-height:1.72!important;
   font-weight:900!important;
   letter-spacing:0!important;
   color:currentColor!important;

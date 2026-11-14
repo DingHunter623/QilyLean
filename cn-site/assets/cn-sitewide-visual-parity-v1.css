@@ -381,3 +381,23 @@ html body header.site-header .qily-cn-nav-shell{flex:1 1 0;min-width:0}
 html body header.site-header #qilyCnPrimaryNavigation{display:flex;flex:1 1 0;min-width:0;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;white-space:nowrap;justify-content:flex-start;align-items:center;gap:8px;padding-bottom:4px;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
 html body header.site-header #qilyCnPrimaryNavigation>a{flex:0 0 auto}
 html body header.site-header .brand,html body header.site-header .qily-cn-translate{flex-shrink:0}
+
+/* QILY-CN-PRIMARY-NAV-PSEUDO-LABEL-LINE-HEIGHT-20261114
+ * Second layer (defence in depth) for the same defect fixed at the source in
+ * cn-site/assets/qilylean-vi-v2.css: the pseudo-label ::before on /lean/ (and
+ * the five sibling hrefs) used line-height:1.22 while every other nav link
+ * inherits the body line-height 1.72, so /lean/ rendered 10px shorter and 5px
+ * lower than its siblings. The deploy guard asserts all nav link tops are
+ * equal, so that 5px failed the VI step and run 43538457714 rolled back —
+ * which is why PR #832 never went live. This override lives in the parity
+ * CSS (loaded last on every CN page, higher specificity via the nav id) so
+ * the home page is fixed even though its vi-v2 is a materialized transform
+ * of the source file. Keep 1.72 in sync with html:root body{line-height}
+ * in qilylean-vi-v2.css.
+ */
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/lean/"]::before,
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/ie/"]::before,
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/standardization/"]::before,
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/factory/"]::before,
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/digital/"]::before,
+html body header.site-header #qilyCnPrimaryNavigation>a[href="/methods/"]::before{line-height:1.72!important}
